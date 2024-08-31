@@ -21,7 +21,7 @@ class FriendController(
     @PostMapping("/email")
     fun addFriendWithEmail(
         @RequestHeader("userId") userId: String,
-        @RequestBody friendRequest: FriendAddWithEmailRequest
+        @RequestBody friendRequest: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val userName = friendRequest.toUserName()
         friendService.addFriendWithEmail(User.UserId.of(userId), userName, friendRequest.email)
@@ -32,7 +32,7 @@ class FriendController(
     @PostMapping("/phone")
     fun addFriendWithPhone(
         @RequestHeader("userId") userId: String,
-        @RequestBody friendRequest: FriendAddWithPhoneRequest
+        @RequestBody friendRequest: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val userName = friendRequest.toUserName()
         friendService.addFriendWithPhone(User.UserId.of(userId), userName, friendRequest.phone)
@@ -43,7 +43,7 @@ class FriendController(
     @PostMapping("/favorite")
     fun changeFavorite(
         @RequestHeader("userId") userId: String,
-        @RequestBody friendFavoriteRequest: FriendFavoriteRequest
+        @RequestBody friendFavoriteRequest: FriendRequest.UpdateFavorite
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = friendFavoriteRequest
         friendService.changeFriendFavorite(User.UserId.of(userId), User.UserId.of(friendId), favorite)
@@ -76,7 +76,7 @@ class FriendController(
     @DeleteMapping("")
     fun deleteFriend(
         @RequestHeader("userId") userId: String,
-        @RequestBody friendRequest: FriendDeleteRequest
+        @RequestBody friendRequest: FriendRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = friendRequest.friendId
         friendService.removeFriend(User.UserId.of(userId), User.UserId.of(friendId))
@@ -87,7 +87,7 @@ class FriendController(
     @PutMapping("")
     fun changeFriendName(
         @RequestHeader("userId") userId: String,
-        @RequestBody friendRequest: FriendUpdateWithNameRequest
+        @RequestBody friendRequest: FriendRequest.UpdateName
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val friendName = friendRequest.toFriendName()
         val friendId = friendRequest.toFriendId()
