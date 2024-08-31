@@ -2,23 +2,23 @@ package org.chewing.v1.model
 
 class Friend private constructor(
     val friend: User,
-    val favorite: Boolean,
-    val friendName: String
+    val isFavorite: Boolean,
+    val friendName: User.UserName,
 ) {
     companion object {
-        fun of(friend: User, favorite: Boolean, friendName: String): Friend {
+        fun of(friend: User, favorite: Boolean, friendFirstName: String, friendLastName: String): Friend {
             return Friend(
                 friend = friend,
-                favorite = favorite,
-                friendName = friendName
+                isFavorite = favorite,
+                friendName = User.UserName.of(friendFirstName, friendLastName),
             )
         }
 
-        fun generate(friend: User, friendName: String): Friend {
+        fun generate(friend: User, friendName: User.UserName): Friend {
             return Friend(
                 friend = friend,
-                favorite = false,
-                friendName = friendName
+                isFavorite = false,
+                friendName = friendName,
             )
         }
     }
@@ -26,8 +26,15 @@ class Friend private constructor(
     fun updateFavorite(favorite: Boolean): Friend {
         return Friend(
             friend = this.friend,
-            favorite = favorite,
-            friendName = this.friendName
+            isFavorite = favorite,
+            friendName = this.friendName,
+        )
+    }
+    fun updateName(friendName: User.UserName): Friend {
+        return Friend(
+            friend = this.friend,
+            isFavorite = this.isFavorite,
+            friendName = friendName,
         )
     }
 }

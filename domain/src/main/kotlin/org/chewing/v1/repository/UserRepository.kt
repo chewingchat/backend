@@ -8,5 +8,6 @@ interface UserRepository {
     fun readUserById(userId: User.UserId): User?
     fun remove(userId: User.UserId): User.UserId?
     fun updateUser(user: User): User.UserId?
-    fun readUserByKeyword(keyword: String): User?
+    fun readUserByEmail(email: String): User?
+    fun readUserByPhoneNumber(email: String): User?
 }

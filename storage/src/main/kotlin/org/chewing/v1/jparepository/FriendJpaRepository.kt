@@ -9,4 +9,6 @@ interface FriendJpaRepository: JpaRepository<FriendJpaEntity, String> {
     fun findAllByUserId(userId: String): List<FriendJpaEntity>
     fun deleteByUserIdAndFriendId(userId: String, friendId: String)
     fun findByUserIdAndFriendId(userId: String, friendId: String): FriendJpaEntity?
+
+    fun existsByUserIdAndFriendId(userId: String, friendId: String): Boolean
 }

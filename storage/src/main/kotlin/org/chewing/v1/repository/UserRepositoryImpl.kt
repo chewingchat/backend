@@ -27,8 +27,14 @@ class UserRepositoryImpl(
         return user.userId
     }
 
-    override fun readUserByKeyword(keyword: String): User? {
-        return authJpaRepository.findByPhoneNumberOrEmail(keyword).map {
+    override fun readUserByEmail(email: String): User? {
+        return authJpaRepository.findByEmail(email).map {
+            it.user.toUser()
+        }.orElse(null)
+    }
+
+    override fun readUserByPhoneNumber(email: String): User? {
+        return authJpaRepository.findByEmail(email).map {
             it.user.toUser()
         }.orElse(null)
     }

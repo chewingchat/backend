@@ -28,12 +28,4 @@ class UserReader(
             throw NotFoundException(ErrorCode.USER_NOT_FOUND)
         }
     }
-    fun readUserByKeyword(keyword: String): User {
-        val user = userRepository.readUserByKeyword(keyword)
-        if (user != null) {
-            return user
-        } else {
-            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-        }
-    }
 }

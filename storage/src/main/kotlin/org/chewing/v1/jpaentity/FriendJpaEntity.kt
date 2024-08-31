@@ -16,8 +16,11 @@ class FriendJpaEntity(
     @Column(name = "favorite", nullable = false)
     val favorite: Boolean,
 
-    @Column(name = "friend_name", nullable = false)
-    val friendName: String,
+    @Column(name = "friend_first_name", nullable = false)
+    val friendFirstName: String,
+
+    @Column(name = "friend_last_name", nullable = false)
+    val friendLastName: String,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("userId")
@@ -34,7 +37,9 @@ class FriendJpaEntity(
         return Friend.of(
             friend = friend.toUser(),
             favorite = favorite,
-            friendName = friendName
+            friendFirstName = friendFirstName,
+            friendLastName = friendLastName
+
         )
     }
 
@@ -46,8 +51,9 @@ class FriendJpaEntity(
         fun fromFriend(user: User, friend: Friend): FriendJpaEntity {
             return FriendJpaEntity(
                 id = FriendId(userId = user.userId.value(), friendId = friend.friend.userId.value()),
-                favorite = friend.favorite,
-                friendName = friend.friendName,
+                favorite = friend.isFavorite,
+                friendFirstName = friend.friendName.firstName(),
+                friendLastName = friend.friendName.lastName(),
                 user = UserJpaEntity.fromUser(user),
                 friend = UserJpaEntity.fromUser(friend.friend)
             )

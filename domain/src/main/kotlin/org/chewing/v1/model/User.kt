@@ -5,21 +5,30 @@ import java.util.*
 
 class User private constructor(
     val userId: UserId,
-    val name: String,
+    val name: UserName,
     val birth: String,
-    val statusMessage: String,
-    val image: Image
+    val image: Image,
+    val status: UserStatus,
+    val backgroundImage: Image
 ) {
     companion object {
         fun withId(
-            userId: String, name: String, birth: String, statusMessage: String, image: Image
+            userId: String,
+            firstName: String,
+            lastName: String,
+            birth: String,
+            image: Image,
+            backgroundImage: Image,
+            emoticon: Emoticon,
+            statusMessage: String
         ): User {
             return User(
                 userId = UserId.of(userId),
-                name = name,
+                status = UserStatus.of(statusMessage, emoticon),
                 birth = birth,
                 image = image,
-                statusMessage = statusMessage
+                backgroundImage = backgroundImage,
+                name = UserName.of(firstName, lastName)
             )
         }
     }
@@ -40,23 +49,49 @@ class User private constructor(
         }
     }
 
+    class UserName private constructor(private val firstName: String, private val lastName: String) {
+        fun firstName(): String {
+            return firstName
+        }
+
+        fun lastName(): String {
+            return lastName
+        }
+
+        companion object {
+            fun of(firstName: String, lastName: String): UserName {
+                return UserName(firstName, lastName)
+            }
+        }
+    }
+
+    class UserStatus private constructor(val statusMessage: String, val emoticon: Emoticon) {
+        companion object {
+            fun of(statusMessage: String, emoticon: Emoticon): UserStatus {
+                return UserStatus(statusMessage, emoticon)
+            }
+        }
+    }
+
     fun updateImage(fileName: String): User {
         return User(
             userId,
             name,
             birth,
-            statusMessage,
-            Image.upload(Image.ImageCategory.USER_PROFILE, userId.value(), fileName)
+            Image.upload(Image.ImageCategory.USER_PROFILE, userId.value(), fileName),
+            status,
+            backgroundImage
         )
     }
 
-    fun updateStatusMessage(statusMessage: String): User {
+    fun updateStatus(status: UserStatus): User {
         return User(
             userId,
             name,
             birth,
-            statusMessage,
-            image
+            image,
+            status,
+            backgroundImage
         )
     }
 }

@@ -1,8 +1,9 @@
 -- User table mock data
-INSERT INTO chewing.`user` (user_id, picture_url, status_message, user_name, birthday, created_at, modified_at)
-VALUES ('user-1', 'https://example.com/user1.png', 'Hello World!', 'User One', '1990-01-01', NOW(), NOW()),
-       ('user-2', 'https://example.com/user2.png', 'Living the life', 'User Two', '1985-05-15', NOW(), NOW()),
-       ('user-3', 'https://example.com/user3.png', 'Good vibes only', 'User Three', '1992-07-20', NOW(), NOW());
+INSERT INTO chewing.`user` (user_id, picture_url, background_picture_url, status_message, user_first_name, user_last_name, birthday, created_at, modified_at)
+VALUES
+    ('user-1', 'https://example.com/user1.png', 'https://example.com/user1.png', 'Hello World!', 'User', 'One', '1990-01-01', NOW(), NOW()),
+    ('user-2', 'https://example.com/user2.png', 'https://example.com/user1.png', 'Living the life', 'User', 'Two', '1985-05-15', NOW(), NOW()),
+    ('user-3', 'https://example.com/user3.png', 'https://example.com/user1.png', 'Good vibes only', 'User', 'Three', '1992-07-20', NOW(), NOW());
 
 -- Email table mock data
 INSERT INTO chewing.`email` (email_id, email, first_authorized, created_at, modified_at)
@@ -23,8 +24,10 @@ VALUES ('auth-1', 'user-1', 'email-1', 'phone-1'),
        ('auth-2', 'user-2', 'email-2', 'phone-2'),
        ('auth-3', 'user-3', 'email-3', 'phone-3');
 
-INSERT INTO chewing.`sort` (sort_id, chat_room_sort, friends_sort, user_id)
-VALUES
-    ('sort-1', 'NOT_READ_DESC', 'NAME_ASC', 'user-1'),
-    ('sort-2', 'NOT_READ_DESC', 'NAME_ASC', 'user-2'),
-    ('sort-3', 'NOT_READ_DESC', 'NAME_ASC', 'user-3');
+INSERT INTO chewing.`emoticon_pack` (emoticon_pack_id, emoticon_pack_name, emoticon_pack_url, created_at, modified_at)
+VALUES ('emoticon-pack-1', 'Default', 'https://example.com/default.png', NOW(), NOW());
+-- Emoticon table mock data
+INSERT INTO chewing.`emoticon` (emoticon_id, emoticon_name, emoticon_url,emoticon_pack_id)
+VALUES ('emoticon-1', 'smile', 'https://example.com/smile.png','emoticon-pack-1'),
+       ('emoticon-2', 'sad', 'https://example.com/sad.png','emoticon-pack-1'),
+       ('emoticon-3', 'angry', 'https://example.com/angry.png','emoticon-pack-1');
