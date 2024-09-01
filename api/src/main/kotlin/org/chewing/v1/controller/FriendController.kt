@@ -88,11 +88,11 @@ class FriendController(
     fun changeFriendName(
         @RequestHeader("userId") userId: String,
         @RequestBody friendRequest: FriendRequest.UpdateName
-    ): SuccessResponseEntity<SuccessCreateResponse> {
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendName = friendRequest.toFriendName()
         val friendId = friendRequest.toFriendId()
         friendService.changeFriendName(User.UserId.of(userId), friendId, friendName)
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successOnly()
     }
 }

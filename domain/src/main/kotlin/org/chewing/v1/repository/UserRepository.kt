@@ -1,5 +1,6 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.model.FriendSearch
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Repository
 
@@ -10,4 +11,6 @@ interface UserRepository {
     fun updateUser(user: User): User.UserId?
     fun readUserByEmail(email: String): User?
     fun readUserByPhoneNumber(email: String): User?
+    fun appendSearchHistory(user: User, search: FriendSearch)
+    fun readSearchHistory(userId: User.UserId): List<FriendSearch>
 }

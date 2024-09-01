@@ -22,6 +22,7 @@ class FriendService(
         val user = userReader.readUserById(userId)
         friendAppender.appendFriend(user, friend)
     }
+
     fun addFriendWithPhone(userId: User.UserId, friendName: User.UserName, phone: String) {
         val friend = Friend.generate(friendReader.readFriendWithPhoneNumber(phone), friendName)
         friendChecker.isAlreadyFriend(userId, friend.friend.userId)
@@ -37,7 +38,7 @@ class FriendService(
     fun getFriends(userId: User.UserId, sort: SortCriteria): Pair<User, List<Friend>> {
         val friends = friendReader.readFriends(userId)
         val user = userReader.readUserById(userId)
-        return Pair(user, FriendSorter.sortFriendCards(friends, sort))
+        return Pair(user, FriendSortEngine.sortFriends(friends, sort))
     }
 
 

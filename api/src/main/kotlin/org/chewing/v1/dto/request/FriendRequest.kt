@@ -5,25 +5,19 @@ import org.chewing.v1.model.User
 class FriendRequest(
 ) {
     data class AddWithEmail(
-        val email:String,
+        val email: String,
         val firstName: String,
-        val lastName: String,
+        val lastName: String
     ) {
-        fun toUserName(): User.UserName {
-            return User.UserName.of(firstName, lastName)
-        }
+        fun toUserName(): User.UserName = User.UserName.of(firstName, lastName)
     }
     data class UpdateName(
         val friendId: String,
         val firstName: String,
         val lastName: String
     ) {
-        fun toFriendName(): User.UserName {
-            return User.UserName.of(firstName, lastName)
-        }
-        fun toFriendId(): User.UserId {
-            return User.UserId.of(friendId)
-        }
+        fun toFriendName(): User.UserName = User.UserName.of(firstName, lastName)
+        fun toFriendId(): User.UserId = User.UserId.of(friendId)
     }
     data class UpdateFavorite(
         val friendId: String,

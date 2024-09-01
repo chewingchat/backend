@@ -2,6 +2,8 @@ package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
 import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.model.FriendSearch
+import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
 import java.util.UUID
 
@@ -21,4 +23,19 @@ class FriendSearchJpaEntity(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     val user: UserJpaEntity,
 ): BaseEntity() {
+    fun toFriendSearch(): FriendSearch {
+        return FriendSearch.of(
+            keyword = searchText,
+            searchTime = createdAt!!.toLocalDate()
+        )
+    }
+
+    companion object {
+        fun fromFriendSearch(user: User, friendSearch: FriendSearch): FriendSearchJpaEntity {
+            return FriendSearchJpaEntity(
+                searchText = friendSearch.keyword,
+                user = UserJpaEntity.fromUser(user)
+            )
+        }
+    }
 }

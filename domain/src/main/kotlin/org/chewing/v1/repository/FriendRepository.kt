@@ -1,7 +1,6 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.model.Friend
-import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Repository
 

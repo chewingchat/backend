@@ -6,9 +6,12 @@ import org.chewing.v1.model.Friend
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
 
+
 @DynamicInsert
 @Entity
-@Table(name = "friend", schema = "chewing")
+@Table(name = "friend", schema = "chewing", indexes = [
+    Index(name = "idx_full_name", columnList = "full_name")
+])
 class FriendJpaEntity(
     @EmbeddedId
     val id: FriendId,
