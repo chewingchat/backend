@@ -25,4 +25,8 @@ class Emoticon private constructor(
             )
         }
     }
+
+    fun isEmpty(): Boolean {
+        return emoticonId.isEmpty() && emoticonName.isEmpty() && emoticonUrl.isEmpty()
+    }
 }

@@ -13,7 +13,7 @@ interface FriendRepository {
 
     fun removeFriend(userId: User.UserId, friendId: User.UserId)
 
-    fun readFriend(userId: User.UserId,friendId: User.UserId): Pair<User, Friend>?
+    fun readFriend(userId: User.UserId,friendId: User.UserId): Friend?
 
     fun checkFriend(userId: User.UserId, friendId: User.UserId): Boolean
 

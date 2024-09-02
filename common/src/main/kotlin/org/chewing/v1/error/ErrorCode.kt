@@ -19,6 +19,7 @@ enum class ErrorCode(
     FRIEND_ALREADY_CREATED("FRIEND_002", "이미 추가된 친구입니다."),
     IMAGE_UPLOAD_FAILED("IMAGE_001", "이미지 업로드 실패."),
     IMAGE_DELETE_FAILED("IMAGE_002", "이미지 삭제 실패"),
+    FEED_NOT_FOUND("FEED_001", "피드를 찾을 수 없음."),
     ;
 
     companion object {

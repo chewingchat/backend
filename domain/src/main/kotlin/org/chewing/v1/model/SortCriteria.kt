@@ -5,4 +5,5 @@ enum class SortCriteria {
     FAVORITE,
     DATE,
     NOT_READ,
+    INDEX
 }

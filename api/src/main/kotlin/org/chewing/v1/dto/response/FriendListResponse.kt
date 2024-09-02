@@ -17,7 +17,7 @@ data class FriendListResponse(
             return FriendListResponse(
                 friends = friends.map { FriendResponse.of(it) },
                 userStatusMessage = user.status.statusMessage,
-                userImageUrl = user.image.value(),
+                userImageUrl = user.image.url,
                 userFirstName = user.name.firstName(),
                 userLastName = user.name.lastName(),
                 totalFriends = friends.size

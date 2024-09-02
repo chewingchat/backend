@@ -1,9 +1,3 @@
--- User table mock data
-INSERT INTO chewing.`user` (user_id, picture_url, background_picture_url, status_message, user_first_name, user_last_name, birthday, created_at, modified_at)
-VALUES
-    ('user-1', 'https://example.com/user1.png', 'https://example.com/user1.png', 'Hello World!', 'User', 'One', '1990-01-01', NOW(), NOW()),
-    ('user-2', 'https://example.com/user2.png', 'https://example.com/user1.png', 'Living the life', 'User', 'Two', '1985-05-15', NOW(), NOW()),
-    ('user-3', 'https://example.com/user3.png', 'https://example.com/user1.png', 'Good vibes only', 'User', 'Three', '1992-07-20', NOW(), NOW());
 
 -- Email table mock data
 INSERT INTO chewing.`email` (email_id, email, first_authorized, created_at, modified_at)
@@ -17,6 +11,12 @@ INSERT INTO chewing.`phone_number` (phone_number_id, phone_number, first_authori
 VALUES ('phone-1', '+1234567890', TRUE, '+1', NOW(), NOW()),
        ('phone-2', '+1987654321', FALSE, '+1', NOW(), NOW()),
        ('phone-3', '+1098765432', TRUE, '+1', NOW(), NOW());
+
+INSERT INTO chewing.`user` (user_id, picture_url, background_picture_url, status_message, user_first_name, user_last_name, birthday, created_at, modified_at)
+VALUES
+    ('user-1', 'https://example.com/user1.png', 'https://example.com/user1.png', 'Hello World!', 'User', 'One', '1990-01-01', NOW(), NOW()),
+    ('user-2', 'https://example.com/user2.png', 'https://example.com/user1.png', 'Living the life', 'User', 'Two', '1985-05-15', NOW(), NOW()),
+    ('user-3', 'https://example.com/user3.png', 'https://example.com/user1.png', 'Good vibes only', 'User', 'Three', '1992-07-20', NOW(), NOW());
 
 -- Auth table mock data
 INSERT INTO chewing.`auth` (auth_id, user_id, email_id, phone_number_id)

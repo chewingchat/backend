@@ -1,4 +1,4 @@
-package org.chewing.v1.common
+package org.chewing.v1.jpaentity.common
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

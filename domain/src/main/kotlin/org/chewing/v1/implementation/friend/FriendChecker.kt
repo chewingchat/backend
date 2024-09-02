@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.friend
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode

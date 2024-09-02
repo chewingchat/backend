@@ -1,9 +1,11 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
+import org.chewing.v1.jpaentity.emoticon.EmoticonPackJpaEntity
 import org.chewing.v1.model.EmoticonPack
 import org.chewing.v1.model.User
-
+@Entity
+@Table(name = "user_emoticon", schema = "chewing")
 class UserEmoticonJpaEntity(
     @EmbeddedId
     val id: UserEmoticonId,

@@ -1,4 +1,4 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable

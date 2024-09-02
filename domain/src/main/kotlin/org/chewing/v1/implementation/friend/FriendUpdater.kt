@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.friend
 
 import org.chewing.v1.model.Friend
 import org.chewing.v1.model.User
@@ -6,10 +6,10 @@ import org.chewing.v1.repository.FriendRepository
 import org.springframework.stereotype.Component
 
 @Component
-class FriendAppender(
+class FriendUpdater(
     private val friendRepository: FriendRepository
 ) {
-    fun appendFriend(user:User, friend: Friend) {
-        friendRepository.appendFriend(user, friend)
+    fun updateFriend(user: User, friend: Friend) {
+        friendRepository.updateFriend(user, friend)
     }
 }

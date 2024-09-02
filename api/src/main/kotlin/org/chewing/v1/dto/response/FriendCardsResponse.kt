@@ -29,10 +29,10 @@ data class FriendCardsResponse(
                     friendId = friend.friend.userId.value(),
                     friendFirstName = friend.friendName.firstName(),
                     friendLastName = friend.friendName.lastName(),
-                    friendImageUrl = friend.friend.image.value(),
+                    friendImageUrl = friend.friend.image.url,
                     friendStatusMessage = friend.friend.status.statusMessage,
                     isFavorite = friend.isFavorite,
-                    friendBackgroundImageUrl = friend.friend.backgroundImage.value(),
+                    friendBackgroundImageUrl = friend.friend.backgroundImage.url,
                     friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl
                 )
             }
@@ -44,7 +44,7 @@ data class FriendCardsResponse(
             return FriendCardsResponse(
                 friends = friends.map { FriendCardResponse.of(it) },
                 userStatusMessage = user.status.statusMessage,
-                userImageUrl = user.image.value(),
+                userImageUrl = user.image.url,
                 userFirstName = user.name.firstName(),
                 userLastName = user.name.lastName(),
                 totalFriends = friends.size,

@@ -1,6 +1,7 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
+import org.chewing.v1.jpaentity.user.UserJpaEntity
 import java.util.*
 
 @Entity

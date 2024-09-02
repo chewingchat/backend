@@ -1,7 +1,8 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.friend
 
 import jakarta.persistence.*
-import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.Friend
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
@@ -9,9 +10,7 @@ import org.hibernate.annotations.DynamicInsert
 
 @DynamicInsert
 @Entity
-@Table(name = "friend", schema = "chewing", indexes = [
-    Index(name = "idx_full_name", columnList = "full_name")
-])
+@Table(name = "friend", schema = "chewing")
 class FriendJpaEntity(
     @EmbeddedId
     val id: FriendId,
@@ -42,7 +41,6 @@ class FriendJpaEntity(
             favorite = favorite,
             friendFirstName = friendFirstName,
             friendLastName = friendLastName
-
         )
     }
 

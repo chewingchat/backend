@@ -17,7 +17,7 @@ data class FriendResponse(
                 friendId = friend.friend.userId.value(),
                 friendFirstName = friend.friendName.firstName(),
                 friendLastName = friend.friendName.lastName(),
-                friendImageUrl = friend.friend.image.value(),
+                friendImageUrl = friend.friend.image.url,
                 friendStatusMessage = friend.friend.status.statusMessage,
                 isFavorite = friend.isFavorite,
                 friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl

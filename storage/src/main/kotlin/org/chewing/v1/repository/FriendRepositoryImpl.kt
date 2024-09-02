@@ -1,9 +1,8 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jpaentity.FriendJpaEntity
+import org.chewing.v1.jpaentity.friend.FriendJpaEntity
 import org.chewing.v1.jparepository.FriendJpaRepository
 import org.chewing.v1.model.Friend
-import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Repository
 
@@ -25,15 +24,12 @@ class FriendRepositoryImpl(
         friendJpaRepository.deleteByUserIdAndFriendId(userId.value(), friendId.value())
     }
 
-    override fun readFriend(userId: User.UserId, friendId: User.UserId): Pair<User, Friend>? {
+    override fun readFriend(userId: User.UserId, friendId: User.UserId): Friend? {
         val friendEntity = friendJpaRepository.findByUserIdAndFriendId(
             userId.value(),
             friendId.value()
         )
-
-        return friendEntity?.let {
-            Pair(it.toUser(), it.toFriend())
-        }
+        return friendEntity?.toFriend()
     }
 
     override fun checkFriend(userId: User.UserId, friendId: User.UserId): Boolean {

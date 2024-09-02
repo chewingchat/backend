@@ -1,13 +1,12 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jpaentity.FriendSearchJpaEntity
-import org.chewing.v1.jpaentity.UserJpaEntity
+import org.chewing.v1.jpaentity.friend.FriendSearchJpaEntity
+import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jparepository.AuthJpaRepository
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
 import org.chewing.v1.model.FriendSearch
 import org.chewing.v1.model.User
-import org.springframework.core.annotation.MergedAnnotations.Search
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -17,8 +16,8 @@ class UserRepositoryImpl(
     private val friendSearchJpaRepository: FriendSearchJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: User.UserId): User? {
-        val userEntity = userJpaRepository.findById(userId.value())
-        return userEntity.map { it.toUser() }.orElse(null)
+        val userEntity = userJpaRepository.findByIdWithStatusEmoticon(userId.value())
+        return userEntity.map { it.toUserWithStatus() }.orElse(null)
     }
 
 

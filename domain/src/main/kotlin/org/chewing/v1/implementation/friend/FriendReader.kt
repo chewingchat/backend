@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.friend
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
@@ -17,7 +17,7 @@ class FriendReader(
         return friendRepository.readFriends(userId)
     }
 
-    fun readFriend(userId: User.UserId, friendId: User.UserId): Pair<User, Friend> {
+    fun readFriend(userId: User.UserId, friendId: User.UserId): Friend {
         return friendRepository.readFriend(userId, friendId) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }
 

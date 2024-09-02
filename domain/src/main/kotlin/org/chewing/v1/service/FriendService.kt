@@ -1,9 +1,11 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.*
-import org.chewing.v1.model.Friend
-import org.chewing.v1.model.SortCriteria
-import org.chewing.v1.model.User
+import org.chewing.v1.implementation.feed.FeedChecker
+import org.chewing.v1.implementation.feed.FeedReader
+import org.chewing.v1.implementation.feed.FeedSortEngine
+import org.chewing.v1.implementation.friend.*
+import org.chewing.v1.model.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,7 +16,9 @@ class FriendService(
     private val friendAppender: FriendAppender,
     private val friendUpdater: FriendUpdater,
     private val userReader: UserReader,
-    private val friendChecker: FriendChecker
+    private val friendChecker: FriendChecker,
+    private val feedReader: FeedReader,
+    private val feedChecker: FeedChecker,
 ) {
     fun addFriendWithEmail(userId: User.UserId, friendName: User.UserName, email: String) {
         val friend = Friend.generate(friendReader.readFriendWithEmail(email), friendName)
@@ -44,15 +48,30 @@ class FriendService(
 
     @Transactional
     fun changeFriendFavorite(userId: User.UserId, friendId: User.UserId, favorite: Boolean) {
-        val (user, friend) = friendReader.readFriend(userId, friendId)
+        val user = userReader.readUserById(userId)
+        val friend = friendReader.readFriend(userId, friendId)
         val updateFriend = friend.updateFavorite(favorite)
         friendUpdater.updateFriend(user, updateFriend)
     }
 
     @Transactional
     fun changeFriendName(userId: User.UserId, friendId: User.UserId, friendName: User.UserName) {
-        val (user, friend) = friendReader.readFriend(userId, friendId)
+        val user = userReader.readUserById(userId)
+        val friend = friendReader.readFriend(userId, friendId)
         val updateFriend = friend.updateName(friendName)
         friendUpdater.updateFriend(user, updateFriend)
+    }
+
+    fun getFriendDetail(userId: User.UserId, friendId: User.UserId): Pair<Friend, List<FriendFeed>> {
+        val friend = friendReader.readFriend(userId, friendId)
+        val feeds = feedReader.readUserFeed(friendId)
+        val likedFeedIds = feedChecker.checkFeedsLike(feeds.map { it.feedId }, userId)
+        val friendsFeed = feeds.map { feed ->
+            val sortedFeedDetails = FeedSortEngine.sortFeedDetails(feed.feedDetails, SortCriteria.INDEX)
+            val updatedFeed = feed.updateFeedDetails(sortedFeedDetails)
+            val isLiked = likedFeedIds[feed.feedId] ?: false
+            FriendFeed.of(updatedFeed, isLiked)
+        }
+        return Pair(friend, friendsFeed)
     }
 }

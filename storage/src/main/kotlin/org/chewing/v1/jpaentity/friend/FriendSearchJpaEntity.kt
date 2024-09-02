@@ -1,7 +1,8 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.friend
 
 import jakarta.persistence.*
-import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.FriendSearch
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert

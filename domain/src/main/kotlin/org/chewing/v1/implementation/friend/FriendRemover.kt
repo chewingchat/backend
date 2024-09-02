@@ -1,15 +1,14 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.model.Friend
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.FriendRepository
 import org.springframework.stereotype.Component
 
 @Component
-class FriendUpdater(
+class FriendRemover(
     private val friendRepository: FriendRepository
 ) {
-    fun updateFriend(user: User, friend: Friend) {
-        friendRepository.updateFriend(user, friend)
+    fun removeFriend(userId: User.UserId, friendId: User.UserId) {
+        friendRepository.removeFriend(userId, friendId)
     }
 }

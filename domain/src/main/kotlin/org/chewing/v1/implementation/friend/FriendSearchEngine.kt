@@ -1,5 +1,7 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.friend
 
+import org.chewing.v1.implementation.UserAppender
+import org.chewing.v1.implementation.UserReader
 import org.chewing.v1.model.Friend
 import org.chewing.v1.model.FriendSearch
 import org.chewing.v1.model.User

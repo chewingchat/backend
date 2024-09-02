@@ -1,7 +1,7 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.FriendSearchEngine
-import org.chewing.v1.implementation.FriendSortEngine
+import org.chewing.v1.implementation.friend.FriendSearchEngine
+import org.chewing.v1.implementation.friend.FriendSortEngine
 import org.chewing.v1.model.Friend
 import org.chewing.v1.model.FriendSearch
 import org.chewing.v1.model.SortCriteria

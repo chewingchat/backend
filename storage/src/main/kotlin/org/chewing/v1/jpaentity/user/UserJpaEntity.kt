@@ -1,7 +1,8 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
 import org.chewing.v1.model.Emoticon
 import org.chewing.v1.model.Image
 import org.chewing.v1.model.User
@@ -42,8 +43,8 @@ class UserJpaEntity(
         fun fromUser(user: User): UserJpaEntity {
             return UserJpaEntity(
                 user.userId.value(),
-                user.image.value(),
-                user.backgroundImage.value(),
+                user.image.url,
+                user.backgroundImage.url,
                 user.status.statusMessage,
                 user.name.firstName(),
                 user.name.lastName(),
@@ -61,7 +62,21 @@ class UserJpaEntity(
             this.birth,
             Image.of(this.pictureUrl),
             Image.of(this.backgroundPictureUrl),
-            this.statusEmoticon?.toEmoticon() ?: Emoticon.empty(),
+            Emoticon.empty(),
+            this.statusMessage
+        )
+    }
+
+    fun toUserWithStatus(): User {
+        val emoticon = this.statusEmoticon?.toEmoticon() ?: Emoticon.empty()
+        return User.withId(
+            this.id,
+            this.userFirstName,
+            this.userLastName,
+            this.birth,
+            Image.of(this.pictureUrl),
+            Image.of(this.backgroundPictureUrl),
+            emoticon,
             this.statusMessage
         )
     }

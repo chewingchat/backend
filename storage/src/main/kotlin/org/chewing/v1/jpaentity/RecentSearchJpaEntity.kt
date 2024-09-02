@@ -1,9 +1,9 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
-import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.jpaentity.friend.FriendJpaEntity
 import org.hibernate.annotations.DynamicInsert
-import java.time.LocalDateTime
 import java.util.*
 
 @DynamicInsert
