@@ -3,8 +3,8 @@ package org.chewing.v1.jpaentity.user
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
-import org.chewing.v1.model.Emoticon
-import org.chewing.v1.model.Image
+import org.chewing.v1.model.emoticon.Emoticon
+import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
 

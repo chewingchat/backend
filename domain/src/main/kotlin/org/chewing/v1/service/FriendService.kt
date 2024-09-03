@@ -6,6 +6,8 @@ import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.feed.FeedSortEngine
 import org.chewing.v1.implementation.friend.*
 import org.chewing.v1.model.*
+import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendFeed
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

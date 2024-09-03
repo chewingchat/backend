@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.friend
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.model.Friend
+import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.FriendRepository
 import org.chewing.v1.repository.UserRepository

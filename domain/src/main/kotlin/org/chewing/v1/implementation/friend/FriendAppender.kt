@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.model.Friend
+import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.FriendRepository
 import org.springframework.stereotype.Component

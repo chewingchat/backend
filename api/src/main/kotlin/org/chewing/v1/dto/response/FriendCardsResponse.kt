@@ -1,7 +1,6 @@
 package org.chewing.v1.dto.response
 
-import org.chewing.v1.model.Emoticon
-import org.chewing.v1.model.Friend
+import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 
 data class FriendCardsResponse(

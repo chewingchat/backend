@@ -2,7 +2,7 @@ package org.chewing.v1.jpaentity.emoticon
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.EmoticonPack
+import org.chewing.v1.model.emoticon.EmoticonPack
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 

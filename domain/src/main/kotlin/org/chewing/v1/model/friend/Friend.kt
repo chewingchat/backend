@@ -1,4 +1,6 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.friend
+
+import org.chewing.v1.model.User
 
 class Friend private constructor(
     val friend: User,

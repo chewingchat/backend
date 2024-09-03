@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.model.Friend
-import org.chewing.v1.model.FriendSearch
+import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.SortCriteria
 
 object FriendSortEngine {
@@ -16,15 +16,15 @@ object FriendSortEngine {
 
     private fun getFriendComparator(sortCriteria: SortCriteria): Comparator<Friend> {
         return when (sortCriteria) {
-            SortCriteria.NAME -> Comparator.comparing<Friend?, String?> { it.friend.name.firstName() }.thenComparing(
-                Comparator.comparing { it.friend.name.lastName() }
+            SortCriteria.NAME -> Comparator.comparing<Friend?, String?> { it.friend.name.lastName() }.thenComparing(
+                Comparator.comparing { it.friend.name.firstName() }
             )
 
             SortCriteria.FAVORITE -> Comparator.comparing<Friend?, Int?> {
                 if (it.isFavorite) 0 else 1
             }.thenComparing(
-                Comparator.comparing<Friend?, String?> { it.friend.name.firstName() }.thenComparing(
-                    Comparator.comparing { it.friend.name.lastName() }
+                Comparator.comparing<Friend?, String?> { it.friend.name.lastName() }.thenComparing(
+                    Comparator.comparing { it.friend.name.firstName() }
                 )
             )
 

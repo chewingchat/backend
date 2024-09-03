@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 interface UserJpaRepository : JpaRepository<UserJpaEntity, String> {
 
-    @Query("SELECT u FROM UserJpaEntity u JOIN FETCH u.statusEmoticon s WHERE u.id = :id")
+    @Query("SELECT u FROM UserJpaEntity u LEFT JOIN FETCH u.statusEmoticon s WHERE u.id = :id")
     fun findByIdWithStatusEmoticon(
         @Param("id") id: String
     ): Optional<UserJpaEntity>

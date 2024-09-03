@@ -1,4 +1,4 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.media
 
 class Video private constructor(private val videoUrl: String) : Media {
     companion object {
@@ -6,8 +6,8 @@ class Video private constructor(private val videoUrl: String) : Media {
 
         fun upload(category: VideoCategory, userId: String, fileName: String): Video {
             val path = when (category) {
-                VideoCategory.FEED -> "${DEFAULT_IMAGE_URL}/peed/$userId/${VideoType.UPLOAD}/$fileName"
-                VideoCategory.EMOTICON -> "${DEFAULT_IMAGE_URL}/emoticon/$userId/${VideoType.UPLOAD}/$fileName"
+                VideoCategory.FEED -> "$DEFAULT_IMAGE_URL/peed/$userId/${VideoType.UPLOAD}/$fileName"
+                VideoCategory.EMOTICON -> "$DEFAULT_IMAGE_URL/emoticon/$userId/${VideoType.UPLOAD}/$fileName"
             }
             return Video(path)
         }

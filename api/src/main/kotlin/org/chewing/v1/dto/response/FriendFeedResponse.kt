@@ -1,9 +1,6 @@
 package org.chewing.v1.dto.response
 
-import org.chewing.v1.model.Feed
-import org.chewing.v1.model.Friend
-import org.chewing.v1.model.FriendFeed
-import java.time.LocalDateTime
+import org.chewing.v1.model.friend.FriendFeed
 import java.time.format.DateTimeFormatter
 
 data class FriendFeedResponse(

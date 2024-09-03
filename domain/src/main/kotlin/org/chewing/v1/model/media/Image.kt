@@ -1,4 +1,4 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.media
 
 class Image private constructor(private val imageUrl: String) : Media {
     companion object {
@@ -6,18 +6,18 @@ class Image private constructor(private val imageUrl: String) : Media {
 
         fun generate(category: ImageCategory): Image {
             val path = when (category) {
-                ImageCategory.USER_PROFILE -> "${DEFAULT_IMAGE_URL}/user/${ImageType.BASIC}.png"
-                ImageCategory.FEED -> "${DEFAULT_IMAGE_URL}/peed/${ImageType.BASIC}.png"
-                ImageCategory.EMOTICON -> "${DEFAULT_IMAGE_URL}/emoticon/${ImageType.BASIC}.png"
+                ImageCategory.USER_PROFILE -> "$DEFAULT_IMAGE_URL/user/${ImageType.BASIC}.png"
+                ImageCategory.FEED -> "$DEFAULT_IMAGE_URL/peed/${ImageType.BASIC}.png"
+                ImageCategory.EMOTICON -> "$DEFAULT_IMAGE_URL/emoticon/${ImageType.BASIC}.png"
             }
             return Image(path)
         }
 
         fun upload(category: ImageCategory, userId: String, fileName: String): Image {
             val path = when (category) {
-                ImageCategory.USER_PROFILE -> "${DEFAULT_IMAGE_URL}/user/$userId/${ImageType.UPLOAD}/$fileName"
-                ImageCategory.FEED -> "${DEFAULT_IMAGE_URL}/peed/$userId/${ImageType.UPLOAD}/$fileName"
-                ImageCategory.EMOTICON -> "${DEFAULT_IMAGE_URL}/emoticon/$userId/${ImageType.UPLOAD}/$fileName"
+                ImageCategory.USER_PROFILE -> "$DEFAULT_IMAGE_URL/user/$userId/${ImageType.UPLOAD}/$fileName"
+                ImageCategory.FEED -> "$DEFAULT_IMAGE_URL/peed/$userId/${ImageType.UPLOAD}/$fileName"
+                ImageCategory.EMOTICON -> "$DEFAULT_IMAGE_URL/emoticon/$userId/${ImageType.UPLOAD}/$fileName"
             }
             return Image(path)
         }

@@ -2,8 +2,8 @@ package org.chewing.v1.service
 
 import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.friend.FriendSortEngine
-import org.chewing.v1.model.Friend
-import org.chewing.v1.model.FriendSearch
+import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Service

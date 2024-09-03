@@ -2,11 +2,9 @@ package org.chewing.v1.jpaentity.feed
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
-import org.chewing.v1.model.Feed
-import org.chewing.v1.model.Friend
-import org.chewing.v1.model.User
+import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.friend.Friend
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 

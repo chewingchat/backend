@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response
 
-import org.chewing.v1.model.FriendSearch
+import org.chewing.v1.model.friend.FriendSearch
 
 data class FriendSearchHistoryResponse(
     val keywords: List<SearchHistoryResponse>

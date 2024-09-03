@@ -9,7 +9,9 @@ enum class ErrorCode(
     val message: String
 ) {
     // Common
-    INTERNAL_SERVER_ERROR("COMMON_001", "Internal Server Error"),
+    PATH_WRONG("COMMON_001", "잘못된 메세드입니다."),
+    VARIABLE_WRONG("COMMON_002", "요청 변수가 잘못되었습니다."),
+    INTERNAL_SERVER_ERROR("COMMON_003", "Internal Server Error"),
     FILE_CONVERT_FAILED("FILE_001", "파일 변환 실패"),
     FILE_NAME_COULD_NOT_EMPTY("FILE_002", "파일 이름 없음"),
     USER_NOT_FOUND("USER_001", "회원을 찾을 수 없음."),

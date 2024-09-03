@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response
 
-import org.chewing.v1.model.FeedDetail
+import org.chewing.v1.model.feed.FeedDetail
 
 data class FeedDetailResponse(
     val index: Int,

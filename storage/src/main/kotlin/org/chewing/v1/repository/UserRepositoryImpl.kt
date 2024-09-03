@@ -5,7 +5,7 @@ import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jparepository.AuthJpaRepository
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
-import org.chewing.v1.model.FriendSearch
+import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Repository
 

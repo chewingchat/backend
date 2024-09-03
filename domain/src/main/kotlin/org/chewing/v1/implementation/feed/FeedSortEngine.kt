@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.feed
 
-import org.chewing.v1.model.FeedDetail
+import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.SortCriteria
 
 object FeedSortEngine {

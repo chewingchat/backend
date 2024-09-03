@@ -1,7 +1,10 @@
 package org.chewing.v1.jpaentity.feed
 
 import jakarta.persistence.*
-import org.chewing.v1.model.*
+import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.media.Video
 import java.util.*
 
 @Entity

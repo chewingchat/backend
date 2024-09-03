@@ -97,7 +97,7 @@ class FriendController(
         return ResponseHelper.successOnly()
     }
 
-    @GetMapping("/{friendId}")
+    @GetMapping("/detail/{friendId}")
     fun getFriendDetail(
         @RequestHeader("userId") userId: String,
         @PathVariable("friendId") friendId: String

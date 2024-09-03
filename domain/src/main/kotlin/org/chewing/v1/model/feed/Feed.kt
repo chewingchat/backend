@@ -1,5 +1,6 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.feed
 
+import org.chewing.v1.model.feed.FeedDetail
 import java.time.LocalDateTime
 
 class Feed private constructor(

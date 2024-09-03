@@ -1,4 +1,4 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.media
 
 
 enum class MediaType {

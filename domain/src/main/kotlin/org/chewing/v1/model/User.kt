@@ -1,7 +1,7 @@
 package org.chewing.v1.model
 
-import java.time.LocalDateTime
-import java.util.*
+import org.chewing.v1.model.emoticon.Emoticon
+import org.chewing.v1.model.media.Image
 
 class User private constructor(
     val userId: UserId,

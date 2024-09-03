@@ -3,7 +3,7 @@ package org.chewing.v1.repository
 import org.chewing.v1.jpaentity.user.UserFeedId
 import org.chewing.v1.jparepository.FeedJpaRepository
 import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
-import org.chewing.v1.model.Feed
+import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Repository
 
