@@ -30,6 +30,15 @@ class UserReader(
         }
     }
 
+    fun readUserWithStatus(userId: User.UserId): User {
+        val user = userRepository.readUserWithStatus(userId)
+        if (user != null) {
+            return user
+        } else {
+            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        }
+    }
+
     fun readSearchHistory(userId: User.UserId): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
     }

@@ -44,8 +44,13 @@ class FriendJpaEntity(
         )
     }
 
-    fun toUser(): User {
-        return user.toUser()
+    fun toFriendWithStatus(): Friend {
+        return Friend.of(
+            friend = friend.toUserWithStatus(),
+            favorite = favorite,
+            friendFirstName = friendFirstName,
+            friendLastName = friendLastName
+        )
     }
 
     companion object {

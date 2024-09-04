@@ -16,11 +16,14 @@ class UserRepositoryImpl(
     private val friendSearchJpaRepository: FriendSearchJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: User.UserId): User? {
+        val userEntity = userJpaRepository.findById(userId.value())
+        return userEntity.map { it.toUser() }.orElse(null)
+    }
+
+    override fun readUserWithStatus(userId: User.UserId): User? {
         val userEntity = userJpaRepository.findByIdWithStatusEmoticon(userId.value())
         return userEntity.map { it.toUserWithStatus() }.orElse(null)
     }
-
-
     override fun remove(userId: User.UserId): User.UserId? {
         userJpaRepository.deleteById(userId.value())
         return userId

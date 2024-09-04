@@ -12,8 +12,8 @@ class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
     private val feedLikesRepository: UserFeedLikesJpaRepository
 ) : FeedRepository {
-    override fun readFeed(feedId: Feed.FeedId): Feed? {
-        return feedJpaRepository.findById(feedId.value()).map { it.toFeed() }.orElse(null)
+    override fun readFeedWithDetails(feedId: Feed.FeedId): Feed? {
+        return feedJpaRepository.findByIdWithDetails(feedId.value()).map { it.toFeedWithDetails() }.orElse(null)
     }
 
     override fun checkFeedLike(feedId: Feed.FeedId, userId: User.UserId): Boolean {
@@ -21,8 +21,8 @@ class FeedRepositoryImpl(
         return feedLikesRepository.existsById(userFeedId)
     }
 
-    override fun readUserFeed(userId: User.UserId): List<Feed> {
-        return feedJpaRepository.findAllByWriterId(userId.value()).map { it.toFeed() }
+    override fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
+        return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }
 
     override fun checkFeedsLike(feedIds: List<Feed.FeedId>, userId: User.UserId): Map<Feed.FeedId, Boolean> {

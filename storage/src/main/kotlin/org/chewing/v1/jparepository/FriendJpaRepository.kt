@@ -15,7 +15,7 @@ interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> {
         LEFT JOIN FETCH u.statusEmoticon 
         WHERE f.id.userId = :userId
     """)
-    fun findAllByUserId(@Param("userId") userId: String): List<FriendJpaEntity>
+    fun findAllByUserIdWithStatus(@Param("userId") userId: String): List<FriendJpaEntity>
 
     fun deleteByUserIdAndFriendId(userId: String, friendId: String)
 
@@ -26,10 +26,22 @@ interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> {
         LEFT JOIN FETCH fu.statusEmoticon
         WHERE f.id.userId = :userId AND f.id.friendId = :friendId
     """)
-    fun findByUserIdAndFriendId(
+    fun findByUserIdAndFriendIdWithStatus(
         @Param("userId") userId: String,
         @Param("friendId") friendId: String
     ): FriendJpaEntity?
 
     fun existsByUserIdAndFriendId(userId: String, friendId: String): Boolean
+
+    @Query("""
+        SELECT f 
+        FROM FriendJpaEntity f 
+        JOIN FETCH f.friend fu 
+        WHERE f.id.userId = :userId AND f.id.friendId = :friendId
+    """)
+    fun findByUserIdAndFriendId(
+        @Param("userId") userId: String,
+        @Param("friendId") friendId: String
+    ): FriendJpaEntity?
+
 }

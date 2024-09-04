@@ -42,8 +42,8 @@ class FriendService(
     }
 
     fun getFriends(userId: User.UserId, sort: SortCriteria): Pair<User, List<Friend>> {
-        val friends = friendReader.readFriends(userId)
-        val user = userReader.readUserById(userId)
+        val friends = friendReader.readFriendsWithStatus(userId)
+        val user = userReader.readUserWithStatus(userId)
         return Pair(user, FriendSortEngine.sortFriends(friends, sort))
     }
 
@@ -65,8 +65,8 @@ class FriendService(
     }
 
     fun getFriendDetail(userId: User.UserId, friendId: User.UserId): Pair<Friend, List<FriendFeed>> {
-        val friend = friendReader.readFriend(userId, friendId)
-        val feeds = feedReader.readUserFeed(friendId)
+        val friend = friendReader.readFriendWithStatus(userId, friendId)
+        val feeds = feedReader.readFeedsWithDetails(friendId)
         val likedFeedIds = feedChecker.checkFeedsLike(feeds.map { it.feedId }, userId)
         val friendsFeed = feeds.map { feed ->
             val sortedFeedDetails = FeedSortEngine.sortFeedDetails(feed.feedDetails, SortCriteria.INDEX)

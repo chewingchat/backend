@@ -48,7 +48,7 @@ class UserJpaEntity(
                 user.status.statusMessage,
                 user.name.firstName(),
                 user.name.lastName(),
-                null,
+                EmoticonJpaEntity.fromEmoticon(user.status.emoticon),
                 user.birth
             )
         }

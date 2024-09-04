@@ -14,7 +14,7 @@ class FriendSearchEngine(
     private val userReader: UserReader
 ) {
     fun searchFriends(userId: User.UserId, keyword: String): List<Friend> {
-        val friends = friendReader.readFriends(userId)
+        val friends = friendReader.readFriendsWithStatus(userId)
         return filterFriendsByKeyword(friends, cleanKeyword(keyword))
     }
 

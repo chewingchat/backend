@@ -7,6 +7,7 @@ import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.FriendFeed
 import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.User
+import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,7 +16,7 @@ class FriendFeedService(
     private val feedChecker: FeedChecker
 ) {
     fun getFriendFeed(userId: User.UserId, feedId: Feed.FeedId): FriendFeed {
-        val feed = feedReader.readFeed(feedId)
+        val feed = feedReader.readFeedWithDetails(feedId)
         val sortedFeedDetails = FeedSortEngine.sortFeedDetails(feed.feedDetails, SortCriteria.INDEX)
         val updatedFeed = feed.updateFeedDetails(sortedFeedDetails)
         val isLiked = feedChecker.checkFeedLike(feedId, userId)

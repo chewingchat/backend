@@ -13,8 +13,8 @@ class FriendReader(
     private val friendRepository: FriendRepository,
     private val userRepository: UserRepository
 ) {
-    fun readFriends(userId: User.UserId): List<Friend> {
-        return friendRepository.readFriends(userId)
+    fun readFriendsWithStatus(userId: User.UserId): List<Friend> {
+        return friendRepository.readFriendsWithStatus(userId)
     }
 
     fun readFriend(userId: User.UserId, friendId: User.UserId): Friend {
@@ -27,5 +27,9 @@ class FriendReader(
 
     fun readFriendWithPhoneNumber(friendPhoneNumber: String): User {
         return userRepository.readUserByEmail(friendPhoneNumber) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
+    }
+
+    fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend {
+        return friendRepository.readFriendWithStatus(userId, friendId) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }
 }

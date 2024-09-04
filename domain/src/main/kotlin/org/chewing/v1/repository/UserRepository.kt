@@ -13,4 +13,5 @@ interface UserRepository {
     fun readUserByPhoneNumber(email: String): User?
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: User.UserId): List<FriendSearch>
+    fun readUserWithStatus(userId: User.UserId): User?
 }

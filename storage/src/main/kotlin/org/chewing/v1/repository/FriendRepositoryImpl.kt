@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository
 class FriendRepositoryImpl(
     private val friendJpaRepository: FriendJpaRepository,
 ) : FriendRepository {
-    override fun readFriends(userId: User.UserId): List<Friend> {
-        val friends = friendJpaRepository.findAllByUserId(userId.value())
-        val friendList = friends.map { it.toFriend() }
+    override fun readFriendsWithStatus(userId: User.UserId): List<Friend> {
+        val friends = friendJpaRepository.findAllByUserIdWithStatus(userId.value())
+        val friendList = friends.map { it.toFriendWithStatus() }
         return friendList
     }
 
@@ -38,5 +38,13 @@ class FriendRepositoryImpl(
 
     override fun updateFriend(user: User, friend: Friend) {
         friendJpaRepository.save(FriendJpaEntity.fromFriend(user, friend))
+    }
+
+    override fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend? {
+        val friendEntity = friendJpaRepository.findByUserIdAndFriendIdWithStatus(
+            userId.value(),
+            friendId.value()
+        )
+        return friendEntity?.toFriend()
     }
 }

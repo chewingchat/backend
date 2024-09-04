@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component
 class FeedReader(
     private val feedRepository: FeedRepository,
 ) {
-    fun readFeed(feedId: Feed.FeedId): Feed {
-        val feed = feedRepository.readFeed(feedId)
+    fun readFeedWithDetails(feedId: Feed.FeedId): Feed {
+        val feed = feedRepository.readFeedWithDetails(feedId)
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
-    fun readUserFeed(userId: User.UserId): List<Feed> {
-        return feedRepository.readUserFeed(userId)
+    fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
+        return feedRepository.readFeedsWithDetails(userId)
     }
 }

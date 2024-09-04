@@ -52,6 +52,16 @@ class FeedJpaEntity(
             feedTopic = feedTopic,
             likes = likes,
             feedUploadTime = createdAt!!,
+            feedDetails = emptyList(),
+        )
+    }
+
+    fun toFeedWithDetails(): Feed {
+        return Feed.of(
+            feedId = feedId,
+            feedTopic = feedTopic,
+            likes = likes,
+            feedUploadTime = createdAt!!,
             feedDetails = feedDetails.map { it.toFeedDetail() },
         )
     }
