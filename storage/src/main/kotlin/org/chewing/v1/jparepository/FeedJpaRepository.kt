@@ -10,11 +10,12 @@ import java.util.*
 
 @Repository
 interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
-    @Query("SELECT f FROM FeedJpaEntity f LEFT JOIN FETCH f.feedDetails LEFT JOIN FETCH f.writer WHERE f.feedId = :feedId")
+    @Query("SELECT f FROM FeedJpaEntity f LEFT JOIN FETCH f.feedDetails d JOIN FETCH f.writer WHERE f.feedId = :feedId ORDER BY  d.index")
     fun findByIdWithDetails(
         @Param("feedId") feedId: String
     ): Optional<FeedJpaEntity>
-    @Query("SELECT f FROM FeedJpaEntity f LEFT JOIN FETCH f.feedDetails LEFT JOIN FETCH f.writer WHERE f.writer.id = :writerId")
+
+    @Query("SELECT f FROM FeedJpaEntity f LEFT JOIN FETCH f.feedDetails d JOIN FETCH f.writer WHERE f.writer.id = :writerId ORDER BY f.createdAt, d.index")
     fun findByWriterIdWithDetails(
         @Param("writerId") writerId: String
     ): List<FeedJpaEntity>

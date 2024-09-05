@@ -33,8 +33,4 @@ class Feed private constructor(
             return Feed(FeedId.of(feedId), feedTopic, likes, feedUploadTime, feedDetails)
         }
     }
-
-    fun updateFeedDetails(feedDetails: List<FeedDetail>): Feed {
-        return Feed(feedId, feedTopic, likes, feedUploadTime, feedDetails)
-    }
 }

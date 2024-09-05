@@ -8,6 +8,7 @@ import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
+import org.chewing.v1.service.FeedService
 import org.chewing.v1.service.FriendService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/friend")
 class FriendController(
     private val friendService: FriendService,
+    private val feedService: FeedService
 ) {
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")

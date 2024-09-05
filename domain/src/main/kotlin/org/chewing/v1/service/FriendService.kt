@@ -3,7 +3,6 @@ package org.chewing.v1.service
 import org.chewing.v1.implementation.*
 import org.chewing.v1.implementation.feed.FeedChecker
 import org.chewing.v1.implementation.feed.FeedReader
-import org.chewing.v1.implementation.feed.FeedSortEngine
 import org.chewing.v1.implementation.friend.*
 import org.chewing.v1.model.*
 import org.chewing.v1.model.friend.Friend
@@ -65,15 +64,22 @@ class FriendService(
     }
 
     fun getFriendDetail(userId: User.UserId, friendId: User.UserId): Pair<Friend, List<FriendFeed>> {
+        // 친구 정보를 읽어옵니다.
         val friend = friendReader.readFriendWithStatus(userId, friendId)
+
+        // 친구의 피드를 읽어옵니다.
         val feeds = feedReader.readFeedsWithDetails(friendId)
+
+        // 피드에 대한 좋아요 상태를 확인합니다.
         val likedFeedIds = feedChecker.checkFeedsLike(feeds.map { it.feedId }, userId)
+
+        // 피드 좋아요 상태를 추가합니다.
         val friendsFeed = feeds.map { feed ->
-            val sortedFeedDetails = FeedSortEngine.sortFeedDetails(feed.feedDetails, SortCriteria.INDEX)
-            val updatedFeed = feed.updateFeedDetails(sortedFeedDetails)
             val isLiked = likedFeedIds[feed.feedId] ?: false
-            FriendFeed.of(updatedFeed, isLiked)
+            FriendFeed.of(feed, isLiked)
         }
+
+        // 결과를 반환합니다.
         return Pair(friend, friendsFeed)
     }
 }

@@ -10,21 +10,10 @@ import org.springframework.stereotype.Component
 @Component
 class FriendSearchEngine(
     private val friendReader: FriendReader,
-    private val userAppender: UserAppender,
-    private val userReader: UserReader
 ) {
     fun searchFriends(userId: User.UserId, keyword: String): List<Friend> {
         val friends = friendReader.readFriendsWithStatus(userId)
         return filterFriendsByKeyword(friends, cleanKeyword(keyword))
-    }
-
-    fun appendSearchHistory(userId: User.UserId, search: FriendSearch) {
-        val user = userReader.readUserById(userId)
-        return userAppender.appendSearchHistory(user, search)
-    }
-
-    fun readFriendSearchHistory(userId: User.UserId): List<FriendSearch> {
-        return userReader.readSearchHistory(userId)
     }
 
     private fun cleanKeyword(keyword: String): String {
