@@ -22,6 +22,8 @@ enum class ErrorCode(
     IMAGE_UPLOAD_FAILED("IMAGE_001", "이미지 업로드 실패."),
     IMAGE_DELETE_FAILED("IMAGE_002", "이미지 삭제 실패"),
     FEED_NOT_FOUND("FEED_001", "피드를 찾을 수 없음."),
+    FEED_ALREADY_LIKED("FEED_002", "이미 공감한 피드입니다."),
+    FEED_ALREADY_UNLIKED("FEED_003", "이미 공감을 취소한 피드입니다."),
     ;
 
     companion object {

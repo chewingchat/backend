@@ -31,6 +31,18 @@ class User private constructor(
                 name = UserName.of(firstName, lastName)
             )
         }
+
+        fun empty(): User {
+            return User(
+                userId = UserId.empty(),
+                status = UserStatus.of("", Emoticon.empty()),
+                birth = "",
+                image = Image.empty(),
+                backgroundImage = Image.empty(),
+                name = UserName.empty()
+
+            )
+        }
     }
 
     class UserId private constructor(private val userId: String) {
@@ -62,6 +74,8 @@ class User private constructor(
             fun of(firstName: String, lastName: String): UserName {
                 return UserName(firstName, lastName)
             }
+
+            fun empty(): UserName = UserName("", "")
         }
     }
 

@@ -22,7 +22,7 @@ class SearchService(
     }
 
     fun addSearchFriendHistory(userId: User.UserId, search: FriendSearch) {
-        val user = userReader.readUserById(userId)
+        val user = userReader.readUser(userId)
         return userAppender.appendSearchHistory(user, search)
     }
 

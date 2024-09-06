@@ -23,6 +23,8 @@ class Image private constructor(private val imageUrl: String) : Media {
         }
 
         fun of(imagePath: String): Image = Image(imagePath)
+
+        fun empty(): Image = Image("")
     }
 
     enum class ImageType {

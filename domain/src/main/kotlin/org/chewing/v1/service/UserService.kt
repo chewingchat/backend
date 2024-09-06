@@ -16,7 +16,7 @@ class UserService(
 ) {
     @Transactional
     fun updateUserImage(file: File, userId: User.UserId): User.UserId {
-        val user: User = userReader.readUserById(userId)
+        val user: User = userReader.readUser(userId)
         val updatedUser: User = user.updateImage(file.name)
         imageProvider.removeImage(updatedUser.image.url)
         imageProvider.appendImage(file, updatedUser.image.url)

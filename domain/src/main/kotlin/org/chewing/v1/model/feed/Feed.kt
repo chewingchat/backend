@@ -1,6 +1,8 @@
 package org.chewing.v1.model.feed
 
+import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.FeedDetail
+import java.io.Writer
 import java.time.LocalDateTime
 
 class Feed private constructor(
@@ -9,6 +11,7 @@ class Feed private constructor(
     val likes: Int,
     val feedUploadTime: LocalDateTime,
     val feedDetails: List<FeedDetail>,
+    val writer: User
 ) {
     class FeedId private constructor(private val feedId: String) {
         fun value(): String {
@@ -29,8 +32,9 @@ class Feed private constructor(
             likes: Int,
             feedUploadTime: LocalDateTime,
             feedDetails: List<FeedDetail>,
+            writer: User
         ): Feed {
-            return Feed(FeedId.of(feedId), feedTopic, likes, feedUploadTime, feedDetails)
+            return Feed(FeedId.of(feedId), feedTopic, likes, feedUploadTime, feedDetails, writer)
         }
     }
 }

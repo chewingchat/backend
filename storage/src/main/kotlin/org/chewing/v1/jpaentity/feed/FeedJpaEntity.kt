@@ -3,6 +3,7 @@ package org.chewing.v1.jpaentity.feed
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.Friend
 import org.hibernate.annotations.DynamicInsert
@@ -35,13 +36,13 @@ class FeedJpaEntity(
     val writer: UserJpaEntity,
 ) : BaseEntity() {
     companion object {
-        fun fromFeed(feed: Feed, friend: Friend): FeedJpaEntity {
+        fun fromFeed(feed: Feed): FeedJpaEntity {
             return FeedJpaEntity(
                 feedId = feed.feedId.value(),
                 feedTopic = feed.feedTopic,
                 likes = feed.likes,
                 feedDetails = feed.feedDetails.map { FeedDetailJpaEntity.fromFeedDetail(it) },
-                writer = UserJpaEntity.fromUser(friend.friend)
+                writer = UserJpaEntity.fromUser(feed.writer)
             )
         }
     }
@@ -53,6 +54,7 @@ class FeedJpaEntity(
             likes = likes,
             feedUploadTime = createdAt!!,
             feedDetails = emptyList(),
+            writer = User.empty()
         )
     }
 
@@ -63,6 +65,7 @@ class FeedJpaEntity(
             likes = likes,
             feedUploadTime = createdAt!!,
             feedDetails = feedDetails.map { it.toFeedDetail() },
+            writer = writer.toUser()
         )
     }
 }

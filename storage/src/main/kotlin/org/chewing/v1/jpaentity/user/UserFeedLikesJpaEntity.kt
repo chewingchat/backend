@@ -29,11 +29,11 @@ class UserFeedLikesJpaEntity(
     val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
-        fun fromUserFeed(user: User, feed: Feed, friend: Friend): UserFeedLikesJpaEntity {
+        fun fromUserFeed(user: User, feed: Feed): UserFeedLikesJpaEntity {
             return UserFeedLikesJpaEntity(
                 id = UserFeedId(userId = user.userId.value(), feedId = feed.feedId.value()),
                 user = UserJpaEntity.fromUser(user),
-                feed = FeedJpaEntity.fromFeed(feed,friend)
+                feed = FeedJpaEntity.fromFeed(feed)
             )
         }
     }

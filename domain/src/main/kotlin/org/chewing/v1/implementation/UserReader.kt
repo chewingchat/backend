@@ -21,7 +21,7 @@ class UserReader(
      * @throws NotFoundException 사용자가 존재하지 않는 경우,
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
-    fun readUserById(userId: User.UserId): User {
+    fun readUser(userId: User.UserId): User {
         val user = userRepository.readUserById(userId)
         if (user != null) {
             return user
