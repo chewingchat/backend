@@ -27,6 +27,7 @@ class FeedDetailJpaEntity(
     companion object {
         fun fromFeedDetail(feedDetail: FeedDetail): FeedDetailJpaEntity {
             return FeedDetailJpaEntity(
+                feedDetailId = feedDetail.feedDetailId,
                 index = feedDetail.index,
                 feedDetailUrl = feedDetail.media.url,
                 feedDetailType = feedDetail.media.type

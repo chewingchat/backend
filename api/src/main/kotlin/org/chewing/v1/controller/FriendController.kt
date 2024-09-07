@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/friend")
 class FriendController(
     private val friendService: FriendService,
-    private val feedService: FeedService
 ) {
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")

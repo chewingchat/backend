@@ -21,7 +21,4 @@ interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun findByWriterIdWithDetails(
         @Param("writerId") writerId: String
     ): List<FeedJpaEntity>
-
-    @Query("SELECT f FROM FeedJpaEntity f JOIN FETCH f.writer WHERE f.feedId = :feedId")
-    fun findByIdWithLock(feedId: String): Optional<FeedJpaEntity>
 }

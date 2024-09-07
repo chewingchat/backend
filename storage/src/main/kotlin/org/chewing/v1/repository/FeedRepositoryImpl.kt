@@ -30,10 +30,6 @@ class FeedRepositoryImpl(
         return feedJpaRepository.findById(feedId.value()).map { it.toFeed() }.orElse(null)
     }
 
-    override fun readFeedWithLock(feedId: Feed.FeedId): Feed? {
-        return feedJpaRepository.findByIdWithLock(feedId.value()).map { it.toFeed() }.orElse(null)
-    }
-
     override fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
         return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }

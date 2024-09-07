@@ -15,14 +15,14 @@ class FeedProcessor(
 ) {
     @Transactional
     fun processFeedLikes(feedId: Feed.FeedId, userId: User.UserId) {
-        val feed = feedReader.readFeedWithLock(feedId)
+        val feed = feedReader.readFeedWithDetails(feedId)
         val user = userReader.readUser(userId)
         feedAppender.appendFeedLikes(feed.appendLikes(), user)
     }
 
     @Transactional
     fun processFeedUnLikes(feedId: Feed.FeedId, userId: User.UserId) {
-        val feed = feedReader.readFeedWithLock(feedId)
+        val feed = feedReader.readFeedWithDetails(feedId)
         val user = userReader.readUser(userId)
         feedRemover.removeFeedLikes(feed.removeLikes(), user)
     }
