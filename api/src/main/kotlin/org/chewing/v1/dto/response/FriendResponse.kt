@@ -1,27 +1,27 @@
 package org.chewing.v1.dto.response
 
-import org.chewing.v1.model.Friend
+import org.chewing.v1.model.friend.Friend
 
 data class FriendResponse(
     val friendId: String,
-    val friendName: String,
+    val friendFirstName: String,
+    val friendLastName: String,
     val friendImageUrl: String,
+    val isFavorite: Boolean,
     val friendStatusMessage: String,
-    val friendIsFavorite: Boolean,
+    val friendStatusEmoticon: String,
 ) {
     companion object {
-        private fun of(friend: Friend): FriendResponse {
+        fun of(friend: Friend): FriendResponse {
             return FriendResponse(
                 friendId = friend.friend.userId.value(),
-                friendName = friend.friendName,
-                friendImageUrl = friend.friend.image.value(),
-                friendStatusMessage = friend.friend.statusMessage,
-                friendIsFavorite = friend.favorite,
+                friendFirstName = friend.friendName.firstName(),
+                friendLastName = friend.friendName.lastName(),
+                friendImageUrl = friend.friend.image.url,
+                friendStatusMessage = friend.friend.status.statusMessage,
+                isFavorite = friend.isFavorite,
+                friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl
             )
-        }
-
-        fun ofList(friends: List<Friend>): List<FriendResponse> {
-            return friends.map { of(it) }
         }
     }
 }

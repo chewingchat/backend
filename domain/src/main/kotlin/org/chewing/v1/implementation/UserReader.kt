@@ -2,6 +2,7 @@ package org.chewing.v1.implementation
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
@@ -20,7 +21,7 @@ class UserReader(
      * @throws NotFoundException 사용자가 존재하지 않는 경우,
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
-    fun readUserById(userId: User.UserId): User {
+    fun readUser(userId: User.UserId): User {
         val user = userRepository.readUserById(userId)
         if (user != null) {
             return user
@@ -28,12 +29,17 @@ class UserReader(
             throw NotFoundException(ErrorCode.USER_NOT_FOUND)
         }
     }
-    fun readUserByKeyword(keyword: String): User {
-        val user = userRepository.readUserByKeyword(keyword)
+
+    fun readUserWithStatus(userId: User.UserId): User {
+        val user = userRepository.readUserWithStatus(userId)
         if (user != null) {
             return user
         } else {
             throw NotFoundException(ErrorCode.USER_NOT_FOUND)
         }
+    }
+
+    fun readSearchHistory(userId: User.UserId): List<FriendSearch> {
+        return userRepository.readSearchHistory(userId)
     }
 }

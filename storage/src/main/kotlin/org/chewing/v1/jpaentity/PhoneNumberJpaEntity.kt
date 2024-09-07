@@ -4,7 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.chewing.v1.common.BaseEntity
+import org.chewing.v1.jpaentity.common.BaseEntity
 import java.util.*
 
 @Entity

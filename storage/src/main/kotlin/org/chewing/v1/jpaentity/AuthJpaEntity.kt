@@ -1,9 +1,9 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
+import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import java.sql.Timestamp
 import java.util.*
 
 @Entity

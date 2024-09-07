@@ -9,8 +9,13 @@ import java.util.*
 @Repository
 interface AuthJpaRepository: JpaRepository<AuthJpaEntity, String> {
 
-    @Query("SELECT a FROM AuthJpaEntity a JOIN FETCH a.phoneNumber p JOIN FETCH a.email e JOIN FETCH a.user u WHERE p.phoneNumber = :keyword OR e.email = :keyword")
-    fun findByPhoneNumberOrEmail(
-        @Param("keyword") keyword: String
+    @Query("SELECT a FROM AuthJpaEntity a JOIN FETCH a.email e JOIN FETCH a.user u WHERE e.email = :email")
+    fun findByEmail(
+        @Param("email") email: String
+    ): Optional<AuthJpaEntity>
+
+    @Query("SELECT a FROM AuthJpaEntity a JOIN FETCH a.phoneNumber p JOIN FETCH a.user u WHERE p.phoneNumber = :phoneNumber")
+    fun findByPhoneNumber(
+        @Param("phoneNumber") phoneNumber: String
     ): Optional<AuthJpaEntity>
 }

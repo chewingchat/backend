@@ -16,21 +16,10 @@ class UserService(
 ) {
     @Transactional
     fun updateUserImage(file: File, userId: User.UserId): User.UserId {
-        val user: User = userReader.readUserById(userId)
+        val user: User = userReader.readUser(userId)
         val updatedUser: User = user.updateImage(file.name)
-        imageProvider.removeImage(updatedUser.image.value())
-        imageProvider.appendImage(file, updatedUser.image.value())
-        return userUpdater.updateUser(updatedUser)
-    }
-
-    fun searchUser(keyword: String): User {
-        return userReader.readUserByKeyword(keyword)
-    }
-
-    @Transactional
-    fun changeStatusMessage(userId: User.UserId, statusMessage: String): User.UserId {
-        val user: User = userReader.readUserById(userId)
-        val updatedUser: User = user.updateStatusMessage(statusMessage)
+        imageProvider.removeImage(updatedUser.image.url)
+        imageProvider.appendImage(file, updatedUser.image.url)
         return userUpdater.updateUser(updatedUser)
     }
 }
