@@ -22,7 +22,7 @@ class UserFeedLikesJpaEntity(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("feedId")
-    @JoinColumn(name = "feed_id", insertable = false, updatable = false)
+    @JoinColumn(name = "feed_id")
     val feed: FeedJpaEntity,
 
     @Column(name = "like_time", nullable = false)

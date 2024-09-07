@@ -4,7 +4,7 @@ import org.chewing.v1.model.feed.Feed
 
 class LikesRequest {
     data class AddLikesRequest(
-        val feedId: String
+        val feedId: String = ""
     ) {
         fun toFeedId(): Feed.FeedId {
             return Feed.FeedId.of(feedId)
@@ -12,7 +12,7 @@ class LikesRequest {
     }
 
     data class DeleteLikesRequest(
-        val feedId: String
+        val feedId: String = ""
     ) {
         fun toFeedId(): Feed.FeedId {
             return Feed.FeedId.of(feedId)

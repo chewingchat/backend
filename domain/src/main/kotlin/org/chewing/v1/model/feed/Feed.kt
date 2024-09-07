@@ -11,7 +11,8 @@ class Feed private constructor(
     val likes: Int,
     val feedUploadTime: LocalDateTime,
     val feedDetails: List<FeedDetail>,
-    val writer: User
+    val writer: User,
+    val version: Long = 0
 ) {
     class FeedId private constructor(private val feedId: String) {
         fun value(): String {
@@ -32,9 +33,18 @@ class Feed private constructor(
             likes: Int,
             feedUploadTime: LocalDateTime,
             feedDetails: List<FeedDetail>,
-            writer: User
+            writer: User,
+            version: Long
         ): Feed {
-            return Feed(FeedId.of(feedId), feedTopic, likes, feedUploadTime, feedDetails, writer)
+            return Feed(FeedId.of(feedId), feedTopic, likes, feedUploadTime, feedDetails, writer, version)
         }
+    }
+
+    fun appendLikes(): Feed {
+        return Feed(FeedId.of(feedId.value()), feedTopic, likes + 1, feedUploadTime, feedDetails, writer, version)
+    }
+
+    fun removeLikes(): Feed {
+        return Feed(FeedId.of(feedId.value()), feedTopic, likes - 1, feedUploadTime, feedDetails, writer, version)
     }
 }

@@ -1,6 +1,7 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.feed.FeedCommentJpaEntity
+import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jpaentity.user.UserFeedId
 import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
 import org.chewing.v1.jparepository.FeedCommentJpaRepository
@@ -29,6 +30,10 @@ class FeedRepositoryImpl(
         return feedJpaRepository.findById(feedId.value()).map { it.toFeed() }.orElse(null)
     }
 
+    override fun readFeedWithLock(feedId: Feed.FeedId): Feed? {
+        return feedJpaRepository.findByIdWithLock(feedId.value()).map { it.toFeed() }.orElse(null)
+    }
+
     override fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
         return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }
@@ -43,11 +48,18 @@ class FeedRepositoryImpl(
         feedCommentsRepository.save(FeedCommentJpaEntity.fromFeedComment(comment, user, feed))
     }
 
-    override fun addFeedLikes(feed: Feed, user: User) {
-        feedLikesRepository.save(UserFeedLikesJpaEntity.fromUserFeed(user, feed))
+    override fun appendFeedLikes(feed: Feed, user: User) {
+        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(user, feed)
+        feedLikesRepository.saveAndFlush(userFeedJpaEntity)
+        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 
-    override fun deleteFeedLikes(feed: Feed, user: User) {
+    override fun removeFeedLikes(feed: Feed, user: User) {
         feedLikesRepository.deleteById(UserFeedId(user.userId.value(), feed.feedId.value()))
+        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
+    }
+
+    override fun updateFeed(feed: Feed) {
+        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 }

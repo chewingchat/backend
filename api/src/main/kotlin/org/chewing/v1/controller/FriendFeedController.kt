@@ -48,7 +48,7 @@ class FriendFeedController(
         return ResponseHelper.successCreate()
     }
 
-    @PostMapping("/like")
+    @DeleteMapping("/like")
     fun deleteFeedLikes(
         @RequestHeader("userId") userId: String,
         @RequestBody request: LikesRequest.DeleteLikesRequest

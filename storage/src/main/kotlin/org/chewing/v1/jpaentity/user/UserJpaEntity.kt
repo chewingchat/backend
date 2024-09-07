@@ -7,6 +7,7 @@ import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
+import java.util.*
 
 @DynamicInsert
 @Entity
@@ -14,7 +15,7 @@ import org.hibernate.annotations.DynamicInsert
 class UserJpaEntity(
     @Id
     @Column(name = "user_id")
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
 
     @Column(name = "picture_url", nullable = false)
     val pictureUrl: String,

@@ -24,7 +24,7 @@ class FriendRequest(
         val favorite: Boolean
     )
     data class Delete(
-        val friendId: String
+        val friendId: String = ""
     )
     data class AddWithPhone(
         val phone: String,

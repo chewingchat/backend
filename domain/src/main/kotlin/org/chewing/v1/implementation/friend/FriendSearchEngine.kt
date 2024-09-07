@@ -23,12 +23,14 @@ class FriendSearchEngine(
     private fun filterFriendsByKeyword(friends: List<Friend>, keyword: String): List<Friend> {
         return friends.filter { friend ->
             // 성과 이름을 두 가지 순서로 조합
-            val firstNameLastName = "${friend.friendName.firstName()} ${friend.friendName.lastName()}"
-            val lastNameFirstName = "${friend.friendName.lastName()} ${friend.friendName.firstName()}"
+            val firstNameLastNameSplit = "${friend.friendName.firstName()} ${friend.friendName.lastName()}"
+            val lastNameFirstNameSplit = "${friend.friendName.lastName()} ${friend.friendName.firstName()}"
+            val firstNameLastName = "${friend.friendName.firstName()}${friend.friendName.lastName()}"
 
             // 두 가지 조합과 검색 키워드를 비교
-            firstNameLastName.contains(keyword, ignoreCase = true) ||
-                    lastNameFirstName.contains(keyword, ignoreCase = true)
+            firstNameLastNameSplit.contains(keyword, ignoreCase = true) ||
+                    lastNameFirstNameSplit.contains(keyword, ignoreCase = true) ||
+                    firstNameLastName.contains(keyword, ignoreCase = true)
         }
     }
 }

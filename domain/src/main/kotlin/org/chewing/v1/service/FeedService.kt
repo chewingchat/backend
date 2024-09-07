@@ -1,9 +1,7 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.UserReader
-import org.chewing.v1.implementation.feed.FeedAppender
-import org.chewing.v1.implementation.feed.FeedChecker
-import org.chewing.v1.implementation.feed.FeedReader
+import org.chewing.v1.implementation.feed.*
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.FriendFeed
 import org.chewing.v1.model.User
@@ -14,7 +12,8 @@ class FeedService(
     private val feedReader: FeedReader,
     private val feedChecker: FeedChecker,
     private val userReader: UserReader,
-    private val feedAppender: FeedAppender
+    private val feedAppender: FeedAppender,
+    private val feedLocker: FeedLocker
 ) {
     fun getFriendFeed(userId: User.UserId, feedId: Feed.FeedId): FriendFeed {
         val feed = feedReader.readFeedWithDetails(feedId)
@@ -25,20 +24,16 @@ class FeedService(
     fun addFeedComment(userId: User.UserId, feedId: Feed.FeedId, comment: String) {
         val feed = feedReader.readFeed(feedId)
         val user = userReader.readUser(userId)
-        feedAppender.addFeedComment(feed, user, comment)
+        feedAppender.appendFeedComment(feed, user, comment)
     }
 
     fun addFeedLikes(userId: User.UserId, feedId: Feed.FeedId) {
-        val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
         feedChecker.isAlreadyLiked(feedId, userId)
-        feedAppender.addFeedLikes(feed, user)
+        feedLocker.lockFeedLikes(feedId, userId)
     }
 
     fun deleteFeedLikes(userId: User.UserId, feedId: Feed.FeedId) {
-        val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
         feedChecker.isAlreadyUnliked(feedId, userId)
-        feedAppender.deleteFeedLikes(feed, user)
+        feedLocker.lockFeedUnLikes(feedId, userId)
     }
 }

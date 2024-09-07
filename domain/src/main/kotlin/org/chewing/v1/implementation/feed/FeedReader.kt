@@ -20,6 +20,10 @@ class FeedReader(
         val feed = feedRepository.readFeed(feedId)
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
+    fun readFeedWithLock(feedId: Feed.FeedId): Feed {
+        val feed = feedRepository.readFeedWithLock(feedId)
+        return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
+    }
     fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
         return feedRepository.readFeedsWithDetails(userId)
     }
