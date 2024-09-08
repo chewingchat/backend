@@ -5,6 +5,7 @@ import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.feed.FeedComment
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.MediaType
@@ -39,5 +40,14 @@ class FeedCommentJpaEntity(
                 feed = FeedJpaEntity.fromFeed(feed)
             )
         }
+    }
+
+    fun toFeedComment(): FeedComment {
+        return FeedComment(
+            commentId = FeedComment.CommentId.of(feedCommentId),
+            comment = comment,
+            writer = writer.toUser(),
+            createAt = createdAt!!
+        )
     }
 }

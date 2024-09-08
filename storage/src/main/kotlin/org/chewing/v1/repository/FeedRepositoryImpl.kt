@@ -9,6 +9,7 @@ import org.chewing.v1.jparepository.FeedJpaRepository
 import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.User
+import org.chewing.v1.model.feed.FeedComment
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -30,6 +31,10 @@ class FeedRepositoryImpl(
         return feedJpaRepository.findById(feedId.value()).map { it.toFeed() }.orElse(null)
     }
 
+    override fun readFeedWithWriter(feedId: Feed.FeedId): Feed? {
+        return feedJpaRepository.findByIdWithWriter(feedId.value()).map { it.toFeedWithWriter() }.orElse(null)
+    }
+
     override fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
         return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }
@@ -42,6 +47,14 @@ class FeedRepositoryImpl(
 
     override fun addFeedComment(feed: Feed, user: User, comment: String) {
         feedCommentsRepository.save(FeedCommentJpaEntity.fromFeedComment(comment, user, feed))
+    }
+
+    override fun readFeedComment(feedId: Feed.FeedId): List<FeedComment> {
+        return feedCommentsRepository.findAllByFeedIdWithWriter(feedId.value()).map { it.toFeedComment() }
+    }
+
+    override fun readFeedComments(commentIds: List<FeedComment.CommentId>): List<FeedComment> {
+        return feedCommentsRepository.findAllByIdsWithWriter(commentIds.map { it.value() }).map { it.toFeedComment() }
     }
 
     override fun appendFeedLikes(feed: Feed, user: User) {
@@ -57,5 +70,12 @@ class FeedRepositoryImpl(
 
     override fun updateFeed(feed: Feed) {
         feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
+    }
+
+    override fun removeFeed(feed: Feed) {
+        feedJpaRepository.deleteById(feed.feedId.value())
+    }
+    override fun removeFeedComments(commentIds: List<FeedComment.CommentId>) {
+        feedCommentsRepository.deleteAllByFeedCommentIdIn(commentIds.map { it.value() })
     }
 }

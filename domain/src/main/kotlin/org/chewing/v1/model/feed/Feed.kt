@@ -12,7 +12,9 @@ class Feed private constructor(
     val feedUploadTime: LocalDateTime,
     val feedDetails: List<FeedDetail>,
     val writer: User,
-    val version: Long = 0
+    val version: Long = 0,
+    val isFeedOwner: Boolean = false,
+    val isLiked: Boolean = false,
 ) {
     class FeedId private constructor(private val feedId: String) {
         fun value(): String {
@@ -46,5 +48,9 @@ class Feed private constructor(
 
     fun removeLikes(): Feed {
         return Feed(FeedId.of(feedId.value()), feedTopic, likes - 1, feedUploadTime, feedDetails, writer, version)
+    }
+
+    fun updateFeedRelation(userId: User.UserId, isLiked: Boolean): Feed {
+        return Feed(FeedId.of(feedId.value()), feedTopic, likes, feedUploadTime, feedDetails, writer, version, userId.value().equals(writer.userId.value()), isLiked)
     }
 }
