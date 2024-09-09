@@ -14,8 +14,8 @@ object FeedValidator {
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
-    fun isCommentOwner(comment: List<FeedComment>, user: User) {
-        if (comment.any { it.writer.userId != user.userId }) {
+    fun isCommentOwner(comment: FeedComment, user: User) {
+        if (comment.writer.userId != user.userId) {
             throw ConflictException(ErrorCode.COMMENT_IS_NOT_OWNED)
         }
     }

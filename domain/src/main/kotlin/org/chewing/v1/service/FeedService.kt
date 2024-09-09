@@ -13,20 +13,21 @@ class FeedService(
     private val feedReader: FeedReader,
     private val feedChecker: FeedChecker,
     private val userReader: UserReader,
-    private val feedAppender: FeedAppender,
     private val feedLocker: FeedLocker,
     private val feedRemover: FeedRemover
 ) {
-    fun getFeed(userId: User.UserId, feedId: Feed.FeedId): FriendFeed {
+    fun getFriendFeed(userId: User.UserId, feedId: Feed.FeedId): FriendFeed {
         val feed = feedReader.readFeedWithDetails(feedId)
         val isLiked = feedChecker.checkFeedLike(feedId, userId)
         return FriendFeed.of(feed, isLiked)
     }
 
+    fun getFeed(userId: User.UserId, feedId: Feed.FeedId): Feed {
+        return feedReader.readFeedWithDetails(feedId)
+    }
+
     fun addFeedComment(userId: User.UserId, feedId: Feed.FeedId, comment: String) {
-        val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
-        feedAppender.appendFeedComment(feed, user, comment)
+        feedLocker.lockFeedComments(userId, feedId, comment)
     }
 
     fun getFeedComment(userId: User.UserId, feedId: Feed.FeedId): List<FeedComment> {
@@ -36,11 +37,24 @@ class FeedService(
         return feedReader.readFeedComment(feedId)
     }
 
+    fun getCommentFeed(userId: User.UserId): List<Pair<Feed, List<FeedComment>>> {
+        val feedCommentsWithFeed = feedReader.readUserCommentWithFeed(userId)
+        return feedCommentsWithFeed
+            .groupBy { it.first.feedId.value() }  // feedId를 기준으로 그룹화
+            .map { (feedId, feedCommentPairs) ->
+                val feed = feedCommentPairs.first().first  // 각 그룹의 첫 번째 피드
+                val comments = feedCommentPairs.map { it.second }  // 해당 피드에 연결된 모든 댓글
+                feed to comments
+            }
+    }
+
     fun deleteFeedComment(userId: User.UserId, commentIds: List<FeedComment.CommentId>) {
-        val comment = feedReader.readFeedComments(commentIds)
+        val commentsWithFeed = feedReader.readFeedsCommentWithFeed(commentIds)
         val user = userReader.readUser(userId)
-        FeedValidator.isCommentOwner(comment, user)
-        feedRemover.removeFeedComments(commentIds)
+        commentsWithFeed.forEach { (comment, feed) ->
+            FeedValidator.isCommentOwner(comment, user)
+            feedLocker.lockFeedUnComments(feed.feedId, comment.commentId)
+        }
     }
 
     fun addFeedLikes(userId: User.UserId, feedId: Feed.FeedId) {

@@ -31,8 +31,11 @@ class FeedReader(
     fun readFeedComment(feedId: Feed.FeedId): List<FeedComment> {
         return feedRepository.readFeedComment(feedId)
     }
+    fun readUserCommentWithFeed(userId: User.UserId): List<Pair<Feed,FeedComment>>{
+        return feedRepository.readUserCommentWithFeed(userId)
+    }
 
-    fun readFeedComments(commentIds: List<FeedComment.CommentId>): List<FeedComment> {
-        return feedRepository.readFeedComments(commentIds)
+    fun readFeedsCommentWithFeed(commentIds: List<FeedComment.CommentId>): List<Pair<FeedComment, Feed>> {
+        return feedRepository.readFeedCommentsWithFeed(commentIds)
     }
 }

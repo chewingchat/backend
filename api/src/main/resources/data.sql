@@ -35,10 +35,10 @@ VALUES ('auth-1', 'user-1', 'email-1', 'phone-1'),
        ('auth-2', 'user-2', 'email-2', 'phone-2'),
        ('auth-3', 'user-3', 'email-3', 'phone-3');
 
-INSERT INTO chewing.`feed` (feed_id, user_id, feed_topic, created_at, modified_at, likes, version)
-VALUES ('feed-1', 'user-1', 'Hello World!', NOW(), NOW(), 0, 0),
-       ('feed-2', 'user-2', 'Living the life', NOW(), NOW(), 0, 0),
-       ('feed-3', 'user-3', 'Good vibes only', NOW(), NOW(), 0, 0);
+INSERT INTO chewing.`feed` (feed_id, user_id, feed_topic, created_at, modified_at, likes, version, comments)
+VALUES ('feed-1', 'user-1', 'Hello World!', NOW(), NOW(), 0, 0, 0),
+       ('feed-2', 'user-2', 'Living the life', NOW(), NOW(), 0, 0, 0),
+       ('feed-3', 'user-3', 'Good vibes only', NOW(), NOW(), 0, 0, 0);
 
 INSERT INTO chewing.feed_detail (feed_detail_id, feed_id, feed_detail_type, feed_detail_url, feed_index)
 VALUES ('feed-detail-1', 'feed-1', 'IMAGE', 'https://example.com/feed1.png', 0),

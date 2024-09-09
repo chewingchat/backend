@@ -16,7 +16,7 @@ class FeedRemover(
     fun removeFeed(feed: Feed) {
         feedRepository.removeFeed(feed)
     }
-    fun removeFeedComments(commentIds:List<FeedComment.CommentId>) {
-        feedRepository.removeFeedComments(commentIds)
+    fun removeFeedComments(feed: Feed, commentId: FeedComment.CommentId) {
+        feedRepository.removeFeedComments(feed, commentId)
     }
 }

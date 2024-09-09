@@ -14,13 +14,16 @@ import java.util.*
 class FeedJpaEntity(
     @Id
     @Column(name = "feed_id")
-    val feedId: String  = UUID.randomUUID().toString(),
+    val feedId: String = UUID.randomUUID().toString(),
 
     @Column(name = "feed_topic", nullable = false)
     val feedTopic: String,
 
     @Column(name = "likes", nullable = false)
     private val likes: Int,
+
+    @Column(name = "comments", nullable = false)
+    private val comments: Int,
 
     @Version
     @Column(name = "version")
@@ -42,7 +45,8 @@ class FeedJpaEntity(
                 likes = feed.likes,
                 feedDetails = feed.feedDetails.map { FeedDetailJpaEntity.fromFeedDetail(it) }.toMutableList(),
                 writer = UserJpaEntity.fromUser(feed.writer),
-                version = feed.version
+                version = feed.version,
+                comments = feed.comments
             )
         }
     }
@@ -55,7 +59,8 @@ class FeedJpaEntity(
             feedUploadTime = createdAt!!,
             feedDetails = emptyList(),
             writer = User.empty(),
-            version = version!!
+            version = version!!,
+            comments = comments
         )
     }
 
@@ -67,7 +72,8 @@ class FeedJpaEntity(
             feedUploadTime = createdAt!!,
             feedDetails = feedDetails.map { it.toFeedDetail() },
             writer = writer.toUser(),
-            version = version!!
+            version = version!!,
+            comments = comments
         )
     }
 
@@ -79,7 +85,8 @@ class FeedJpaEntity(
             feedUploadTime = createdAt!!,
             feedDetails = emptyList(),
             writer = writer.toUser(),
-            version = version!!
+            version = version!!,
+            comments = comments
         )
     }
 }
