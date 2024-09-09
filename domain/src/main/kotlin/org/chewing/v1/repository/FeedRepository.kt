@@ -13,12 +13,13 @@ interface FeedRepository {
     fun readFeedsWithDetails(userId: User.UserId): List<Feed>
     fun readFeedWithWriter(feedId: Feed.FeedId): Feed?
     fun checkFeedsLike(feedIds: List<Feed.FeedId>, userId: User.UserId): Map<Feed.FeedId, Boolean>
-    fun addFeedComment(feed: Feed,user: User, comment: String)
+    fun appendFeedComment(feed: Feed, comment: FeedComment)
     fun readFeedComment(feedId: Feed.FeedId): List<FeedComment>
-    fun readFeedComments(commentIds: List<FeedComment.CommentId>): List<FeedComment>
+    fun readFeedCommentsWithFeed(commentIds: List<FeedComment.CommentId>): List<Pair<FeedComment, Feed>>
     fun appendFeedLikes(feed: Feed, user: User)
     fun removeFeedLikes(feed: Feed, user: User)
     fun updateFeed(feed: Feed)
     fun removeFeed(feed: Feed)
-    fun removeFeedComments(commentIds: List<FeedComment.CommentId>)
+    fun removeFeedComments(feed: Feed, commentId: FeedComment.CommentId)
+    fun readUserCommentWithFeed(userId: User.UserId): List<Pair<Feed,FeedComment>>
 }

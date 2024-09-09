@@ -33,10 +33,10 @@ class FeedCommentJpaEntity(
     val feed: FeedJpaEntity,
 ) : BaseEntity() {
     companion object {
-        fun fromFeedComment(comment: String, writer: User, feed: Feed): FeedCommentJpaEntity {
+        fun fromFeedComment(comment: FeedComment, feed: Feed): FeedCommentJpaEntity {
             return FeedCommentJpaEntity(
-                comment = comment,
-                writer = UserJpaEntity.fromUser(writer),
+                comment = comment.comment,
+                writer = UserJpaEntity.fromUser(comment.writer),
                 feed = FeedJpaEntity.fromFeed(feed)
             )
         }
@@ -49,5 +49,13 @@ class FeedCommentJpaEntity(
             writer = writer.toUser(),
             createAt = createdAt!!
         )
+    }
+
+    fun toFeed(): Feed {
+        return feed.toFeed()
+    }
+
+    fun toFeedWithDetails(): Feed{
+        return feed.toFeedWithDetails()
     }
 }
