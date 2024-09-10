@@ -32,7 +32,7 @@ class FriendSearchController(
         @RequestBody friendRequest: FriendSearchRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val friendSearch = friendRequest.toSearchFriend()
-        searchService.addSearchFriendHistory(User.UserId.of(userId), friendSearch)
+        searchService.addSearchedFriend(User.UserId.of(userId), friendSearch)
         //성공 응답 200 반환
         return ResponseHelper.successCreate()
     }
@@ -41,7 +41,7 @@ class FriendSearchController(
     fun getSearchFriendHistory(
         @RequestHeader("userId") userId: String
     ): SuccessResponseEntity<FriendSearchHistoryResponse> {
-        val friends = searchService.getSearchFriendHistory(User.UserId.of(userId))
+        val friends = searchService.getSearchedFriend(User.UserId.of(userId))
         //성공 응답 200 반환
         return ResponseHelper.success(FriendSearchHistoryResponse.ofList(friends))
     }

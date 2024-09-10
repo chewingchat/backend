@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class UserAppender(
     private val userRepository: UserRepository
 ) {
-    fun appendSearchHistory(user: User, search: FriendSearch) {
+    fun appendSearchedFriend(user: User, search: FriendSearch) {
         return userRepository.appendSearchHistory(user, search)
     }
 }

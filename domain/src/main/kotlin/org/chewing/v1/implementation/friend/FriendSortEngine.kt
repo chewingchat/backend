@@ -10,7 +10,7 @@ object FriendSortEngine {
         return friends.sortedWith(getFriendComparator(sortCriteria))
     }
 
-    fun sortFriendSearchHistory(friends: List<FriendSearch>, sortCriteria: SortCriteria): List<FriendSearch> {
+    fun sortFriendSearchedHistory(friends: List<FriendSearch>, sortCriteria: SortCriteria): List<FriendSearch> {
         return friends.sortedWith(getFriendSearchHistoryComparator(sortCriteria))
     }
 

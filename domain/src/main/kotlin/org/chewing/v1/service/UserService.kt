@@ -22,4 +22,7 @@ class UserService(
         imageProvider.appendImage(file, updatedUser.image.url)
         return userUpdater.updateUser(updatedUser)
     }
+    fun getUserInfo(userId: User.UserId): User {
+        return userReader.readUserWithStatus(userId)
+    }
 }

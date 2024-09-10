@@ -3,7 +3,7 @@ package org.chewing.v1.dto.response
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 
-data class FriendListResponse(
+data class MyFriendListResponse(
     val friends: List<FriendResponse>,
     val userStatusMessage: String,
     val userImageUrl: String,
@@ -13,8 +13,8 @@ data class FriendListResponse(
 ) {
 
     companion object {
-        fun ofList(user: User, friends: List<Friend>): FriendListResponse {
-            return FriendListResponse(
+        fun ofList(user: User, friends: List<Friend>): MyFriendListResponse {
+            return MyFriendListResponse(
                 friends = friends.map { FriendResponse.of(it) },
                 userStatusMessage = user.status.statusMessage,
                 userImageUrl = user.image.url,

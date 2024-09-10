@@ -13,10 +13,7 @@ class FeedRemover(
     fun removeFeedLikes(feed: Feed, user: User) {
         feedRepository.removeFeedLikes(feed, user)
     }
-    fun removeFeed(feed: Feed) {
-        feedRepository.removeFeed(feed)
-    }
-    fun removeFeedComments(feed: Feed, commentId: FeedComment.CommentId) {
-        feedRepository.removeFeedComments(feed, commentId)
+    fun removeFeed(feedId: Feed.FeedId) {
+        feedRepository.removeFeed(feedId)
     }
 }

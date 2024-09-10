@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.feed
+package org.chewing.v1.implementation.comment
 
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
@@ -7,15 +7,15 @@ import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
 
 @Component
-class FeedLocker(
-    private val feedProcessor: FeedProcessor
+class CommentLocker(
+    private val commentProcessor: CommentProcessor
 ) {
-    fun lockFeedLikes(feedId: Feed.FeedId, userId: User.UserId) {
+    fun lockFeedComments(userId: User.UserId, feedId: Feed.FeedId, comment: String) {
         var retryCount = 0
         val maxRetry = 10
         while (retryCount < maxRetry) {
             try {
-                feedProcessor.processFeedLikes(feedId, userId)
+                commentProcessor.processFeedComments(userId, feedId, comment)
                 return
             } catch (ex: OptimisticLockingFailureException) {
                 // 예외 처리: 버전 충돌 시 재시도
@@ -25,12 +25,12 @@ class FeedLocker(
         }
     }
 
-    fun lockFeedUnLikes(feedId: Feed.FeedId, userId: User.UserId) {
+    fun lockFeedUnComments(commentId: FeedComment.CommentId) {
         var retryCount = 0
         val maxRetry = 10
         while (retryCount < maxRetry) {
             try {
-                feedProcessor.processFeedUnLikes(feedId, userId)
+                commentProcessor.processFeedUnComments(commentId)
                 return
             } catch (ex: OptimisticLockingFailureException) {
                 // 예외 처리: 버전 충돌 시 재시도

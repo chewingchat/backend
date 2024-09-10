@@ -25,6 +25,7 @@ enum class ErrorCode(
     FEED_ALREADY_LIKED("FEED_002", "이미 공감한 피드입니다."),
     FEED_ALREADY_UNLIKED("FEED_003", "이미 공감을 취소한 피드입니다."),
     FEED_IS_NOT_OWNED("FEED_004", "피드 작성자가 아닙니다."),
+    FEED_IS_OWNED("FEED_005", "피드 작성자입니다."),
     COMMENT_IS_NOT_OWNED("COMMENT_001", "댓글 작성자가 아닙니다."),
     ;
 

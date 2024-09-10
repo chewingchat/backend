@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository
 class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
     private val feedLikesRepository: UserFeedLikesJpaRepository,
-    private val feedCommentsRepository: FeedCommentJpaRepository
+    private val feedCommentJpaRepository: FeedCommentJpaRepository
 ) : FeedRepository {
     override fun readFeedWithDetails(feedId: Feed.FeedId): Feed? {
         return feedJpaRepository.findByIdWithDetails(feedId.value()).map { it.toFeedWithDetails() }.orElse(null)
@@ -35,7 +35,7 @@ class FeedRepositoryImpl(
         return feedJpaRepository.findByIdWithWriter(feedId.value()).map { it.toFeedWithWriter() }.orElse(null)
     }
 
-    override fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
+    override fun readFulledFeeds(userId: User.UserId): List<Feed> {
         return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }
 
@@ -43,26 +43,6 @@ class FeedRepositoryImpl(
         val likedFeedIds = feedLikesRepository.findAllByUserIdAndFeedIdIn(userId.value(), feedIds.map { it.value() })
             .map { it.id.feedId }
         return feedIds.associateWith { feedId -> likedFeedIds.contains(feedId.value()) }
-    }
-
-    override fun appendFeedComment(feed: Feed, comment: FeedComment) {
-        feedCommentsRepository.save(FeedCommentJpaEntity.fromFeedComment(comment, feed))
-        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
-    }
-
-    override fun readFeedComment(feedId: Feed.FeedId): List<FeedComment> {
-        return feedCommentsRepository.findAllByFeedIdWithWriter(feedId.value()).map { it.toFeedComment() }
-    }
-
-    override fun readFeedCommentsWithFeed(commentIds: List<FeedComment.CommentId>): List<Pair<FeedComment, Feed>> {
-        return feedCommentsRepository.findAllByIdsWithWriterWithFeed(commentIds.map { it.value() })
-            .map { Pair(it.toFeedComment(), it.toFeed()) }
-    }
-
-    override fun readUserCommentWithFeed(userId: User.UserId): List<Pair<Feed, FeedComment>> {
-        return feedCommentsRepository.findAllByUserIdWithFeed(userId.value()).map {
-            Pair(it.toFeedWithDetails(), it.toFeedComment())
-        }
     }
 
     override fun appendFeedLikes(feed: Feed, user: User) {
@@ -80,12 +60,11 @@ class FeedRepositoryImpl(
         feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 
-    override fun removeFeed(feed: Feed) {
-        feedJpaRepository.deleteById(feed.feedId.value())
+    override fun removeFeed(feedId: Feed.FeedId) {
+        feedJpaRepository.deleteById(feedId.value())
     }
 
-    override fun removeFeedComments(feed: Feed, commentId: FeedComment.CommentId) {
-        feedCommentsRepository.deleteByFeedCommentId(commentId.value())
-        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
+    override fun readFulledFeedByCommentId(commentId: FeedComment.CommentId): Feed {
+        return feedCommentJpaRepository.findByIdWithFeedAndWriter(commentId.value()).toFeed()
     }
 }

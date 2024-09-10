@@ -1,11 +1,9 @@
-package org.chewing.v1.model
-
-import java.time.LocalDateTime
+package org.chewing.v1.model.contact
 
 class Phone private constructor(
     val country: String,
     val number: String,
-) {
+) : Contact {
     companion object {
         fun of(country: String, number: String): Phone {
             return Phone(
@@ -14,4 +12,7 @@ class Phone private constructor(
             )
         }
     }
+
+    override val type: ContactType
+        get() = ContactType.PHONE
 }

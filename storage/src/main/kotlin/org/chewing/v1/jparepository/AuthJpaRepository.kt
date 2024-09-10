@@ -14,8 +14,9 @@ interface AuthJpaRepository: JpaRepository<AuthJpaEntity, String> {
         @Param("email") email: String
     ): Optional<AuthJpaEntity>
 
-    @Query("SELECT a FROM AuthJpaEntity a JOIN FETCH a.phoneNumber p JOIN FETCH a.user u WHERE p.phoneNumber = :phoneNumber")
+    @Query("SELECT a FROM AuthJpaEntity a JOIN FETCH a.phoneNumber p JOIN FETCH a.user u WHERE p.phoneNumber = :phoneNumber AND p.countryCode = :countryCode")
     fun findByPhoneNumber(
-        @Param("phoneNumber") phoneNumber: String
+        @Param("phoneNumber") phoneNumber: String,
+        @Param("countryCode") countryCode: String
     ): Optional<AuthJpaEntity>
 }

@@ -3,19 +3,19 @@ package org.chewing.v1.dto.response
 import org.chewing.v1.model.feed.FeedComment
 import java.time.format.DateTimeFormatter
 
-data class FeedFriendCommentsResponse(
-    val comments: List<CommentFriendResponse>
+data class FeedCommentsResponse(
+    val comments: List<FriendCommentResponse>
 ) {
     companion object {
         fun of(
             comments: List<FeedComment>
-        ): FeedFriendCommentsResponse {
-            return FeedFriendCommentsResponse(
-                comments = comments.map { CommentFriendResponse.of(it) }
+        ): FeedCommentsResponse {
+            return FeedCommentsResponse(
+                comments = comments.map { FriendCommentResponse.of(it) }
             )
         }
     }
-    data class CommentFriendResponse(
+    data class FriendCommentResponse(
         val friendId: String,
         val friendFirstName: String,
         val friendLastName: String,
@@ -26,8 +26,8 @@ data class FeedFriendCommentsResponse(
         companion object {
             fun of(
                 feedComment: FeedComment
-            ): CommentFriendResponse {
-                return CommentFriendResponse(
+            ): FriendCommentResponse {
+                return FriendCommentResponse(
                     friendId = feedComment.writer.userId.value(),
                     friendFirstName = feedComment.writer.name.firstName(),
                     friendLastName = feedComment.writer.name.lastName(),
