@@ -1,11 +1,8 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.request.CommentRequest
 import org.chewing.v1.dto.request.FeedRequest
 import org.chewing.v1.dto.request.LikesRequest
-import org.chewing.v1.dto.response.FeedFriendCommentsResponse
 import org.chewing.v1.dto.response.FriendFeedResponse
-import org.chewing.v1.dto.response.MyCommentResponse
 import org.chewing.v1.dto.response.MyFeedResponse
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.User
@@ -32,7 +29,7 @@ class FeedController(
     }
 
     @GetMapping("/user/{feedId}")
-    fun getMyFeed(
+    fun getUserFeed(
         @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<MyFeedResponse> {
@@ -41,18 +38,7 @@ class FeedController(
         return ResponseHelper.success(MyFeedResponse.of(feed))
     }
 
-    @PostMapping("/friend/comment")
-    fun addFeedComment(
-        @RequestHeader("userId") userId: String,
-        @RequestBody commentRequest: CommentRequest.AddCommentRequest
-    ): SuccessResponseEntity<SuccessCreateResponse> {
-        val (feedId, comment) = commentRequest
-        feedService.addFeedComment(User.UserId.of(userId), Feed.FeedId.of(feedId), comment)
-        //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
-    }
-
-    @PostMapping("/friend/like")
+    @PostMapping("/like")
     fun addFeedLikes(
         @RequestHeader("userId") userId: String,
         @RequestBody request: LikesRequest.AddLikesRequest
@@ -63,7 +49,7 @@ class FeedController(
         return ResponseHelper.successCreate()
     }
 
-    @DeleteMapping("/friend/like")
+    @DeleteMapping("/like")
     fun deleteFeedLikes(
         @RequestHeader("userId") userId: String,
         @RequestBody request: LikesRequest.DeleteLikesRequest
@@ -74,36 +60,7 @@ class FeedController(
         return ResponseHelper.successOnly()
     }
 
-    @GetMapping("/user/{feedId}/comment")
-    fun getFeedComments(
-        @RequestHeader("userId") userId: String,
-        @PathVariable("feedId") feedId: String
-    ): SuccessResponseEntity<FeedFriendCommentsResponse> {
-        val feedComments = feedService.getFeedComment(User.UserId.of(userId), Feed.FeedId.of(feedId))
-        //성공 응답 200 반환
-        return ResponseHelper.success(FeedFriendCommentsResponse.of(feedComments))
-    }
-
-    @GetMapping("/comment/user")
-    fun getMyComment(
-        @RequestHeader("userId") userId: String,
-    ): SuccessResponseEntity<MyCommentResponse> {
-        val feedCommentsWithFeed = feedService.getCommentFeed(User.UserId.of(userId))
-        //성공 응답 200 반환
-        return ResponseHelper.success(MyCommentResponse.of(feedCommentsWithFeed))
-    }
-
-    @DeleteMapping("/comment/user")
-    fun deleteFeedComment(
-        @RequestHeader("userId") userId: String,
-        @RequestBody request: List<CommentRequest.DeleteCommentRequest>
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        feedService.deleteFeedComment(User.UserId.of(userId), request.map{it.toCommentId()})
-        //삭제 완료 응답 200 반환
-        return ResponseHelper.successOnly()
-    }
-
-    @DeleteMapping("/user")
+    @DeleteMapping("")
     fun deleteFeed(
         @RequestHeader("userId") userId: String,
         @RequestBody request: FeedRequest.Delete

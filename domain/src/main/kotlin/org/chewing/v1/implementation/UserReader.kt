@@ -5,6 +5,7 @@ import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
 
@@ -31,6 +32,15 @@ class UserReader(
         }
     }
 
+    fun readUserByContact(contact: Contact): User {
+        val user = userRepository.readUserByContact(contact)
+        if (user != null) {
+            return user
+        } else {
+            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        }
+    }
+
     fun readUserWithStatus(userId: User.UserId): User {
         val user = userRepository.readUserWithStatus(userId)
         if (user != null) {
@@ -40,7 +50,7 @@ class UserReader(
         }
     }
 
-    fun readSearchHistory(userId: User.UserId): List<FriendSearch> {
+    fun readSearchedFriend(userId: User.UserId): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
     }
 

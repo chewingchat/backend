@@ -26,16 +26,9 @@ class FeedReader(
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
     fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
-        return feedRepository.readFeedsWithDetails(userId)
+        return feedRepository.readFulledFeeds(userId)
     }
-    fun readFeedComment(feedId: Feed.FeedId): List<FeedComment> {
-        return feedRepository.readFeedComment(feedId)
-    }
-    fun readUserCommentWithFeed(userId: User.UserId): List<Pair<Feed,FeedComment>>{
-        return feedRepository.readUserCommentWithFeed(userId)
-    }
-
-    fun readFeedsCommentWithFeed(commentIds: List<FeedComment.CommentId>): List<Pair<FeedComment, Feed>> {
-        return feedRepository.readFeedCommentsWithFeed(commentIds)
+    fun readFulledFeedByCommentId(commentId: FeedComment.CommentId): Feed {
+        return feedRepository.readFulledFeedByCommentId(commentId)
     }
 }
