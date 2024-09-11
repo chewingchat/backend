@@ -18,7 +18,7 @@ class FeedRepositoryImpl(
     private val feedLikesRepository: UserFeedLikesJpaRepository,
     private val feedCommentJpaRepository: FeedCommentJpaRepository
 ) : FeedRepository {
-    override fun readFeedWithDetails(feedId: Feed.FeedId): Feed? {
+    override fun readFulledFeed(feedId: Feed.FeedId): Feed? {
         return feedJpaRepository.findByIdWithDetails(feedId.value()).map { it.toFeedWithDetails() }.orElse(null)
     }
 
@@ -31,11 +31,7 @@ class FeedRepositoryImpl(
         return feedJpaRepository.findById(feedId.value()).map { it.toFeed() }.orElse(null)
     }
 
-    override fun readFeedWithWriter(feedId: Feed.FeedId): Feed? {
-        return feedJpaRepository.findByIdWithWriter(feedId.value()).map { it.toFeedWithWriter() }.orElse(null)
-    }
-
-    override fun readFulledFeeds(userId: User.UserId): List<Feed> {
+    override fun readFulledFeedsByUserId(userId: User.UserId): List<Feed> {
         return feedJpaRepository.findByWriterIdWithDetails(userId.value()).map { it.toFeedWithDetails() }
     }
 
@@ -60,11 +56,20 @@ class FeedRepositoryImpl(
         feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 
-    override fun removeFeed(feedId: Feed.FeedId) {
-        feedJpaRepository.deleteById(feedId.value())
+    override fun removeFeeds(feedIds: List<Feed.FeedId>) {
+        feedJpaRepository.deleteAllById(feedIds.map { it.value() })
     }
 
     override fun readFulledFeedByCommentId(commentId: FeedComment.CommentId): Feed {
         return feedCommentJpaRepository.findByIdWithFeedAndWriter(commentId.value()).toFeed()
+    }
+
+    override fun appendFeed(feed: Feed): Feed.FeedId {
+        val feedId = feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed)).feedId
+        return Feed.FeedId.of(feedId)
+    }
+
+    override fun readFulledFeeds(feedIds: List<Feed.FeedId>): List<Feed> {
+        return feedJpaRepository.findByIdsWithDetails(feedIds.map { it.value() }).map { it.toFeedWithDetails() }
     }
 }

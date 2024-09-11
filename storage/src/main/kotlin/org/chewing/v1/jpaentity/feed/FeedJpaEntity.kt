@@ -30,7 +30,7 @@ class FeedJpaEntity(
     var version: Long? = 0,
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id", insertable = false, updatable = false)
+    @JoinColumn(name = "feed_id")
     var feedDetails: MutableList<FeedDetailJpaEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

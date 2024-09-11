@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.comment
 
 import org.chewing.v1.model.feed.FeedComment
 import java.time.format.DateTimeFormatter

@@ -7,15 +7,16 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface FeedRepository {
-    fun readFeedWithDetails(feedId: Feed.FeedId): Feed?
+    fun readFulledFeed(feedId: Feed.FeedId): Feed?
     fun readFeed(feedId: Feed.FeedId): Feed?
     fun checkFeedLike(feedId: Feed.FeedId, userId: User.UserId): Boolean
-    fun readFulledFeeds(userId: User.UserId): List<Feed>
-    fun readFeedWithWriter(feedId: Feed.FeedId): Feed?
+    fun readFulledFeedsByUserId(userId: User.UserId): List<Feed>
+    fun readFulledFeeds(feedIds: List<Feed.FeedId>): List<Feed>
     fun checkFeedsLike(feedIds: List<Feed.FeedId>, userId: User.UserId): Map<Feed.FeedId, Boolean>
     fun appendFeedLikes(feed: Feed, user: User)
     fun removeFeedLikes(feed: Feed, user: User)
     fun updateFeed(feed: Feed)
-    fun removeFeed(feedId: Feed.FeedId)
+    fun removeFeeds(feedIds: List<Feed.FeedId>)
     fun readFulledFeedByCommentId(commentId: FeedComment.CommentId): Feed
+    fun appendFeed(feed: Feed): Feed.FeedId
 }

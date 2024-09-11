@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.user
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -16,10 +16,8 @@ class UserUpdater(
 ) {
     /**
      * 주어진 사용자 정보를 업데이트합니다.
-     * @throws ConflictException 사용자 업데이트에 실패한 경우,
-     * USER_UPDATE_FAILED 오류 코드와 함께 예외를 발생시킵니다.
      */
-    fun updateUser(user: User): User.UserId {
-        return userRepository.updateUser(user) ?: throw ConflictException(ErrorCode.USER_UPDATE_FAILED)
+    fun updateUser(user: User) {
+        return userRepository.updateUser(user)
     }
 }

@@ -61,8 +61,8 @@ class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Image.of(this.pictureUrl),
-            Image.of(this.backgroundPictureUrl),
+            Image.of(this.pictureUrl, 0),
+            Image.of(this.backgroundPictureUrl, 0),
             Emoticon.empty(),
             this.statusMessage
         )
@@ -75,8 +75,8 @@ class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Image.of(this.pictureUrl),
-            Image.of(this.backgroundPictureUrl),
+            Image.of(this.pictureUrl, 0),
+            Image.of(this.backgroundPictureUrl, 0),
             emoticon,
             this.statusMessage
         )

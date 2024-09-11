@@ -45,9 +45,8 @@ class UserRepositoryImpl(
         return userId
     }
 
-    override fun updateUser(user: User): User.UserId? {
+    override fun updateUser(user: User) {
         userJpaRepository.save(UserJpaEntity.fromUser(user))
-        return user.userId
     }
 
     override fun readUserByEmail(email: String): User? {

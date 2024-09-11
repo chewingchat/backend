@@ -1,9 +1,9 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.feed
 
 import org.chewing.v1.model.feed.Feed
 import java.time.format.DateTimeFormatter
 
-data class MyFeedResponse(
+data class UserFeedResponse(
     val feedId: String,
     val totalLiked: Int,
     val feedUploadTime: String,
@@ -14,9 +14,9 @@ data class MyFeedResponse(
     companion object {
         fun of(
             feed: Feed
-        ): MyFeedResponse {
+        ): UserFeedResponse {
             val formattedUploadTime = feed.feedUploadTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-            return MyFeedResponse(
+            return UserFeedResponse(
                 feedId = feed.feedId.value(),
                 totalLiked = feed.likes,
                 feedUploadTime = formattedUploadTime,

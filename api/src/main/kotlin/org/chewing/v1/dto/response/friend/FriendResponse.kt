@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.friend
 
 import org.chewing.v1.model.friend.Friend
 

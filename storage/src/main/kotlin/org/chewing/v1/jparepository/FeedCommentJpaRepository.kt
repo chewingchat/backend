@@ -14,12 +14,10 @@ interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity, String>
     @Query("""
     SELECT f 
     FROM FeedCommentJpaEntity f
-    JOIN FETCH f.feed feed
-    JOIN FETCH feed.writer writer
-    JOIN FETCH feed.feedDetails details
+    JOIN FETCH f.writer
     WHERE f.writer.id = :userId
     """)
-    fun findAllByUserIdWithFeed(@Param("userId") userId: String): List<FeedCommentJpaEntity>
+    fun findAllByUserIdWithWriter(@Param("userId") userId: String): List<FeedCommentJpaEntity>
     @Query("SELECT f FROM FeedCommentJpaEntity f JOIN FETCH f.writer WHERE f.feed.feedId = :feedId")
     fun findAllByFeedId(feedId: String): List<FeedCommentJpaEntity>
 }

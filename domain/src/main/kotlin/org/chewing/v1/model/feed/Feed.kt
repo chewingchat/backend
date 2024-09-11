@@ -2,6 +2,7 @@ package org.chewing.v1.model.feed
 
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.media.Media
 import java.io.Writer
 import java.time.LocalDateTime
 
@@ -24,6 +25,10 @@ class Feed private constructor(
             fun of(value: String): FeedId {
                 return FeedId(value)
             }
+
+            fun empty(): FeedId {
+                return FeedId("")
+            }
         }
     }
 
@@ -39,6 +44,17 @@ class Feed private constructor(
             version: Long
         ): Feed {
             return Feed(FeedId.of(feedId), feedTopic, likes, comments, feedUploadTime, feedDetails, writer, version)
+        }
+
+        fun generate(
+            feedTopic: String,
+            medias: List<Media>,
+            writer: User
+        ): Feed {
+            val feedDetails = medias.map {
+                FeedDetail.generate(it)
+            }
+            return Feed(FeedId.empty(), feedTopic, 0, 0, LocalDateTime.now(), feedDetails, writer)
         }
     }
 
@@ -80,6 +96,7 @@ class Feed private constructor(
             version
         )
     }
+
     fun removeComments(): Feed {
         return Feed(
             FeedId.of(feedId.value()),

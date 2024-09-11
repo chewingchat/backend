@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.feed
 
 import org.chewing.v1.model.feed.FeedDetail
 
@@ -11,7 +11,7 @@ data class FeedDetailResponse(
         fun of(
             feedDetail: FeedDetail
         ): FeedDetailResponse {
-            return FeedDetailResponse(feedDetail.index, feedDetail.media.url, feedDetail.media.type.toString().lowercase())
+            return FeedDetailResponse(feedDetail.media.index, feedDetail.media.url, feedDetail.media.type.toString().lowercase())
         }
     }
 }

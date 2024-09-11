@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.user
 
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User

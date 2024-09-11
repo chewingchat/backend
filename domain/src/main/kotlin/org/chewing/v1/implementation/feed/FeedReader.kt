@@ -12,21 +12,19 @@ import org.springframework.stereotype.Component
 class FeedReader(
     private val feedRepository: FeedRepository,
 ) {
-    fun readFeedWithDetails(feedId: Feed.FeedId): Feed {
-        val feed = feedRepository.readFeedWithDetails(feedId)
+    fun readFulledFeed(feedId: Feed.FeedId): Feed {
+        val feed = feedRepository.readFulledFeed(feedId)
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
-
     fun readFeed(feedId: Feed.FeedId): Feed {
         val feed = feedRepository.readFeed(feedId)
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
-    fun readFeedWithWriter(feedId: Feed.FeedId): Feed {
-        val feed = feedRepository.readFeedWithWriter(feedId)
-        return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
+    fun readFulledFeeds(feedIds: List<Feed.FeedId>): List<Feed> {
+        return feedRepository.readFulledFeeds(feedIds)
     }
-    fun readFeedsWithDetails(userId: User.UserId): List<Feed> {
-        return feedRepository.readFulledFeeds(userId)
+    fun readFulledFeedsByUserId(userId: User.UserId): List<Feed> {
+        return feedRepository.readFulledFeedsByUserId(userId)
     }
     fun readFulledFeedByCommentId(commentId: FeedComment.CommentId): Feed {
         return feedRepository.readFulledFeedByCommentId(commentId)
