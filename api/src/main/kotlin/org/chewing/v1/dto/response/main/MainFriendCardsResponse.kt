@@ -1,9 +1,9 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.main
 
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 
-data class MyFriendCardsResponse(
+data class MainFriendCardsResponse(
     val friends: List<FriendCardResponse>,
     val userStatusMessage: String,
     val userStatusEmoticon: String,
@@ -39,8 +39,8 @@ data class MyFriendCardsResponse(
     }
 
     companion object {
-        fun ofList(user: User, friends: List<Friend>): MyFriendCardsResponse {
-            return MyFriendCardsResponse(
+        fun ofList(user: User, friends: List<Friend>): MainFriendCardsResponse {
+            return MainFriendCardsResponse(
                 friends = friends.map { FriendCardResponse.of(it) },
                 userStatusMessage = user.status.statusMessage,
                 userImageUrl = user.image.url,

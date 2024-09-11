@@ -1,6 +1,6 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.UserReader
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.comment.CommentLocker
 import org.chewing.v1.implementation.comment.CommentReader
 import org.chewing.v1.implementation.comment.CommentValidator

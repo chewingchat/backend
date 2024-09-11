@@ -23,4 +23,10 @@ interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun findByIdWithWriter(
         @Param("feedId") feedId: String
     ): Optional<FeedJpaEntity>
+
+    @Query("SELECT f FROM FeedJpaEntity f JOIN FETCH f.feedDetails d WHERE f.feedId IN :feedIds")
+    fun findByIdsWithDetails(
+        @Param("feedIds") feedIds: List<String>
+    ): List<FeedJpaEntity>
+
 }

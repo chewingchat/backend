@@ -24,7 +24,7 @@ class CommentRepositoryImpl(
     }
 
     override fun readUserCommentsFulledFeeds(userId: User.UserId): List<Pair<FeedComment, Feed>> {
-        return commentJpaRepository.findAllByUserIdWithFeed(userId.value())
+        return commentJpaRepository.findAllByUserIdWithWriter(userId.value())
             .map { Pair(it.toFeedComment(), it.toFeed()) }
     }
 

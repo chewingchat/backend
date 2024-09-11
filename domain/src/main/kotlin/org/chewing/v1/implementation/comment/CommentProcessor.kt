@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.implementation.UserReader
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.feed.FeedUpdater
 import org.chewing.v1.model.User
@@ -20,7 +20,7 @@ class CommentProcessor(
 
     @Transactional
     fun processFeedComments(userId: User.UserId, feedId: Feed.FeedId, comment: String) {
-        val feed = feedReader.readFeedWithDetails(feedId)
+        val feed = feedReader.readFulledFeed(feedId)
         val user = userReader.readUser(userId)
         val feedComment = FeedComment.generate(comment, user)
         commentAppender.appendComment(feedComment, feed)

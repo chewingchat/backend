@@ -2,6 +2,7 @@ package org.chewing.v1.model
 
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.Media
 
 
 class User private constructor(
@@ -104,12 +105,12 @@ class User private constructor(
         }
     }
 
-    fun updateImage(fileName: String): User {
+    fun updateImage(media: Media): User {
         return User(
             userId,
             name,
             birth,
-            Image.upload(Image.ImageCategory.USER_PROFILE, userId.value(), fileName),
+            media as Image,
             status,
             backgroundImage
         )

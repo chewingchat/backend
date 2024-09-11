@@ -2,6 +2,7 @@ package org.chewing.v1.service
 
 import org.chewing.v1.implementation.*
 import org.chewing.v1.implementation.friend.*
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.*
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.friend.Friend

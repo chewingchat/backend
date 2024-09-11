@@ -16,7 +16,7 @@ class FriendFacade(
         // 친구 정보를 읽어옵니다.
         val friend = friendService.getFriend(userId, friendId)
         // 친구의 피드를 읽어옵니다.
-        val feeds = feedService.getFriendFeedsFull(friendId)
+        val feeds = feedService.getFriendFulledFeeds(friendId)
         // 결과를 반환합니다.
         return Pair(friend, feeds)
     }

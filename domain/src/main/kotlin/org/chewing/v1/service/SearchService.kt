@@ -1,7 +1,7 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.UserAppender
-import org.chewing.v1.implementation.UserReader
+import org.chewing.v1.implementation.user.UserAppender
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.friend.FriendSortEngine
 import org.chewing.v1.model.friend.Friend

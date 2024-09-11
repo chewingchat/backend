@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.UserReader
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedComment
@@ -23,6 +23,15 @@ class FeedValidator(
         }
     }
 
+    fun isFeedsOwner(feedIds: List<Feed.FeedId>, userId: User.UserId): List<Feed> {
+        val feeds = feedReader.readFulledFeeds(feedIds)
+        val user = userReader.readUser(userId)
+        if (feeds.any { it.writer.userId != user.userId }) {
+            throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
+        }
+        return feeds
+    }
+
     fun isNotFeedOwner(feedId: Feed.FeedId, userId: User.UserId) {
         val feed = feedReader.readFeed(feedId)
         val user = userReader.readUser(userId)
@@ -32,13 +41,13 @@ class FeedValidator(
     }
 
     fun isAlreadyLiked(feedId: Feed.FeedId, userId: User.UserId) {
-        if(feedRepository.checkFeedLike(feedId, userId)){
+        if (feedRepository.checkFeedLike(feedId, userId)) {
             throw ConflictException(ErrorCode.FEED_ALREADY_LIKED)
         }
     }
 
     fun isAlreadyUnliked(feedId: Feed.FeedId, userId: User.UserId) {
-        if(!feedRepository.checkFeedLike(feedId, userId)){
+        if (!feedRepository.checkFeedLike(feedId, userId)) {
             throw ConflictException(ErrorCode.FEED_ALREADY_UNLIKED)
         }
     }

@@ -11,7 +11,7 @@ interface UserRepository {
     fun readUserById(userId: User.UserId): User?
     fun readUserByContact(contact: Contact): User?
     fun remove(userId: User.UserId): User.UserId?
-    fun updateUser(user: User): User.UserId?
+    fun updateUser(user: User)
     fun readUserByEmail(email: String): User?
     fun readUserByPhoneNumber(phoneNumber: String, countryCode: String): User?
     fun appendSearchHistory(user: User, search: FriendSearch)

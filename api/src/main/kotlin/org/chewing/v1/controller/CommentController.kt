@@ -1,7 +1,7 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.CommentRequest
-import org.chewing.v1.dto.response.FeedCommentsResponse
+import org.chewing.v1.dto.response.comment.FeedCommentsResponse
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.response.SuccessCreateResponse
@@ -12,11 +12,11 @@ import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/feed/comment")
+@RequestMapping("/api/feed")
 class CommentController(
     private val commentService: CommentService
 ) {
-    @PostMapping("")
+    @PostMapping("/comment")
     fun addFeedComment(
         @RequestHeader("userId") userId: String,
         @RequestBody commentRequest: CommentRequest.AddCommentRequest
@@ -27,7 +27,7 @@ class CommentController(
         return ResponseHelper.successCreate()
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/comment")
     fun deleteFeedComment(
         @RequestHeader("userId") userId: String,
         @RequestBody request: List<CommentRequest.DeleteCommentRequest>
@@ -37,7 +37,7 @@ class CommentController(
         return ResponseHelper.successOnly()
     }
 
-    @GetMapping("/{feedId}")
+    @GetMapping("/{feedId}/comment")
     fun getFeedComments(
         @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String

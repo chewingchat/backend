@@ -13,4 +13,7 @@ class FeedAppender(
     fun appendFeedLikes(feed: Feed, user: User) {
         feedRepository.appendFeedLikes(feed, user)
     }
+    fun appendFeed(feed: Feed): Feed.FeedId {
+        return feedRepository.appendFeed(feed)
+    }
 }
