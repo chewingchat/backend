@@ -1,8 +1,6 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
-import org.chewing.v1.dto.response.friend.FriendDetailResponse
-import org.chewing.v1.implementation.facade.FriendFacade
 import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -14,8 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/friend")
 class FriendController(
-    private val friendService: FriendService,
-    private val friendFacade: FriendFacade
+    private val friendService: FriendService
 ) {
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")
@@ -70,15 +67,5 @@ class FriendController(
         friendService.changeFriendName(User.UserId.of(userId), friendId, friendName)
         //생성 완료 응답 201 반환
         return ResponseHelper.successOnly()
-    }
-
-    @GetMapping("/{friendId}/detail")
-    fun getFriendDetail(
-        @RequestHeader("userId") userId: String,
-        @PathVariable("friendId") friendId: String
-    ): SuccessResponseEntity<FriendDetailResponse> {
-        val (friend, friendFeeds) = friendFacade.getFriendDetail(User.UserId.of(userId), User.UserId.of(friendId))
-        //성공 응답 200 반환
-        return ResponseHelper.success(FriendDetailResponse.of(friend, friendFeeds))
     }
 }

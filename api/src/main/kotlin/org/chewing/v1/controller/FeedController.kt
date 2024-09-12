@@ -4,6 +4,7 @@ import org.chewing.v1.dto.request.FeedRequest
 import org.chewing.v1.dto.request.LikesRequest
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.UserFeedResponse
+import org.chewing.v1.dto.response.friend.FriendDetailResponse
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
@@ -28,6 +29,16 @@ class FeedController(
         val friendFeed = feedService.getFriendFeed(User.UserId.of(userId), Feed.FeedId.of(feedId))
         //성공 응답 200 반환
         return ResponseHelper.success(FriendFeedResponse.of(friendFeed))
+    }
+
+    @GetMapping("/{friendId}")
+    fun getFriendFeeds(
+        @RequestHeader("userId") userId: String,
+        @PathVariable("friendId") friendId: String
+    ): SuccessResponseEntity<FriendDetailResponse> {
+        val feeds = feedService.getFriendFulledFeeds(User.UserId.of(friendId))
+        //성공 응답 200 반환
+        return ResponseHelper.success(FriendDetailResponse.of(feeds))
     }
 
     @GetMapping("/{feedId}/user")
@@ -83,5 +94,4 @@ class FeedController(
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
-
 }
