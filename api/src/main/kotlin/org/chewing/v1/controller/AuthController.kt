@@ -2,7 +2,6 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
 import org.chewing.v1.dto.response.TokenResponse
-import org.chewing.v1.dto.response.UserResponse
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
@@ -52,7 +51,7 @@ class AuthController(
     fun verifyEmailAndSignup(@RequestBody request: EmailSignupRequest): SuccessResponseEntity<TokenResponse> {
         val (accessToken, refreshToken) = authService.verifyEmailAndSignup(
             request.toEmail(),
-            request.toPushToken(),
+            request.toPushToken()
         )
         return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
     }
@@ -62,6 +61,7 @@ class AuthController(
         val (accessToken, refreshToken) = authService.verifyPhoneAndSignup(
             request.toPhone(),
             request.toPushToken(),
+            request.toUser()
         )
         return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
     }

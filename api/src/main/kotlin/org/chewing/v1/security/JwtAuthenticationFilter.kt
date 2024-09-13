@@ -20,7 +20,8 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         val token = resolveToken(request)
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        if (token != null) {
+            jwtTokenProvider.validateToken(token)
             val userId = jwtTokenProvider.getUserIdFromToken(token)
             val authentication = JwtAuthenticationToken(userId, null, emptyList())
             authentication.details = WebAuthenticationDetailsSource().buildDetails(request)

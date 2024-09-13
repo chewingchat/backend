@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.PushToken
 
 

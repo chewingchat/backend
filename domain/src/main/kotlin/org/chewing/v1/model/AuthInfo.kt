@@ -1,5 +1,7 @@
 package org.chewing.v1.model
 
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.token.RefreshToken
 
 class AuthInfo(

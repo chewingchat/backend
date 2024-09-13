@@ -7,9 +7,9 @@ import org.chewing.v1.jparepository.ConfirmEmailJpaRepository
 import org.chewing.v1.jparepository.ConfirmPhoneNumberJpaRepository
 import org.chewing.v1.jparepository.LoggedInJpaRepository
 import org.chewing.v1.model.AuthInfo
-import org.chewing.v1.model.Email
-import org.chewing.v1.model.Phone
 import org.chewing.v1.model.User
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
@@ -28,12 +28,6 @@ class AuthRepositoryImpl(
         val authEntity = authJpaRepository.findUserByEmail(email)
         return authEntity.isPresent
         // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
-    }
-
-
-    override fun checkPhoneNumberRegistered(phoneNumber: String): Boolean {
-        val authEntity = authJpaRepository.findUserByPhone(phoneNumber)
-        return authEntity.isPresent
     }
 
 
@@ -91,12 +85,8 @@ class AuthRepositoryImpl(
     // 로그아웃 시 로그인 정보를 삭제하는 로직
     override fun deleteLoggedInInfo(userId: User.UserId) {
         // 로그인 정보를 찾아 삭제
-        val loggedInEntity = loggedInJpaRepository.findByUserId(userId.value())
-        loggedInEntity?.let {
-            loggedInJpaRepository.delete(it)
-        } ?: throw IllegalArgumentException("No logged in session found for user: ${userId.value()}")
+        val authInfo = authJpaRepository.findByUserId(userId.value())
+        val loggedInEntity = loggedInJpaRepository.findByAuthAuthId(authInfo.get().authId)
+        loggedInJpaRepository.delete(loggedInEntity!!)
     }
-
-
-
 }

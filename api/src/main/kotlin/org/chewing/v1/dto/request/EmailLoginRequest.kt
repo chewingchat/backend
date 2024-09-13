@@ -1,8 +1,8 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.PushToken
-import org.chewing.v1.model.Email
+import org.chewing.v1.model.contact.Email
 
 data class EmailLoginRequest(
     val email: String,
