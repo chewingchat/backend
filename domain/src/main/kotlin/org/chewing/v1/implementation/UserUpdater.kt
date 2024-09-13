@@ -2,6 +2,7 @@ package org.chewing.v1.implementation
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
@@ -21,5 +22,9 @@ class UserUpdater(
      */
     fun updateUser(user: User): User.UserId {
         return userRepository.updateUser(user) ?: throw ConflictException(ErrorCode.USER_UPDATE_FAILED)
+    }
+
+    fun updateUserPushToken(user: User, pushToken: PushToken) {
+        userRepository.updateUserPushToken(user, pushToken)
     }
 }

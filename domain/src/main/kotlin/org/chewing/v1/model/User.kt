@@ -3,6 +3,7 @@ package org.chewing.v1.model
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
 
+
 class User private constructor(
     val userId: UserId,
     val name: UserName,
@@ -43,6 +44,17 @@ class User private constructor(
 
             )
         }
+
+        fun generate(birth: String, firstName: String, lastName: String): User {
+            return User(
+                userId = UserId.empty(),
+                status = UserStatus.of("", Emoticon.empty()),
+                birth = birth,
+                image = Image.generate(Image.ImageCategory.USER_PROFILE),
+                backgroundImage = Image.empty(),
+                name = UserName.of(firstName, lastName)
+            )
+        }
     }
 
     class UserId private constructor(private val userId: String) {
@@ -70,6 +82,7 @@ class User private constructor(
             return lastName
         }
 
+
         companion object {
             fun of(firstName: String, lastName: String): UserName {
                 return UserName(firstName, lastName)
@@ -77,6 +90,10 @@ class User private constructor(
 
             fun empty(): UserName = UserName("", "")
         }
+
+
+
+
     }
 
     class UserStatus private constructor(val statusMessage: String, val emoticon: Emoticon) {
@@ -108,4 +125,7 @@ class User private constructor(
             backgroundImage
         )
     }
+
+
+
 }

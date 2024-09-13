@@ -2,6 +2,7 @@ package org.chewing.v1.implementation
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.repository.UserRepository
@@ -42,4 +43,9 @@ class UserReader(
     fun readSearchHistory(userId: User.UserId): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
     }
+
+    fun readUserPushToken(pushToken: PushToken): PushToken? {
+        return userRepository.readPushToken(pushToken)
+    }
+
 }

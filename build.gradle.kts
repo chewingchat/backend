@@ -12,6 +12,7 @@ dependencies {
     jacocoAggregation(project(":common"))
     jacocoAggregation(project(":api"))
     jacocoAggregation(project(":domain"))
+
 }
 
 
@@ -33,8 +34,14 @@ allprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("io.github.microutils:kotlin-logging:3.0.5")
+        // 추가
+        implementation("org.springframework.boot:spring-boot-starter-security")
+        implementation("io.jsonwebtoken:jjwt-jackson:0.11.5") // for Jackson JSON Processor
+        //
         testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+
     }
 
     java {
