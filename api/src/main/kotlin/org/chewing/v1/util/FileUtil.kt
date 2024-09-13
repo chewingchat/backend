@@ -30,4 +30,10 @@ object FileUtil {
 
         return convertFile
     }
+
+    @Throws(IOException::class, AuthorizationException::class)
+    fun convertMultipartFilesToFiles(files: List<MultipartFile>): List<File> {
+        return files.map { convertMultipartFileToFile(it) }
+    }
+
 }

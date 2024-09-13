@@ -1,8 +1,8 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.FriendSearchRequest
-import org.chewing.v1.dto.response.FriendSearchHistoryResponse
-import org.chewing.v1.dto.response.FriendSearchResultResponse
+import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
+import org.chewing.v1.dto.response.search.FriendSearchResultResponse
 import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.service.SearchService
@@ -32,7 +32,7 @@ class FriendSearchController(
         @RequestBody friendRequest: FriendSearchRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val friendSearch = friendRequest.toSearchFriend()
-        searchService.addSearchFriendHistory(User.UserId.of(userId), friendSearch)
+        searchService.addSearchedFriend(User.UserId.of(userId), friendSearch)
         //성공 응답 200 반환
         return ResponseHelper.successCreate()
     }
@@ -41,7 +41,7 @@ class FriendSearchController(
     fun getSearchFriendHistory(
         @RequestHeader("userId") userId: String
     ): SuccessResponseEntity<FriendSearchHistoryResponse> {
-        val friends = searchService.getSearchFriendHistory(User.UserId.of(userId))
+        val friends = searchService.getSearchedFriend(User.UserId.of(userId))
         //성공 응답 200 반환
         return ResponseHelper.success(FriendSearchHistoryResponse.ofList(friends))
     }

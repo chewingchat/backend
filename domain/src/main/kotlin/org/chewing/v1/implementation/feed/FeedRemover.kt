@@ -12,4 +12,7 @@ class FeedRemover(
     fun removeFeedLikes(feed: Feed, user: User) {
         feedRepository.removeFeedLikes(feed, user)
     }
+    fun removeFeeds(feedIds: List<Feed.FeedId>) {
+        feedRepository.removeFeeds(feedIds)
+    }
 }

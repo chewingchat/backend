@@ -1,7 +1,7 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.UserAppender
-import org.chewing.v1.implementation.UserReader
+import org.chewing.v1.implementation.user.UserAppender
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.friend.FriendSortEngine
 import org.chewing.v1.model.friend.Friend
@@ -21,13 +21,12 @@ class SearchService(
         return FriendSortEngine.sortFriends(friends, SortCriteria.NAME)
     }
 
-    fun addSearchFriendHistory(userId: User.UserId, search: FriendSearch) {
+    fun addSearchedFriend(userId: User.UserId, search: FriendSearch) {
         val user = userReader.readUser(userId)
-        return userAppender.appendSearchHistory(user, search)
+        return userAppender.appendSearchedFriend(user, search)
     }
-
-    fun getSearchFriendHistory(userId: User.UserId): List<FriendSearch> {
-        val friendSearchHistory = userReader.readSearchHistory(userId)
-        return FriendSortEngine.sortFriendSearchHistory(friendSearchHistory, SortCriteria.DATE)
+    fun getSearchedFriend(userId: User.UserId): List<FriendSearch> {
+        val friendSearchHistory = userReader.readSearchedFriend(userId)
+        return FriendSortEngine.sortFriendSearchedHistory(friendSearchHistory, SortCriteria.DATE)
     }
 }

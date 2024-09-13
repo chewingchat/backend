@@ -2,6 +2,7 @@ package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.feed.FeedComment
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
 

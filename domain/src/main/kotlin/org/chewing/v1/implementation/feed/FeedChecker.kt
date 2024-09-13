@@ -18,16 +18,4 @@ class FeedChecker(
     fun checkFeedsLike(feedIds: List<Feed.FeedId>, userId: User.UserId): Map<Feed.FeedId, Boolean> {
         return feedRepository.checkFeedsLike(feedIds, userId)
     }
-
-    fun isAlreadyLiked(feedId: Feed.FeedId, userId: User.UserId) {
-        if(feedRepository.checkFeedLike(feedId, userId)){
-            throw ConflictException(ErrorCode.FEED_ALREADY_LIKED)
-        }
-    }
-
-    fun isAlreadyUnliked(feedId: Feed.FeedId, userId: User.UserId) {
-        if(!feedRepository.checkFeedLike(feedId, userId)){
-            throw ConflictException(ErrorCode.FEED_ALREADY_UNLIKED)
-        }
-    }
 }

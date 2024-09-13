@@ -28,7 +28,7 @@ class FeedDetailJpaEntity(
         fun fromFeedDetail(feedDetail: FeedDetail): FeedDetailJpaEntity {
             return FeedDetailJpaEntity(
                 feedDetailId = feedDetail.feedDetailId,
-                index = feedDetail.index,
+                index = feedDetail.media.index,
                 feedDetailUrl = feedDetail.media.url,
                 feedDetailType = feedDetail.media.type
             )
@@ -39,14 +39,12 @@ class FeedDetailJpaEntity(
         return when (feedDetailType) {
             MediaType.IMAGE -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                index = index,
-                media = Image.of(feedDetailUrl)
+                media = Image.of(feedDetailUrl, index)
             )
 
             MediaType.VIDEO -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                index = index,
-                media = Video.of(feedDetailUrl)
+                media = Video.of(feedDetailUrl, index)
             )
         }
     }

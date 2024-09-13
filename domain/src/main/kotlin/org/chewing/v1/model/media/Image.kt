@@ -1,35 +1,23 @@
 package org.chewing.v1.model.media
 
-class Image private constructor(private val imageUrl: String) : Media {
+import java.util.*
+
+class Image private constructor(
+    private val imageUrl: String,
+    override val index: Int
+) : Media {
     companion object {
         private const val DEFAULT_IMAGE_URL = "https://chewing.s3.ap-northeast-2.amazonaws.com"
 
-        fun generate(category: ImageCategory): Image {
-            val path = when (category) {
-                ImageCategory.USER_PROFILE -> "$DEFAULT_IMAGE_URL/user/${ImageType.BASIC}.png"
-                ImageCategory.FEED -> "$DEFAULT_IMAGE_URL/peed/${ImageType.BASIC}.png"
-                ImageCategory.EMOTICON -> "$DEFAULT_IMAGE_URL/emoticon/${ImageType.BASIC}.png"
-            }
-            return Image(path)
-        }
-
         fun upload(category: ImageCategory, userId: String, fileName: String): Image {
-            val path = when (category) {
-                ImageCategory.USER_PROFILE -> "$DEFAULT_IMAGE_URL/user/$userId/${ImageType.UPLOAD}/$fileName"
-                ImageCategory.FEED -> "$DEFAULT_IMAGE_URL/peed/$userId/${ImageType.UPLOAD}/$fileName"
-                ImageCategory.EMOTICON -> "$DEFAULT_IMAGE_URL/emoticon/$userId/${ImageType.UPLOAD}/$fileName"
-            }
-            return Image(path)
+            val randomId = UUID.randomUUID().toString()
+            val path = "$DEFAULT_IMAGE_URL/{${category.name}/$userId/$randomId/$fileName"
+            return Image(path, fileName.split(".")[0].toInt())
         }
 
-        fun of(imagePath: String): Image = Image(imagePath)
+        fun of(imagePath: String, index: Int): Image = Image(imagePath, index)
 
-        fun empty(): Image = Image("")
-    }
-
-    enum class ImageType {
-        BASIC,
-        UPLOAD
+        fun empty(): Image = Image("", 0)
     }
 
     enum class ImageCategory {

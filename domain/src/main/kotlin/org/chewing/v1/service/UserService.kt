@@ -1,25 +1,24 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.ImageProvider
-import org.chewing.v1.implementation.UserReader
-import org.chewing.v1.implementation.UserUpdater
+import org.chewing.v1.implementation.media.FileProcessor
+import org.chewing.v1.implementation.user.UserProcessor
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.io.File
 
 @Service
 class UserService(
     private val userReader: UserReader,
-    private val userUpdater: UserUpdater,
-    private val imageProvider: ImageProvider,
+    private val fileProcessor: FileProcessor,
+    private val userProcessor: UserProcessor
 ) {
-    @Transactional
-    fun updateUserImage(file: File, userId: User.UserId): User.UserId {
-        val user: User = userReader.readUser(userId)
-        val updatedUser: User = user.updateImage(file.name)
-        imageProvider.removeImage(updatedUser.image.url)
-        imageProvider.appendImage(file, updatedUser.image.url)
-        return userUpdater.updateUser(updatedUser)
+    fun updateUserImage(file: File, userId: User.UserId) {
+        val media = fileProcessor.processNewFile(userId, file)
+        val preMedia = userProcessor.processChangeUserImage(userId, media)
+        fileProcessor.processPreFile(preMedia)
+    }
+    fun getUserInfo(userId: User.UserId): User {
+        return userReader.readUserWithStatus(userId)
     }
 }
