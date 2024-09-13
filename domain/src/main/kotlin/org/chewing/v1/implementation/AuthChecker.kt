@@ -22,11 +22,6 @@ class AuthChecker(
         }
     }
 
-    fun checkPhoneNumberRegistered(phoneNumber: String) {
-        if (authRepository.checkPhoneNumberRegistered(phoneNumber)) {
-            throw ConflictException(ErrorCode.PHONE_ALREADY_REGISTERED)
-        }
-    }
     fun checkPhoneVerificationCode(phoneNumber: String, verificationCode: String) {
         if (!authRepository.isPhoneVerificationCodeValid(phoneNumber, verificationCode)) {
             throw ConflictException(ErrorCode.AUTH_1) // 인증 번호가 틀렸습니다.

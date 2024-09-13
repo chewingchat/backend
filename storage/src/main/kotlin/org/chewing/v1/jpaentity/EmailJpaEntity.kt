@@ -2,12 +2,7 @@ package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*;
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
-import org.chewing.v1.model.Email
-import org.chewing.v1.model.Phone
-import org.chewing.v1.model.User
-import org.chewing.v1.model.emoticon.Emoticon
-import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.contact.Email
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 

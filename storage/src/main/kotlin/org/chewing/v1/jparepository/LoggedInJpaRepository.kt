@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface LoggedInJpaRepository : JpaRepository<LoggedInEntity, String>{
-    fun findByDeviceId(deviceId: String): LoggedInEntity?
-    fun findByUserId(userId: String): LoggedInEntity?
+    fun findByAuthAuthId(authId: String): LoggedInEntity?
 }

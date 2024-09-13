@@ -1,6 +1,8 @@
 package org.chewing.v1.implementation
 
 import io.jsonwebtoken.*
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -32,7 +34,7 @@ class JwtTokenProvider(
         val claims: Claims = Jwts.claims().setSubject(userId)
         val now = Date()
         val expiryDate = Date(now.time + refreshExpiration)
-        val token =  Jwts.builder()
+        val token = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
@@ -42,12 +44,12 @@ class JwtTokenProvider(
     }
 
     // 토큰 유효성 검사
-    fun validateToken(token: String): Boolean {
+    fun validateToken(token: String) {
         try {
             val claims = getClaimsFromToken(token)
-            return !claims.expiration.before(Date())
+            !claims.expiration.before(Date())
         } catch (e: Exception) {
-            return false
+            throw UnauthorizedException(ErrorCode.AUTH_5)
         }
     }
 

@@ -22,6 +22,6 @@ interface UserRepository {
     fun readPushToken(pushToken: PushToken): PushToken?
     fun appendUserPushToken(user: User, pushToken: PushToken)
     fun updateUserPushToken(user: User, pushToken: PushToken)
-    fun saveUser(user: User) // 새로운 유저 정보를 저장하는 메서드
+    fun saveUser(user: User):User.UserId // 새로운 유저 정보를 저장하는 메서드
 
 }

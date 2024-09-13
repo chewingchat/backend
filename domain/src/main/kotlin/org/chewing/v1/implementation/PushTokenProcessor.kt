@@ -1,5 +1,8 @@
 package org.chewing.v1.implementation
 
+import org.chewing.v1.implementation.user.UserAppender
+import org.chewing.v1.implementation.user.UserReader
+import org.chewing.v1.implementation.user.UserUpdater
 import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.User
 import org.springframework.stereotype.Component

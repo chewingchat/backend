@@ -1,7 +1,8 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.PushToken
+import org.chewing.v1.model.User
 
 data class PhoneSignupRequest(
     val email: String,
@@ -21,5 +22,8 @@ data class PhoneSignupRequest(
 
     fun toPhone(): Phone {
         return Phone.authorize(phoneNumber, countryCode, verificationCode)
+    }
+    fun toUser(): User {
+        return User.generate(birth, firstName, lastName)
     }
 }

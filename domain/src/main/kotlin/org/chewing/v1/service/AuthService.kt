@@ -1,15 +1,13 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.implementation.*
+import org.chewing.v1.implementation.user.UserAppender
 import org.chewing.v1.model.*
-import org.chewing.v1.model.token.RefreshToken
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.repository.AuthRepository
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -135,7 +133,7 @@ class AuthService(
 
 
         // 이미 인증된 사용자인지 확인
-        AuthValidator.EmailvalidateIsAuthorizedFirst(savedEmail)
+        AuthValidator.emailValidateIsAuthorizedFirst(savedEmail)
 
         // 받은 이메일 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
         AuthValidator.validateEmail(savedEmail, email.validationCode.code)
@@ -154,7 +152,7 @@ class AuthService(
         )
 
         // UserJpaEntity에 저장 (UserAppender 사용)
-        userAppender.appendUser(newUser)
+        val userId = userAppender.appendUser(newUser)
 
 
 
@@ -180,6 +178,7 @@ class AuthService(
     fun verifyPhoneAndSignup(
         phone: Phone,
         pushToken: PushToken,
+        user: User
     ): Pair<String, String> {
 
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
@@ -190,7 +189,7 @@ class AuthService(
 
 
         // 이미 인증된 사용자인지 확인
-        AuthValidator.PhonevalidateIsAuthorizedFirst(savedPhone)
+        AuthValidator.phoneValidateIsAuthorizedFirst(savedPhone)
 
         // 받은 휴대폰 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
         AuthValidator.validatePhoneNumber(savedPhone, phone.validationCode.code)
@@ -199,24 +198,18 @@ class AuthService(
         // 휴대폰 인증 정보를 불러오기 (sendPhoneVerification에서 저장된 정보 사용)
         val authInfo = authReader.readInfoWithUserByPhoneNumber(phone.number).second
 
-        // 새로운 유저 정보 받아서 저장 (UserJpaEntity로 저장) ---> 수정해야함(프론트엔드)
-        val newUser = User.generate(
-            birth = "1990-01-01", // 예시로 추가한 기본 정보. 필요에 맞게 수정해야 함
-            firstName = "FirstName",
-            lastName = "LastName"
-        )
-
         // UserJpaEntity에 저장 (UserAppender 사용)
-        userAppender.appendUser(newUser)
+        // userId 가져오기!
+        val userId = userAppender.appendUser(user)
+        val newUser = user.updateUserId(userId)
+
+        // AuthInfo 도 authAppender 를 통해 저장해야함!!
 
         //푸시 토큰 처리
         pushTokenProcessor.processPushToken(newUser, pushToken)
 
-
         val accessToken = jwtTokenProvider.createToken(newUser.userId.value())
         val refreshToken = jwtTokenProvider.createRefreshToken(newUser.userId.value())
-
-
 
 
         //로그인 정보 저장 -> refresh Token 저장 해야함
@@ -253,9 +246,7 @@ class AuthService(
         val token = refreshToken.removePrefix("Bearer ")
 
         // 리프레시 토큰 유효성 검사
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw UnauthorizedException(ErrorCode.AUTH_5)
-        }
+        jwtTokenProvider.validateToken(token)
 
         // 리프레시 토큰에서 사용자 ID 추출
         val userId = jwtTokenProvider.getUserIdFromToken(token)
@@ -264,6 +255,7 @@ class AuthService(
         val newAccessToken = jwtTokenProvider.createToken(userId)
         val newRefreshToken = jwtTokenProvider.createRefreshToken(userId).token
 
+        //
         // Pair로 반환
         return Pair(newAccessToken, newRefreshToken)
     }

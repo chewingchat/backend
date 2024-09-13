@@ -6,7 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import java.util.*
 
 @Entity

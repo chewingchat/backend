@@ -3,9 +3,9 @@ package org.chewing.v1.implementation
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.AuthInfo
-import org.chewing.v1.model.Email
-import org.chewing.v1.model.Phone
 import org.chewing.v1.model.User
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component
 

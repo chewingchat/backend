@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation
 
 import org.chewing.v1.model.AuthInfo
-import org.chewing.v1.model.Email
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component

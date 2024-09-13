@@ -13,7 +13,7 @@ class FriendRequest(
         val lastName: String
     ) {
         fun toUserName(): User.UserName = User.UserName.of(firstName, lastName)
-        fun toContact(): Email = Email.of(email)
+        fun toContact(): Email = Email.generate(email)
     }
 
     data class UpdateName(
@@ -45,7 +45,7 @@ class FriendRequest(
         }
 
         fun toContact(): Contact {
-            return Phone.of(countyCode, phone)
+            return Phone.generate(countyCode, phone)
         }
     }
 }

@@ -2,16 +2,15 @@ package org.chewing.v1.repository
 
 
 import org.chewing.v1.model.AuthInfo
-import org.chewing.v1.model.Email
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.User
+import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
 @Repository
 interface AuthRepository {
     fun checkEmailRegistered(phoneNumber: String, email: String): Boolean
-    fun checkPhoneNumberRegistered(phoneNumber: String): Boolean
     fun isEmailVerificationCodeValid(email: String, verificationCode: String): Boolean
     fun isPhoneVerificationCodeValid(phoneNumber: String, verificationCode: String): Boolean
 

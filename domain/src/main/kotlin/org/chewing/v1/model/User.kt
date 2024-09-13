@@ -51,7 +51,7 @@ class User private constructor(
                 userId = UserId.empty(),
                 status = UserStatus.of("", Emoticon.empty()),
                 birth = birth,
-                image = Image.generate(Image.ImageCategory.USER_PROFILE),
+                image = Image.empty(),
                 backgroundImage = Image.empty(),
                 name = UserName.of(firstName, lastName)
             )
@@ -117,6 +117,16 @@ class User private constructor(
     }
 
     fun updateStatus(status: UserStatus): User {
+        return User(
+            userId,
+            name,
+            birth,
+            image,
+            status,
+            backgroundImage
+        )
+    }
+    fun updateUserId(userId: UserId): User {
         return User(
             userId,
             name,

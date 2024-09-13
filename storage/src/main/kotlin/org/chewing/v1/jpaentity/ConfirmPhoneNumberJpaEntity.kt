@@ -1,7 +1,7 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
-import org.chewing.v1.model.Phone
+import org.chewing.v1.model.contact.Phone
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 import java.util.*

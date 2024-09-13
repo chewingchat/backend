@@ -5,10 +5,10 @@ import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jparepository.AuthJpaRepository
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
+import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.springframework.stereotype.Repository
@@ -27,10 +27,12 @@ class UserRepositoryImpl(
     override fun readUserByContact(contact: Contact): User? {
         return when (contact) {
             is Email -> {
-                readUserByEmail(contact.email)
+                readUserByEmail(contact.emailAddress)
             }
+
             is Phone ->
                 readUserByPhoneNumber(contact.number, contact.country)
+
             else -> null
         }
     }
@@ -38,6 +40,24 @@ class UserRepositoryImpl(
     override fun readUserWithStatus(userId: User.UserId): User? {
         val userEntity = userJpaRepository.findByIdWithStatusEmoticon(userId.value())
         return userEntity.map { it.toUserWithStatus() }.orElse(null)
+    }
+
+    override fun readPushToken(pushToken: PushToken): PushToken? {
+        TODO("Not yet implemented")
+    }
+
+    override fun appendUserPushToken(user: User, pushToken: PushToken) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateUserPushToken(user: User, pushToken: PushToken) {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveUser(user: User): User.UserId {
+        userJpaRepository.save(UserJpaEntity.fromUser(user)).id.let {
+            return User.UserId.of(it)
+        }
     }
 
     override fun remove(userId: User.UserId): User.UserId? {
@@ -50,7 +70,7 @@ class UserRepositoryImpl(
     }
 
     override fun readUserByEmail(email: String): User? {
-        return authJpaRepository.findByEmail(email).map {
+        return authJpaRepository.findUserByEmail(email).map {
             it.user.toUser()
         }.orElse(null)
     }

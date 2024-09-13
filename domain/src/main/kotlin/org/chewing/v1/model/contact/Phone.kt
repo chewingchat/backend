@@ -1,5 +1,6 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.contact
 
+import org.chewing.v1.model.ValidationCode
 import java.time.LocalDateTime
 
 class Phone private constructor(
@@ -8,7 +9,6 @@ class Phone private constructor(
     val number: String,
     val validationCode: ValidationCode,
     val isAuthorizedFirst: Boolean
-) {
 ) : Contact {
     companion object {
         fun of(
