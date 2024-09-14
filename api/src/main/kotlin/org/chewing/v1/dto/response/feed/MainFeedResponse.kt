@@ -16,14 +16,14 @@ data class MainFeedResponse(
             friendFeed: FriendFeed
         ): MainFeedResponse {
             val formattedUploadTime =
-                friendFeed.feed.feedUploadTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+                friendFeed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return MainFeedResponse(
-                feedId = friendFeed.feed.feedId.value(),
+                feedId = friendFeed.feed.id.value(),
                 isLiked = friendFeed.isLiked,
                 totalLiked = friendFeed.feed.likes,
                 feedUploadTime = formattedUploadTime,
-                feedMainDetailFileUrl = friendFeed.feed.feedDetails[0].media.url,
-                type = friendFeed.feed.feedDetails[0].media.type.toString().lowercase()
+                feedMainDetailFileUrl = friendFeed.feed.details[0].media.url,
+                type = friendFeed.feed.details[0].media.type.toString().lowercase()
             )
         }
     }

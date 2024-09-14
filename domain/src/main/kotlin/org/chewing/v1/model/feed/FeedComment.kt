@@ -4,7 +4,7 @@ import org.chewing.v1.model.User
 import java.time.LocalDateTime
 
 class FeedComment(
-    val commentId: CommentId,
+    val id: CommentId,
     val comment: String,
     val writer: User,
     val createAt: LocalDateTime

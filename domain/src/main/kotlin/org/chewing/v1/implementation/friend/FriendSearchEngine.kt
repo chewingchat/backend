@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class FriendSearchEngine(
-    private val friendReader: FriendReader,
+    private val friendFinder: FriendFinder,
 ) {
     fun searchFriends(userId: User.UserId, keyword: String): List<Friend> {
-        val friends = friendReader.readFriendsWithStatus(userId)
+        val friends = friendFinder.findFriendsWithStatus(userId)
         return filterFriendsByKeyword(friends, cleanKeyword(keyword))
     }
 
@@ -20,9 +20,9 @@ class FriendSearchEngine(
     private fun filterFriendsByKeyword(friends: List<Friend>, keyword: String): List<Friend> {
         return friends.filter { friend ->
             // 성과 이름을 두 가지 순서로 조합
-            val firstNameLastNameSplit = "${friend.friendName.firstName()} ${friend.friendName.lastName()}"
-            val lastNameFirstNameSplit = "${friend.friendName.lastName()} ${friend.friendName.firstName()}"
-            val firstNameLastName = "${friend.friendName.firstName()}${friend.friendName.lastName()}"
+            val firstNameLastNameSplit = "${friend.name.firstName()} ${friend.name.lastName()}"
+            val lastNameFirstNameSplit = "${friend.name.lastName()} ${friend.name.firstName()}"
+            val firstNameLastName = "${friend.name.firstName()}${friend.name.lastName()}"
 
             // 두 가지 조합과 검색 키워드를 비교
             firstNameLastNameSplit.contains(keyword, ignoreCase = true) ||

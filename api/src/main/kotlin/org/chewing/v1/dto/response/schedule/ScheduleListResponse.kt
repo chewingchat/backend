@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response.schedule
 
-import org.chewing.v1.model.Schedule
+import org.chewing.v1.model.schedule.Schedule
 import java.time.format.DateTimeFormatter
 
 data class ScheduleListResponse(
@@ -28,12 +28,12 @@ data class ScheduleListResponse(
             fun of(schedule: Schedule): ScheduleResponse {
                 val formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")
                 return ScheduleResponse(
-                    schedule.scheduleId.value(),
-                    schedule.scheduleName,
-                    schedule.scheduleStartTime.format(formatter),
-                    schedule.scheduleEndTime.format(formatter),
-                    schedule.notificationTime.format(formatter),
-                    schedule.scheduleText
+                    schedule.id.value(),
+                    schedule.name,
+                    schedule.startAt.format(formatter),
+                    schedule.entAt.format(formatter),
+                    schedule.notificationAt.format(formatter),
+                    schedule.content
                 )
             }
         }

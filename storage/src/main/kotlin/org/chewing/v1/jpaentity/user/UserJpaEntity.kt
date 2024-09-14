@@ -14,31 +14,17 @@ import java.util.*
 @Table(name = "`user`", schema = "chewing")
 class UserJpaEntity(
     @Id
-    @Column(name = "user_id")
-    val id: String = UUID.randomUUID().toString(),
+    val userId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "picture_url", nullable = false)
     val pictureUrl: String,
 
-    @Column(name = "background_picture_url", nullable = false)
     val backgroundPictureUrl: String,
 
-    @Column(name = "status_message", nullable = false)
-    val statusMessage: String,
-
-    @Column(name = "user_first_name", nullable = false)
     val userFirstName: String,
 
-    @Column(name = "user_last_name", nullable = false)
     val userLastName: String,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "emoticon_id", nullable = true)
-    val statusEmoticon: EmoticonJpaEntity?,
-
-    @Column(name = "birthday", nullable = false)
-    val birth: String
-
+    val birth: String,
 ) : BaseEntity() {
     companion object {
         fun fromUser(user: User): UserJpaEntity {
@@ -48,37 +34,22 @@ class UserJpaEntity(
                 user.backgroundImage.url,
                 user.status.statusMessage,
                 user.name.firstName(),
-                user.name.lastName(),
-                EmoticonJpaEntity.fromEmoticon(user.status.emoticon),
-                user.birth
+                user.name.lastName()
             )
         }
     }
 
     fun toUser(): User {
-        return User.withId(
-            this.id,
+        return User.of(
+            this.userId,
             this.userFirstName,
             this.userLastName,
             this.birth,
             Image.of(this.pictureUrl, 0),
             Image.of(this.backgroundPictureUrl, 0),
+            "",
             Emoticon.empty(),
-            this.statusMessage
-        )
-    }
-
-    fun toUserWithStatus(): User {
-        val emoticon = this.statusEmoticon?.toEmoticon() ?: Emoticon.empty()
-        return User.withId(
-            this.id,
-            this.userFirstName,
-            this.userLastName,
-            this.birth,
-            Image.of(this.pictureUrl, 0),
-            Image.of(this.backgroundPictureUrl, 0),
-            emoticon,
-            this.statusMessage
+            ""
         )
     }
 }

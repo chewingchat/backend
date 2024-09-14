@@ -30,9 +30,9 @@ class FeedService(
 
     fun getFriendFulledFeeds(userId: User.UserId): List<FriendFeed> {
         val feeds = feedReader.readFulledFeedsByUserId(userId)
-        val likedFeedIds = feedChecker.checkFeedsLike(feeds.map { it.feedId }, userId)
+        val likedFeedIds = feedChecker.checkFeedsLike(feeds.map { it.id }, userId)
         return feeds.map { feed ->
-            val isLiked = likedFeedIds[feed.feedId] ?: false
+            val isLiked = likedFeedIds[feed.id] ?: false
             FriendFeed.of(feed, isLiked)
         }
     }
@@ -53,8 +53,8 @@ class FeedService(
     fun deleteFeeds(userId: User.UserId, feedIds: List<Feed.FeedId>) {
         val feeds = feedValidator.isFeedsOwner(feedIds, userId)
         feedRemover.removeFeeds(feedIds)
-        val medias = feeds.flatMap { feed -> feed.feedDetails.map { it.media } }
-        fileProcessor.processPreFiles(medias)
+        val medias = feeds.flatMap { feed -> feed.details.map { it.media } }
+        fileProcessor.processOldFiles(medias)
     }
 
     fun createFeed(userId: User.UserId, files: List<File>, topic: String) {

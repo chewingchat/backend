@@ -34,7 +34,7 @@ object FriendSortEngine {
 
     private fun getFriendSearchHistoryComparator(sortCriteria: SortCriteria): Comparator<FriendSearch> {
         return when (sortCriteria) {
-            SortCriteria.DATE -> Comparator.comparing { it.searchTime }
+            SortCriteria.DATE -> Comparator.comparing { it.searchAt }
             else -> throw IllegalArgumentException("존재하지 않는 정렬 기준: $sortCriteria")
         }
     }

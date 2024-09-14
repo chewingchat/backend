@@ -15,12 +15,12 @@ data class FriendResponse(
         fun of(friend: Friend): FriendResponse {
             return FriendResponse(
                 friendId = friend.friend.userId.value(),
-                friendFirstName = friend.friendName.firstName(),
-                friendLastName = friend.friendName.lastName(),
+                friendFirstName = friend.name.firstName(),
+                friendLastName = friend.name.lastName(),
                 friendImageUrl = friend.friend.image.url,
                 friendStatusMessage = friend.friend.status.statusMessage,
                 isFavorite = friend.isFavorite,
-                friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl
+                friendStatusEmoticon = friend.friend.status.emoticon.media.url
             )
         }
     }

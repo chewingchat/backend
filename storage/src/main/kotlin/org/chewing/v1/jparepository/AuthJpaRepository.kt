@@ -42,5 +42,5 @@ interface AuthJpaRepository : JpaRepository<AuthJpaEntity, String> {
     fun findAuthInfoByEmail(
         @Param("email") email: String
     ): Optional<AuthJpaEntity>
-    fun findByUserId(userId: String): Optional<AuthJpaEntity>
+    fun findByUserUserId(userId: String): Optional<AuthJpaEntity>
 }

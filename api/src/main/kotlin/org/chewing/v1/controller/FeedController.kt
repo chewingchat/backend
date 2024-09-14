@@ -54,7 +54,7 @@ class FeedController(
     @PostMapping("/like")
     fun addFeedLikes(
         @RequestHeader("userId") userId: String,
-        @RequestBody request: LikesRequest.AddLikesRequest
+        @RequestBody request: LikesRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val feedId = request.toFeedId()
         feedService.addFeedLikes(User.UserId.of(userId), feedId)
@@ -65,7 +65,7 @@ class FeedController(
     @DeleteMapping("/like")
     fun deleteFeedLikes(
         @RequestHeader("userId") userId: String,
-        @RequestBody request: LikesRequest.DeleteLikesRequest
+        @RequestBody request: LikesRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val feedId = request.toFeedId()
         feedService.deleteFeedLikes(User.UserId.of(userId), feedId)

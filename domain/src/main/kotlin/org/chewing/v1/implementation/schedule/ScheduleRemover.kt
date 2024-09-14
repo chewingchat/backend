@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.schedule
 
-import org.chewing.v1.model.Schedule
+import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.repository.ScheduleRepository
 import org.springframework.stereotype.Component
 

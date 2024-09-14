@@ -1,15 +1,16 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.schedule
 
-import java.time.LocalDate
+import org.chewing.v1.model.User
 import java.time.LocalDateTime
 
 class Schedule private constructor(
-    val scheduleId: ScheduleId,
-    val scheduleName: String,
-    val scheduleStartTime: LocalDateTime,
-    val scheduleEndTime: LocalDateTime,
-    val notificationTime: LocalDateTime,
-    val scheduleText: String
+    val id: ScheduleId,
+    val name: String,
+    val startAt: LocalDateTime,
+    val entAt: LocalDateTime,
+    val notificationAt: LocalDateTime,
+    val content: String,
+    val writer: User
 ) {
     companion object {
         fun of(
@@ -18,7 +19,8 @@ class Schedule private constructor(
             scheduleStartTime: LocalDateTime,
             scheduleEndTime: LocalDateTime,
             notificationTime: LocalDateTime,
-            scheduleText: String
+            scheduleText: String,
+            writer: User
         ): Schedule {
             return Schedule(
                 ScheduleId.of(scheduleId),
@@ -26,7 +28,8 @@ class Schedule private constructor(
                 scheduleStartTime,
                 scheduleEndTime,
                 notificationTime,
-                scheduleText
+                scheduleText,
+                writer
             )
         }
 
@@ -43,7 +46,8 @@ class Schedule private constructor(
                 scheduleStartTime,
                 scheduleEndTime,
                 notificationTime,
-                scheduleText
+                scheduleText,
+                User.empty()
             )
         }
     }
@@ -64,5 +68,16 @@ class Schedule private constructor(
         }
     }
 
+    fun updateWriter(writer: User): Schedule {
+        return Schedule(
+            id,
+            name,
+            startAt,
+            entAt,
+            notificationAt,
+            content,
+            writer
+        )
+    }
 
 }

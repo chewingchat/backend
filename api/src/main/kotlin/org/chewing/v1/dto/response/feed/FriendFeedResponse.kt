@@ -15,14 +15,14 @@ data class FriendFeedResponse(
         fun of(
             friendFeed: FriendFeed
         ): FriendFeedResponse {
-            val formattedUploadTime = friendFeed.feed.feedUploadTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+            val formattedUploadTime = friendFeed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return FriendFeedResponse(
-                feedId = friendFeed.feed.feedId.value(),
+                feedId = friendFeed.feed.id.value(),
                 isLiked = friendFeed.isLiked,
                 totalLiked = friendFeed.feed.likes,
                 feedUploadTime = formattedUploadTime,
-                feedTopic = friendFeed.feed.feedTopic,
-                feedDetails = friendFeed.feed.feedDetails.map { FeedDetailResponse.of(it) }
+                feedTopic = friendFeed.feed.topic,
+                feedDetails = friendFeed.feed.details.map { FeedDetailResponse.of(it) }
             )
         }
     }

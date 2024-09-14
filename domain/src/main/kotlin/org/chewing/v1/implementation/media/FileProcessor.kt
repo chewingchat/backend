@@ -29,7 +29,7 @@ class FileProcessor(
         fileProvider.removeFile(media)
     }
 
-    fun processPreFiles(medias: List<Media>) {
+    fun processOldFiles(medias: List<Media>) {
         medias.forEach {
             fileProvider.removeFile(it)
         }

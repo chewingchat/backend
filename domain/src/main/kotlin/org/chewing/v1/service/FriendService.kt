@@ -1,6 +1,5 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.*
 import org.chewing.v1.implementation.friend.*
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.*
@@ -17,16 +16,17 @@ class FriendService(
     private val friendUpdater: FriendUpdater,
     private val userReader: UserReader,
     private val friendChecker: FriendChecker,
+    private val friendFinder: FriendFinder
 ) {
     fun addFriend(
         userId: User.UserId,
         friendName: User.UserName,
         contact: Contact
     ) {
-        val friendTarget = userReader.readUserByContact(contact)
-        val friend = Friend.generate(friendTarget, friendName)
-        friendChecker.isAlreadyFriend(userId, friend.friend.userId)
+        val targetUser = userReader.readUserByContact(contact)
+        friendChecker.isAlreadyFriend(userId, targetUser.userId)
         val user = userReader.readUser(userId)
+        val friend = Friend.generate(targetUser, friendName)
         friendAppender.appendFriend(user, friend)
     }
 
@@ -34,14 +34,9 @@ class FriendService(
     fun removeFriend(userId: User.UserId, friendId: User.UserId) {
         friendRemover.removeFriend(userId, friendId)
     }
-
     fun getFriends(userId: User.UserId, sort: SortCriteria): List<Friend> {
-        val friends = friendReader.readFriendsWithStatus(userId)
+        val friends = friendFinder.findFriendsWithStatus(userId)
         return FriendSortEngine.sortFriends(friends, sort)
-    }
-
-    fun getFriend(userId: User.UserId, friendId: User.UserId): Friend {
-        return friendReader.readFriendWithStatus(userId, friendId)
     }
     @Transactional
     fun changeFriendFavorite(userId: User.UserId, friendId: User.UserId, favorite: Boolean) {

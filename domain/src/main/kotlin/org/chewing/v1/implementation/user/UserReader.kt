@@ -49,6 +49,9 @@ class UserReader(
             throw NotFoundException(ErrorCode.USER_NOT_FOUND)
         }
     }
+    fun readUsersWithStatuses(userIds: List<User.UserId>): List<User> {
+        return userRepository.readUsersWithStatuses(userIds)
+    }
 
     fun readSearchedFriend(userId: User.UserId): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)

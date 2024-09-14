@@ -26,13 +26,13 @@ data class MainFriendCardsResponse(
             fun of(friend: Friend): FriendCardResponse {
                 return FriendCardResponse(
                     friendId = friend.friend.userId.value(),
-                    friendFirstName = friend.friendName.firstName(),
-                    friendLastName = friend.friendName.lastName(),
+                    friendFirstName = friend.name.firstName(),
+                    friendLastName = friend.name.lastName(),
                     friendImageUrl = friend.friend.image.url,
                     friendStatusMessage = friend.friend.status.statusMessage,
                     isFavorite = friend.isFavorite,
                     friendBackgroundImageUrl = friend.friend.backgroundImage.url,
-                    friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl
+                    friendStatusEmoticon = friend.friend.status.emoticon.media.url
                 )
             }
         }
@@ -47,7 +47,7 @@ data class MainFriendCardsResponse(
                 userFirstName = user.name.firstName(),
                 userLastName = user.name.lastName(),
                 totalFriends = friends.size,
-                userStatusEmoticon = user.status.emoticon.emoticonUrl
+                userStatusEmoticon = user.status.emoticon.media.url
             )
         }
     }
