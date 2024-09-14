@@ -1,24 +1,22 @@
 package org.chewing.v1.model.feed
 
 import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.media.Media
-import java.io.Writer
 import java.time.LocalDateTime
 
 class Feed private constructor(
-    val feedId: FeedId,
-    val feedTopic: String,
-    val likes: Int = 0,
-    val comments: Int = 0,
-    val feedUploadTime: LocalDateTime,
-    val feedDetails: List<FeedDetail>,
+    val id: FeedId,
+    val topic: String,
+    val likes: Int,
+    val comments: Int,
+    val uploadAt: LocalDateTime,
+    val details: List<FeedDetail>,
     val writer: User,
     val version: Long = 0,
 ) {
-    class FeedId private constructor(private val feedId: String) {
+    class FeedId private constructor(private val id: String) {
         fun value(): String {
-            return feedId
+            return id
         }
 
         companion object {
@@ -34,38 +32,38 @@ class Feed private constructor(
 
     companion object {
         fun of(
-            feedId: String,
-            feedTopic: String,
+            id: String,
+            topic: String,
             likes: Int,
             comments: Int,
-            feedUploadTime: LocalDateTime,
-            feedDetails: List<FeedDetail>,
+            uploadAt: LocalDateTime,
+            details: List<FeedDetail>,
             writer: User,
             version: Long
         ): Feed {
-            return Feed(FeedId.of(feedId), feedTopic, likes, comments, feedUploadTime, feedDetails, writer, version)
+            return Feed(FeedId.of(id), topic, likes, comments, uploadAt, details, writer, version)
         }
 
         fun generate(
-            feedTopic: String,
+            topic: String,
             medias: List<Media>,
             writer: User
         ): Feed {
             val feedDetails = medias.map {
                 FeedDetail.generate(it)
             }
-            return Feed(FeedId.empty(), feedTopic, 0, 0, LocalDateTime.now(), feedDetails, writer)
+            return Feed(FeedId.empty(), topic, 0, 0, LocalDateTime.now(), feedDetails, writer)
         }
     }
 
     fun appendLikes(): Feed {
         return Feed(
-            FeedId.of(feedId.value()),
-            feedTopic,
+            FeedId.of(id.value()),
+            topic,
             likes + 1,
             comments,
-            feedUploadTime,
-            feedDetails,
+            uploadAt,
+            details,
             writer,
             version
         )
@@ -73,12 +71,12 @@ class Feed private constructor(
 
     fun removeLikes(): Feed {
         return Feed(
-            FeedId.of(feedId.value()),
-            feedTopic,
+            FeedId.of(id.value()),
+            topic,
             likes - 1,
             comments,
-            feedUploadTime,
-            feedDetails,
+            uploadAt,
+            details,
             writer,
             version
         )
@@ -86,12 +84,12 @@ class Feed private constructor(
 
     fun appendComments(): Feed {
         return Feed(
-            FeedId.of(feedId.value()),
-            feedTopic,
+            FeedId.of(id.value()),
+            topic,
             likes,
             comments + 1,
-            feedUploadTime,
-            feedDetails,
+            uploadAt,
+            details,
             writer,
             version
         )
@@ -99,12 +97,12 @@ class Feed private constructor(
 
     fun removeComments(): Feed {
         return Feed(
-            FeedId.of(feedId.value()),
-            feedTopic,
+            FeedId.of(id.value()),
+            topic,
             likes,
             comments - 1,
-            feedUploadTime,
-            feedDetails,
+            uploadAt,
+            details,
             writer,
             version
         )

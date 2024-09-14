@@ -1,6 +1,7 @@
 package org.chewing.v1.implementation
 
 import io.jsonwebtoken.*
+import io.jsonwebtoken.security.Keys
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.model.token.RefreshToken
@@ -8,14 +9,16 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.util.*
+import javax.crypto.SecretKey
 
 @Component
 class JwtTokenProvider(
-    @Value("\${jwt.secret}") private val secretKey: String,
+    @Value("\${jwt.secret}") private val secretKeyString: String,
     @Value("\${jwt.access-expiration}") private val accessExpiration: Long,
-    @Value("\${jwt.refresh-expiration}") private val refreshExpiration: Long
+    @Value("\${jwt.refresh-expiration}") private val refreshExpiration: Long,
 ) {
-
+    private val secretKey: SecretKey
+        get() = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
     // JWT Access Token 생성
     fun createToken(userId: String): String {
         val claims: Claims = Jwts.claims().setSubject(userId)
@@ -25,7 +28,7 @@ class JwtTokenProvider(
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
-            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .signWith(secretKey, SignatureAlgorithm.HS512)
             .compact()
     }
 
@@ -38,7 +41,7 @@ class JwtTokenProvider(
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
-            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .signWith(secretKey, SignatureAlgorithm.HS512)
             .compact()
         return RefreshToken.of(token, LocalDateTime.from(expiryDate.toInstant()))
     }
@@ -61,8 +64,9 @@ class JwtTokenProvider(
 
     // 토큰에서 클레임 추출
     private fun getClaimsFromToken(token: String): Claims {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
             .setSigningKey(secretKey)
+            .build()
             .parseClaimsJws(token)
             .body
     }

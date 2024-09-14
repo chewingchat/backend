@@ -13,11 +13,8 @@ import java.util.UUID
 @Table(name = "friend_search", schema = "chewing")
 class FriendSearchJpaEntity(
     @Id
-    @Column(name = "search_id")
     val searchId: String = UUID.randomUUID().toString(),
 
-
-    @Column(name = "search_text", nullable = false)
     val searchText: String,
 
     @JoinColumn(name = "user_id", insertable = false, updatable = false)

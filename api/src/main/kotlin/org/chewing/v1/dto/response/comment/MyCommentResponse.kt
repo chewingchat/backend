@@ -38,11 +38,11 @@ data class MyCommentResponse(
                     feed.writer.name.firstName(),
                     feed.writer.name.lastName(),
                     feed.writer.image.url,
-                    feed.feedId.value(),
-                    feed.feedTopic,
-                    feed.feedDetails[0].media.url,
-                    feed.feedUploadTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
-                    feed.feedDetails[0].media.type.toString().lowercase(),
+                    feed.id.value(),
+                    feed.topic,
+                    feed.details[0].media.url,
+                    feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
+                    feed.details[0].media.type.toString().lowercase(),
                     comments.map { CommentResponse.of(it) }
                 )
             }
@@ -58,7 +58,7 @@ data class MyCommentResponse(
                     comment: FeedComment
                 ): CommentResponse {
                     return CommentResponse(
-                        commentId = comment.commentId.value(),
+                        commentId = comment.id.value(),
                         comment = comment.comment,
                         commentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
                     )

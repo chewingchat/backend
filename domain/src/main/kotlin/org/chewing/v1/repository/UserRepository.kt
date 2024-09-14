@@ -17,11 +17,9 @@ interface UserRepository {
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: User.UserId): List<FriendSearch>
     fun readUserWithStatus(userId: User.UserId): User?
-
-    //
+    fun readUsersWithStatuses(userIds: List<User.UserId>): List<User>
     fun readPushToken(pushToken: PushToken): PushToken?
     fun appendUserPushToken(user: User, pushToken: PushToken)
     fun updateUserPushToken(user: User, pushToken: PushToken)
-    fun saveUser(user: User):User.UserId // 새로운 유저 정보를 저장하는 메서드
-
+    fun saveUser(user: User): User.UserId // 새로운 유저 정보를 저장하는 메서드
 }

@@ -3,7 +3,6 @@ package org.chewing.v1.jpaentity.user
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
@@ -25,13 +24,12 @@ class UserFeedLikesJpaEntity(
     @JoinColumn(name = "feed_id")
     val feed: FeedJpaEntity,
 
-    @Column(name = "like_time", nullable = false)
     val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
         fun fromUserFeed(user: User, feed: Feed): UserFeedLikesJpaEntity {
             return UserFeedLikesJpaEntity(
-                id = UserFeedId(userId = user.userId.value(), feedId = feed.feedId.value()),
+                id = UserFeedId(userId = user.userId.value(), feedId = feed.id.value()),
                 user = UserJpaEntity.fromUser(user),
                 feed = FeedJpaEntity.fromFeed(feed)
             )

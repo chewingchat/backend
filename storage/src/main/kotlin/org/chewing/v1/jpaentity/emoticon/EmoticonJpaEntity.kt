@@ -8,21 +8,16 @@ import java.util.*
 @Table(name = "emoticon", schema = "chewing")
 class EmoticonJpaEntity(
     @Id
-    @Column(name = "emoticon_id")
     val emoticonId: String = UUID.randomUUID().toString(),
-
-    @Column(name = "emoticon_url", nullable = false)
     val emoticonUrl: String,
-
-    @Column(name = "emoticon_name", nullable = false)
     val emoticonName: String,
 ) {
     companion object {
         fun fromEmoticon(emoticon: Emoticon): EmoticonJpaEntity {
             return EmoticonJpaEntity(
-                emoticon.emoticonId,
-                emoticon.emoticonUrl,
-                emoticon.emoticonName,
+                emoticon.id,
+                emoticon.media.url,
+                emoticon.name,
             )
         }
     }

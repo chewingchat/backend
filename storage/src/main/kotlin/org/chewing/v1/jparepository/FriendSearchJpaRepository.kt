@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface FriendSearchJpaRepository : JpaRepository<FriendSearchJpaEntity, String> {
-    fun findAllByUserId(userId: String): List<FriendSearchJpaEntity>
+    fun findAllByUserUserId(userId: String): List<FriendSearchJpaEntity>
 }

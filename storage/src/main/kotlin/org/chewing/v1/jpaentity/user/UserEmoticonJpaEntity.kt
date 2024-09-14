@@ -23,7 +23,7 @@ class UserEmoticonJpaEntity(
     companion object {
         fun fromUserEmoticon(user: User, emoticonPack: EmoticonPack): UserEmoticonJpaEntity {
             return UserEmoticonJpaEntity(
-                id = UserEmoticonId(userId = user.userId.value(), emoticonPackId = emoticonPack.emoticonPackId),
+                id = UserEmoticonId(userId = user.userId.value(), emoticonPackId = emoticonPack.id),
                 user = UserJpaEntity.fromUser(user),
                 emoticonPack = EmoticonPackJpaEntity.fromEmoticonPack(emoticonPack)
             )

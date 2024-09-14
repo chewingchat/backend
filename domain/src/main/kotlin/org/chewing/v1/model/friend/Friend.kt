@@ -5,14 +5,14 @@ import org.chewing.v1.model.User
 class Friend private constructor(
     val friend: User,
     val isFavorite: Boolean,
-    val friendName: User.UserName,
+    val name: User.UserName,
 ) {
     companion object {
         fun of(friend: User, favorite: Boolean, friendFirstName: String, friendLastName: String): Friend {
             return Friend(
                 friend = friend,
                 isFavorite = favorite,
-                friendName = User.UserName.of(friendFirstName, friendLastName),
+                name = User.UserName.of(friendFirstName, friendLastName),
             )
         }
 
@@ -20,7 +20,7 @@ class Friend private constructor(
             return Friend(
                 friend = friend,
                 isFavorite = false,
-                friendName = friendName,
+                name = friendName,
             )
         }
     }
@@ -29,14 +29,21 @@ class Friend private constructor(
         return Friend(
             friend = this.friend,
             isFavorite = favorite,
-            friendName = this.friendName,
+            name = this.name,
         )
     }
     fun updateName(friendName: User.UserName): Friend {
         return Friend(
             friend = this.friend,
             isFavorite = this.isFavorite,
-            friendName = friendName,
+            name = friendName,
+        )
+    }
+    fun updateFriend(friend: User): Friend {
+        return Friend(
+            friend = friend,
+            isFavorite = this.isFavorite,
+            name = this.name,
         )
     }
 }

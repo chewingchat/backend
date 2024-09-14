@@ -1,6 +1,5 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jpaentity.feed.FeedCommentJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jpaentity.user.UserFeedId
 import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
@@ -48,7 +47,7 @@ class FeedRepositoryImpl(
     }
 
     override fun removeFeedLikes(feed: Feed, user: User) {
-        feedLikesRepository.deleteById(UserFeedId(user.userId.value(), feed.feedId.value()))
+        feedLikesRepository.deleteById(UserFeedId(user.userId.value(), feed.id.value()))
         feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 

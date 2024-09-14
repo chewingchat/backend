@@ -85,7 +85,7 @@ class AuthRepositoryImpl(
     // 로그아웃 시 로그인 정보를 삭제하는 로직
     override fun deleteLoggedInInfo(userId: User.UserId) {
         // 로그인 정보를 찾아 삭제
-        val authInfo = authJpaRepository.findByUserId(userId.value())
+        val authInfo = authJpaRepository.findByUserUserId(userId.value())
         val loggedInEntity = loggedInJpaRepository.findByAuthAuthId(authInfo.get().authId)
         loggedInJpaRepository.delete(loggedInEntity!!)
     }

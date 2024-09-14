@@ -3,6 +3,7 @@ package org.chewing.v1.jpaentity.friend
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
@@ -14,14 +15,8 @@ import org.hibernate.annotations.DynamicInsert
 class FriendJpaEntity(
     @EmbeddedId
     val id: FriendId,
-
-    @Column(name = "favorite", nullable = false)
     val favorite: Boolean,
-
-    @Column(name = "friend_first_name", nullable = false)
     val friendFirstName: String,
-
-    @Column(name = "friend_last_name", nullable = false)
     val friendLastName: String,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,22 +39,13 @@ class FriendJpaEntity(
         )
     }
 
-    fun toFriendWithStatus(): Friend {
-        return Friend.of(
-            friend = friend.toUserWithStatus(),
-            favorite = favorite,
-            friendFirstName = friendFirstName,
-            friendLastName = friendLastName
-        )
-    }
-
     companion object {
         fun fromFriend(user: User, friend: Friend): FriendJpaEntity {
             return FriendJpaEntity(
                 id = FriendId(userId = user.userId.value(), friendId = friend.friend.userId.value()),
                 favorite = friend.isFavorite,
-                friendFirstName = friend.friendName.firstName(),
-                friendLastName = friend.friendName.lastName(),
+                friendFirstName = friend.name.firstName(),
+                friendLastName = friend.name.lastName(),
                 user = UserJpaEntity.fromUser(user),
                 friend = UserJpaEntity.fromUser(friend.friend)
             )

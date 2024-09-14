@@ -1,5 +1,6 @@
 package org.chewing.v1.controller
 
+import org.chewing.v1.dto.request.UserStatusRequest
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -25,6 +26,13 @@ class UserController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFile(file)
         userService.updateUserImage(convertedFile, User.UserId.of(userId))
+        return ResponseHelper.successOnly()
+    }
+    @PostMapping("/profile/status")
+    fun changeProfileStatus(
+        @RequestHeader("userId") userId: String,
+        @RequestBody request: UserStatusRequest
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
         return ResponseHelper.successOnly()
     }
 }

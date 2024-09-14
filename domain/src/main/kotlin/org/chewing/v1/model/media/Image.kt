@@ -3,7 +3,7 @@ package org.chewing.v1.model.media
 import java.util.*
 
 class Image private constructor(
-    private val imageUrl: String,
+    override val url: String,
     override val index: Int
 ) : Media {
     companion object {
@@ -26,7 +26,8 @@ class Image private constructor(
         EMOTICON
     }
 
-    override val url: String get() = imageUrl
     override val type: MediaType
         get() = MediaType.IMAGE
+    override val isEmpty: Boolean
+        get() = url.isEmpty()
 }

@@ -1,10 +1,9 @@
 package org.chewing.v1.model.media
 
-import org.chewing.v1.model.User
 import java.util.*
 
 class Video private constructor(
-    private val videoUrl: String,
+    override val url: String,
     override val index: Int
 ) : Media {
     companion object {
@@ -24,7 +23,8 @@ class Video private constructor(
         EMOTICON
     }
 
-    override val url: String get() = videoUrl
     override val type: MediaType
         get() = MediaType.VIDEO
+    override val isEmpty: Boolean
+        get() = url.isEmpty()
 }

@@ -11,17 +11,13 @@ class PushNotificationJpaEntity(
     @Column(name = "push_notification_id")
     val pushId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "app_token", nullable = false)
     val appToken: String,
 
-    @Column(name = "device_id", nullable = false)
     val deviceId: String,
 
-    @Column(name = "device_provider", nullable = false)
     val deviceProvider: String,
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     val user: UserJpaEntity,
 ) {
 }

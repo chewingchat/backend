@@ -11,14 +11,11 @@ import java.util.*
 @Table(name = "emoticon_pack", schema = "chewing")
 class EmoticonPackJpaEntity(
     @Id
-    @Column(name = "emoticon_pack_id")
     val emoticonPackId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "emoticon_pack_url", nullable = false)
     val emoticonPackUrl: String,
 
-    @Column(name = "emoticon_pack_name", nullable = false)
-    private val emoticonPackName: String,
+    val emoticonPackName: String,
 
     @JoinColumn(name = "emoticon_pack_id")
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -28,9 +25,9 @@ class EmoticonPackJpaEntity(
     companion object {
         fun fromEmoticonPack(emoticonPack: EmoticonPack): EmoticonPackJpaEntity {
             return EmoticonPackJpaEntity(
-                emoticonPack.emoticonPackId,
-                emoticonPack.emoticonPackUrl,
-                emoticonPack.emoticonPackName
+                emoticonPack.id,
+                emoticonPack.media.url,
+                emoticonPack.name
             )
         }
     }

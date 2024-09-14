@@ -2,9 +2,11 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.friend.FriendSearchJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.chewing.v1.jparepository.AuthJpaRepository
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
+import org.chewing.v1.jparepository.UserStatusJpaRepository
 import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
@@ -17,7 +19,8 @@ import org.springframework.stereotype.Repository
 class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
     private val authJpaRepository: AuthJpaRepository,
-    private val friendSearchJpaRepository: FriendSearchJpaRepository
+    private val friendSearchJpaRepository: FriendSearchJpaRepository,
+    private val userStatusJpaRepository: UserStatusJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: User.UserId): User? {
         val userEntity = userJpaRepository.findById(userId.value())
@@ -38,8 +41,13 @@ class UserRepositoryImpl(
     }
 
     override fun readUserWithStatus(userId: User.UserId): User? {
-        val userEntity = userJpaRepository.findByIdWithStatusEmoticon(userId.value())
-        return userEntity.map { it.toUserWithStatus() }.orElse(null)
+        val userFulledEntity = userStatusJpaRepository.findSelectedUserStatusWithUser(userId.value())
+        return userFulledEntity.map { it.toUserWithStatusAndEmoticon() }.orElse(null)
+    }
+
+    override fun readUsersWithStatuses(userIds: List<User.UserId>): List<User> {
+        val userFulledEntities = userStatusJpaRepository.findSelectedUsersStatusWithUser(userIds.map { it.value() })
+        return userFulledEntities.map { it.toUserWithStatusAndEmoticon() }
     }
 
     override fun readPushToken(pushToken: PushToken): PushToken? {
@@ -55,7 +63,7 @@ class UserRepositoryImpl(
     }
 
     override fun saveUser(user: User): User.UserId {
-        userJpaRepository.save(UserJpaEntity.fromUser(user)).id.let {
+        userJpaRepository.save(UserJpaEntity.fromUser(user)).userId.let {
             return User.UserId.of(it)
         }
     }
@@ -86,7 +94,7 @@ class UserRepositoryImpl(
     }
 
     override fun readSearchHistory(userId: User.UserId): List<FriendSearch> {
-        return friendSearchJpaRepository.findAllByUserId(userId.value()).map {
+        return friendSearchJpaRepository.findAllByUserUserId(userId.value()).map {
             it.toFriendSearch()
         }
     }

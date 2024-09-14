@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface FriendRepository {
 
-    fun readFriendsWithStatus(userId: User.UserId): List<Friend>
+    fun readFriends(userId: User.UserId): List<Friend>
 
     fun appendFriend(user:User, friend: Friend)
 
@@ -18,6 +18,4 @@ interface FriendRepository {
     fun checkFriend(userId: User.UserId, friendId: User.UserId): Boolean
 
     fun updateFriend(user: User, friend: Friend)
-
-    fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend?
 }
