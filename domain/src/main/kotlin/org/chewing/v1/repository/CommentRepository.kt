@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 interface CommentRepository {
     fun readComments(commentIds: List<FeedComment.CommentId>): List<FeedComment>
     fun removeComment(commentId: FeedComment.CommentId)
-    fun appendComment(comment: FeedComment, feed: Feed)
+    fun appendComment(user: User, comment: String, feed: Feed)
     fun readFeedComments(feedId: Feed.FeedId): List<FeedComment>
     fun readUserCommentsFulledFeeds(userId: User.UserId): List<Pair<FeedComment, Feed>>
 }

@@ -14,10 +14,10 @@ import org.hibernate.annotations.DynamicInsert
 @Table(name = "friend", schema = "chewing")
 class FriendJpaEntity(
     @EmbeddedId
-    val id: FriendId,
-    val favorite: Boolean,
-    val friendFirstName: String,
-    val friendLastName: String,
+    private val id: FriendId,
+    private var favorite: Boolean,
+    private var friendFirstName: String,
+    private var friendLastName: String,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("userId")
@@ -38,6 +38,13 @@ class FriendJpaEntity(
             friendLastName = friendLastName
         )
     }
+    fun updateFavorite(favorite: Boolean) {
+        this.favorite = favorite
+    }
+    fun updateName(friendName: User.UserName) {
+        this.friendFirstName = friendName.firstName()
+        this.friendLastName = friendName.lastName()
+    }
 
     companion object {
         fun fromFriend(user: User, friend: Friend): FriendJpaEntity {
@@ -48,6 +55,16 @@ class FriendJpaEntity(
                 friendLastName = friend.name.lastName(),
                 user = UserJpaEntity.fromUser(user),
                 friend = UserJpaEntity.fromUser(friend.friend)
+            )
+        }
+        fun generate(user: User, friendName: User.UserName, targetUser: User): FriendJpaEntity {
+            return FriendJpaEntity(
+                id = FriendId(userId = user.userId.value(), friendId = targetUser.userId.value()),
+                favorite = false,
+                friendFirstName = friendName.firstName(),
+                friendLastName = friendName.lastName(),
+                user = UserJpaEntity.fromUser(user),
+                friend = UserJpaEntity.fromUser(targetUser)
             )
         }
     }

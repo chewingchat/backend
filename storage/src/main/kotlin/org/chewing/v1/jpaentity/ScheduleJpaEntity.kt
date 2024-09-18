@@ -3,7 +3,9 @@ package org.chewing.v1.jpaentity
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.model.User
+import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.Schedule
+import org.chewing.v1.model.schedule.ScheduleTime
 import java.time.LocalDateTime
 import java.util.*
 
@@ -36,17 +38,31 @@ class ScheduleJpaEntity(
                 UserJpaEntity.fromUser(schedule.writer)
             )
         }
+
+        fun generate(
+            scheduleContent: ScheduleContent,
+            scheduleTime: ScheduleTime,
+            writer: User
+        ): ScheduleJpaEntity {
+            return ScheduleJpaEntity(
+                scheduleName = scheduleContent.title,
+                scheduleContent = scheduleContent.text,
+                scheduleStartAt = scheduleTime.startAt,
+                scheduleEndAt = scheduleTime.endAt,
+                notificationAt = scheduleTime.notificationAt,
+                user = UserJpaEntity.fromUser(writer)
+            )
+        }
     }
 
-    fun toSchedule(): Schedule {
+    fun toScheduleInfo(): Schedule {
         return Schedule.of(
             scheduleId,
             scheduleName,
+            scheduleContent,
             scheduleStartAt,
             scheduleEndAt,
-            notificationAt,
-            scheduleContent,
-            User.empty()
+            notificationAt
         )
     }
 }

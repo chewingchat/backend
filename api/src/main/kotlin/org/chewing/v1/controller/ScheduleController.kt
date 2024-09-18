@@ -28,6 +28,7 @@ class ScheduleController(
         val schedules = scheduleService.getSchedules(User.UserId.of(userId), type)
         return ResponseHelper.success(ScheduleListResponse.of(schedules))
     }
+
     @DeleteMapping("")
     fun deleteSchedule(
         @RequestHeader("userId") userId: String,
@@ -37,13 +38,13 @@ class ScheduleController(
         scheduleService.removeSchedule(scheduleId)
         return ResponseHelper.successCreate()
     }
+
     @PostMapping("")
     fun addSchedule(
         @RequestHeader("userId") userId: String,
         @RequestBody request: ScheduleRequest.Add
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        val schedule = request.toSchedule()
-        scheduleService.addSchedule(User.UserId.of(userId), schedule)
+        scheduleService.addSchedule(User.UserId.of(userId), request.toScheduleTime(), request.toScheduleContent())
         return ResponseHelper.successOnly()
     }
 }

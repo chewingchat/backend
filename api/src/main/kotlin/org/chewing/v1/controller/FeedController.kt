@@ -57,7 +57,7 @@ class FeedController(
         @RequestBody request: LikesRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val feedId = request.toFeedId()
-        feedService.addFeedLikes(User.UserId.of(userId), feedId)
+        feedService.addFeedLikes(User.UserId.of(userId), feedId, request.toTarget())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -68,7 +68,7 @@ class FeedController(
         @RequestBody request: LikesRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val feedId = request.toFeedId()
-        feedService.deleteFeedLikes(User.UserId.of(userId), feedId)
+        feedService.deleteFeedLikes(User.UserId.of(userId), feedId, request.toUpdateType())
         //삭제 완료 응답 200 반환
         return ResponseHelper.successOnly()
     }

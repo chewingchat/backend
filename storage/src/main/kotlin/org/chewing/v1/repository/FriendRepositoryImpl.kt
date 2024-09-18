@@ -18,8 +18,8 @@ class FriendRepositoryImpl(
         return friends.map { it.toFriend() }
     }
 
-    override fun appendFriend(user: User, friend: Friend) {
-        friendJpaRepository.save(FriendJpaEntity.fromFriend(user, friend))
+    override fun appendFriend(user: User, friendName: User.UserName, targetUser: User) {
+        friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
     }
 
     override fun removeFriend(userId: User.UserId, friendId: User.UserId) {
@@ -40,5 +40,13 @@ class FriendRepositoryImpl(
 
     override fun updateFriend(user: User, friend: Friend) {
         friendJpaRepository.save(FriendJpaEntity.fromFriend(user, friend))
+    }
+
+    override fun updateFavorite(user: User, friendId: User.UserId, favorite: Boolean) {
+        friendJpaRepository.findByUserIdAndFriendId(user.userId.value(), friendId.value())?.updateFavorite(favorite)
+    }
+
+    override fun updateName(user: User, friendId: User.UserId, friendName: User.UserName) {
+        friendJpaRepository.findByUserIdAndFriendId(user.userId.value(), friendId.value())?.updateName(friendName)
     }
 }

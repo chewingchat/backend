@@ -29,11 +29,11 @@ data class ScheduleListResponse(
                 val formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")
                 return ScheduleResponse(
                     schedule.id.value(),
-                    schedule.name,
-                    schedule.startAt.format(formatter),
-                    schedule.entAt.format(formatter),
-                    schedule.notificationAt.format(formatter),
-                    schedule.content
+                    schedule.content.title,
+                    schedule.time.startAt.format(formatter),
+                    schedule.time.endAt.format(formatter),
+                    schedule.time.notificationAt.format(formatter),
+                    schedule.content.text
                 )
             }
         }

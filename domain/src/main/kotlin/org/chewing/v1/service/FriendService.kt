@@ -16,7 +16,7 @@ class FriendService(
     private val friendUpdater: FriendUpdater,
     private val userReader: UserReader,
     private val friendChecker: FriendChecker,
-    private val friendFinder: FriendFinder
+    private val friendFinder: FriendFinder,
 ) {
     fun addFriend(
         userId: User.UserId,
@@ -26,31 +26,29 @@ class FriendService(
         val targetUser = userReader.readUserByContact(contact)
         friendChecker.isAlreadyFriend(userId, targetUser.userId)
         val user = userReader.readUser(userId)
-        val friend = Friend.generate(targetUser, friendName)
-        friendAppender.appendFriend(user, friend)
+        friendAppender.appendFriend(user, friendName, targetUser)
     }
 
-    @Transactional
     fun removeFriend(userId: User.UserId, friendId: User.UserId) {
         friendRemover.removeFriend(userId, friendId)
     }
+
     fun getFriends(userId: User.UserId, sort: SortCriteria): List<Friend> {
         val friends = friendFinder.findFriendsWithStatus(userId)
         return FriendSortEngine.sortFriends(friends, sort)
     }
+
     @Transactional
     fun changeFriendFavorite(userId: User.UserId, friendId: User.UserId, favorite: Boolean) {
         val user = userReader.readUser(userId)
-        val friend = friendReader.readFriend(userId, friendId)
-        val updateFriend = friend.updateFavorite(favorite)
-        friendUpdater.updateFriend(user, updateFriend)
+        friendChecker.isFriend(userId, friendId)
+        friendUpdater.updateFavorite(user, friendId, favorite)
     }
 
     @Transactional
     fun changeFriendName(userId: User.UserId, friendId: User.UserId, friendName: User.UserName) {
         val user = userReader.readUser(userId)
-        val friend = friendReader.readFriend(userId, friendId)
-        val updateFriend = friend.updateName(friendName)
-        friendUpdater.updateFriend(user, updateFriend)
+        friendChecker.isFriend(userId, friendId)
+        friendUpdater.updateName(user, friendId, friendName)
     }
 }

@@ -1,13 +1,11 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.schedule.ScheduleAppender
-import org.chewing.v1.implementation.schedule.ScheduleEnricher
 import org.chewing.v1.implementation.schedule.ScheduleReader
 import org.chewing.v1.implementation.schedule.ScheduleRemover
 import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.model.schedule.Schedule
-import org.chewing.v1.model.schedule.ScheduleType
 import org.chewing.v1.model.User
+import org.chewing.v1.model.schedule.*
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,13 +13,11 @@ class ScheduleService(
     private val userReader: UserReader,
     private val scheduleAppender: ScheduleAppender,
     private val scheduleRemover: ScheduleRemover,
-    private val scheduleReader: ScheduleReader,
-    private val scheduleEnricher: ScheduleEnricher
+    private val scheduleReader: ScheduleReader
 ) {
-    fun addSchedule(userId: User.UserId, schedule: Schedule) {
+    fun addSchedule(userId: User.UserId, scheduleTime: ScheduleTime, scheduleContent: ScheduleContent) {
         val user = userReader.readUser(userId)
-        val enrichSchedule = scheduleEnricher.enrichSchedule(user, schedule)
-        scheduleAppender.appendSchedule(enrichSchedule)
+        scheduleAppender.appendSchedule(scheduleTime, scheduleContent, user)
     }
 
     fun removeSchedule(scheduleId: Schedule.ScheduleId) {
