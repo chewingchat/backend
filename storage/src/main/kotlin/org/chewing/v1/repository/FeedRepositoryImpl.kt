@@ -1,5 +1,6 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.jpaentity.feed.FeedDetailJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jpaentity.user.UserFeedId
 import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
@@ -9,13 +10,15 @@ import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.FeedComment
+import org.chewing.v1.model.feed.FeedTarget
+import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
 
 @Repository
 class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
     private val feedLikesRepository: UserFeedLikesJpaRepository,
-    private val feedCommentJpaRepository: FeedCommentJpaRepository
+    private val feedCommentJpaRepository: FeedCommentJpaRepository,
 ) : FeedRepository {
     override fun readFulledFeed(feedId: Feed.FeedId): Feed? {
         return feedJpaRepository.findByIdWithDetails(feedId.value()).map { it.toFeedWithDetails() }.orElse(null)
@@ -43,16 +46,22 @@ class FeedRepositoryImpl(
     override fun appendFeedLikes(feed: Feed, user: User) {
         val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(user, feed)
         feedLikesRepository.saveAndFlush(userFeedJpaEntity)
-        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 
     override fun removeFeedLikes(feed: Feed, user: User) {
         feedLikesRepository.deleteById(UserFeedId(user.userId.value(), feed.id.value()))
-        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
     }
 
-    override fun updateFeed(feed: Feed) {
-        feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed))
+    override fun updateFeed(feed: Feed, target: FeedTarget) {
+        feedJpaRepository.findById(feed.id.value()).orElseThrow().let {
+            when (target) {
+                FeedTarget.LIKES -> it.updateLikes()
+                FeedTarget.UNLIKES -> it.updateUnLikes()
+                FeedTarget.COMMENTS -> it.updateComments()
+                FeedTarget.UNCOMMENTS -> it.updateUnComments()
+            }
+            feedJpaRepository.saveAndFlush(it)
+        }
     }
 
     override fun removeFeeds(feedIds: List<Feed.FeedId>) {
@@ -63,9 +72,9 @@ class FeedRepositoryImpl(
         return feedCommentJpaRepository.findByIdWithFeedAndWriter(commentId.value()).toFeed()
     }
 
-    override fun appendFeed(feed: Feed): Feed.FeedId {
-        val feedId = feedJpaRepository.saveAndFlush(FeedJpaEntity.fromFeed(feed)).feedId
-        return Feed.FeedId.of(feedId)
+    override fun appendFeed(medias: List<Media>, user: User, topic: String): Feed.FeedId {
+        val feedId = feedJpaRepository.save(FeedJpaEntity.generate(topic, user, medias)).toFeedId()
+        return feedId
     }
 
     override fun readFulledFeeds(feedIds: List<Feed.FeedId>): List<Feed> {

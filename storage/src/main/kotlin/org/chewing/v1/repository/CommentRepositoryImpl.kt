@@ -19,8 +19,8 @@ class CommentRepositoryImpl(
         commentJpaRepository.deleteById(commentId.value())
     }
 
-    override fun appendComment(comment: FeedComment, feed: Feed) {
-        commentJpaRepository.save(FeedCommentJpaEntity.fromFeedComment(comment, feed))
+    override fun appendComment(user: User, comment: String, feed: Feed) {
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, user, feed))
     }
 
     override fun readUserCommentsFulledFeeds(userId: User.UserId): List<Pair<FeedComment, Feed>> {

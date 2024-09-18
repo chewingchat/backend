@@ -1,6 +1,7 @@
 package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.FeedRepository
 import org.springframework.stereotype.Component
 
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component
 class FeedUpdater(
     private val feedRepository: FeedRepository
 ) {
-    fun updateFeed(feed: Feed) {
-        feedRepository.updateFeed(feed)
+    fun updateFeed(feed: Feed, target: FeedTarget) {
+        feedRepository.updateFeed(feed, target)
     }
 }

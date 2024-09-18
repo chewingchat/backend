@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class FriendAppender(
     private val friendRepository: FriendRepository
 ) {
-    fun appendFriend(user:User, friend: Friend) {
-        friendRepository.appendFriend(user, friend)
+    fun appendFriend(user:User, friendName: User.UserName, targetUser: User) {
+        friendRepository.appendFriend(user, friendName,targetUser)
     }
 }

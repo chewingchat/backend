@@ -15,29 +15,6 @@ class Friend private constructor(
                 name = User.UserName.of(friendFirstName, friendLastName),
             )
         }
-
-        fun generate(friend: User, friendName: User.UserName): Friend {
-            return Friend(
-                friend = friend,
-                isFavorite = false,
-                name = friendName,
-            )
-        }
-    }
-
-    fun updateFavorite(favorite: Boolean): Friend {
-        return Friend(
-            friend = this.friend,
-            isFavorite = favorite,
-            name = this.name,
-        )
-    }
-    fun updateName(friendName: User.UserName): Friend {
-        return Friend(
-            friend = this.friend,
-            isFavorite = this.isFavorite,
-            name = friendName,
-        )
     }
     fun updateFriend(friend: User): Friend {
         return Friend(

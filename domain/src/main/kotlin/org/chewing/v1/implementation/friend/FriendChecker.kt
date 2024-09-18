@@ -15,4 +15,9 @@ class FriendChecker(
              throw ConflictException(ErrorCode.FRIEND_ALREADY_CREATED)
          }
     }
+    fun isFriend(userId: User.UserId, friendId: User.UserId) {
+        if(!friendRepository.checkFriend(userId, friendId)) {
+            throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
+        }
+    }
 }

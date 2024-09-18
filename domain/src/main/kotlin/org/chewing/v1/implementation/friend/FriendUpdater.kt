@@ -12,4 +12,11 @@ class FriendUpdater(
     fun updateFriend(user: User, friend: Friend) {
         friendRepository.updateFriend(user, friend)
     }
+
+    fun updateFavorite(user: User, friendId: User.UserId, favorite: Boolean) {
+        friendRepository.updateFavorite(user, friendId, favorite)
+    }
+    fun updateName(user: User, friendId: User.UserId, friendName: User.UserName) {
+        friendRepository.updateName(user, friendId, friendName)
+    }
 }

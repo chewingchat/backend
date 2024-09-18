@@ -5,6 +5,7 @@ import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -13,10 +14,10 @@ import java.util.*
 @Table(name = "feed", schema = "chewing")
 class FeedJpaEntity(
     @Id
-    val feedId: String = UUID.randomUUID().toString(),
-    val feedTopic: String,
-    private val likes: Int,
-    private val comments: Int,
+    private val feedId: String = UUID.randomUUID().toString(),
+    private val feedTopic: String,
+    private var likes: Int,
+    private var comments: Int,
 
     @Version
     var version: Long? = 0,
@@ -37,10 +38,45 @@ class FeedJpaEntity(
                 likes = feed.likes,
                 feedDetails = feed.details.map { FeedDetailJpaEntity.fromFeedDetail(it) }.toMutableList(),
                 writer = UserJpaEntity.fromUser(feed.writer),
-                version = feed.version,
                 comments = feed.comments
             )
         }
+
+        fun generate(
+            topic: String,
+            writer: User,
+            medias: List<Media>
+        ): FeedJpaEntity {
+            return FeedJpaEntity(
+                feedTopic = topic,
+                likes = 0,
+                comments = 0,
+                writer = UserJpaEntity.fromUser(writer),
+                feedDetails = medias.map {
+                    FeedDetailJpaEntity.generate(it)
+                }.toMutableList()
+            )
+        }
+    }
+
+    fun updateLikes() {
+        this.likes += 1
+    }
+
+    fun updateUnLikes() {
+        this.likes -= 1
+    }
+
+    fun updateComments() {
+        this.comments += 1
+    }
+
+    fun updateUnComments() {
+        this.comments -= 1
+    }
+
+    fun toFeedId(): Feed.FeedId {
+        return Feed.FeedId.of(feedId)
     }
 
     fun toFeed(): Feed {
@@ -51,7 +87,6 @@ class FeedJpaEntity(
             uploadAt = createdAt!!,
             details = emptyList(),
             writer = User.empty(),
-            version = version!!,
             comments = comments
         )
     }
@@ -64,7 +99,6 @@ class FeedJpaEntity(
             uploadAt = createdAt!!,
             details = feedDetails.map { it.toFeedDetail() },
             writer = writer.toUser(),
-            version = version!!,
             comments = comments
         )
     }
@@ -77,7 +111,6 @@ class FeedJpaEntity(
             uploadAt = createdAt!!,
             details = emptyList(),
             writer = writer.toUser(),
-            version = version!!,
             comments = comments
         )
     }

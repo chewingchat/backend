@@ -5,6 +5,7 @@ import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.FriendFeed
 import org.chewing.v1.model.User
+import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -36,18 +37,15 @@ class FeedService(
             FriendFeed.of(feed, isLiked)
         }
     }
-    fun getUserFulledFeeds(userId: User.UserId): List<Feed> {
-        return feedReader.readFulledFeedsByUserId(userId)
-    }
 
-    fun addFeedLikes(userId: User.UserId, feedId: Feed.FeedId) {
+    fun addFeedLikes(userId: User.UserId, feedId: Feed.FeedId, target: FeedTarget) {
         feedValidator.isAlreadyLiked(feedId, userId)
-        feedLocker.lockFeedLikes(feedId, userId)
+        feedLocker.lockFeedLikes(feedId, userId, target)
     }
 
-    fun deleteFeedLikes(userId: User.UserId, feedId: Feed.FeedId) {
+    fun deleteFeedLikes(userId: User.UserId, feedId: Feed.FeedId, target: FeedTarget) {
         feedValidator.isAlreadyUnliked(feedId, userId)
-        feedLocker.lockFeedUnLikes(feedId, userId)
+        feedLocker.lockFeedUnLikes(feedId, userId, target)
     }
 
     fun deleteFeeds(userId: User.UserId, feedIds: List<Feed.FeedId>) {

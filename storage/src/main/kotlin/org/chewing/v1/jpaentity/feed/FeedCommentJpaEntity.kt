@@ -3,6 +3,7 @@ package org.chewing.v1.jpaentity.feed
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedComment
 import org.hibernate.annotations.DynamicInsert
@@ -32,6 +33,14 @@ class FeedCommentJpaEntity(
                 feed = FeedJpaEntity.fromFeed(feed)
             )
         }
+
+        fun generate(comment: String, writer: User, feed: Feed): FeedCommentJpaEntity {
+            return FeedCommentJpaEntity(
+                comment = comment,
+                writer = UserJpaEntity.fromUser(writer),
+                feed = FeedJpaEntity.fromFeed(feed)
+            )
+        }
     }
 
     fun toFeedComment(): FeedComment {
@@ -47,7 +56,7 @@ class FeedCommentJpaEntity(
         return feed.toFeed()
     }
 
-    fun toFeedWithDetails(): Feed{
+    fun toFeedWithDetails(): Feed {
         return feed.toFeedWithDetails()
     }
 }

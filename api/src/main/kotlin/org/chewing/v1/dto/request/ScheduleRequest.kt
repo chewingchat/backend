@@ -1,6 +1,7 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.schedule.Schedule
+import org.chewing.v1.model.schedule.ScheduleContent
+import org.chewing.v1.model.schedule.ScheduleTime
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -19,19 +20,15 @@ class ScheduleRequest {
         val notificationTime: String,
         val scheduleText: String
     ) {
-        fun toSchedule(): Schedule {
+        fun toScheduleContent(): ScheduleContent {
+            return ScheduleContent.of(scheduleName, scheduleText)
+        }
+        fun toScheduleTime(): ScheduleTime {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             val startTime = LocalDateTime.parse(scheduleStartTime, formatter)
             val endTime = LocalDateTime.parse(scheduleEndTime, formatter)
             val notification = LocalDateTime.parse(notificationTime, formatter)
-
-            return Schedule.generate(
-                scheduleName,
-                startTime,
-                endTime,
-                notification,
-                scheduleText
-            )
+            return ScheduleTime.of(startTime, endTime, notification)
         }
     }
 }
