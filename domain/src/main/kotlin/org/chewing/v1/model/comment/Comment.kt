@@ -1,22 +1,19 @@
-package org.chewing.v1.model.feed
+package org.chewing.v1.model.comment
 
-import org.chewing.v1.model.User
 import java.time.LocalDateTime
 
-class FeedComment(
+class Comment(
     val id: CommentId,
     val comment: String,
-    val writer: User,
     val createAt: LocalDateTime
 ) {
     companion object {
         fun of(
             commentId: String,
             comment: String,
-            writer: User,
             createAt: LocalDateTime
-        ): FeedComment {
-            return FeedComment(CommentId.of(commentId), comment, writer, createAt)
+        ): Comment {
+            return Comment(CommentId.of(commentId), comment, createAt)
         }
     }
 

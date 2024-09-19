@@ -16,10 +16,6 @@ class EmoticonPackJpaEntity(
     val emoticonPackUrl: String,
 
     val emoticonPackName: String,
-
-    @JoinColumn(name = "emoticon_pack_id")
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    val emoticons: List<EmoticonJpaEntity> = mutableListOf()
 ) : BaseEntity() {
 
     companion object {
@@ -30,14 +26,5 @@ class EmoticonPackJpaEntity(
                 emoticonPack.name
             )
         }
-    }
-
-    fun toEmoticonPack(): EmoticonPack {
-        return EmoticonPack.of(
-            emoticonPackId,
-            emoticonPackName,
-            emoticonPackUrl,
-            emoticons.map { it.toEmoticon() }
-        )
     }
 }

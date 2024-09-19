@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.comment
 
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedComment
+import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
@@ -26,7 +26,7 @@ class CommentLocker(
         }
     }
 
-    fun lockFeedUnComments(commentId: FeedComment.CommentId, target: FeedTarget) {
+    fun lockFeedUnComments(commentId: Comment.CommentId, target: FeedTarget) {
         var retryCount = 0
         val maxRetry = 10
         while (retryCount < maxRetry) {

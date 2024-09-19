@@ -51,8 +51,8 @@ class CommentController(
         @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FeedCommentsResponse> {
-        val feedComments = commentService.getFeedComments(User.UserId.of(userId), Feed.FeedId.of(feedId))
+        val friendComment = commentService.getFriendCommented(User.UserId.of(userId), Feed.FeedId.of(feedId))
         //성공 응답 200 반환
-        return ResponseHelper.success(FeedCommentsResponse.of(feedComments))
+        return ResponseHelper.success(FeedCommentsResponse.of(friendComment))
     }
 }

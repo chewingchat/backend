@@ -38,6 +38,10 @@ class FriendService(
         return FriendSortEngine.sortFriends(friends, sort)
     }
 
+    fun getOnlyFriends(userId: User.UserId): List<Friend> {
+        return friendReader.readFriends(userId)
+    }
+
     @Transactional
     fun changeFriendFavorite(userId: User.UserId, friendId: User.UserId, favorite: Boolean) {
         val user = userReader.readUser(userId)

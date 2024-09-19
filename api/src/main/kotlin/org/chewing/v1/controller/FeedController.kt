@@ -26,7 +26,7 @@ class FeedController(
         @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
-        val friendFeed = feedService.getFriendFeed(User.UserId.of(userId), Feed.FeedId.of(feedId))
+        val friendFeed = feedService.getFeed(User.UserId.of(userId), Feed.FeedId.of(feedId))
         //성공 응답 200 반환
         return ResponseHelper.success(FriendFeedResponse.of(friendFeed))
     }
@@ -36,7 +36,7 @@ class FeedController(
         @RequestHeader("userId") userId: String,
         @PathVariable("friendId") friendId: String
     ): SuccessResponseEntity<FriendDetailResponse> {
-        val feeds = feedService.getFriendFulledFeeds(User.UserId.of(friendId))
+        val feeds = feedService.getFriendFeeds(User.UserId.of(userId), User.UserId.of(friendId))
         //성공 응답 200 반환
         return ResponseHelper.success(FriendDetailResponse.of(feeds))
     }

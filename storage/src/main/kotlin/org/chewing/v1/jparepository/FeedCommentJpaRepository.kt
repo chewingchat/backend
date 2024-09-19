@@ -6,20 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity, String> {
-    @Query("SELECT f FROM FeedCommentJpaEntity f JOIN FETCH f.feed WHERE f.feedCommentId IN :commentIds ORDER BY f.createdAt")
-    fun findAllByIdsWithWriter(@Param("commentIds") commentIds: List<String>): List<FeedCommentJpaEntity>
-    @Query("SELECT f FROM FeedCommentJpaEntity f JOIN FETCH f.writer Join Fetch f.feed WHERE f.feedCommentId = :commentId ")
-    fun findByIdWithFeedAndWriter(@Param("commentId") commentId: String): FeedCommentJpaEntity
-
-    @Query(
-        """
-    SELECT f 
-    FROM FeedCommentJpaEntity f
-    JOIN FETCH f.writer
-    WHERE f.writer.userId = :userId
-    """
-    )
-    fun findAllByUserIdWithWriter(@Param("userId") userId: String): List<FeedCommentJpaEntity>
-    @Query("SELECT f FROM FeedCommentJpaEntity f JOIN FETCH f.writer WHERE f.feed.feedId = :feedId")
+    fun findAllByUserId(userId: String): List<FeedCommentJpaEntity>
     fun findAllByFeedId(feedId: String): List<FeedCommentJpaEntity>
+    fun existsAllByFeedCommentIdInAndUserId(feedCommentIds: List<String>, userId: String): Boolean
 }

@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.model.feed.FeedComment
+import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.repository.CommentRepository
 import org.springframework.stereotype.Component
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class CommentRemover(
     private val commentRepository: CommentRepository
 ) {
-    fun removeComment(commentId: FeedComment.CommentId) {
+    fun removeComment(commentId: Comment.CommentId) {
         commentRepository.removeComment(commentId)
     }
 }

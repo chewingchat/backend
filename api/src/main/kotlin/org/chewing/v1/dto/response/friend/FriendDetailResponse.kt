@@ -1,8 +1,7 @@
 package org.chewing.v1.dto.response.friend
 
 import org.chewing.v1.dto.response.feed.MainFeedResponse
-import org.chewing.v1.model.friend.Friend
-import org.chewing.v1.model.friend.FriendFeed
+import org.chewing.v1.model.feed.FriendFeed
 
 data class FriendDetailResponse(
     val feeds: List<MainFeedResponse>

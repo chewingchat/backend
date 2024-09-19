@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 interface FriendRepository {
 
     fun readFriends(userId: User.UserId): List<Friend>
-
+    fun readFriendsByIds(friendIds: List<User.UserId>, userId: User.UserId): List<Friend>
     fun appendFriend(user:User, friendName: User.UserName, targetUser: User)
 
     fun removeFriend(userId: User.UserId, friendId: User.UserId)

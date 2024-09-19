@@ -13,7 +13,7 @@ import java.time.Year
 @Repository
 interface ScheduleJpaRepository : JpaRepository<ScheduleJpaEntity, String> {
     @Query(
-        "SELECT s FROM ScheduleJpaEntity s WHERE s.user.userId = :userId AND " +
+        "SELECT s FROM ScheduleJpaEntity s WHERE s.userId = :userId AND " +
                 "s.scheduleStartAt BETWEEN :startDateTime AND :endDateTime"
     )
     fun findByUserIdAndType(

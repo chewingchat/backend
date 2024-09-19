@@ -10,9 +10,5 @@ class FeedDetail private constructor(
         fun of(feedDetailId: String, media: Media): FeedDetail {
             return FeedDetail(feedDetailId, media)
         }
-
-        fun generate(media: Media): FeedDetail {
-            return FeedDetail("", media)
-        }
     }
 }

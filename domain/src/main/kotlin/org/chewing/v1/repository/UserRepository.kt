@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository {
     fun readUserById(userId: User.UserId): User?
+    fun readUsersByIds(userIds: List<User.UserId>): List<User>
     fun readUserByContact(contact: Contact): User?
     fun remove(userId: User.UserId): User.UserId?
     fun updateUser(user: User)

@@ -60,5 +60,8 @@ class UserReader(
     fun readUserPushToken(pushToken: PushToken): PushToken? {
         return userRepository.readPushToken(pushToken)
     }
+    fun readUsersById(userIds: List<User.UserId>): List<User> {
+        return userRepository.readUsersByIds(userIds)
+    }
 
 }

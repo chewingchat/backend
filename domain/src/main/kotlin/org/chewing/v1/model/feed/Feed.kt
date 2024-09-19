@@ -10,8 +10,6 @@ class Feed private constructor(
     val likes: Int,
     val comments: Int,
     val uploadAt: LocalDateTime,
-    val details: List<FeedDetail>,
-    val writer: User,
 ) {
     class FeedId private constructor(private val id: String) {
         fun value(): String {
@@ -32,10 +30,8 @@ class Feed private constructor(
             likes: Int,
             comments: Int,
             uploadAt: LocalDateTime,
-            details: List<FeedDetail>,
-            writer: User,
         ): Feed {
-            return Feed(FeedId.of(id), topic, likes, comments, uploadAt, details, writer)
+            return Feed(FeedId.of(id), topic, likes, comments, uploadAt)
         }
     }
 }
