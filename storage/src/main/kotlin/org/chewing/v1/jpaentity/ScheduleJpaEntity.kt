@@ -22,23 +22,9 @@ class ScheduleJpaEntity(
     val scheduleStartAt: LocalDateTime,
     val scheduleEndAt: LocalDateTime,
     val notificationAt: LocalDateTime,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    val user: UserJpaEntity
+    val userId: String
 ) {
     companion object {
-        fun from(schedule: Schedule): ScheduleJpaEntity {
-            return ScheduleJpaEntity(
-                schedule.id.value(),
-                schedule.name,
-                schedule.content,
-                schedule.startAt,
-                schedule.entAt,
-                schedule.notificationAt,
-                UserJpaEntity.fromUser(schedule.writer)
-            )
-        }
-
         fun generate(
             scheduleContent: ScheduleContent,
             scheduleTime: ScheduleTime,
@@ -50,7 +36,7 @@ class ScheduleJpaEntity(
                 scheduleStartAt = scheduleTime.startAt,
                 scheduleEndAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
-                user = UserJpaEntity.fromUser(writer)
+                userId = writer.userId.value()
             )
         }
     }

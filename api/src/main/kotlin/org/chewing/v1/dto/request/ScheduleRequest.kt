@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.request
 
+import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import java.time.LocalDateTime

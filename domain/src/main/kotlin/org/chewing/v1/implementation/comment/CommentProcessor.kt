@@ -5,7 +5,7 @@ import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.feed.FeedUpdater
 import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedComment
+import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -21,16 +21,16 @@ class CommentProcessor(
 
     @Transactional
     fun processFeedComments(userId: User.UserId, feedId: Feed.FeedId, comment: String, updateType: FeedTarget) {
-        val feed = feedReader.readFulledFeed(feedId)
+        val feed = feedReader.readFeed(feedId)
         val user = userReader.readUser(userId)
-        commentAppender.appendComment(user, comment, feed)
         feedUpdater.updateFeed(feed, updateType)
+        commentAppender.appendComment(user, comment, feed)
     }
 
     @Transactional
-    fun processFeedUnComments(commentId: FeedComment.CommentId, updateType: FeedTarget) {
-        val feed = feedReader.readFulledFeedByCommentId(commentId)
-        commentRemover.removeComment(commentId)
+    fun processFeedUnComments(commentId: Comment.CommentId, updateType: FeedTarget) {
+        val feed = feedReader.readFeedByCommentId(commentId)
         feedUpdater.updateFeed(feed, updateType)
+        commentRemover.removeComment(commentId)
     }
 }

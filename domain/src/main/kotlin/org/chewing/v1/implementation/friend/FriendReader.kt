@@ -14,6 +14,9 @@ class FriendReader(
     fun readFriends(userId: User.UserId): List<Friend> {
         return friendRepository.readFriends(userId)
     }
+    fun readFriendsByIds(friendIds: List<User.UserId>, userId: User.UserId): List<Friend> {
+        return friendRepository.readFriendsByIds(friendIds, userId)
+    }
 
     fun readFriend(userId: User.UserId, friendId: User.UserId): Friend {
         return friendRepository.readFriend(userId, friendId) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)

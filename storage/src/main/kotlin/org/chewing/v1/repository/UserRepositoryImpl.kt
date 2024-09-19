@@ -27,6 +27,11 @@ class UserRepositoryImpl(
         return userEntity.map { it.toUser() }.orElse(null)
     }
 
+    override fun readUsersByIds(userIds: List<User.UserId>): List<User> {
+        val userEntities = userJpaRepository.findAllById(userIds.map { it.value() })
+        return userEntities.map { it.toUser() }
+    }
+
     override fun readUserByContact(contact: Contact): User? {
         return when (contact) {
             is Email -> {

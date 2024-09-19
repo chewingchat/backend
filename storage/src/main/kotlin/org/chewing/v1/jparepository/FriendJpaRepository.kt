@@ -20,7 +20,7 @@ interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> {
     fun deleteById(friendId: FriendId)
     fun existsById(friendId: FriendId): Boolean
     fun findById(friendId: FriendId): FriendJpaEntity?
-
+    fun findAllByFriendUserIdInAndUserUserId(friendIds: List<String>, userId: String): List<FriendJpaEntity>
     @Query("""
         SELECT f 
         FROM FriendJpaEntity f 

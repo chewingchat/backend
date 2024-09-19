@@ -18,6 +18,15 @@ class FriendRepositoryImpl(
         return friends.map { it.toFriend() }
     }
 
+    override fun readFriendsByIds(friendIds: List<User.UserId>, userId: User.UserId): List<Friend> {
+        friendJpaRepository.findAllByFriendUserIdInAndUserUserId(
+            friendIds.map { it.value() },
+            userId.value()
+        ).let {
+            return it.map { it.toFriend() }
+        }
+    }
+
     override fun appendFriend(user: User, friendName: User.UserName, targetUser: User) {
         friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
     }
