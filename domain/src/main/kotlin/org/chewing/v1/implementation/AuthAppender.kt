@@ -25,5 +25,19 @@ class AuthAppender(
         authRepository.saveEmailVerificationInfo(authInfo) // AuthInfo 엔티티를 저장하는 로직 (아래 저장 로직도 구현)
     }
 
+    // 추가
+
+    // 전화번호 수정 로직
+    fun updateUserPhoneNumber(userId: String, phoneNumber: String, countryCode: String) {
+        // 사용자 전화번호 업데이트 로직 (기존 로직 활용)
+        authRepository.updateUserPhoneNumber(userId, phoneNumber, countryCode)
+    }
+
+    // 이메일 수정 로직
+    fun updateUserEmail(userId: String, email: String) {
+        // 사용자 이메일 업데이트 로직 (기존 로직 활용)
+        authRepository.updateUserEmail(userId, email)
+    }
+
 
 }

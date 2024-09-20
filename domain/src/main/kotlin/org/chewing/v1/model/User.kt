@@ -14,20 +14,19 @@ class User private constructor(
     val backgroundImage: Image
 ) {
     companion object {
-        fun of(
+        fun withId(
             userId: String,
             firstName: String,
             lastName: String,
             birth: String,
             image: Image,
             backgroundImage: Image,
-            statusId: String,
             emoticon: Emoticon,
             statusMessage: String
         ): User {
             return User(
-                UserId.of(userId),
-                status = UserStatus.of(statusId, statusMessage, emoticon),
+                userId = UserId.of(userId),
+                status = UserStatus.of(statusMessage, emoticon),
                 birth = birth,
                 image = image,
                 backgroundImage = backgroundImage,
@@ -38,7 +37,7 @@ class User private constructor(
         fun empty(): User {
             return User(
                 userId = UserId.empty(),
-                status = UserStatus.of("", "", Emoticon.empty()),
+                status = UserStatus.of("", Emoticon.empty()),
                 birth = "",
                 image = Image.empty(),
                 backgroundImage = Image.empty(),
@@ -50,13 +49,16 @@ class User private constructor(
         fun generate(birth: String, firstName: String, lastName: String): User {
             return User(
                 userId = UserId.empty(),
-                status = UserStatus.of("", "", Emoticon.empty()),
+                status = UserStatus.of("", Emoticon.empty()),
                 birth = birth,
                 image = Image.empty(),
                 backgroundImage = Image.empty(),
                 name = UserName.of(firstName, lastName)
             )
         }
+
+
+
     }
 
     class UserId private constructor(private val userId: String) {
@@ -92,20 +94,16 @@ class User private constructor(
 
             fun empty(): UserName = UserName("", "")
         }
+
+
+
+
     }
 
-    class UserStatus private constructor(val statusId: String, val statusMessage: String, val emoticon: Emoticon) {
+    class UserStatus private constructor(val statusMessage: String, val emoticon: Emoticon) {
         companion object {
-            fun of(statusId: String, statusMessage: String, emoticon: Emoticon): UserStatus {
-                return UserStatus(statusId, statusMessage, emoticon)
-            }
-        }
-    }
-
-    class UserBasicInfo private constructor(val name: UserName, val birth: String, val image: Image) {
-        companion object {
-            fun of(name: UserName, birth: String, image: Image): UserBasicInfo {
-                return UserBasicInfo(name, birth, image)
+            fun of(statusMessage: String, emoticon: Emoticon): UserStatus {
+                return UserStatus(statusMessage, emoticon)
             }
         }
     }
@@ -131,7 +129,6 @@ class User private constructor(
             backgroundImage
         )
     }
-
     fun updateUserId(userId: UserId): User {
         return User(
             userId,
@@ -142,4 +139,16 @@ class User private constructor(
             backgroundImage
         )
     }
+    // 추가
+    fun updateName(firstName: String, lastName: String): User {
+        return User(
+            userId = this.userId,
+            name = UserName.of(firstName, lastName),
+            birth = this.birth,
+            image = this.image,
+            status = this.status,
+            backgroundImage = this.backgroundImage
+        )
+    }
+
 }

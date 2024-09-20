@@ -2,18 +2,23 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
 import org.chewing.v1.dto.response.TokenResponse
+import org.chewing.v1.implementation.JwtTokenProvider
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
+import org.chewing.v1.model.User.UserId
 
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
-    private val authService: AuthService
+    private val authService: AuthService,
+    // 추가
+    private val jwtTokenProvider: JwtTokenProvider
 ) {
 
     @PostMapping("/phone/verify/send")
@@ -50,6 +55,7 @@ class AuthController(
     @PostMapping("/email/verify/signup")
     fun verifyEmailAndSignup(@RequestBody request: EmailSignupRequest): SuccessResponseEntity<TokenResponse> {
         val (accessToken, refreshToken) = authService.verifyEmailAndSignup(
+            request,  // SignupRequest로 request 전체를 전달
             request.toEmail(),
             request.toPushToken()
         )
@@ -59,9 +65,9 @@ class AuthController(
     @PostMapping("/phone/verify/signup")
     fun verifyPhoneAndSignup(@RequestBody request: PhoneSignupRequest): SuccessResponseEntity<TokenResponse> {
         val (accessToken, refreshToken) = authService.verifyPhoneAndSignup(
+            request,  // SignupRequest로 request 전체를 전달
             request.toPhone(),
-            request.toPushToken(),
-            request.toUser()
+            request.toPushToken()
         )
         return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
     }
@@ -85,5 +91,34 @@ class AuthController(
 
     }
 
+    // 수정 로직 추가
+
+    @PostMapping("/phone/verify/send")
+    fun sendPhoneVerification(@RequestHeader("Authorization") accessToken: String, @RequestBody request: PhoneVerificationRequest): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        authService.sendPhoneVerificationForUpdate(userId, request.phoneNumber, request.countryCode)
+        return ResponseHelper.successOnly()
+    }
+
+    @PostMapping("/phone/verify/check")
+    fun verifyPhoneAndUpdate(@RequestHeader("Authorization") accessToken: String, @RequestBody request: PhoneVerificationCheckRequest): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        authService.verifyPhoneForUpdate(userId, request.phoneNumber, request.countryCode, request.verificationCode)
+        return ResponseHelper.successOnly()
+    }
+
+    @PostMapping("/email/verify/send")
+    fun sendEmailVerification(@RequestHeader("Authorization") accessToken: String, @RequestBody request: EmailVerificationRequest): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        authService.sendEmailVerificationForUpdate(userId,  request.email)
+        return ResponseHelper.successOnly()
+    }
+
+    @PostMapping("/email/verify/check")
+    fun verifyEmailAndUpdate(@RequestHeader("Authorization") accessToken: String, @RequestBody request: EmailVerificationCheckRequest): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        authService.verifyEmailForUpdate(userId, request.email, request.verificationCode)
+        return ResponseHelper.successOnly()
+    }
 
 }

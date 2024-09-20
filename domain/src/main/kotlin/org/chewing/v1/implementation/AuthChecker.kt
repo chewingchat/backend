@@ -5,13 +5,20 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component
+import java.util.Locale.IsoCountryCode
 
 @Component
 class AuthChecker(
     private val authRepository: AuthRepository
 ) {
-    fun checkEmailRegistered(phoneNumber: String, email: String) {
-        if (authRepository.checkEmailRegistered(phoneNumber, email)) {
+    fun checkPhoneNumberRegistered(phoneNumber: String, countryCode: String) {
+        if (authRepository.checkPhoneRegistered(phoneNumber, countryCode)) {
+            throw ConflictException(ErrorCode.PHONE_ALREADY_REGISTERED)
+        }
+    }
+
+    fun checkEmailRegistered(emailAddress: String) {
+        if (authRepository.checkEmailRegistered(emailAddress)) {
             throw ConflictException(ErrorCode.EMAIL_REGISTERED)
         }
     }

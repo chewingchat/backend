@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AuthRepository {
-    fun checkEmailRegistered(phoneNumber: String, email: String): Boolean
+    fun checkEmailRegistered(emailAddress: String): Boolean
+    fun checkPhoneRegistered(phoneNumber: String, countryCode: String): Boolean
     fun isEmailVerificationCodeValid(email: String, verificationCode: String): Boolean
     fun isPhoneVerificationCodeValid(phoneNumber: String, verificationCode: String): Boolean
 
@@ -26,6 +27,16 @@ interface AuthRepository {
     fun savePhoneVerificationInfo(authInfo: AuthInfo)
     fun saveEmailVerificationInfo(authInfo: AuthInfo)
     fun deleteLoggedInInfo(userId: User.UserId)
+    // 추가
+    fun deleteByUserId(userId: String)
+    fun readUserById(userId: String): User?
+
+
+    // 사용자 전화번호 업데이트
+    fun updateUserPhoneNumber(userId: String, phoneNumber: String, countryCode: String)
+
+    // 사용자 이메일 업데이트
+    fun updateUserEmail(userId: String, email: String)
 
 
 }
