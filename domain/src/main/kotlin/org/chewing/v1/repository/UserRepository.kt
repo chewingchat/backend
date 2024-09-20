@@ -11,7 +11,7 @@ interface UserRepository {
     fun readUserById(userId: User.UserId): User?
     fun readUserByContact(contact: Contact): User?
     fun remove(userId: User.UserId): User.UserId?
-    fun updateUser(user: User)
+    fun updateUser(user: User): User.UserId
     fun readUserByEmail(email: String): User?
     fun readUserByPhoneNumber(phoneNumber: String, countryCode: String): User?
     fun appendSearchHistory(user: User, search: FriendSearch)
@@ -23,5 +23,9 @@ interface UserRepository {
     fun appendUserPushToken(user: User, pushToken: PushToken)
     fun updateUserPushToken(user: User, pushToken: PushToken)
     fun saveUser(user: User):User.UserId // 새로운 유저 정보를 저장하는 메서드
+
+    // 코드 추가
+    fun deleteLoggedInInfo(userId: User.UserId)
+
 
 }

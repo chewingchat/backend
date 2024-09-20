@@ -1,11 +1,12 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.AuthJpaEntity
+import org.chewing.v1.jpaentity.EmailJpaEntity
 import org.chewing.v1.jpaentity.LoggedInEntity
-import org.chewing.v1.jparepository.AuthJpaRepository
-import org.chewing.v1.jparepository.ConfirmEmailJpaRepository
-import org.chewing.v1.jparepository.ConfirmPhoneNumberJpaRepository
-import org.chewing.v1.jparepository.LoggedInJpaRepository
+import org.chewing.v1.jpaentity.PhoneNumberJpaEntity
+import org.chewing.v1.jparepository.*
 import org.chewing.v1.model.AuthInfo
 import org.chewing.v1.model.User
 import org.chewing.v1.model.contact.Email
@@ -20,12 +21,19 @@ class AuthRepositoryImpl(
     private val loggedInJpaRepository: LoggedInJpaRepository,
     // 추가
     private val confirmEmailJpaRepository: ConfirmEmailJpaRepository,
+    private val phoneNumberJpaRepository: PhoneNumberJpaRepository,
+    private val emailJpaRepository: EmailJpaRepository,
 
 
     ) : AuthRepository {
 
-    override fun checkEmailRegistered(phoneNumber: String, email: String): Boolean {
-        val authEntity = authJpaRepository.findUserByEmail(email)
+    override fun checkEmailRegistered(emailAddress: String): Boolean {
+        val authEntity = authJpaRepository.findUserByEmail(emailAddress)
+        return authEntity.isPresent
+        // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
+    }
+    override fun checkPhoneRegistered(phoneNumber: String, countryCode: String): Boolean {
+        val authEntity = authJpaRepository.findByPhoneNumber(phoneNumber, countryCode)
         return authEntity.isPresent
         // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
     }
@@ -89,4 +97,47 @@ class AuthRepositoryImpl(
         val loggedInEntity = loggedInJpaRepository.findByAuthAuthId(authInfo.get().authId)
         loggedInJpaRepository.delete(loggedInEntity!!)
     }
+
+    override fun deleteByUserId(userId: String) {
+        authJpaRepository.deleteById(userId)
+    }
+
+    override fun readUserById(userId: String): User? {
+        TODO("Not yet implemented")
+    }
+
+
+    //추가
+    // 사용자 전화번호 업데이트
+
+    override fun updateUserPhoneNumber(userId: String, phoneNumber: String, countryCode: String) {
+        val phoneEntity = phoneNumberJpaRepository.findByUserId(userId)
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+
+        // 전화번호 업데이트
+        val updatedPhoneEntity = PhoneNumberJpaEntity(
+            phoneNumberId = phoneEntity.phoneNumberId,
+            phoneNumber = phoneNumber,
+            firstAuthorized = phoneEntity.firstAuthorized,
+            countryCode = countryCode
+        )
+        phoneNumberJpaRepository.save(updatedPhoneEntity)
+    }
+
+    // 사용자 이메일 업데이트
+    override fun updateUserEmail(userId: String, email: String) {
+        val emailEntity = emailJpaRepository.findByUserId(userId)
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+
+        // 이메일 업데이트
+        val updatedEmailEntity = EmailJpaEntity(
+            emailId = emailEntity.emailId,
+            emailAddress = email,
+            firstAuthorized = emailEntity.firstAuthorized
+        )
+        emailJpaRepository.save(updatedEmailEntity)
+    }
+
+
+
 }

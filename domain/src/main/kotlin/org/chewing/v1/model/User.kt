@@ -56,6 +56,9 @@ class User private constructor(
                 name = UserName.of(firstName, lastName)
             )
         }
+
+
+
     }
 
     class UserId private constructor(private val userId: String) {
@@ -136,7 +139,16 @@ class User private constructor(
             backgroundImage
         )
     }
-
-
+    // 추가
+    fun updateName(firstName: String, lastName: String): User {
+        return User(
+            userId = this.userId,
+            name = UserName.of(firstName, lastName),
+            birth = this.birth,
+            image = this.image,
+            status = this.status,
+            backgroundImage = this.backgroundImage
+        )
+    }
 
 }

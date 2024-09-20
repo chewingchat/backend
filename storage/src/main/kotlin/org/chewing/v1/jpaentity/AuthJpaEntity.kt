@@ -48,4 +48,6 @@ class AuthJpaEntity(
     fun toAuthInfoOnlyWithId(): AuthInfo {
         return AuthInfo.onlyWithId(authId)
     }
+
+
 }

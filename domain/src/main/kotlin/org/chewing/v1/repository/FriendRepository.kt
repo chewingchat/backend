@@ -20,4 +20,7 @@ interface FriendRepository {
     fun updateFriend(user: User, friend: Friend)
 
     fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend?
+
+    // 츄가
+    fun deleteAllByUserId(userId: String)
 }
