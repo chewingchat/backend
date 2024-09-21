@@ -1,6 +1,5 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.FeedTarget
 
@@ -10,8 +9,8 @@ class CommentRequest(
         val feedId: String = "",
         val comment: String = ""
     ){
-        fun toFeedId(): Feed.FeedId {
-            return Feed.FeedId.of(feedId)
+        fun toFeedId(): String {
+            return feedId
         }
         fun toComment(): String {
             return comment
@@ -25,8 +24,8 @@ class CommentRequest(
         val commentId: String = "",
         val feedId: String = ""
     ){
-        fun toCommentId(): Comment.CommentId {
-            return Comment.CommentId.of(commentId)
+        fun toCommentId(): String {
+            return commentId
         }
     }
 }

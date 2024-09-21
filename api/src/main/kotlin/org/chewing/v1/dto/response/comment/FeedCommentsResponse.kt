@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response.comment
 
-import org.chewing.v1.model.comment.FriendComment
+import org.chewing.v1.model.comment.Comment
 import java.time.format.DateTimeFormatter
 
 data class FeedCommentsResponse(
@@ -8,7 +8,7 @@ data class FeedCommentsResponse(
 ) {
     companion object {
         fun of(
-            comments: List<FriendComment>
+            comments: List<Comment>
         ): FeedCommentsResponse {
             return FeedCommentsResponse(
                 comments = comments.map { FriendCommentResponse.of(it) }
@@ -25,15 +25,15 @@ data class FeedCommentsResponse(
     ) {
         companion object {
             fun of(
-                friendComment: FriendComment
+                friendComment: Comment
             ): FriendCommentResponse {
                 return FriendCommentResponse(
-                    friendId = friendComment.friend.friend.userId.value(),
-                    friendFirstName = friendComment.friend.friend.name.firstName(),
-                    friendLastName = friendComment.friend.friend.name.lastName(),
-                    friendImageUrl = friendComment.friend.friend.image.url,
-                    comment = friendComment.comment.comment,
-                    commentTime = friendComment.comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+                    friendId = friendComment.writer.userId,
+                    friendFirstName = friendComment.writer.name.firstName(),
+                    friendLastName = friendComment.writer.name.lastName(),
+                    friendImageUrl = friendComment.writer.image.url,
+                    comment = friendComment.comment,
+                    commentTime = friendComment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
                 )
             }
         }

@@ -25,7 +25,7 @@ class ScheduleController(
         @RequestParam("month") month: Month
     ): SuccessResponseEntity<ScheduleListResponse> {
         val type = ScheduleType.of(year, month)
-        val schedules = scheduleService.getSchedules(User.UserId.of(userId), type)
+        val schedules = scheduleService.fetches(userId, type)
         return ResponseHelper.success(ScheduleListResponse.of(schedules))
     }
 
@@ -35,7 +35,7 @@ class ScheduleController(
         @RequestBody request: ScheduleRequest.Delete
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val scheduleId = request.toScheduleId()
-        scheduleService.removeSchedule(scheduleId)
+        scheduleService.remove(scheduleId)
         return ResponseHelper.successCreate()
     }
 
@@ -44,7 +44,7 @@ class ScheduleController(
         @RequestHeader("userId") userId: String,
         @RequestBody request: ScheduleRequest.Add
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        scheduleService.addSchedule(User.UserId.of(userId), request.toScheduleTime(), request.toScheduleContent())
+        scheduleService.make(userId, request.toScheduleTime(), request.toScheduleContent())
         return ResponseHelper.successOnly()
     }
 }

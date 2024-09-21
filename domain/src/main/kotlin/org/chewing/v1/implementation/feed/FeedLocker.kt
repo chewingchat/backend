@@ -1,7 +1,5 @@
 package org.chewing.v1.implementation.feed
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
@@ -10,7 +8,7 @@ import org.springframework.stereotype.Component
 class FeedLocker(
     private val feedProcessor: FeedProcessor
 ) {
-    fun lockFeedLikes(feedId: Feed.FeedId, userId: User.UserId, updateType: FeedTarget) {
+    fun lockFeedLikes(feedId: String, userId: String, updateType: FeedTarget) {
         var retryCount = 0
         val maxRetry = 10
         while (retryCount < maxRetry) {
@@ -25,7 +23,7 @@ class FeedLocker(
         }
     }
 
-    fun lockFeedUnLikes(feedId: Feed.FeedId, userId: User.UserId, updateType: FeedTarget) {
+    fun lockFeedUnLikes(feedId: String, userId: String, updateType: FeedTarget) {
         var retryCount = 0
         val maxRetry = 10
         while (retryCount < maxRetry) {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class CommentRemover(
     private val commentRepository: CommentRepository
 ) {
-    fun removeComment(commentId: Comment.CommentId) {
+    fun removeComment(commentId: String) {
         commentRepository.removeComment(commentId)
     }
 }

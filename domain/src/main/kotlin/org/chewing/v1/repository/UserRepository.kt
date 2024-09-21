@@ -3,29 +3,20 @@ package org.chewing.v1.repository
 import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepository {
-    fun readUserById(userId: User.UserId): User?
-    fun readUserByContact(contact: Contact): User?
-    fun remove(userId: User.UserId): User.UserId?
-    fun updateUser(user: User): User.UserId
-    fun readUserByEmail(email: String): User?
-    fun readUserByPhoneNumber(phoneNumber: String, countryCode: String): User?
+    fun readUserById(userId: String): User?
+    fun readUsersByIds(userIds: List<String>): List<User>
+    fun remove(userId: String): String?
+    fun updateProfileImage(user: User, media: Media)
     fun appendSearchHistory(user: User, search: FriendSearch)
-    fun readSearchHistory(userId: User.UserId): List<FriendSearch>
-    fun readUserWithStatus(userId: User.UserId): User?
-
-    //
-    fun readPushToken(pushToken: PushToken): PushToken?
-    fun appendUserPushToken(user: User, pushToken: PushToken)
-    fun updateUserPushToken(user: User, pushToken: PushToken)
-    fun saveUser(user: User):User.UserId // 새로운 유저 정보를 저장하는 메서드
-
-    // 코드 추가
-    fun deleteLoggedInInfo(userId: User.UserId)
-
-
+    fun readSearchHistory(userId: String): List<FriendSearch>
+    fun removePushToken(device: PushToken.Device)
+    fun appendPushToken(device: PushToken.Device, appToken: String, user: User)
+    fun appendUser(userContent: UserContent): User
 }

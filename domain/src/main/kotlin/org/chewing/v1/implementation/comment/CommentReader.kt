@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.repository.CommentRepository
 import org.springframework.stereotype.Component
 
@@ -10,11 +10,14 @@ import org.springframework.stereotype.Component
 class CommentReader(
     private val commentRepository: CommentRepository
 ) {
-    fun readCommentWithUserId(feedId: Feed.FeedId): List<Pair<User.UserId, Comment>> {
-        return commentRepository.readCommentsWithUserId(feedId)
+    fun reads(feedId: String): List<CommentInfo> {
+        return commentRepository.readComment(feedId)
     }
 
-    fun readUserCommentedFeed(userId: User.UserId): List<Pair<Feed.FeedId, Comment>> {
-        return commentRepository.readCommentsWithFeedId(userId)
+    fun readCommented(userId: String): List<CommentInfo> {
+        return commentRepository.readCommented(userId)
+    }
+    fun read(commentId: String): CommentInfo {
+        return commentRepository.read(commentId)?: throw NotFoundException(ErrorCode.COMMENT_NOT_FOUND)
     }
 }

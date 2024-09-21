@@ -10,7 +10,7 @@ class FriendRemover(
     private val friendRepository: FriendRepository
 ) {
     @Transactional
-    fun removeFriend(userId: User.UserId, friendId: User.UserId) {
+    fun removeFriend(userId: String, friendId: String) {
         friendRepository.removeFriend(userId, friendId)
     }
 }

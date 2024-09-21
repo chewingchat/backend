@@ -12,7 +12,7 @@ import java.util.UUID
 @Entity
 @DynamicInsert
 @Table(name = "announcement", schema = "chewing")
-class AnnouncementJpaEntity(
+internal class AnnouncementJpaEntity(
     @Id
     val announcementId: String = UUID.randomUUID().toString(),
     val announcementTopic: String,

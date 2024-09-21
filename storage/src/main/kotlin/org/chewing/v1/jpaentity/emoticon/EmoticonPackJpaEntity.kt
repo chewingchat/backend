@@ -9,7 +9,7 @@ import java.util.*
 @DynamicInsert
 @Entity
 @Table(name = "emoticon_pack", schema = "chewing")
-class EmoticonPackJpaEntity(
+internal class EmoticonPackJpaEntity(
     @Id
     val emoticonPackId: String = UUID.randomUUID().toString(),
 
@@ -17,14 +17,12 @@ class EmoticonPackJpaEntity(
 
     val emoticonPackName: String,
 ) : BaseEntity() {
-
-    companion object {
-        fun fromEmoticonPack(emoticonPack: EmoticonPack): EmoticonPackJpaEntity {
-            return EmoticonPackJpaEntity(
-                emoticonPack.id,
-                emoticonPack.media.url,
-                emoticonPack.name
-            )
-        }
+    fun toEmoticonPack(emoticons: List<EmoticonJpaEntity>): EmoticonPack {
+        return EmoticonPack.of(
+            emoticonPackId,
+            emoticonPackName,
+            emoticonPackUrl,
+            emoticons.map { it.toEmoticon() }
+        )
     }
 }

@@ -1,18 +1,12 @@
 package org.chewing.v1.service
 
-
-
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.*
+import org.chewing.v1.implementation.auth.*
 import org.chewing.v1.implementation.user.UserAppender
-import org.chewing.v1.implementation.user.UserUpdater
+import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.*
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
-import org.chewing.v1.repository.AuthRepository
-import org.chewing.v1.repository.FriendRepository
-import org.chewing.v1.repository.PushNotificationRepository
+import org.chewing.v1.model.auth.AuthInfo
+import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.repository.UserRepository
 
 import org.springframework.stereotype.Service
@@ -27,30 +21,22 @@ class AuthService(
     private val userRepository: UserRepository,
     private val authReader: AuthReader,
     private val authAppender: AuthAppender,
+    private val authRemover: AuthRemover,
     private val userAppender: UserAppender,
-    private val authRepository: AuthRepository,
-    private val friendRepository: FriendRepository,
-    private val pushNotificationRepository: PushNotificationRepository,
-
-
+    private val userReader: UserReader,
+    private val authUpdater: AuthUpdater,
     // tokenProvider: JwtTokenProvider --> 이건 뭔 뜻이죠?
-
-
 ) {
 
 
-
-    fun sendPhoneVerification(phoneNumber: String, countryCode: String) {
+    fun sendPhoneVerification(phoneNumber: PhoneNumber) {
         // authChecker.checkPhoneNumberRegistered(phoneNumber) // --> 필요없어보여서 뻄
         // 휴대폰 인증번호 전송하기 전에 db에 인증 정보 저장하는 로직 구현
-        val phone = Phone.generate(countryCode, phoneNumber) // 먼저 Phone 인스턴스 생성
-        val phoneWithCode = phone.generateValidationCode() // 인증번호 생성
-
-        authAppender.appendPhoneVerificationInfo(phoneWithCode) // authinfo에 인증번호 저장
+        // 변수에 NULL처리 때문에 객체 생성하는거 막을게요 ㅠㅠㅠ.. 저도 코드 다 바꾸는중 ㅠ
+        authAppender.appendPhoneVerification(phoneNumber) // authinfo에 인증번호 저장
 
 
         // AWS써서 phoneWithCode = phone.generateValidationCode()에서 생성한 인증번호 전송 로직 필요
-
 
 
     }
@@ -58,11 +44,7 @@ class AuthService(
     fun sendEmailVerification(emailAddress: String) {
         // authChecker.checkEmailRegistered("", emailAddress) --> 필요없어보여서 뺌
         // 이메일 인증번호 전송하기 전에 db에 인증 정보 저장하는 로직 구현
-        val email = Email.generate(emailAddress)
-        val emailWithCode = email.generateValidationCode()
-
-
-        authAppender.appendEmailVerificationInfo(emailWithCode)
+        authAppender.appendEmailVerification(emailAddress)
 
         // AWS써서 인증번호 전송
 
@@ -73,166 +55,92 @@ class AuthService(
     //트랜잭션 처리 필요없는 부분
     // processor에서 트랜잭션 걸게욥
     fun verifyPhoneAndLogin(
-        phone: Phone,
-        pushToken: PushToken,
+        phoneNumber: PhoneNumber,
+        verificationCode: String,
+        appToken: String,
+        device: PushToken.Device
     ): Pair<String, String> {
 
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
 
-        // 사용자가 인증코드 입력 후 휴대폰 인증 번호 확인용 읽기(인증번호 받음)
-        val savedPhone = authReader.readPhoneNumber(phone.number, phone.country)
-
-
-
-        // 받은 휴대폰 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
-        AuthValidator.validatePhoneNumber(savedPhone, phone.validationCode.code)
-
+        // 사용자가 인증코드 입력 후 휴대폰 인증 번호 확인용 읽기(인증번호 받음) -> 조
+        val savedPhone = authReader.readPhoneNumber(phoneNumber)
+        // 받은 휴대폰 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생 -> 좋아욥
+        AuthValidator.validatePhoneNumber(savedPhone, verificationCode)
         //유저 읽기
-        val (user, authInfo) = authReader.readInfoWithUserByPhoneNumber(phone.number)
+        val authInfo = authReader.readInfoByPhoneNumberId(phoneNumber.number)
+        val user = userReader.read(authInfo.userId)
 
-        //푸시 토큰 처리
-        pushTokenProcessor.processPushToken(user, pushToken)
-
-
-        val accessToken = jwtTokenProvider.createToken(user.userId.value())
-        val refreshToken = jwtTokenProvider.createRefreshToken(user.userId.value())
-
-        //로그인 정보 저장 -> refresh Token 저장 해야함
-        authAppender.appendLoggedInInfo(authInfo, refreshToken)
-        return Pair(accessToken, refreshToken.token)
+        return makeTokenPair(user.userId, authInfo)
     }
 
     //밑에 verifyEmailAndLogin, verifyEmailAndSignup, verifyPhoneAndSignup, 수정
-
     fun verifyEmailAndLogin(
-        email: Email,
-        pushToken: PushToken,
+        emailAddress: String,
+        verificationCode: String,
+        appToken: String,
+        device: PushToken.Device
     ): Pair<String, String> {
 
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
 
         // 사용자가 인증코드 입력 후 이메일 인증 번호 확인용 읽기(인증번호 받음)
-        val savedEmail = authReader.readEmail(email.emailAddress)
-
-
-
+        val savedEmail = authReader.readEmail(emailAddress)
         // 받은 이메일 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
-        AuthValidator.validateEmail(savedEmail, email.validationCode.code)
-
-        //유저 읽기
-        val (user, authInfo) = authReader.readInfoWithUserByEmail(email.emailId)
-
-
+        AuthValidator.validateEmail(savedEmail, verificationCode)
+        //유저 읽기 -> fetch join 없앨게욥
+        val authInfo = authReader.readInfoByEmailId(savedEmail.emailId)
+        val user = userReader.read(authInfo.userId)
         //푸시 토큰 처리
-        pushTokenProcessor.processPushToken(user, pushToken)
-
-
-        val accessToken = jwtTokenProvider.createToken(user.userId.value())
-        val refreshToken = jwtTokenProvider.createRefreshToken(user.userId.value())
-
-        //로그인 정보 저장 -> refresh Token 저장 해야함
-        authAppender.appendLoggedInInfo(authInfo, refreshToken)
-        return Pair(accessToken, refreshToken.token)
+        return makeTokenPair(user.userId, authInfo)
     }
 
-
     fun verifyEmailAndSignup(
-        signupRequest: SignupRequest,
-        email: Email,
-        pushToken: PushToken,
-    ): Pair<String, String> {
-
+        emailAddress: String,
+        verificationCode: String,
+    ): String {
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
 
         // 사용자가 인증코드 입력 후 이메일 인증 번호 확인용 읽기(인증번호 받음)
-        val savedEmail = authReader.readEmail(email.emailId)
-
+        val savedEmail = authReader.readEmail(emailAddress)
 
         // 이미 인증된 사용자인지 확인
         AuthValidator.emailValidateIsAuthorizedFirst(savedEmail)
 
         // 받은 이메일 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
-        AuthValidator.validateEmail(savedEmail, email.validationCode.code)
+        AuthValidator.validateEmail(savedEmail, emailAddress)
 
+        authUpdater.updateEmailAuthorized(savedEmail.emailId)
 
-
-        // 인증 정보를 불러오기 (sendEmailVerification에서 저장된 정보 사용)
-        val authInfo = authReader.readInfoWithUserByEmail(email.emailAddress).second
-
-
-        // 여기부터 수정
-        // toUser 메서드로 유저 생성
-        val newUser = signupRequest.toUser()
-
-        // AuthInfo 도 authAppender 를 통해 저장해야함!!
-
-        //푸시 토큰 처리
-        pushTokenProcessor.processPushToken(newUser, pushToken)
-
-        val accessToken = jwtTokenProvider.createToken(newUser.userId.value())
-        val refreshToken = jwtTokenProvider.createRefreshToken(newUser.userId.value())
-
-
-        //로그인 정보 저장 -> refresh Token 저장 해야함
-        authAppender.appendLoggedInInfo(authInfo, refreshToken)
-        return Pair(accessToken, refreshToken.token)
-
+        return savedEmail.emailId
     }
 
 
     fun verifyPhoneAndSignup(
-        signupRequest: SignupRequest,
-        phone: Phone,
-        pushToken: PushToken,
-    ): Pair<String, String> {
+        phoneNumber: PhoneNumber,
+        verificationCode: String,
+    ): String {
 
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
-
-
-
         // 사용자가 인증코드 입력 후 휴대폰 인증 번호 확인용 읽기(인증번호 받음)
-        val savedPhone = authReader.readPhoneNumber(phone.number, phone.country)
-
-
+        val savedPhone = authReader.readPhoneNumber(phoneNumber)
 
         // 이미 인증된 사용자인지 확인
         AuthValidator.phoneValidateIsAuthorizedFirst(savedPhone)
 
         // 받은 휴대폰 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생
-        AuthValidator.validatePhoneNumber(savedPhone, phone.validationCode.code)
+        AuthValidator.validatePhoneNumber(savedPhone, verificationCode)
 
-
-        // 휴대폰 인증 정보를 불러오기 (sendPhoneVerification에서 저장된 정보 사용)
-        val authInfo = authReader.readInfoWithUserByPhoneNumber(phone.number).second
-
-        // 여기부터 수정
-        // toUser 메서드로 유저 생성
-        val newUser = signupRequest.toUser()
-
-        // AuthInfo 도 authAppender 를 통해 저장해야함!!
-
-        //푸시 토큰 처리
-        pushTokenProcessor.processPushToken(newUser, pushToken)
-
-        val accessToken = jwtTokenProvider.createToken(newUser.userId.value())
-        val refreshToken = jwtTokenProvider.createRefreshToken(newUser.userId.value())
-
-
-        //로그인 정보 저장 -> refresh Token 저장 해야함
-        authAppender.appendLoggedInInfo(authInfo, refreshToken)
-        return Pair(accessToken, refreshToken.token)
-
+        authUpdater.updatePhoneAuthorized(savedPhone.phoneId)
+        return savedPhone.phoneId
     }
-
 
 
     fun logout(accessToken: String) {
         val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
-        val user = User.UserId.of(userId)
-
         // 사용자 로그인 정보 삭제 (리프레시 토큰 포함)
-        userRepository.deleteLoggedInInfo(user)
-
+        val authInfo = authReader.readInfoByUserId(userId)
+        authRemover.removeLoginInfo(authInfo.authInfoId)
     }
 
     fun refreshAccessToken(refreshToken: String): Pair<String, String> {
@@ -245,39 +153,30 @@ class AuthService(
         // 리프레시 토큰에서 사용자 ID 추출
         val userId = jwtTokenProvider.getUserIdFromToken(token)
 
-        // 새 액세스 토큰 및 리프레시 토큰 생성
-        val newAccessToken = jwtTokenProvider.createToken(userId)
-        val newRefreshToken = jwtTokenProvider.createRefreshToken(userId).token
+        val auth = authReader.readInfoByUserId(userId)
 
-        //
-        // Pair로 반환
-        return Pair(newAccessToken, newRefreshToken)
+        return makeTokenPair(userId, auth)
     }
 
     // 수정 로직 추가(더 추가)
     // 전화번호 수정 전 인증 요청 로직
-    fun sendPhoneVerificationForUpdate(userId: String, phoneNumber: String, countryCode: String) {
+    fun sendPhoneVerificationForUpdate(userId: String, phoneNumber: PhoneNumber) {
         // 번호 중복 체크 로직 (이미 사용 중인 번호인지 확인)
-        authChecker.checkPhoneNumberRegistered(phoneNumber, countryCode)
-
-        val phone = Phone.generate(countryCode, phoneNumber) // 먼저 Phone 인스턴스 생성
-        val phoneWithCode = phone.generateValidationCode() // 인증번호 생성
-
-        authAppender.appendPhoneVerificationInfo(phoneWithCode) // authinfo에 인증번호 저장
+        authChecker.checkPhoneNumberRegistered(phoneNumber)
+        authUpdater.updatePhoneVerificationCode(phoneNumber)
     }
 
     // 전화번호 인증 및 수정 로직
 
-    fun verifyPhoneForUpdate(userId: String, phoneNumber: String, countryCode: String, verificationCode: String) {
+    fun verifyPhoneForUpdate(userId: String, phoneNumber: PhoneNumber, verificationCode: String) {
         // 인증 정보 읽기
-        val savedPhone = authReader.readPhoneNumber(phoneNumber, countryCode)
+        val savedPhone = authReader.readPhoneNumber(phoneNumber)
 
         // 인증번호 검증
         AuthValidator.validatePhoneNumber(savedPhone, verificationCode)
 
-
         // 업데이트 로직 실행
-        authAppender.updateUserPhoneNumber(userId, phoneNumber, countryCode)
+        authUpdater.updatePhoneNumber(phoneNumber)
     }
 
     // 이메일 수정 전 인증 요청 로직
@@ -285,13 +184,7 @@ class AuthService(
         // 이메일 중복 체크 로직 (이미 사용 중인 이메일인지 확인)
         authChecker.checkEmailRegistered(emailAddress)
 
-        // 인증번호 생성 후 저장
-        val email = Email.generate(emailAddress)
-        val emailWithCode = email.generateValidationCode()
-
-
-        authAppender.appendEmailVerificationInfo(emailWithCode)
-
+        authUpdater.updateEmailVerificationCode(emailAddress)
     }
 
     // 이메일 인증 및 수정 로직
@@ -303,10 +196,40 @@ class AuthService(
         AuthValidator.validateEmail(savedEmail, verificationCode)
 
         // 업데이트 로직 실행
-        authAppender.updateUserEmail(userId, email)
+        authUpdater.updateEmail(email)
     }
 
+    fun signUpWithEmail(
+        emailId: String,
+        userContent: UserContent,
+        device: PushToken.Device,
+        appToken: String
+    ): Pair<String, String> {
+        val user = userAppender.appendUser(userContent)
+        val auth = authAppender.appendAuthInfoByEmailId(emailId, user.userId)
 
+        pushTokenProcessor.processPushToken(user, appToken, device)
 
+        return makeTokenPair(user.userId, auth)
+    }
 
+    fun signUpWithPhone(
+        phoneId: String,
+        userContent: UserContent,
+        device: PushToken.Device,
+        appToken: String
+    ): Pair<String, String> {
+        val user = userAppender.appendUser(userContent)
+        val auth = authAppender.appendAuthInfoByPhoneId(phoneId, user.userId)
+
+        pushTokenProcessor.processPushToken(user, appToken, device)
+        return makeTokenPair(user.userId, auth)
+    }
+
+    private fun makeTokenPair(userId: String, authInfo: AuthInfo): Pair<String, String> {
+        val accessToken = jwtTokenProvider.createToken(userId)
+        val refreshToken = jwtTokenProvider.createRefreshToken(userId)
+        authAppender.appendLoggedInInfo(authInfo, refreshToken)
+        return Pair(accessToken, refreshToken.token)
+    }
 }

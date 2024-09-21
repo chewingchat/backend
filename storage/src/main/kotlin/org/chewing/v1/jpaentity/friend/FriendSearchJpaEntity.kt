@@ -11,15 +11,11 @@ import java.util.UUID
 @Entity
 @DynamicInsert
 @Table(name = "friend_search", schema = "chewing")
-class FriendSearchJpaEntity(
+internal class FriendSearchJpaEntity(
     @Id
     val searchId: String = UUID.randomUUID().toString(),
-
     val searchText: String,
-
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    val user: UserJpaEntity,
+    val userId: String,
 ): BaseEntity() {
     fun toFriendSearch(): FriendSearch {
         return FriendSearch.of(
@@ -32,7 +28,7 @@ class FriendSearchJpaEntity(
         fun fromFriendSearch(user: User, friendSearch: FriendSearch): FriendSearchJpaEntity {
             return FriendSearchJpaEntity(
                 searchText = friendSearch.keyword,
-                user = UserJpaEntity.fromUser(user)
+                userId = user.userId
             )
         }
     }

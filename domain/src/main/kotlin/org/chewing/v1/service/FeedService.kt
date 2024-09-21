@@ -1,11 +1,9 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.feed.*
-import org.chewing.v1.implementation.friend.FriendReader
 import org.chewing.v1.implementation.media.FileProcessor
-import org.chewing.v1.model.User
+import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.feed.*
-import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -18,50 +16,47 @@ class FeedService(
     private val fileProcessor: FileProcessor,
     private val feedProcessor: FeedProcessor,
     private val feedEnricher: FeedEnricher,
-    private val friendReader: FriendReader,
-    private val feedFilter: FeedFilter
 ) {
-    fun getFeed(userId: User.UserId, feedId: Feed.FeedId): FulledFeed {
-        return feedReader.readFulledFeed(feedId)
+    // 피드를 가져옴
+    fun getFeed(userId: String, feedId: String): Feed {
+        val feed = feedReader.readFeed(feedId)
+        val feedDetails = feedReader.readFeedDetails(feedId)
+
+        return Feed.of(feed, feedDetails)
     }
 
-    fun getFriendFeedsWithOwner(userId: User.UserId, feedIds: List<Feed.FeedId>, friends: List<Friend>): List<FriendFeed> {
-        // 피드와 소유자 ID를 읽어옴
-        val feedWithOwnerId = feedReader.readFulledFeedsByOwner(feedIds, friends.map { it.friend.userId })
-
-        // 피드 좋아요 상태를 읽어옴
-        val likedFeedIds = feedReader.readFeedsLike(feedWithOwnerId.map { it.first.feed.id }, userId)
-
-        // FeedFilter를 사용하여 유효한 피드와 친구 쌍을 필터링
-        val filteredFriendFeeds = feedFilter.filterFriendFeeds(feedWithOwnerId, friends)
-
-        // FriendFeed 객체를 생성
-        return feedEnricher.enrichFriendFeed(filteredFriendFeeds, likedFeedIds)
-    }
-    fun getFriendFeeds(userId: User.UserId, friendId: User.UserId): List<FriendFeed> {
-        val friend = friendReader.readFriend(userId, friendId)
-        val feeds = feedReader.readFulledFeedsByUserId(friendId)
-        val likedFeedIds = feedReader.readFeedsLike(feeds.map { it.feed.id }, userId)
-        return feedEnricher.enrichFriendFeeds(friend, feeds, likedFeedIds)
+    fun getFeeds(feedsId: List<String>): List<Feed> {
+        val feeds = feedReader.reads(feedsId)
+        val feedsDetails = feedReader.readsDetails(feedsId)
+        return feedEnricher.enrichFeeds(feeds, feedsDetails)
     }
 
-    fun addFeedLikes(userId: User.UserId, feedId: Feed.FeedId, target: FeedTarget) {
+    //좋아요 유무가 포함되어야 함
+    fun getFriendFeeds(userId: String, friendId: String): List<FriendFeed> {
+        val feeds = feedReader.readsByUser(friendId)
+        val feedsDetail = feedReader.readsDetails(feeds.map { it.feedId })
+        val likedFeedIds = feedReader.readsLike(feeds.map { it.feedId }, userId)
+        val friendFeeds = feedEnricher.enrichFriendFeeds(feeds, likedFeedIds, feedsDetail)
+        return FeedSortEngine.sort(friendFeeds, SortCriteria.DATE)
+    }
+
+    fun likes(userId: String, feedId: String, target: FeedTarget) {
         feedValidator.isAlreadyLiked(feedId, userId)
         feedLocker.lockFeedLikes(feedId, userId, target)
     }
 
-    fun deleteFeedLikes(userId: User.UserId, feedId: Feed.FeedId, target: FeedTarget) {
+    fun unlikes(userId: String, feedId: String, target: FeedTarget) {
         feedValidator.isAlreadyUnliked(feedId, userId)
         feedLocker.lockFeedUnLikes(feedId, userId, target)
     }
 
-    fun deleteFeeds(userId: User.UserId, feedIds: List<Feed.FeedId>) {
+    fun removes(userId: String, feedIds: List<String>) {
         feedValidator.isFeedsOwner(feedIds, userId)
         val oldMedias = feedRemover.removeFeeds(feedIds)
         fileProcessor.processOldFiles(oldMedias)
     }
 
-    fun createFeed(userId: User.UserId, files: List<File>, topic: String) {
+    fun make(userId: String, files: List<File>, topic: String) {
         val medias = fileProcessor.processNewFiles(userId, files)
         feedProcessor.processNewFeed(medias, userId, topic)
     }

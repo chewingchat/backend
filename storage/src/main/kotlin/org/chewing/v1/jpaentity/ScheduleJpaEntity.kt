@@ -36,7 +36,7 @@ class ScheduleJpaEntity(
                 scheduleStartAt = scheduleTime.startAt,
                 scheduleEndAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
-                userId = writer.userId.value()
+                userId = writer.userId
             )
         }
     }

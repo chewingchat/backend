@@ -6,7 +6,7 @@ import org.chewing.v1.model.SortCriteria
 
 object FriendSortEngine {
 
-    fun sortFriends(friends: List<Friend>, sortCriteria: SortCriteria): List<Friend> {
+    fun sort(friends: List<Friend>, sortCriteria: SortCriteria): List<Friend> {
         return friends.sortedWith(getFriendComparator(sortCriteria))
     }
 
