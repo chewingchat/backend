@@ -20,4 +20,5 @@ interface FriendRepository {
     fun updateFriend(user: User, friend: Friend)
     fun updateFavorite(user: User, friendId: User.UserId, favorite: Boolean)
     fun updateName(user: User, friendId: User.UserId, friendName: User.UserName)
+    fun deleteAllByUserId(userId: String)
 }

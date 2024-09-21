@@ -31,5 +31,11 @@ class LoggedInEntity(
                 expiredAt = refreshToken.expiredAt
             )
         }
+
+
+    }
+    // 사용자 ID를 반환하는 메서드 추가
+    fun getUserId(): String {
+        return auth.user.id  // auth.user를 통해 userId 반환
     }
 }

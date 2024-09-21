@@ -57,6 +57,9 @@ class User private constructor(
                 name = UserName.of(firstName, lastName)
             )
         }
+
+
+
     }
 
     class UserId private constructor(private val userId: String) {

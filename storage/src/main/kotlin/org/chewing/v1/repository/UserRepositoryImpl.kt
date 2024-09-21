@@ -5,6 +5,7 @@ import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.chewing.v1.jparepository.AuthJpaRepository
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
+import org.chewing.v1.jparepository.LoggedInJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
 import org.chewing.v1.jparepository.UserStatusJpaRepository
 import org.chewing.v1.model.PushToken
@@ -21,6 +22,8 @@ class UserRepositoryImpl(
     private val authJpaRepository: AuthJpaRepository,
     private val friendSearchJpaRepository: FriendSearchJpaRepository,
     private val userStatusJpaRepository: UserStatusJpaRepository
+    private val friendSearchJpaRepository: FriendSearchJpaRepository,
+    private val loggedInJpaRepository: LoggedInJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: User.UserId): User? {
         val userEntity = userJpaRepository.findById(userId.value())
@@ -78,9 +81,7 @@ class UserRepositoryImpl(
         return userId
     }
 
-    override fun updateUser(user: User) {
-        userJpaRepository.save(UserJpaEntity.fromUser(user))
-    }
+    // 수정
 
     override fun readUserByEmail(email: String): User? {
         return authJpaRepository.findUserByEmail(email).map {
@@ -102,5 +103,22 @@ class UserRepositoryImpl(
         return friendSearchJpaRepository.findAllByUserUserId(userId.value()).map {
             it.toFriendSearch()
         }
+    }
+    // 코드 추가
+    // 로그인 정보 삭제 (리프레시 토큰 포함)
+    override fun deleteLoggedInInfo(userId: User.UserId) {
+        val loggedInEntity = loggedInJpaRepository.findByUserId(userId.value())
+        loggedInEntity.ifPresent {
+            loggedInJpaRepository.delete(it)
+        }
+    }
+
+    // 수정 + 추가
+    override fun updateUser(user: User): User.UserId {
+        // 유저 엔티티 저장
+        userJpaRepository.save(UserJpaEntity.fromUser(user))
+
+        // 저장 후 유저의 ID를 반환
+        return user.userId
     }
 }
