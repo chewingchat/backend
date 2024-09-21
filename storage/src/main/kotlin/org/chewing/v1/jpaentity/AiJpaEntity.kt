@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDeleteAction
 @DynamicInsert
 @Entity
 @Table(name = "ai", schema = "chewing")
-class AiJpaEntity(
+internal class AiJpaEntity(
     @Id
     @Column(name = "ai_id", nullable = false)
     val aiId: String,
@@ -18,9 +18,6 @@ class AiJpaEntity(
     @Column(name = "function_type", nullable = false)
     val functionType: String,
 
-    @JoinColumn(name = "user_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    val userId: UserJpaEntity
+    val userId: String
 ) : BaseEntity() {
 }

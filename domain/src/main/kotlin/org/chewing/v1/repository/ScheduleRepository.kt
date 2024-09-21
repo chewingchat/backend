@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ScheduleRepository {
     fun appendSchedule(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User)
-    fun removeSchedule(scheduleId: Schedule.ScheduleId)
-    fun readSchedule(userId: User.UserId, type: ScheduleType): List<Schedule>
+    fun removeSchedule(scheduleId: String)
+    fun readSchedule(userId: String, type: ScheduleType): List<Schedule>
 }

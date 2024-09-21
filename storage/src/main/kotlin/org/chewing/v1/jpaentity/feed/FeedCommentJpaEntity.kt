@@ -3,8 +3,8 @@ package org.chewing.v1.jpaentity.feed
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.model.feed.FeedInfo
+import org.chewing.v1.model.comment.CommentInfo
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -19,19 +19,22 @@ class FeedCommentJpaEntity(
     val feedId: String
 ) : BaseEntity() {
     companion object {
-        fun generate(comment: String, writer: User, feed: Feed): FeedCommentJpaEntity {
+        fun generate(comment: String, writer: User, feedInfo: FeedInfo): FeedCommentJpaEntity {
             return FeedCommentJpaEntity(
                 comment = comment,
-                userId = writer.userId.value(),
-                feedId = feed.id.value()
+                userId = writer.userId,
+                feedId = feedInfo.feedId
             )
         }
     }
-    fun toComment(): Comment {
-        return Comment(
-            Comment.CommentId.of(feedCommentId),
+
+    fun toCommentInfo(): CommentInfo {
+        return CommentInfo.of(
+            feedCommentId,
             comment,
-            this.createdAt!!
+            this.createdAt!!,
+            userId,
+            feedId
         )
     }
 }

@@ -30,7 +30,7 @@ class UserController(
         @RequestHeader("userId") userId: String
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFile(file)
-        userService.updateUserImage(convertedFile, User.UserId.of(userId))
+        userService.updateUserImage(convertedFile, userId)
         return ResponseHelper.successOnly()
     }
     @PostMapping("/profile/status")
@@ -40,24 +40,4 @@ class UserController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         return ResponseHelper.successOnly()
     }
-
-    // 회원탈퇴로직(추가)
-    @DeleteMapping("")
-    fun deleteAccount(@RequestHeader("Authorization") accessToken: String): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        userService.deleteAccount(accessToken)
-        return ResponseHelper.successOnly()
-    }
-
-    @PutMapping("/name")
-    fun updateUserName(
-        @RequestHeader("Authorization") accessToken: String,
-        @RequestBody request: NameUpdateRequest
-    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        // 서비스 호출하여 이름 수정
-        userService.updateUserName(accessToken, request.firstName, request.lastName)
-
-        return ResponseHelper.successOnly()
-    }
-
-
 }

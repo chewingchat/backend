@@ -4,10 +4,9 @@ import org.chewing.v1.implementation.user.UserAppender
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.friend.FriendSortEngine
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.SortCriteria
-import org.chewing.v1.model.User
+import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,17 +15,17 @@ class SearchService(
     private val userAppender: UserAppender,
     private val userReader: UserReader
 ) {
-    fun searchFriends(userId: User.UserId, keyword: String): List<Friend> {
-        val friends = friendSearchEngine.searchFriends(userId, keyword)
-        return FriendSortEngine.sortFriends(friends, SortCriteria.NAME)
+    fun searchFriends(userId: String, keyword: String): List<Friend> {
+        val friends = friendSearchEngine.search(userId, keyword)
+        return FriendSortEngine.sort(friends, SortCriteria.NAME)
     }
 
-    fun addSearchedFriend(userId: User.UserId, search: FriendSearch) {
-        val user = userReader.readUser(userId)
-        return userAppender.appendSearchedFriend(user, search)
+    fun addSearchedFriend(userId: String, search: FriendSearch) {
+        val user = userReader.read(userId)
+        return userAppender.appendSearched(user, search)
     }
-    fun getSearchedFriend(userId: User.UserId): List<FriendSearch> {
-        val friendSearchHistory = userReader.readSearchedFriend(userId)
+    fun getSearchedFriend(userId: String): List<FriendSearch> {
+        val friendSearchHistory = userReader.readSearched(userId)
         return FriendSortEngine.sortFriendSearchedHistory(friendSearchHistory, SortCriteria.DATE)
     }
 }

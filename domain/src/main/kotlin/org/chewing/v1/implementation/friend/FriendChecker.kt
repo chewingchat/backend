@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component
 class FriendChecker(
     private val friendRepository: FriendRepository
 ) {
-    fun isAlreadyFriend(userId: User.UserId, friendId: User.UserId) {
+    fun isAlreadyFriend(userId: String, friendId: String) {
          if(friendRepository.checkFriend(userId, friendId)) {
              throw ConflictException(ErrorCode.FRIEND_ALREADY_CREATED)
          }
     }
-    fun isFriend(userId: User.UserId, friendId: User.UserId) {
+    fun isFriend(userId: String, friendId: String) {
         if(!friendRepository.checkFriend(userId, friendId)) {
             throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
         }

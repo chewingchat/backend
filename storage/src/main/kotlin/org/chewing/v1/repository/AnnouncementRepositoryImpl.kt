@@ -5,7 +5,7 @@ import org.chewing.v1.model.announcement.Announcement
 import org.springframework.stereotype.Repository
 
 @Repository
-class AnnouncementRepositoryImpl(
+internal class AnnouncementRepositoryImpl(
     private val announcementJpaRepository: AnnouncementJpaRepository
 ) : AnnouncementRepository {
     override fun readAnnouncements(): List<Announcement> {

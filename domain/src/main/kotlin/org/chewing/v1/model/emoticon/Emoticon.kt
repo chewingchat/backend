@@ -4,14 +4,14 @@ import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.Media
 
 class Emoticon private constructor(
-    val id: String,
+    val emoticonId: String,
     val name: String,
     val media: Media,
 ) {
     companion object {
         fun empty(): Emoticon {
             return Emoticon(
-                id = "",
+                emoticonId = "",
                 name = "",
                 media = Image.empty(),
             )
@@ -23,7 +23,7 @@ class Emoticon private constructor(
             url: String,
         ): Emoticon {
             return Emoticon(
-                id = id,
+                emoticonId = id,
                 name = name,
                 media = Image.of(url, 0)
             )
@@ -31,6 +31,6 @@ class Emoticon private constructor(
     }
 
     fun isEmpty(): Boolean {
-        return id.isEmpty() && name.isEmpty() && media.isEmpty
+        return emoticonId.isEmpty() && name.isEmpty() && media.isEmpty
     }
 }

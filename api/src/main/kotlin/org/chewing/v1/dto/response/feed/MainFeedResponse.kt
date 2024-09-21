@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.response.feed
 
+import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FriendFeed
 import java.time.format.DateTimeFormatter
 
@@ -13,17 +14,17 @@ data class MainFeedResponse(
 ) {
     companion object {
         fun of(
-            friendFeed: FriendFeed
+            feed: FriendFeed
         ): MainFeedResponse {
             val formattedUploadTime =
-                friendFeed.fulledFeed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+                feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return MainFeedResponse(
-                feedId = friendFeed.fulledFeed.feed.id.value(),
-                isLiked = friendFeed.isLiked,
-                totalLiked = friendFeed.fulledFeed.feed.likes,
+                feedId = feed.feedId,
+                isLiked = feed.isLiked,
+                totalLiked = feed.likes,
                 feedUploadTime = formattedUploadTime,
-                feedMainDetailFileUrl = friendFeed.fulledFeed.details[0].media.url,
-                type = friendFeed.fulledFeed.details[0].media.type.toString().lowercase()
+                feedMainDetailFileUrl = feed.feedDetails[0].media.url,
+                type = feed.feedDetails[0].media.type.toString().lowercase()
             )
         }
     }

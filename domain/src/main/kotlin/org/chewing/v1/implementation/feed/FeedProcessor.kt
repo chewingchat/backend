@@ -1,8 +1,6 @@
 package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Component
@@ -17,24 +15,24 @@ class FeedProcessor(
     private val feedUpdater: FeedUpdater
 ) {
     @Transactional
-    fun processFeedLikes(feedId: Feed.FeedId, userId: User.UserId, target: FeedTarget) {
+    fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
         val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
+        val user = userReader.read(userId)
         feedAppender.appendFeedLikes(feed, user)
-        feedUpdater.updateFeed(feed, target)
+        feedUpdater.updateFeed(feedId, target)
     }
 
     @Transactional
-    fun processFeedUnLikes(feedId: Feed.FeedId, userId: User.UserId, target: FeedTarget) {
+    fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
         val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
+        val user = userReader.read(userId)
         feedRemover.removeFeedLikes(feed, user)
-        feedUpdater.updateFeed(feed, target)
+        feedUpdater.updateFeed(feedId, target)
     }
 
     @Transactional
-    fun processNewFeed(medias: List<Media>, userId: User.UserId, topic: String) {
-        val user = userReader.readUser(userId)
+    fun processNewFeed(medias: List<Media>, userId: String, topic: String) {
+        val user = userReader.read(userId)
         feedAppender.appendFeed(medias, user, topic)
     }
 }

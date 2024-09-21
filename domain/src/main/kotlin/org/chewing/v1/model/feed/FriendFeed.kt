@@ -1,19 +1,26 @@
 package org.chewing.v1.model.feed
 
-import org.chewing.v1.model.friend.Friend
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User
+import java.time.LocalDateTime
 
-class FriendFeed(
-    val fulledFeed: FulledFeed,
+class FriendFeed private constructor(
+    val feedId: String,
+    val topic: String,
+    val uploadAt: LocalDateTime,
     val isLiked: Boolean,
-    val friend: Friend
+    val likes: Int,
+    val feedDetails: List<FeedDetail>
 ) {
     companion object {
-        fun of(feed: FulledFeed, isLiked: Boolean,friend: Friend): FriendFeed {
-            return FriendFeed(
-                fulledFeed = feed,
-                isLiked = isLiked,
-                friend = friend
-            )
+        fun of(
+            feedId: String,
+            topic: String,
+            uploadAt: LocalDateTime,
+            isLiked: Boolean,
+            likes: Int,
+            feedDetails: List<FeedDetail>
+        ): FriendFeed {
+            return FriendFeed(feedId, topic, uploadAt, isLiked, likes, feedDetails)
         }
     }
 }

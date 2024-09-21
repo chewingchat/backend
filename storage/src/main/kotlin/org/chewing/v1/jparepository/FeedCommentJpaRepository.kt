@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity, String> {
+internal interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity, String> {
     fun findAllByUserId(userId: String): List<FeedCommentJpaEntity>
     fun findAllByFeedId(feedId: String): List<FeedCommentJpaEntity>
     fun existsAllByFeedCommentIdInAndUserId(feedCommentIds: List<String>, userId: String): Boolean

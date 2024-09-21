@@ -1,6 +1,7 @@
 package org.chewing.v1.dto.request
 
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
@@ -12,7 +13,7 @@ class FriendRequest(
         val firstName: String,
         val lastName: String
     ) {
-        fun toUserName(): User.UserName = User.UserName.of(firstName, lastName)
+        fun toUserName(): UserName = UserName.of(firstName, lastName)
         fun toContact(): Email = Email.generate(email)
     }
 
@@ -21,8 +22,8 @@ class FriendRequest(
         val firstName: String,
         val lastName: String
     ) {
-        fun toFriendName(): User.UserName = User.UserName.of(firstName, lastName)
-        fun toFriendId(): User.UserId = User.UserId.of(friendId)
+        fun toFriendName(): UserName = UserName.of(firstName, lastName)
+        fun toFriendId(): String = friendId
     }
 
     data class UpdateFavorite(
@@ -40,8 +41,8 @@ class FriendRequest(
         val firstName: String,
         val lastName: String,
     ) {
-        fun toUserName(): User.UserName {
-            return User.UserName.of(firstName, lastName)
+        fun toUserName(): UserName {
+            return UserName.of(firstName, lastName)
         }
 
         fun toContact(): Contact {

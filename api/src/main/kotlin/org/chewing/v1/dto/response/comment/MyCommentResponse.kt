@@ -1,23 +1,25 @@
 package org.chewing.v1.dto.response.comment
 
 import org.chewing.v1.model.comment.Comment
-import org.chewing.v1.model.feed.FriendFeed
+import org.chewing.v1.model.comment.CommentInfo
+import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.friend.Friend
 import java.time.format.DateTimeFormatter
 
 data class MyCommentResponse(
     val feeds: List<MyCommentFeedResponse>
 ) {
     companion object {
-        fun of(feedWithComments: List<Pair<FriendFeed, Comment>>): MyCommentResponse {
+        fun of(feedWithComments: List<Triple<Feed, Friend, CommentInfo>>): MyCommentResponse {
             // Feed ID로 그룹화
-            val groupedByFeed = feedWithComments.groupBy { (feed, _) -> feed.fulledFeed.feed.id }
+            val groupedByFeed = feedWithComments.groupBy { (feed, _) -> feed.feed.feedId }
 
             return MyCommentResponse(
                 groupedByFeed.map { (feedId, feedComments) ->
                     val feed = feedComments.first().first
-                    val comments = feedComments.map { it.second }
-
-                    MyCommentFeedResponse.of(feed, comments)
+                    val friend = feedComments.first().second
+                    val comments = feedComments.map { it.third }
+                    MyCommentFeedResponse.of(feed, friend, comments)
                 }
             )
         }
@@ -37,19 +39,20 @@ data class MyCommentResponse(
     ) {
         companion object {
             fun of(
-                friendFeed: FriendFeed,
-                comments: List<Comment>
+                feed: Feed,
+                friend: Friend,
+                comments: List<CommentInfo>
             ): MyCommentFeedResponse {
                 return MyCommentFeedResponse(
-                    friendFeed.friend.friend.userId.value(),
-                    friendFeed.friend.friend.name.firstName(),
-                    friendFeed.friend.friend.name.lastName(),
-                    friendFeed.friend.friend.image.url,
-                    friendFeed.fulledFeed.feed.id.value(),
-                    friendFeed.fulledFeed.feed.topic,
-                    friendFeed.fulledFeed.details[0].media.url,
-                    friendFeed.fulledFeed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
-                    friendFeed.fulledFeed.details[0].media.type.toString().lowercase(),
+                    friend.friend.userId,
+                    friend.name.firstName(),
+                    friend.name.lastName(),
+                    friend.friend.image.url,
+                    feed.feed.feedId,
+                    feed.feed.topic,
+                    feed.feedDetails[0].media.url,
+                    feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
+                    feed.feedDetails[0].media.type.toString().lowercase(),
                     comments.map { CommentResponse.of(it) }
                 )
             }
@@ -62,10 +65,10 @@ data class MyCommentResponse(
         ) {
             companion object {
                 fun of(
-                    comment: Comment
+                    comment: CommentInfo
                 ): CommentResponse {
                     return CommentResponse(
-                        commentId = comment.id.value(),
+                        commentId = comment.commentId,
                         comment = comment.comment,
                         commentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
                     )

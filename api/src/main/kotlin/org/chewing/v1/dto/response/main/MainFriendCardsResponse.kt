@@ -1,7 +1,8 @@
 package org.chewing.v1.dto.response.main
 
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.friend.Friend
 
 data class MainFriendCardsResponse(
     val friends: List<FriendCardResponse>,
@@ -25,29 +26,29 @@ data class MainFriendCardsResponse(
         companion object {
             fun of(friend: Friend): FriendCardResponse {
                 return FriendCardResponse(
-                    friendId = friend.friend.userId.value(),
+                    friendId = friend.friend.userId,
                     friendFirstName = friend.name.firstName(),
                     friendLastName = friend.name.lastName(),
                     friendImageUrl = friend.friend.image.url,
-                    friendStatusMessage = friend.friend.status.statusMessage,
+                    friendStatusMessage = friend.friendStatus.statusMessage,
                     isFavorite = friend.isFavorite,
                     friendBackgroundImageUrl = friend.friend.backgroundImage.url,
-                    friendStatusEmoticon = friend.friend.status.emoticon.media.url
+                    friendStatusEmoticon = friend.friendStatus.emoticon.media.url
                 )
             }
         }
     }
 
     companion object {
-        fun ofList(user: User, friends: List<Friend>): MainFriendCardsResponse {
+        fun ofList(user: User, userStatus: UserStatus, friends: List<Friend>): MainFriendCardsResponse {
             return MainFriendCardsResponse(
                 friends = friends.map { FriendCardResponse.of(it) },
-                userStatusMessage = user.status.statusMessage,
+                userStatusMessage = userStatus.statusMessage,
                 userImageUrl = user.image.url,
                 userFirstName = user.name.firstName(),
                 userLastName = user.name.lastName(),
                 totalFriends = friends.size,
-                userStatusEmoticon = user.status.emoticon.media.url
+                userStatusEmoticon = userStatus.emoticon.media.url
             )
         }
     }

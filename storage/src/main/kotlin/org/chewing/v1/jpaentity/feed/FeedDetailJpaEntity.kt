@@ -1,7 +1,6 @@
 package org.chewing.v1.jpaentity.feed
 
 import jakarta.persistence.*
-import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.Media
@@ -22,13 +21,13 @@ class FeedDetailJpaEntity(
     val feedId: String,
 ) {
     companion object {
-        fun generate(medias: List<Media>, feedId: Feed.FeedId): List<FeedDetailJpaEntity> {
+        fun generate(medias: List<Media>, feedId: String): List<FeedDetailJpaEntity> {
             return medias.map { media ->
                 FeedDetailJpaEntity(
                     feedIndex = media.index,
                     feedDetailUrl = media.url,
                     feedDetailType = media.type,
-                    feedId = feedId.value()
+                    feedId = feedId
                 )
             }
         }
@@ -41,12 +40,14 @@ class FeedDetailJpaEntity(
         return when (feedDetailType) {
             IMAGE -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Image.of(feedDetailUrl, feedIndex)
+                media = Image.of(feedDetailUrl, feedIndex),
+                feedId = feedId
             )
 
             VIDEO -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Video.of(feedDetailUrl, feedIndex)
+                media = Video.of(feedDetailUrl, feedIndex),
+                feedId = feedId
             )
         }
     }

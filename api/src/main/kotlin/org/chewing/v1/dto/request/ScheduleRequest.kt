@@ -10,8 +10,8 @@ class ScheduleRequest {
     data class Delete(
         val scheduleId: String = ""
     ){
-        fun toScheduleId(): Schedule.ScheduleId {
-            return Schedule.ScheduleId.of(scheduleId)
+        fun toScheduleId(): String {
+            return scheduleId
         }
     }
     data class Add(

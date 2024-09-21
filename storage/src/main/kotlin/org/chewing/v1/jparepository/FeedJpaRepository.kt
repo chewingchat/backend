@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
+internal interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun findByUserId(string: String): List<FeedJpaEntity>
     fun existsByFeedIdAndUserId(feedId: String, writerId: String): Boolean
     fun existsAllByFeedIdInAndUserId(feedId: List<String>, writerId: String): Boolean

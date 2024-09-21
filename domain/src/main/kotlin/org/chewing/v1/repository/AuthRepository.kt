@@ -1,42 +1,33 @@
 package org.chewing.v1.repository
 
 
-import org.chewing.v1.model.AuthInfo
-import org.chewing.v1.model.contact.Phone
-import org.chewing.v1.model.User
+import org.chewing.v1.model.auth.AuthInfo
 import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
 @Repository
 interface AuthRepository {
-    fun checkEmailRegistered(emailAddress: String): Boolean
-    fun checkPhoneRegistered(phoneNumber: String, countryCode: String): Boolean
-    fun isEmailVerificationCodeValid(email: String, verificationCode: String): Boolean
-    fun isPhoneVerificationCodeValid(phoneNumber: String, verificationCode: String): Boolean
-
-    fun readPhoneNumber(phoneNumber: String, countryCode: String): Phone?
-    fun readAuthInfoWithUser(phoneNumber: String): Pair<User, AuthInfo>
-    fun readAuthInfoWithUserEmail(emailAddress: String): Pair<User, AuthInfo>
-
-
-
-    fun appendLoggedInInfo(authInfo: AuthInfo, refreshToken: RefreshToken)
-    // 추가
+    fun readPhoneNumber(phoneNumber: PhoneNumber): Phone?
     fun readEmail(email: String): Email?
-    fun savePhoneVerificationInfo(authInfo: AuthInfo)
-    fun saveEmailVerificationInfo(authInfo: AuthInfo)
-    fun deleteLoggedInInfo(userId: User.UserId)
-    // 추가
-    fun deleteByUserId(userId: String)
-    fun readUserById(userId: String): User?
-
-
-    // 사용자 전화번호 업데이트
-    fun updateUserPhoneNumber(userId: String, phoneNumber: String, countryCode: String)
-
-    // 사용자 이메일 업데이트
-    fun updateUserEmail(userId: String, email: String)
-
-
+    fun savePhoneVerification(phoneNumber: PhoneNumber): String
+    fun saveEmailVerification(email: String): String
+    fun readInfoByEmailId(emailId: String): AuthInfo?
+    fun readInfoByPhoneNumberId(phoneNumberId: String): AuthInfo?
+    fun readInfoByUserId(userId: String): AuthInfo?
+    fun saveAuthInfoByEmailId(emailId: String, userId: String): AuthInfo
+    fun saveAuthInfoByPhoneNumberId(phoneNumberId: String, userId: String): AuthInfo
+    fun updatePhoneAuthorized(phoneId: String)
+    fun updateEmailAuthorized(emailId: String)
+    fun removeLoginInfo(authId: String)
+    fun checkPhoneRegistered(phoneNumber: PhoneNumber): Boolean
+    fun checkEmailRegistered(emailAddress: String): Boolean
+    fun updateEmailVerificationCode(emailAddress: String): String
+    fun updatePhoneVerificationCode(phoneNumber: PhoneNumber): String
+    fun updateEmail(email: String)
+    fun updatePhoneNumber(phoneNumber: PhoneNumber)
+    fun appendLoggedInInfo(authInfo: AuthInfo, refreshToken: RefreshToken)
+    fun readByContact(contact: Any): AuthInfo?
 }

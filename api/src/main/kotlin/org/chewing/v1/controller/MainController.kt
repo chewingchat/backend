@@ -20,9 +20,9 @@ class MainController(
         @RequestParam("sort") sort: String
     ): SuccessResponseEntity<MainFriendCardsResponse> {
         val sortCriteria = SortCriteria.valueOf(sort.uppercase())
-        val (user, friends) = mainFacade.getMainPage(User.UserId.of(userId), sortCriteria)
+        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sortCriteria)
         //성공 응답 200 반환
-        return ResponseHelper.success(MainFriendCardsResponse.ofList(user, friends))
+        return ResponseHelper.success(MainFriendCardsResponse.ofList(user, userStatus, friends))
     }
 
     @GetMapping("/friend/list")
@@ -31,8 +31,8 @@ class MainController(
         @RequestParam("sort") sort: String
     ): SuccessResponseEntity<MainFriendListResponse> {
         val sortCriteria = SortCriteria.valueOf(sort.uppercase())
-        val (user, friends) = mainFacade.getMainPage(User.UserId.of(userId), sortCriteria)
+        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sortCriteria)
         //성공 응답 200 반환
-        return ResponseHelper.success(MainFriendListResponse.ofList(user, friends))
+        return ResponseHelper.success(MainFriendListResponse.ofList(user, userStatus, friends))
     }
 }

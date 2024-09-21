@@ -1,8 +1,10 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.User
+import org.chewing.v1.model.StatusInfo
 
 interface UserStatusRepository {
-    fun readUserStatuses(userId: User.UserId): List<User.UserStatus>
+    fun readUserStatuses(userId: String): List<StatusInfo>
     fun removeUserStatus(statusId: String)
+    fun readSelectedUserStatus(userId: String): StatusInfo
+    fun readSelectedUsersStatus(userIds: List<String>): List<StatusInfo>
 }

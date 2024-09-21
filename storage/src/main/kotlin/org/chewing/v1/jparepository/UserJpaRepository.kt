@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface UserJpaRepository : JpaRepository<UserJpaEntity, String> {
+internal interface UserJpaRepository : JpaRepository<UserJpaEntity, String> {
 }

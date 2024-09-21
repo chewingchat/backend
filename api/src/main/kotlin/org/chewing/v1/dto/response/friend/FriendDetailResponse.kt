@@ -1,6 +1,7 @@
 package org.chewing.v1.dto.response.friend
 
 import org.chewing.v1.dto.response.feed.MainFeedResponse
+import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FriendFeed
 
 data class FriendDetailResponse(

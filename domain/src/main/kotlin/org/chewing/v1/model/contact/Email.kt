@@ -43,15 +43,6 @@ class Email private constructor(
                 isAuthorizedFirst = true
             )
         }
-
-        fun empty(): Email {
-            return Email(
-                emailId = "",
-                emailAddress = "",
-                validationCode = ValidationCode.empty(),
-                isAuthorizedFirst = false
-            )
-        }
     }
 
     fun generateValidationCode(): Email {

@@ -1,15 +1,16 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.model.feed.FeedInfo
+import org.chewing.v1.model.comment.CommentInfo
 import org.springframework.stereotype.Repository
 
 @Repository
 interface CommentRepository {
-    fun isCommentsOwner(userId: User.UserId, commentIds: List<Comment.CommentId>): Boolean
-    fun readCommentsWithUserId(feedId: Feed.FeedId): List<Pair<User.UserId, Comment>>
-    fun removeComment(commentId: Comment.CommentId)
-    fun appendComment(user: User, comment: String, feed: Feed)
-    fun readCommentsWithFeedId(userId: User.UserId): List<Pair<Feed.FeedId, Comment>>
+    fun isCommentsOwner(userId: String, commentIds: List<String>): Boolean
+    fun readComment(feedId: String): List<CommentInfo>
+    fun appendComment(user: User, comment: String, feedInfo: FeedInfo)
+    fun readCommented(userId: String): List<CommentInfo>
+    fun removeComment(commentId: String)
+    fun read(commentId: String): CommentInfo?
 }

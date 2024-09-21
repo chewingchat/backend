@@ -17,8 +17,8 @@ class MyController(
     fun getMyCommentedFeed(
         @RequestHeader("userId") userId: String,
     ): SuccessResponseEntity<MyCommentResponse> {
-        val feedCommentsWithFeed = myFacade.getFeedUserCommented(User.UserId.of(userId))
+        val myCommentedInfo = myFacade.getFeedUserCommented(userId)
         //성공 응답 200 반환
-        return ResponseHelper.success(MyCommentResponse.of(feedCommentsWithFeed))
+        return ResponseHelper.success(MyCommentResponse.of(myCommentedInfo))
     }
 }
