@@ -18,15 +18,24 @@ internal class FriendRepositoryImpl(
     override fun readFriends(userId: String): List<FriendInfo> {
         return friendJpaRepository.findAllByIdUserId(userId).map { it.toFriendInfo() }
     }
+
     override fun readFriendsByIds(friendIds: List<String>, userId: String): List<FriendInfo> {
-        return friendJpaRepository.findAllByIdUserIdInAndIdUserId(friendIds.map { it }, userId).map { it.toFriendInfo() }
+        return friendJpaRepository.findAllByIdUserIdInAndIdUserId(friendIds.map { it }, userId)
+            .map { it.toFriendInfo() }
     }
+
     override fun appendFriend(user: User, friendName: UserName, targetUser: User) {
         friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
     }
+
     override fun removeFriend(userId: String, friendId: String) {
         friendJpaRepository.deleteById(FriendId(userId, friendId))
     }
+
+    override fun removeAllFriend(userId: String) {
+        friendJpaRepository.deleteAllByIdUserIdOrIdFriendId(userId, userId)
+    }
+
     override fun readFriend(userId: String, friendId: String): FriendInfo? {
         return friendJpaRepository.findById(FriendId(userId, friendId))?.toFriendInfo()
     }
@@ -34,6 +43,7 @@ internal class FriendRepositoryImpl(
     override fun checkFriend(userId: String, friendId: String): Boolean {
         return friendJpaRepository.existsById(FriendId(userId, friendId))
     }
+
     override fun updateFavorite(user: User, friendId: String, favorite: Boolean) {
         friendJpaRepository.findById(FriendId(user.userId, friendId))?.updateFavorite(favorite)
     }

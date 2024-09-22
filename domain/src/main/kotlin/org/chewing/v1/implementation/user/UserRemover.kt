@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class UserRemover(
     private val userRepository: UserRepository,
 ) {
-    fun removeUser(userId: String) {
+    fun remove(userId: String) {
         userRepository.remove(userId)
     }
     fun removePushToken(device: PushToken.Device) {

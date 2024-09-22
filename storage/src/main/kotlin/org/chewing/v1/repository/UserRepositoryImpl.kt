@@ -11,6 +11,7 @@ import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
+import org.chewing.v1.model.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
@@ -54,6 +55,12 @@ internal class UserRepositoryImpl(
     override fun updateProfileImage(user: User, media: Media) {
         userJpaRepository.findById(user.userId).ifPresent {
             it.updateUserPictureUrl(media)
+            userJpaRepository.save(it)
+        }
+    }
+    override fun updateName(userId: String, userName: UserName) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateUserName(userName)
             userJpaRepository.save(it)
         }
     }

@@ -14,6 +14,7 @@ enum class ErrorCode(
     AUTH_3("AUTH_3", "회원가입을 먼저 진행해 주세요"),
     AUTH_4("AUTH_4", "엑세스 토큰이 만료되었습니다."),
     AUTH_5("AUTH_5", "리프레시 토큰이 만료되었습니다."),
+    AUTH_6("AUTH_6", "엑세스 토큰이 없습니다."),
     PHONE_ALREADY_REGISTERED("AUTH_6", "해당 전화번호로 이미 회원가입이 되어 있습니다."),
     EMAIL_REGISTERED("AUTH_3", "기존에 회원가입된 휴대폰과 다른 이메일입니다."),
 

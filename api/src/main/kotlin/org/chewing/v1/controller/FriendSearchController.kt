@@ -18,7 +18,7 @@ class FriendSearchController(
     ) {
     @GetMapping("")
     fun searchFriend(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestParam("keyword") keyword: String
     ): SuccessResponseEntity<FriendSearchResultResponse> {
         val friends = searchService.searchFriends(userId, keyword)
@@ -28,7 +28,7 @@ class FriendSearchController(
 
     @PostMapping("")
     fun addSearchFriend(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody friendRequest: FriendSearchRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val friendSearch = friendRequest.toSearchFriend()
@@ -39,7 +39,7 @@ class FriendSearchController(
 
     @GetMapping("/recent")
     fun getSearchFriendHistory(
-        @RequestHeader("userId") userId: String
+        @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<FriendSearchHistoryResponse> {
         val friends = searchService.getSearchedFriend(userId)
         //성공 응답 200 반환

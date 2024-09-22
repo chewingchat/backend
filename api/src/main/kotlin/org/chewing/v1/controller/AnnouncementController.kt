@@ -15,7 +15,7 @@ class AnnouncementController(
 
     @GetMapping("/list")
     fun getAnnouncements(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<AnnouncementListResponse> {
         // 공지사항 목록을 반환하는 로직
         val announcements = announcementService.readAnnouncements()
@@ -24,7 +24,7 @@ class AnnouncementController(
 
     @GetMapping("/{announcementId}")
     fun getAnnouncement(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @PathVariable announcementId: String,
     ): SuccessResponseEntity<AnnouncementDetailResponse> {
         // 공지사항을 반환하는 로직

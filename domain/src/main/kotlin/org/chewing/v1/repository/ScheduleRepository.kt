@@ -9,4 +9,5 @@ interface ScheduleRepository {
     fun appendSchedule(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User)
     fun removeSchedule(scheduleId: String)
     fun readSchedule(userId: String, type: ScheduleType): List<Schedule>
+    fun removeAll(userId: String)
 }

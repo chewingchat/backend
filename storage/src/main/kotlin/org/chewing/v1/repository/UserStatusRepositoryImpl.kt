@@ -25,4 +25,8 @@ internal class UserStatusRepositoryImpl(
     override fun readSelectedUsersStatus(userIds: List<String>): List<StatusInfo> {
         return userStatusJpaRepository.findAllBySelectedTrueAndUserIdIn(userIds).map { it.toUserStatusInfo() }
     }
+
+    override fun removeByUserId(userId: String) {
+        userStatusJpaRepository.deleteAllByUserId(userId)
+    }
 }
