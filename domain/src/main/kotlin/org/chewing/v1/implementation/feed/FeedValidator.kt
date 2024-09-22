@@ -2,52 +2,39 @@ package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedComment
 import org.chewing.v1.repository.FeedRepository
 import org.springframework.stereotype.Component
 
 @Component
 class FeedValidator(
-    private val feedReader: FeedReader,
-    private val userReader: UserReader,
     private val feedRepository: FeedRepository
 ) {
-    fun isFeedOwner(feedId: Feed.FeedId, userId: User.UserId) {
-        val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
-        if (feed.writer.userId != user.userId) {
+    fun isOwner(feedId: String, userId: String) {
+        if(!feedRepository.isOwner(feedId, userId)){
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
 
-    fun isFeedsOwner(feedIds: List<Feed.FeedId>, userId: User.UserId): List<Feed> {
-        val feeds = feedReader.readFulledFeeds(feedIds)
-        val user = userReader.readUser(userId)
-        if (feeds.any { it.writer.userId != user.userId }) {
-            throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
-        }
-        return feeds
-    }
-
-    fun isNotFeedOwner(feedId: Feed.FeedId, userId: User.UserId) {
-        val feed = feedReader.readFeed(feedId)
-        val user = userReader.readUser(userId)
-        if (feed.writer.userId == user.userId) {
+    fun isFeedsOwner(feedIds: List<String>, userId: String) {
+        if (feedRepository.isAllOwner(feedIds, userId)) {
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
 
-    fun isAlreadyLiked(feedId: Feed.FeedId, userId: User.UserId) {
-        if (feedRepository.checkFeedLike(feedId, userId)) {
+    fun isNotOwner(feedId: String, userId: String) {
+        if(feedRepository.isOwner(feedId, userId)){
+            throw ConflictException(ErrorCode.FEED_IS_OWNED)
+        }
+    }
+
+    fun isAlreadyLiked(feedId: String, userId: String) {
+        if (feedRepository.isAlreadyLiked(feedId, userId)) {
             throw ConflictException(ErrorCode.FEED_ALREADY_LIKED)
         }
     }
 
-    fun isAlreadyUnliked(feedId: Feed.FeedId, userId: User.UserId) {
-        if (!feedRepository.checkFeedLike(feedId, userId)) {
+    fun isAlreadyUnliked(feedId: String, userId: String) {
+        if (!feedRepository.isAlreadyLiked(feedId, userId)) {
             throw ConflictException(ErrorCode.FEED_ALREADY_UNLIKED)
         }
     }

@@ -1,8 +1,9 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.*
 import org.chewing.v1.implementation.friend.*
+import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
+import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.friend.Friend
@@ -17,45 +18,66 @@ class FriendService(
     private val friendUpdater: FriendUpdater,
     private val userReader: UserReader,
     private val friendChecker: FriendChecker,
+    private val friendEnricher: FriendEnricher,
+    private val userStatusFinder: UserStatusFinder,
+    private val userFinder: UserFinder
 ) {
     fun addFriend(
-        userId: User.UserId,
-        friendName: User.UserName,
+        userId: String,
+        friendName: UserName,
         contact: Contact
     ) {
-        val friendTarget = userReader.readUserByContact(contact)
-        val friend = Friend.generate(friendTarget, friendName)
-        friendChecker.isAlreadyFriend(userId, friend.friend.userId)
-        val user = userReader.readUser(userId)
-        friendAppender.appendFriend(user, friend)
+        // 저장할 친구 정보를 읽어옴
+        val targetUser = userFinder.findUserByContact(contact)
+        // 이미 친구인지 확인
+        friendChecker.isAlreadyFriend(userId, targetUser.userId)
+        // 나의 정보를 읽어온다.
+        val user = userReader.read(userId)
+        // 친구 추가
+        friendAppender.appendFriend(user, friendName, targetUser)
     }
 
-    @Transactional
-    fun removeFriend(userId: User.UserId, friendId: User.UserId) {
+    // 친구 삭제
+    fun removeFriend(userId: String, friendId: String) {
         friendRemover.removeFriend(userId, friendId)
     }
 
-    fun getFriends(userId: User.UserId, sort: SortCriteria): List<Friend> {
-        val friends = friendReader.readFriendsWithStatus(userId)
-        return FriendSortEngine.sortFriends(friends, sort)
+    // 친구 목록을 가져옴
+    fun getFriends(userId: String, sort: SortCriteria): List<Friend> {
+        val friendInfos = friendReader.reads(userId)
+        val users = userReader.reads(friendInfos.map { it.friendId })
+        val usersStatus = userStatusFinder.finds(friendInfos.map { it.friendId })
+        val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
+        return FriendSortEngine.sort(friends, sort)
     }
 
-    fun getFriend(userId: User.UserId, friendId: User.UserId): Friend {
-        return friendReader.readFriendWithStatus(userId, friendId)
-    }
-    @Transactional
-    fun changeFriendFavorite(userId: User.UserId, friendId: User.UserId, favorite: Boolean) {
-        val user = userReader.readUser(userId)
-        val friend = friendReader.readFriend(userId, friendId)
-        val updateFriend = friend.updateFavorite(favorite)
-        friendUpdater.updateFriend(user, updateFriend)
+    fun getFriendsIn(friendIds: List<String>, userId: String): List<Friend> {
+        val friendInfos = friendReader.readsIn(friendIds, userId)
+        val users = userReader.reads(friendInfos.map { it.friendId })
+        val usersStatus = userStatusFinder.finds(friendInfos.map { it.friendId })
+        val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
+        return friends
     }
 
+    // 친구 즐겨찾기 변경
     @Transactional
-    fun changeFriendName(userId: User.UserId, friendId: User.UserId, friendName: User.UserName) {
-        val user = userReader.readUser(userId)
-        val friend = friendReader.readFriend(userId, friendId)
-        val updateFriend = friend.updateName(friendName)
-        friendUpdater.updateFriend(user, updateFriend)
+    fun changeFriendFavorite(userId: String, friendId: String, favorite: Boolean) {
+        // 사용자 정보를 읽어옴
+        val user = userReader.read(userId)
+        // 친구인지 확인
+        friendChecker.isFriend(userId, friendId)
+        // 친구 즐겨찾기 변경
+        friendUpdater.updateFavorite(user, friendId, favorite)
+    }
+
+    // 친구 이름 변경
+    @Transactional
+    fun changeFriendName(userId: String, friendId: String, friendName: UserName) {
+        // 사용자 정보를 읽어옴
+        val user = userReader.read(userId)
+        // 친구인지 확인
+        friendChecker.isFriend(userId, friendId)
+        // 친구 이름 변경
+        friendUpdater.updateName(user, friendId, friendName)
     }
 }

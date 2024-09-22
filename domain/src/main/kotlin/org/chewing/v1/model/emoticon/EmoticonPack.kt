@@ -1,22 +1,26 @@
 package org.chewing.v1.model.emoticon
 
-class EmoticonPack(
-    val emoticonPackId: String,
-    val emoticonPackName: String,
-    val emoticonPackUrl: String,
+import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.Media
+
+
+class EmoticonPack private constructor(
+    val id: String,
+    val name: String,
+    val media: Media,
     val emoticons: List<Emoticon>
 ) {
     companion object {
         fun of(
-            emoticonPackId: String,
-            emoticonPackName: String,
-            emoticonPackUrl: String,
+            id: String,
+            name: String,
+            url: String,
             emoticons: List<Emoticon>
         ): EmoticonPack {
             return EmoticonPack(
-                emoticonPackId = emoticonPackId,
-                emoticonPackName = emoticonPackName,
-                emoticonPackUrl = emoticonPackUrl,
+                id = id,
+                name = name,
+                media = Image.of(url, 0),
                 emoticons = emoticons
             )
         }

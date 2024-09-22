@@ -1,42 +1,23 @@
 package org.chewing.v1.model.friend
 
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserName
+import org.chewing.v1.model.UserStatus
 
 class Friend private constructor(
     val friend: User,
     val isFavorite: Boolean,
-    val friendName: User.UserName,
+    val name: UserName,
+    val friendStatus: UserStatus
 ) {
     companion object {
-        fun of(friend: User, favorite: Boolean, friendFirstName: String, friendLastName: String): Friend {
+        fun of(friend: User, favorite: Boolean, friendName: UserName, friendStatus: UserStatus): Friend {
             return Friend(
                 friend = friend,
                 isFavorite = favorite,
-                friendName = User.UserName.of(friendFirstName, friendLastName),
+                name = friendName,
+                friendStatus = friendStatus
             )
         }
-
-        fun generate(friend: User, friendName: User.UserName): Friend {
-            return Friend(
-                friend = friend,
-                isFavorite = false,
-                friendName = friendName,
-            )
-        }
-    }
-
-    fun updateFavorite(favorite: Boolean): Friend {
-        return Friend(
-            friend = this.friend,
-            isFavorite = favorite,
-            friendName = this.friendName,
-        )
-    }
-    fun updateName(friendName: User.UserName): Friend {
-        return Friend(
-            friend = this.friend,
-            isFavorite = this.isFavorite,
-            friendName = friendName,
-        )
     }
 }

@@ -7,6 +7,7 @@ import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
 
 /**
@@ -17,45 +18,21 @@ import org.springframework.stereotype.Component
 @Component
 class UserReader(
     private val userRepository: UserRepository,
+    private val userStatusRepository: UserStatusRepository
 ) {
     /**
      * 주어진 사용자 ID에 해당하는 사용자 정보를 읽어옵니다.
      * @throws NotFoundException 사용자가 존재하지 않는 경우,
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
-    fun readUser(userId: User.UserId): User {
-        val user = userRepository.readUserById(userId)
-        if (user != null) {
-            return user
-        } else {
-            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-        }
+    fun read(userId: String): User {
+        return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
-
-    fun readUserByContact(contact: Contact): User {
-        val user = userRepository.readUserByContact(contact)
-        if (user != null) {
-            return user
-        } else {
-            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-        }
+    fun reads(userIds: List<String>): List<User> {
+        return userRepository.readUsersByIds(userIds)
     }
-
-    fun readUserWithStatus(userId: User.UserId): User {
-        val user = userRepository.readUserWithStatus(userId)
-        if (user != null) {
-            return user
-        } else {
-            throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-        }
-    }
-
-    fun readSearchedFriend(userId: User.UserId): List<FriendSearch> {
+    //유저의 최근 친구 검색 목록을 읽어옴
+    fun readSearched(userId: String): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
     }
-
-    fun readUserPushToken(pushToken: PushToken): PushToken? {
-        return userRepository.readPushToken(pushToken)
-    }
-
 }

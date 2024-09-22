@@ -1,50 +1,45 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.jpaentity.friend.FriendId
 import org.chewing.v1.jpaentity.friend.FriendJpaEntity
 import org.chewing.v1.jparepository.FriendJpaRepository
+import org.chewing.v1.jparepository.UserJpaRepository
+import org.chewing.v1.jparepository.UserStatusJpaRepository
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserName
+import org.chewing.v1.model.friend.FriendInfo
 import org.springframework.stereotype.Repository
 
 @Repository
-class FriendRepositoryImpl(
-    private val friendJpaRepository: FriendJpaRepository,
+internal class FriendRepositoryImpl(
+    private val friendJpaRepository: FriendJpaRepository
 ) : FriendRepository {
-    override fun readFriendsWithStatus(userId: User.UserId): List<Friend> {
-        val friends = friendJpaRepository.findAllByUserIdWithStatus(userId.value())
-        val friendList = friends.map { it.toFriendWithStatus() }
-        return friendList
+    override fun readFriends(userId: String): List<FriendInfo> {
+        return friendJpaRepository.findAllByIdUserId(userId).map { it.toFriendInfo() }
+    }
+    override fun readFriendsByIds(friendIds: List<String>, userId: String): List<FriendInfo> {
+        return friendJpaRepository.findAllByIdUserIdInAndIdUserId(friendIds.map { it }, userId).map { it.toFriendInfo() }
+    }
+    override fun appendFriend(user: User, friendName: UserName, targetUser: User) {
+        friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
+    }
+    override fun removeFriend(userId: String, friendId: String) {
+        friendJpaRepository.deleteById(FriendId(userId, friendId))
+    }
+    override fun readFriend(userId: String, friendId: String): FriendInfo? {
+        return friendJpaRepository.findById(FriendId(userId, friendId))?.toFriendInfo()
     }
 
-    override fun appendFriend(user: User, friend: Friend) {
-        friendJpaRepository.save(FriendJpaEntity.fromFriend(user, friend))
+    override fun checkFriend(userId: String, friendId: String): Boolean {
+        return friendJpaRepository.existsById(FriendId(userId, friendId))
+    }
+    override fun updateFavorite(user: User, friendId: String, favorite: Boolean) {
+        friendJpaRepository.findById(FriendId(user.userId, friendId))?.updateFavorite(favorite)
     }
 
-    override fun removeFriend(userId: User.UserId, friendId: User.UserId) {
-        friendJpaRepository.deleteByUserIdAndFriendId(userId.value(), friendId.value())
+    override fun updateName(user: User, friendId: String, friendName: UserName) {
+        friendJpaRepository.findById(FriendId(user.userId, friendId))?.updateName(friendName)
     }
 
-    override fun readFriend(userId: User.UserId, friendId: User.UserId): Friend? {
-        val friendEntity = friendJpaRepository.findByUserIdAndFriendId(
-            userId.value(),
-            friendId.value()
-        )
-        return friendEntity?.toFriend()
-    }
-
-    override fun checkFriend(userId: User.UserId, friendId: User.UserId): Boolean {
-        return friendJpaRepository.existsByUserIdAndFriendId(userId.value(), friendId.value())
-    }
-
-    override fun updateFriend(user: User, friend: Friend) {
-        friendJpaRepository.save(FriendJpaEntity.fromFriend(user, friend))
-    }
-
-    override fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend? {
-        val friendEntity = friendJpaRepository.findByUserIdAndFriendIdWithStatus(
-            userId.value(),
-            friendId.value()
-        )
-        return friendEntity?.toFriend()
-    }
 }

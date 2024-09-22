@@ -1,9 +1,7 @@
 package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import org.chewing.v1.jpaentity.feed.FeedJpaEntity
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.User
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
@@ -11,29 +9,15 @@ import java.time.LocalDateTime
 @Entity
 @DynamicInsert
 @Table(name = "feed_likes", schema = "chewing")
-class UserFeedLikesJpaEntity(
+internal class UserFeedLikesJpaEntity(
     @EmbeddedId
-    val id: UserFeedId,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    val user: UserJpaEntity,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("feedId")
-    @JoinColumn(name = "feed_id")
-    val feed: FeedJpaEntity,
-
-    @Column(name = "like_time", nullable = false)
+    val userFeedId: UserFeedId,
     val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
-        fun fromUserFeed(user: User, feed: Feed): UserFeedLikesJpaEntity {
+        fun fromUserFeed(user: User, feedInfo: FeedInfo): UserFeedLikesJpaEntity {
             return UserFeedLikesJpaEntity(
-                id = UserFeedId(userId = user.userId.value(), feedId = feed.feedId.value()),
-                user = UserJpaEntity.fromUser(user),
-                feed = FeedJpaEntity.fromFeed(feed)
+                userFeedId = UserFeedId(userId = user.userId, feedId = feedInfo.feedId),
             )
         }
     }

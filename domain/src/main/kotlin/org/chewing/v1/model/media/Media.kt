@@ -5,4 +5,5 @@ interface Media {
     val url: String
     val type: MediaType
     val index: Int
+    val isEmpty: Boolean
 }

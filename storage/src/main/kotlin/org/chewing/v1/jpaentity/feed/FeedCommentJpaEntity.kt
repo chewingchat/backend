@@ -2,14 +2,9 @@ package org.chewing.v1.jpaentity.feed
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.model.User
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedComment
-import org.chewing.v1.model.feed.FeedDetail
-import org.chewing.v1.model.media.Image
-import org.chewing.v1.model.media.MediaType
-import org.chewing.v1.model.media.Video
+import org.chewing.v1.model.feed.FeedInfo
+import org.chewing.v1.model.comment.CommentInfo
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -18,44 +13,28 @@ import java.util.*
 @Table(name = "feed_comment", schema = "chewing")
 class FeedCommentJpaEntity(
     @Id
-    @Column(name = "feed_comment_id")
     val feedCommentId: String = UUID.randomUUID().toString(),
-
-    @Column(name = "feed_comment", nullable = false)
     val comment: String,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    val writer: UserJpaEntity,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "feed_id", insertable = false, updatable = false)
-    val feed: FeedJpaEntity,
+    val userId: String,
+    val feedId: String
 ) : BaseEntity() {
     companion object {
-        fun fromFeedComment(comment: FeedComment, feed: Feed): FeedCommentJpaEntity {
+        fun generate(comment: String, writer: User, feedInfo: FeedInfo): FeedCommentJpaEntity {
             return FeedCommentJpaEntity(
-                comment = comment.comment,
-                writer = UserJpaEntity.fromUser(comment.writer),
-                feed = FeedJpaEntity.fromFeed(feed)
+                comment = comment,
+                userId = writer.userId,
+                feedId = feedInfo.feedId
             )
         }
     }
 
-    fun toFeedComment(): FeedComment {
-        return FeedComment(
-            commentId = FeedComment.CommentId.of(feedCommentId),
-            comment = comment,
-            writer = writer.toUser(),
-            createAt = createdAt!!
+    fun toCommentInfo(): CommentInfo {
+        return CommentInfo.of(
+            feedCommentId,
+            comment,
+            this.createdAt!!,
+            userId,
+            feedId
         )
-    }
-
-    fun toFeed(): Feed {
-        return feed.toFeed()
-    }
-
-    fun toFeedWithDetails(): Feed{
-        return feed.toFeedWithDetails()
     }
 }

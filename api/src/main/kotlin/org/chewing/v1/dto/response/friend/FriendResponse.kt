@@ -14,13 +14,13 @@ data class FriendResponse(
     companion object {
         fun of(friend: Friend): FriendResponse {
             return FriendResponse(
-                friendId = friend.friend.userId.value(),
-                friendFirstName = friend.friendName.firstName(),
-                friendLastName = friend.friendName.lastName(),
+                friendId = friend.friend.userId,
+                friendFirstName = friend.name.firstName(),
+                friendLastName = friend.name.lastName(),
                 friendImageUrl = friend.friend.image.url,
-                friendStatusMessage = friend.friend.status.statusMessage,
+                friendStatusMessage = friend.friendStatus.statusMessage,
                 isFavorite = friend.isFavorite,
-                friendStatusEmoticon = friend.friend.status.emoticon.emoticonUrl
+                friendStatusEmoticon = friend.friendStatus.emoticon.media.url
             )
         }
     }

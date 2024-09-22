@@ -2,142 +2,148 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.jpaentity.AuthJpaEntity
-import org.chewing.v1.jpaentity.EmailJpaEntity
-import org.chewing.v1.jpaentity.LoggedInEntity
-import org.chewing.v1.jpaentity.PhoneNumberJpaEntity
+import org.chewing.v1.jpaentity.*
+import org.chewing.v1.jpaentity.auth.EmailJpaEntity
+import org.chewing.v1.jpaentity.auth.PhoneNumberJpaEntity
 import org.chewing.v1.jparepository.*
-import org.chewing.v1.model.AuthInfo
+import org.chewing.v1.model.auth.AuthInfo
 import org.chewing.v1.model.User
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
 @Repository
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val authJpaRepository: AuthJpaRepository,
-    private val confirmPhoneNumberJpaRepository: ConfirmPhoneNumberJpaRepository,
     private val loggedInJpaRepository: LoggedInJpaRepository,
-    // 추가
-    private val confirmEmailJpaRepository: ConfirmEmailJpaRepository,
     private val phoneNumberJpaRepository: PhoneNumberJpaRepository,
     private val emailJpaRepository: EmailJpaRepository,
 
 
     ) : AuthRepository {
+    override fun savePhoneVerification(phoneNumber: PhoneNumber): String {
+        return phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(phoneNumber)).getVerifiedNumber()
+    }
+
+
+    override fun saveEmailVerification(email: String): String {
+        // AuthInfo를 JPA 엔티티로 변환한 후 저장
+        return emailJpaRepository.save(EmailJpaEntity.generate(email)).getAuthorizedNumber()
+    }
+
 
     override fun checkEmailRegistered(emailAddress: String): Boolean {
-        val authEntity = authJpaRepository.findUserByEmail(emailAddress)
-        return authEntity.isPresent
-        // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
-    }
-    override fun checkPhoneRegistered(phoneNumber: String, countryCode: String): Boolean {
-        val authEntity = authJpaRepository.findByPhoneNumber(phoneNumber, countryCode)
-        return authEntity.isPresent
+        return emailJpaRepository.existsByEmailAddressAndFirstAuthorizedTrue(emailAddress)
         // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
     }
 
-
-
-    override fun isEmailVerificationCodeValid(email: String, verificationCode: String): Boolean {
-        return authJpaRepository.findByEmailAndVerificationCode(email, verificationCode).isPresent
-    }
-    override fun isPhoneVerificationCodeValid(phoneNumber: String, verificationCode: String): Boolean {
-        return authJpaRepository.findByPhoneAndVerificationCode(phoneNumber, verificationCode).isPresent
+    override fun checkPhoneRegistered(phoneNumber: PhoneNumber): Boolean {
+        return phoneNumberJpaRepository.existsByPhoneNumberAndCountryCodeAndFirstAuthorizedTrue(
+            phoneNumber.number,
+            phoneNumber.countryCode
+        )
+        // && authEntity.get().phoneNumber.phoneNumber == phoneNumber
     }
     override fun readEmail(email: String): Email? {
         val emailConfirmJpaEntity =
-            confirmEmailJpaRepository.findWithEmail(email)
+            emailJpaRepository.findByEmailAddress(email)
         return emailConfirmJpaEntity.map { it.toEmail() }.orElse(null)
     }
 
 
-    override fun readPhoneNumber(phoneNumber: String, countryCode: String): Phone? {
+    override fun readPhoneNumber(phoneNumber: PhoneNumber): Phone? {
         val phoneNumberConfirmJpaEntity =
-            confirmPhoneNumberJpaRepository.findWithPhoneNumber(phoneNumber, countryCode)
+            phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
         return phoneNumberConfirmJpaEntity.map { it.toPhone() }.orElse(null)
     }
 
-    override fun readAuthInfoWithUser(phoneNumber: String): Pair<User, AuthInfo> {
-        val authEntity = authJpaRepository.findAuthInfoByPhoneNumber(phoneNumber)
-        val user = authEntity.map { it.toUser() }.orElse(null)
-        val authInfo = authEntity.map { it.toAuthInfoOnlyWithId() }.orElse(null)
-        return Pair(user, authInfo)
+    override fun readInfoByEmailId(emailId: String): AuthInfo? {
+        return authJpaRepository.findByEmailId(emailId).orElse(null).toAuthInfo()
     }
 
-    override fun readAuthInfoWithUserEmail(emailAddress: String): Pair<User, AuthInfo> {
-        val authEntity = authJpaRepository.findAuthInfoByEmail(emailAddress)
-        val user = authEntity.map { it.toUser() }.orElse(null)
-        val authInfo = authEntity.map { it.toAuthInfoOnlyWithId() }.orElse(null)
-        return Pair(user, authInfo)
+    override fun readInfoByPhoneNumberId(phoneNumberId: String): AuthInfo? {
+        return authJpaRepository.findByPhoneNumberId(phoneNumberId).orElse(null).toAuthInfo()
     }
 
+    override fun readInfoByUserId(userId: String): AuthInfo? {
+        return authJpaRepository.findByUserId(userId).orElse(null).toAuthInfo()
+    }
+
+    override fun saveAuthInfoByEmailId(emailId: String, userId: String): AuthInfo {
+        return authJpaRepository.save(AuthJpaEntity.generateEmail(emailId, userId)).toAuthInfo()
+    }
+
+    override fun saveAuthInfoByPhoneNumberId(phoneNumberId: String, userId: String): AuthInfo {
+        return authJpaRepository.save(AuthJpaEntity.generatePhoneNumber(phoneNumberId, userId)).toAuthInfo()
+    }
+
+    override fun updateEmailAuthorized(emailId: String) {
+        emailJpaRepository.findById(emailId).orElse(null).let {
+            it.updateFirstAuthorized()
+            emailJpaRepository.save(it)
+        }
+    }
+
+    override fun updatePhoneAuthorized(phoneId: String) {
+        phoneNumberJpaRepository.findById(phoneId).orElse(null).let {
+            it.updateFirstAuthorized()
+            phoneNumberJpaRepository.save(it)
+        }
+    }
+
+    override fun removeLoginInfo(authId: String) {
+        loggedInJpaRepository.deleteByAuthId(authId)
+    }
+
+    override fun updateEmailVerificationCode(emailAddress: String): String {
+        val emailEntity = emailJpaRepository.findByEmailAddress(emailAddress)
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+        emailEntity.updateVerificationCode()
+        emailJpaRepository.save(emailEntity)
+        return emailEntity.getAuthorizedNumber()
+    }
+
+    override fun updatePhoneVerificationCode(phoneNumber: PhoneNumber): String {
+        val phoneEntity =
+            phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
+                .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+        phoneEntity.updateVerificationCode()
+        phoneNumberJpaRepository.save(phoneEntity)
+        return phoneEntity.getVerifiedNumber()
+    }
+
+    override fun updatePhoneNumber(phoneNumber: PhoneNumber) {
+        val phoneEntity =
+            phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
+                .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+        phoneEntity.updatePhoneNumber(phoneNumber)
+    }
+
+    override fun updateEmail(email: String) {
+        val emailEntity = emailJpaRepository.findByEmailAddress(email)
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
+        emailEntity.updateEmail(email)
+    }
 
 
     override fun appendLoggedInInfo(authInfo: AuthInfo, refreshToken: RefreshToken) {
         loggedInJpaRepository.save(LoggedInEntity.fromAuthInfo(authInfo, refreshToken))
     }
-
-
-    override fun savePhoneVerificationInfo(authInfo: AuthInfo) {
-        // AuthInfo를 JPA 엔티티로 변환한 후 저장
-        val authEntity = AuthJpaEntity.fromAuthInfo(authInfo)
-        authJpaRepository.save(authEntity)
+    override fun readByContact(contact: Any): AuthInfo? {
+        return when (contact) {
+            is Email -> {
+                emailJpaRepository.findByEmailAddress(contact.emailAddress).orElse(null)?.toEmail()?.let {
+                    readInfoByEmailId(it.emailId)
+                }
+            }
+            is Phone -> {
+                phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(contact.number, contact.country).orElse(null)?.toPhone()?.let {
+                    readInfoByPhoneNumberId(it.phoneId)
+                }
+            }
+            else -> null
+        }
     }
-    override fun saveEmailVerificationInfo(authInfo: AuthInfo) {
-        // AuthInfo를 JPA 엔티티로 변환한 후 저장
-        val authEntity = AuthJpaEntity.fromAuthInfo(authInfo)
-        authJpaRepository.save(authEntity)
-    }
-    // 로그아웃 시 로그인 정보를 삭제하는 로직
-    override fun deleteLoggedInInfo(userId: User.UserId) {
-        // 로그인 정보를 찾아 삭제
-        val authInfo = authJpaRepository.findByUserId(userId.value())
-        val loggedInEntity = loggedInJpaRepository.findByAuthAuthId(authInfo.get().authId)
-        loggedInJpaRepository.delete(loggedInEntity!!)
-    }
-
-    override fun deleteByUserId(userId: String) {
-        authJpaRepository.deleteById(userId)
-    }
-
-    override fun readUserById(userId: String): User? {
-        TODO("Not yet implemented")
-    }
-
-
-    //추가
-    // 사용자 전화번호 업데이트
-
-    override fun updateUserPhoneNumber(userId: String, phoneNumber: String, countryCode: String) {
-        val phoneEntity = phoneNumberJpaRepository.findByUserId(userId)
-            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
-
-        // 전화번호 업데이트
-        val updatedPhoneEntity = PhoneNumberJpaEntity(
-            phoneNumberId = phoneEntity.phoneNumberId,
-            phoneNumber = phoneNumber,
-            firstAuthorized = phoneEntity.firstAuthorized,
-            countryCode = countryCode
-        )
-        phoneNumberJpaRepository.save(updatedPhoneEntity)
-    }
-
-    // 사용자 이메일 업데이트
-    override fun updateUserEmail(userId: String, email: String) {
-        val emailEntity = emailJpaRepository.findByUserId(userId)
-            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
-
-        // 이메일 업데이트
-        val updatedEmailEntity = EmailJpaEntity(
-            emailId = emailEntity.emailId,
-            emailAddress = email,
-            firstAuthorized = emailEntity.firstAuthorized
-        )
-        emailJpaRepository.save(updatedEmailEntity)
-    }
-
-
-
 }

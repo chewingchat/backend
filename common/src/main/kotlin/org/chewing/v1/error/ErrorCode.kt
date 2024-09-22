@@ -36,6 +36,9 @@ enum class ErrorCode(
     FEED_IS_NOT_OWNED("FEED_004", "피드 작성자가 아닙니다."),
     FEED_IS_OWNED("FEED_005", "피드 작성자입니다."),
     COMMENT_IS_NOT_OWNED("COMMENT_001", "댓글 작성자가 아닙니다."),
+    ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_001", "공지사항을 찾을 수 없음."),
+    COMMENT_NOT_FOUND("COMMENT_002", "댓글을 찾을 수 없음."),
+    LONGIN_FAILED("LOGIN_001", "로그인 실패"),
     ;
 
     companion object {

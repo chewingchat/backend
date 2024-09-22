@@ -9,7 +9,7 @@ class Email private constructor(
     val emailAddress: String,
     val validationCode: ValidationCode,
     val isAuthorizedFirst: Boolean
-) : Contact{
+) : Contact {
     companion object {
         fun of(
             emailId: String,
@@ -41,15 +41,6 @@ class Email private constructor(
                 emailAddress = emailAddress,
                 validationCode = ValidationCode.onlyWithCode(authorizedNumber),
                 isAuthorizedFirst = true
-            )
-        }
-
-        fun empty(): Email {
-            return Email(
-                emailId = "",
-                emailAddress = "",
-                validationCode = ValidationCode.empty(),
-                isAuthorizedFirst = false
             )
         }
     }

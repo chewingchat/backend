@@ -6,12 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface LoggedInJpaRepository : JpaRepository<LoggedInEntity, String>{
-    fun findByAuthAuthId(authId: String): LoggedInEntity?
-    // 추가한 부분
-    // 특정 사용자의 로그인 정보를 찾는 메서드
-    fun findByUserId(loggedInId: String): Optional<LoggedInEntity>
-    // 추기
-    fun deleteByUserId(userId: String)
+internal interface LoggedInJpaRepository : JpaRepository<LoggedInEntity, String>{
+    fun deleteByAuthId(authId: String)
 
 }

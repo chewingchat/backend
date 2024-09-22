@@ -15,13 +15,13 @@ data class UserFeedResponse(
         fun of(
             feed: Feed
         ): UserFeedResponse {
-            val formattedUploadTime = feed.feedUploadTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+            val formattedUploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return UserFeedResponse(
-                feedId = feed.feedId.value(),
-                totalLiked = feed.likes,
+                feedId = feed.feed.feedId,
+                totalLiked = feed.feed.likes,
                 feedUploadTime = formattedUploadTime,
-                feedTopic = feed.feedTopic,
-                totalComment = feed.comments,
+                feedTopic = feed.feed.topic,
+                totalComment = feed.feed.comments,
                 feedDetails = feed.feedDetails.map { FeedDetailResponse.of(it) }
             )
         }

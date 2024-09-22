@@ -6,7 +6,7 @@ import org.chewing.v1.model.SortCriteria
 
 object FriendSortEngine {
 
-    fun sortFriends(friends: List<Friend>, sortCriteria: SortCriteria): List<Friend> {
+    fun sort(friends: List<Friend>, sortCriteria: SortCriteria): List<Friend> {
         return friends.sortedWith(getFriendComparator(sortCriteria))
     }
 
@@ -34,7 +34,7 @@ object FriendSortEngine {
 
     private fun getFriendSearchHistoryComparator(sortCriteria: SortCriteria): Comparator<FriendSearch> {
         return when (sortCriteria) {
-            SortCriteria.DATE -> Comparator.comparing { it.searchTime }
+            SortCriteria.DATE -> Comparator.comparing { it.searchAt }
             else -> throw IllegalArgumentException("존재하지 않는 정렬 기준: $sortCriteria")
         }
     }

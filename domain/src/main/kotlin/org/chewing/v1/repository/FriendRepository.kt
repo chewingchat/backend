@@ -2,25 +2,22 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserName
+import org.chewing.v1.model.friend.FriendInfo
 import org.springframework.stereotype.Repository
 
 @Repository
 interface FriendRepository {
 
-    fun readFriendsWithStatus(userId: User.UserId): List<Friend>
+    fun readFriends(userId: String): List<FriendInfo>
+    fun readFriendsByIds(friendIds: List<String>, userId: String): List<FriendInfo>
+    fun appendFriend(user:User, friendName: UserName, targetUser: User)
 
-    fun appendFriend(user:User, friend: Friend)
+    fun removeFriend(userId: String, friendId: String)
 
-    fun removeFriend(userId: User.UserId, friendId: User.UserId)
+    fun readFriend(userId: String,friendId: String): FriendInfo?
 
-    fun readFriend(userId: User.UserId,friendId: User.UserId): Friend?
-
-    fun checkFriend(userId: User.UserId, friendId: User.UserId): Boolean
-
-    fun updateFriend(user: User, friend: Friend)
-
-    fun readFriendWithStatus(userId: User.UserId, friendId: User.UserId): Friend?
-
-    // 츄가
-    fun deleteAllByUserId(userId: String)
+    fun checkFriend(userId: String, friendId: String): Boolean
+    fun updateFavorite(user: User, friendId: String, favorite: Boolean)
+    fun updateName(user: User, friendId: String, friendName: UserName)
 }

@@ -10,7 +10,7 @@ class FileProcessor(
     private val fileGenerator: FileGenerator,
     private val fileValidator: FileValidator
 ) {
-    fun processNewFiles(userId: User.UserId, files: List<File>): List<Media> {
+    fun processNewFiles(userId: String, files: List<File>): List<Media> {
         fileValidator.validateFilesNameCorrect(files)
         val mediaWithFiles = fileGenerator.generateFeedMedias(files, userId)
         mediaWithFiles.forEach {
@@ -19,7 +19,7 @@ class FileProcessor(
         }
         return mediaWithFiles.map { it.second }
     }
-    fun processNewFile(userId: User.UserId, file: File): Media {
+    fun processNewFile(userId: String, file: File): Media {
         fileValidator.validateFileNameCorrect(file)
         val media = fileGenerator.generateFeedMedia(file, userId)
         fileProvider.appendFile(file, media)
@@ -29,7 +29,7 @@ class FileProcessor(
         fileProvider.removeFile(media)
     }
 
-    fun processPreFiles(medias: List<Media>) {
+    fun processOldFiles(medias: List<Media>) {
         medias.forEach {
             fileProvider.removeFile(it)
         }

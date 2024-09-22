@@ -1,33 +1,36 @@
 package org.chewing.v1.implementation.friend
 
+import org.chewing.v1.implementation.user.UserReader
+import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.friend.Friend
-import org.chewing.v1.model.User
 import org.springframework.stereotype.Component
 
 @Component
 class FriendSearchEngine(
     private val friendReader: FriendReader,
+    private val userStatusFinder: UserStatusFinder,
+    private val userReader: UserReader,
+    private val friendEnricher: FriendEnricher
 ) {
-    fun searchFriends(userId: User.UserId, keyword: String): List<Friend> {
-        val friends = friendReader.readFriendsWithStatus(userId)
-        return filterFriendsByKeyword(friends, cleanKeyword(keyword))
+    fun search(userId: String, keyword: String): List<Friend> {
+        val friendsInfo = friendReader.reads(userId)
+        val users = userReader.reads(friendsInfo.map { it.friendId })
+        val friendsStatus = userStatusFinder.finds(friendsInfo.map { it.friendId })
+        val enrichedFriends = friendEnricher.enriches(friendsInfo, users, friendsStatus)
+        return personalized(enrichedFriends, cleanKeyword(keyword))
     }
 
-    private fun cleanKeyword(keyword: String): String {
-        return keyword.replace(" ", "") // 공백 제거
-    }
+    private fun cleanKeyword(keyword: String): String = keyword.replace(" ", "")
 
-    private fun filterFriendsByKeyword(friends: List<Friend>, keyword: String): List<Friend> {
+    private fun personalized(friends: List<Friend>, keyword: String): List<Friend> {
         return friends.filter { friend ->
-            // 성과 이름을 두 가지 순서로 조합
-            val firstNameLastNameSplit = "${friend.friendName.firstName()} ${friend.friendName.lastName()}"
-            val lastNameFirstNameSplit = "${friend.friendName.lastName()} ${friend.friendName.firstName()}"
-            val firstNameLastName = "${friend.friendName.firstName()}${friend.friendName.lastName()}"
+            val fullName = "${friend.friend.name.firstName()} ${friend.friend.name.lastName()}"
+            val alternativeFullName = "${friend.friend.name.lastName()} ${friend.friend.name.firstName()}"
+            val concatenatedNames = "${friend.friend.name.firstName()}${friend.friend.name.lastName()}"
 
-            // 두 가지 조합과 검색 키워드를 비교
-            firstNameLastNameSplit.contains(keyword, ignoreCase = true) ||
-                    lastNameFirstNameSplit.contains(keyword, ignoreCase = true) ||
-                    firstNameLastName.contains(keyword, ignoreCase = true)
+            listOf(fullName, alternativeFullName, concatenatedNames).any {
+                it.contains(keyword, ignoreCase = true)
+            }
         }
     }
 }

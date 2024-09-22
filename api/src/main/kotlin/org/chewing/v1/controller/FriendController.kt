@@ -20,7 +20,7 @@ class FriendController(
         @RequestHeader("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(User.UserId.of(userId), request.toUserName(), request.toContact())
+        friendService.addFriend(userId, request.toUserName(), request.toContact())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -30,7 +30,7 @@ class FriendController(
         @RequestHeader("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(User.UserId.of(userId), request.toUserName(), request.toContact())
+        friendService.addFriend(userId, request.toUserName(), request.toContact())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -41,7 +41,7 @@ class FriendController(
         @RequestBody request: FriendRequest.UpdateFavorite
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = request
-        friendService.changeFriendFavorite(User.UserId.of(userId), User.UserId.of(friendId), favorite)
+        friendService.changeFriendFavorite(userId, friendId, favorite)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
@@ -52,7 +52,7 @@ class FriendController(
         @RequestBody request: FriendRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
-        friendService.removeFriend(User.UserId.of(userId), User.UserId.of(friendId))
+        friendService.removeFriend(userId, friendId)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
@@ -64,7 +64,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendName = request.toFriendName()
         val friendId = request.toFriendId()
-        friendService.changeFriendName(User.UserId.of(userId), friendId, friendName)
+        friendService.changeFriendName(userId, friendId, friendName)
         //생성 완료 응답 201 반환
         return ResponseHelper.successOnly()
     }

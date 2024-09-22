@@ -6,79 +6,67 @@ import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
+import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
 @DynamicInsert
 @Entity
 @Table(name = "`user`", schema = "chewing")
-class UserJpaEntity(
+internal class UserJpaEntity(
     @Id
-    @Column(name = "user_id")
-    val id: String = UUID.randomUUID().toString(),
+    private val userId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "picture_url", nullable = false)
-    val pictureUrl: String,
+    private var pictureUrl: String,
 
-    @Column(name = "background_picture_url", nullable = false)
-    val backgroundPictureUrl: String,
+    private var backgroundPictureUrl: String,
 
-    @Column(name = "status_message", nullable = false)
-    val statusMessage: String,
+    private var userFirstName: String,
 
-    @Column(name = "user_first_name", nullable = false)
-    val userFirstName: String,
+    private var userLastName: String,
 
-    @Column(name = "user_last_name", nullable = false)
-    val userLastName: String,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "emoticon_id", nullable = true)
-    val statusEmoticon: EmoticonJpaEntity?,
-
-    @Column(name = "birthday", nullable = false)
-    val birth: String
-
+    private var birth: String,
 ) : BaseEntity() {
     companion object {
         fun fromUser(user: User): UserJpaEntity {
             return UserJpaEntity(
-                user.userId.value(),
-                user.image.url,
-                user.backgroundImage.url,
-                user.status.statusMessage,
-                user.name.firstName(),
-                user.name.lastName(),
-                EmoticonJpaEntity.fromEmoticon(user.status.emoticon),
-                user.birth
+                userId = user.userId,
+                userFirstName = user.name.firstName,
+                userLastName = user.name.lastName,
+                birth = user.birth,
+                pictureUrl = user.image.url,
+                backgroundPictureUrl = user.backgroundImage.url
+            )
+        }
+
+        fun generate(userContent: UserContent): UserJpaEntity {
+            return UserJpaEntity(
+                userFirstName = userContent.name.firstName(),
+                userLastName = userContent.name.lastName(),
+                birth = userContent.birth,
+                pictureUrl = "",
+                backgroundPictureUrl = ""
             )
         }
     }
 
     fun toUser(): User {
-        return User.withId(
-            this.id,
+        return User.of(
+            this.userId,
             this.userFirstName,
             this.userLastName,
             this.birth,
             Image.of(this.pictureUrl, 0),
             Image.of(this.backgroundPictureUrl, 0),
-            Emoticon.empty(),
-            this.statusMessage
         )
     }
 
-    fun toUserWithStatus(): User {
-        val emoticon = this.statusEmoticon?.toEmoticon() ?: Emoticon.empty()
-        return User.withId(
-            this.id,
-            this.userFirstName,
-            this.userLastName,
-            this.birth,
-            Image.of(this.pictureUrl, 0),
-            Image.of(this.backgroundPictureUrl, 0),
-            emoticon,
-            this.statusMessage
-        )
+    fun updateUserPictureUrl(media: Media) {
+        this.pictureUrl = media.url
+    }
+
+    fun id(): String {
+        return this.userId
     }
 }
