@@ -7,4 +7,5 @@ interface UserStatusRepository {
     fun removeUserStatus(statusId: String)
     fun readSelectedUserStatus(userId: String): StatusInfo
     fun readSelectedUsersStatus(userIds: List<String>): List<StatusInfo>
+    fun removeByUserId(userId: String)
 }

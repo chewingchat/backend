@@ -23,6 +23,7 @@ interface FeedRepository {
     fun unlikes(feedInfo: FeedInfo, user: User)
     fun removes(feedIds: List<String>)
     fun removesDetails(feedIds: List<String>): List<Media>
+    fun removesByUserId(userId: String): List<String>
     fun append(medias: List<Media>, user: User, topic: String): String
     fun update(feedId: String, target: FeedTarget)
 }

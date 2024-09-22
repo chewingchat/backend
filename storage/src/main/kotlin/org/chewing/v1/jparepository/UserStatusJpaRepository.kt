@@ -11,4 +11,5 @@ internal interface UserStatusJpaRepository : JpaRepository<UserStatusJpaEntity, 
     fun findAllByUserId(userId: String): List<UserStatusJpaEntity>
     fun findBySelectedTrue(): Optional<UserStatusJpaEntity>
     fun findAllBySelectedTrueAndUserIdIn(userIds: List<String>): List<UserStatusJpaEntity>
+    fun deleteAllByUserId(userId: String)
 }

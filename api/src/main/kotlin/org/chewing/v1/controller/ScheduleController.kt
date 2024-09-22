@@ -20,7 +20,7 @@ class ScheduleController(
 ) {
     @GetMapping("")
     fun getSchedule(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestParam("year") year: Year,
         @RequestParam("month") month: Month
     ): SuccessResponseEntity<ScheduleListResponse> {
@@ -31,7 +31,7 @@ class ScheduleController(
 
     @DeleteMapping("")
     fun deleteSchedule(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: ScheduleRequest.Delete
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val scheduleId = request.toScheduleId()
@@ -41,7 +41,7 @@ class ScheduleController(
 
     @PostMapping("")
     fun addSchedule(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: ScheduleRequest.Add
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         scheduleService.make(userId, request.toScheduleTime(), request.toScheduleContent())

@@ -12,12 +12,18 @@ class FeedRemover(
     val feedRepository: FeedRepository
 ) {
     @Transactional
-    fun removeFeedLikes(feedInfo: FeedInfo, user: User) {
+    fun removeLikes(feedInfo: FeedInfo, user: User) {
         feedRepository.unlikes(feedInfo, user)
     }
+
     @Transactional
-    fun removeFeeds(feedIds: List<String>): List<Media>{
+    fun removes(feedIds: List<String>): List<Media> {
         feedRepository.removes(feedIds)
         return feedRepository.removesDetails(feedIds)
+    }
+
+    @Transactional
+    fun removeAll(userId: String): List<String> {
+        return feedRepository.removesByUserId(userId)
     }
 }

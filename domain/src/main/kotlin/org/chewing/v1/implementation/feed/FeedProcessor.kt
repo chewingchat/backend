@@ -26,7 +26,7 @@ class FeedProcessor(
     fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
         val feed = feedReader.readFeed(feedId)
         val user = userReader.read(userId)
-        feedRemover.removeFeedLikes(feed, user)
+        feedRemover.removeLikes(feed, user)
         feedUpdater.updateFeed(feedId, target)
     }
 

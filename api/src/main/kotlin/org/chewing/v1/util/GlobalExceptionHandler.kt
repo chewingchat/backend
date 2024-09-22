@@ -12,6 +12,7 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MissingServletRequestParameterException
 

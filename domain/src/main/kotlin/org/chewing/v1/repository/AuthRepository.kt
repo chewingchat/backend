@@ -22,6 +22,7 @@ interface AuthRepository {
     fun updatePhoneAuthorized(phoneId: String)
     fun updateEmailAuthorized(emailId: String)
     fun removeLoginInfo(authId: String)
+    fun removeAuthInfo(authId: String)
     fun checkPhoneRegistered(phoneNumber: PhoneNumber): Boolean
     fun checkEmailRegistered(emailAddress: String): Boolean
     fun updateEmailVerificationCode(emailAddress: String): String
