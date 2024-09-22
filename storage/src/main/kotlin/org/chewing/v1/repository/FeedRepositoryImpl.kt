@@ -41,7 +41,7 @@ internal class FeedRepositoryImpl(
         return feedDetailJpaRepository.findAllByFeedId(feedId).map { it.toFeedDetail() }
     }
 
-    override fun readsDetails(feedIds: List<String>):  List<FeedDetail> {
+    override fun readsDetails(feedIds: List<String>): List<FeedDetail> {
         val feedDetails = feedDetailJpaRepository.findAllByFeedIdIn(feedIds)
         return feedDetails.map { it.toFeedDetail() }
     }
@@ -92,6 +92,13 @@ internal class FeedRepositoryImpl(
         val details = feedDetailJpaRepository.findAllByFeedIdIn(feedIds.map { it }).map { it.toFeedDetail() }
         feedDetailJpaRepository.deleteAllById(feedIds.map { it })
         return details.map { it.media }
+    }
+
+    override fun removesByUserId(userId: String): List<String> {
+        val feedIds = feedJpaRepository.findByUserId(userId).map { it.toFeedId() }
+        feedJpaRepository.deleteAllByUserId(userId)
+        feedDetailJpaRepository.deleteAllByFeedIdIn(feedIds)
+        return feedIds
     }
 
     override fun append(medias: List<Media>, user: User, topic: String): String {

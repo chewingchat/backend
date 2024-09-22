@@ -16,7 +16,7 @@ class MainController(
 ) {
     @GetMapping("/friend/card")
     fun getMainPageFriendCards(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: String
     ): SuccessResponseEntity<MainFriendCardsResponse> {
         val sortCriteria = SortCriteria.valueOf(sort.uppercase())
@@ -27,7 +27,7 @@ class MainController(
 
     @GetMapping("/friend/list")
     fun getMainPageFriendList(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: String
     ): SuccessResponseEntity<MainFriendListResponse> {
         val sortCriteria = SortCriteria.valueOf(sort.uppercase())

@@ -96,6 +96,13 @@ internal class AuthRepositoryImpl(
     override fun removeLoginInfo(authId: String) {
         loggedInJpaRepository.deleteByAuthId(authId)
     }
+    override fun removeAuthInfo(authId: String) {
+        val authEntity = authJpaRepository.findById(authId).orElse(null)
+        authJpaRepository.deleteById(authId)
+        authEntity.emailId?.let { emailJpaRepository.deleteById(it) }
+        authEntity.phoneNumberId?.let { phoneNumberJpaRepository.deleteById(it) }
+        authJpaRepository.deleteById(authId)
+    }
 
     override fun updateEmailVerificationCode(emailAddress: String): String {
         val emailEntity = emailJpaRepository.findByEmailAddress(emailAddress)

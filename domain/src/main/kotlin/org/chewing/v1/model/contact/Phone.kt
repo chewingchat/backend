@@ -40,38 +40,7 @@ class Phone private constructor(
                 isAuthorizedFirst = false
             )
         }
-
-        fun authorize(country: String, number: String, authorizedNumber: String): Phone {
-            return Phone(
-                phoneId = "",
-                country = country,
-                number = number,
-                validationCode = ValidationCode.onlyWithCode(authorizedNumber),
-                isAuthorizedFirst = true
-            )
-        }
-
-        fun empty(): Phone {
-            return Phone(
-                phoneId = "",
-                country = "",
-                number = "",
-                validationCode = ValidationCode.empty(),
-                isAuthorizedFirst = false
-            )
-        }
     }
-
     override val type: ContactType
         get() = ContactType.PHONE
-
-    fun generateValidationCode(): Phone {
-        return Phone(
-            phoneId = phoneId,
-            country = country,
-            number = number,
-            validationCode = ValidationCode.generate(),
-            isAuthorizedFirst = isAuthorizedFirst
-        )
-    }
 }

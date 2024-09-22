@@ -15,7 +15,7 @@ class MyController(
 ) {
     @GetMapping("/comment")
     fun getMyCommentedFeed(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<MyCommentResponse> {
         val myCommentedInfo = myFacade.getFeedUserCommented(userId)
         //성공 응답 200 반환

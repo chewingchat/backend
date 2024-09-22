@@ -7,6 +7,7 @@ import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
+import org.chewing.v1.model.UserName
 import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -64,6 +65,10 @@ internal class UserJpaEntity(
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
+    }
+    fun updateUserName(userName: UserName) {
+        this.userFirstName = userName.firstName
+        this.userLastName = userName.lastName
     }
 
     fun id(): String {

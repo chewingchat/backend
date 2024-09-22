@@ -17,7 +17,7 @@ class FriendController(
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")
     fun addFriendWithEmail(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendService.addFriend(userId, request.toUserName(), request.toContact())
@@ -27,7 +27,7 @@ class FriendController(
 
     @PostMapping("/phone")
     fun addFriendWithPhone(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendService.addFriend(userId, request.toUserName(), request.toContact())
@@ -37,7 +37,7 @@ class FriendController(
 
     @PostMapping("/favorite")
     fun addFavorite(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.UpdateFavorite
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = request
@@ -45,10 +45,9 @@ class FriendController(
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
-
     @DeleteMapping("")
     fun deleteFriend(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
@@ -59,7 +58,7 @@ class FriendController(
 
     @PutMapping("")
     fun changeFriendName(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.UpdateName
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendName = request.toFriendName()
