@@ -27,6 +27,7 @@ class FriendUpdater(
             image = user.image,
             backgroundImage = user.backgroundImage,
             birth = user.birth,
+            type = user.type
         )
     }
 }

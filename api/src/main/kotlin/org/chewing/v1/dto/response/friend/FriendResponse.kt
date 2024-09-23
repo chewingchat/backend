@@ -7,6 +7,7 @@ data class FriendResponse(
     val friendFirstName: String,
     val friendLastName: String,
     val friendImageUrl: String,
+    val friendActivate: String,
     val isFavorite: Boolean,
     val friendStatusMessage: String,
     val friendStatusEmoticon: String,
@@ -18,6 +19,7 @@ data class FriendResponse(
                 friendFirstName = friend.name.firstName(),
                 friendLastName = friend.name.lastName(),
                 friendImageUrl = friend.friend.image.url,
+                friendActivate = friend.friend.type.name,
                 friendStatusMessage = friend.friendStatus.statusMessage,
                 isFavorite = friend.isFavorite,
                 friendStatusEmoticon = friend.friendStatus.emoticon.media.url

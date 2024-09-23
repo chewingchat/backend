@@ -14,7 +14,6 @@ interface FriendRepository {
     fun appendFriend(user:User, friendName: UserName, targetUser: User)
 
     fun removeFriend(userId: String, friendId: String)
-    fun removeAllFriend(userId: String)
 
     fun readFriend(userId: String,friendId: String): FriendInfo?
 

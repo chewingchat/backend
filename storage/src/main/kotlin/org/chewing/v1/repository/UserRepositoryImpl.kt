@@ -22,9 +22,9 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
-    private val authJpaRepository: AuthJpaRepository,
     private val friendSearchJpaRepository: FriendSearchJpaRepository,
     private val pushNotificationJpaRepository: PushNotificationJpaRepository,
+    private val userEmoticonJpaRepository: UserEmoticonJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
@@ -35,6 +35,7 @@ internal class UserRepositoryImpl(
         val userEntities = userJpaRepository.findAllById(userIds.map { it })
         return userEntities.map { it.toUser() }
     }
+
     override fun removePushToken(device: PushToken.Device) {
         pushNotificationJpaRepository.deleteByDeviceIdAndDeviceProvider(device.deviceId, device.provider)
     }
@@ -48,7 +49,10 @@ internal class UserRepositoryImpl(
     }
 
     override fun remove(userId: String): String? {
-        userJpaRepository.deleteById(userId)
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateDelete()
+            userJpaRepository.save(it)
+        }
         return userId
     }
 
@@ -58,6 +62,7 @@ internal class UserRepositoryImpl(
             userJpaRepository.save(it)
         }
     }
+
     override fun updateName(userId: String, userName: UserName) {
         userJpaRepository.findById(userId).ifPresent {
             it.updateUserName(userName)
@@ -73,5 +78,9 @@ internal class UserRepositoryImpl(
         return friendSearchJpaRepository.findAllByUserId(userId).map {
             it.toFriendSearch()
         }
+    }
+
+    override fun readUserEmoticonPacks(userId: String): List<String> {
+        return userEmoticonJpaRepository.findAllByIdUserId(userId).map { it.id.emoticonPackId }
     }
 }

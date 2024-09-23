@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class UserStatusFilter {
     fun filter(emoticon: Emoticon, statuses: Collection<StatusInfo>): UserStatus? {
-        val status = statuses.firstOrNull { it.emoticonId == emoticon.emoticonId }
+        val status = statuses.firstOrNull { it.emoticonId == emoticon.id }
         return status?.let {
             UserStatus.of(
                 it.statusId,

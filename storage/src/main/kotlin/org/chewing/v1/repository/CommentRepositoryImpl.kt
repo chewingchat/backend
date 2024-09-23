@@ -25,14 +25,6 @@ internal class CommentRepositoryImpl(
         commentJpaRepository.deleteById(commentId)
     }
 
-    override fun removeCommented(userId: String) {
-        commentJpaRepository.deleteAllByUserId(userId)
-    }
-
-    override fun removesByFeedId(feedIds: List<String>) {
-        commentJpaRepository.deleteAllByFeedIdIn(feedIds)
-    }
-
     override fun appendComment(user: User, comment: String, feedInfo: FeedInfo) {
         commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, user, feedInfo))
     }

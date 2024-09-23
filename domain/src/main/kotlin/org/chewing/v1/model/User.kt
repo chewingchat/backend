@@ -10,7 +10,8 @@ class User private constructor(
     val name: UserName,
     val birth: String,
     val image: Image,
-    val backgroundImage: Image
+    val backgroundImage: Image,
+    val type: UserType
 ) {
     companion object {
         fun of(
@@ -20,13 +21,15 @@ class User private constructor(
             birth: String,
             image: Image,
             backgroundImage: Image,
+            type: UserType
         ): User {
             return User(
                 userId = userId,
                 birth = birth,
                 image = image,
                 backgroundImage = backgroundImage,
-                name = UserName.of(firstName, lastName)
+                name = UserName.of(firstName, lastName),
+                type = UserType.ACTIVATE
             )
         }
     }
