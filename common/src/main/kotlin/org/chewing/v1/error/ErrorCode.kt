@@ -40,6 +40,7 @@ enum class ErrorCode(
     ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_001", "공지사항을 찾을 수 없음."),
     COMMENT_NOT_FOUND("COMMENT_002", "댓글을 찾을 수 없음."),
     LONGIN_FAILED("LOGIN_001", "로그인 실패"),
+    EMOTICON_NOT_FOUND("EMOTICON_001", "이모티콘을 찾을 수 없음."),
     ;
 
     companion object {

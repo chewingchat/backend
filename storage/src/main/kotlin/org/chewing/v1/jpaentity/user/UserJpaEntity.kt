@@ -8,6 +8,7 @@ import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
+import org.chewing.v1.model.UserType
 import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -28,26 +29,19 @@ internal class UserJpaEntity(
     private var userLastName: String,
 
     private var birth: String,
+
+    @Enumerated(EnumType.STRING)
+    private var type: UserType
 ) : BaseEntity() {
     companion object {
-        fun fromUser(user: User): UserJpaEntity {
-            return UserJpaEntity(
-                userId = user.userId,
-                userFirstName = user.name.firstName,
-                userLastName = user.name.lastName,
-                birth = user.birth,
-                pictureUrl = user.image.url,
-                backgroundPictureUrl = user.backgroundImage.url
-            )
-        }
-
         fun generate(userContent: UserContent): UserJpaEntity {
             return UserJpaEntity(
                 userFirstName = userContent.name.firstName(),
                 userLastName = userContent.name.lastName(),
                 birth = userContent.birth,
                 pictureUrl = "",
-                backgroundPictureUrl = ""
+                backgroundPictureUrl = "",
+                type = UserType.ACTIVATE
             )
         }
     }
@@ -60,15 +54,20 @@ internal class UserJpaEntity(
             this.birth,
             Image.of(this.pictureUrl, 0),
             Image.of(this.backgroundPictureUrl, 0),
+            this.type
         )
     }
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
     }
+
     fun updateUserName(userName: UserName) {
         this.userFirstName = userName.firstName
         this.userLastName = userName.lastName
+    }
+    fun updateDelete() {
+        this.type = UserType.DELETE
     }
 
     fun id(): String {

@@ -21,9 +21,4 @@ class FeedRemover(
         feedRepository.removes(feedIds)
         return feedRepository.removesDetails(feedIds)
     }
-
-    @Transactional
-    fun removeAll(userId: String): List<String> {
-        return feedRepository.removesByUserId(userId)
-    }
 }

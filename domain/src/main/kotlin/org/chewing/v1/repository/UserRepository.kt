@@ -5,7 +5,6 @@ import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
-import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
 
@@ -21,4 +20,5 @@ interface UserRepository {
     fun removePushToken(device: PushToken.Device)
     fun appendPushToken(device: PushToken.Device, appToken: String, user: User)
     fun appendUser(userContent: UserContent): User
+    fun readUserEmoticonPacks(userId: String): List<String>
 }

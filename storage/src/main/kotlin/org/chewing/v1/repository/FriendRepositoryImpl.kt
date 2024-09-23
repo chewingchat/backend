@@ -32,10 +32,6 @@ internal class FriendRepositoryImpl(
         friendJpaRepository.deleteById(FriendId(userId, friendId))
     }
 
-    override fun removeAllFriend(userId: String) {
-        friendJpaRepository.deleteAllByIdUserIdOrIdFriendId(userId, userId)
-    }
-
     override fun readFriend(userId: String, friendId: String): FriendInfo? {
         return friendJpaRepository.findById(FriendId(userId, friendId))?.toFriendInfo()
     }
