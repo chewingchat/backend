@@ -4,6 +4,7 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.UnauthorizedException
+import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -19,8 +20,13 @@ class JwtTokenProvider(
 ) {
     private val secretKey: SecretKey
         get() = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
+    fun createJwtToken(userId: String): JwtToken {
+        val accessToken = createAccessToken(userId)
+        val refreshToken = createRefreshToken(userId)
+        return JwtToken.of(accessToken, refreshToken)
+    }
     // JWT Access Token 생성
-    fun createToken(userId: String): String {
+    fun createAccessToken(userId: String): String {
         val claims: Claims = Jwts.claims().setSubject(userId)
         val now = Date()
         val expiryDate = Date(now.time + accessExpiration)

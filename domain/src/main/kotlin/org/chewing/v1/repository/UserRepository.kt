@@ -5,6 +5,7 @@ import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
 
@@ -12,13 +13,16 @@ import org.springframework.stereotype.Repository
 interface UserRepository {
     fun readUserById(userId: String): User?
     fun readUsersByIds(userIds: List<String>): List<User>
+    fun readByContact(contact: Contact): User?
     fun remove(userId: String): String?
     fun updateProfileImage(user: User, media: Media)
     fun updateName(userId: String, userName: UserName)
+    fun updateContent(userId: String, content: UserContent)
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: String): List<FriendSearch>
     fun removePushToken(device: PushToken.Device)
     fun appendPushToken(device: PushToken.Device, appToken: String, user: User)
-    fun appendUser(userContent: UserContent): User
+    fun appendUser(contact: Contact): User
     fun readUserEmoticonPacks(userId: String): List<String>
+    fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean
 }

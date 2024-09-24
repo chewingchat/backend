@@ -8,7 +8,5 @@ import java.util.Optional
 
 @Repository
 internal interface PhoneNumberJpaRepository : JpaRepository<PhoneNumberJpaEntity, String> {
-    fun existsByPhoneNumberAndCountryCodeAndFirstAuthorizedTrue(phoneNumber: String, countryCode: String): Boolean
-
     fun findByPhoneNumberAndCountryCode(phoneNumber: String, countryCode: String): Optional<PhoneNumberJpaEntity>
 }

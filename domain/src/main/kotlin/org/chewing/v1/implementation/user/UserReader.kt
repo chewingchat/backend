@@ -4,6 +4,7 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.User
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.UserRepository
 import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
@@ -25,6 +26,10 @@ class UserReader(
      */
     fun read(userId: String): User {
         return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+    }
+
+    fun readByContact(contact: Contact): User {
+        return userRepository.readByContact(contact) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     fun reads(userIds: List<String>): List<User> {

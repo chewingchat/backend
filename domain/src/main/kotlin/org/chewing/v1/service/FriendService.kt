@@ -6,6 +6,7 @@ import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,13 +23,27 @@ class FriendService(
     private val userStatusFinder: UserStatusFinder,
     private val userFinder: UserFinder
 ) {
-    fun addFriend(
+    fun addFriendByEmail(
         userId: String,
         friendName: UserName,
-        contact: Contact
+        emailAddress: String
     ) {
         // 저장할 친구 정보를 읽어옴
-        val targetUser = userFinder.findUserByContact(contact)
+        val targetUser = userFinder.findUserByEmail(emailAddress)
+        // 이미 친구인지 확인
+        friendChecker.isAlreadyFriend(userId, targetUser.userId)
+        // 나의 정보를 읽어온다.
+        val user = userReader.read(userId)
+        // 친구 추가
+        friendAppender.appendFriend(user, friendName, targetUser)
+    }
+    fun addFriendByPhoneNumber(
+        userId: String,
+        friendName: UserName,
+        phoneNumber: PhoneNumber
+    ) {
+        // 저장할 친구 정보를 읽어옴
+        val targetUser = userFinder.findUserByPhoneNumber(phoneNumber)
         // 이미 친구인지 확인
         friendChecker.isAlreadyFriend(userId, targetUser.userId)
         // 나의 정보를 읽어온다.

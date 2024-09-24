@@ -1,11 +1,8 @@
 package org.chewing.v1.jpaentity.friend
 
 import jakarta.persistence.*
-import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserName
 import org.chewing.v1.model.friend.FriendInfo
@@ -31,7 +28,7 @@ internal class FriendJpaEntity(
                 favorite = false,
                 friendFirstName = friendName.firstName(),
                 friendLastName = friendName.lastName(),
-                type = ActivateType.ACTIVATE
+                type = ActivateType.ACCESS
             )
         }
     }

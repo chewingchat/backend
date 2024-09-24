@@ -7,6 +7,5 @@ import java.util.*
 
 @Repository
 internal interface EmailJpaRepository : JpaRepository<EmailJpaEntity, String> {
-    fun existsByEmailAddressAndFirstAuthorizedTrue(emailAddress: String): Boolean
     fun findByEmailAddress(emailAddress: String): Optional<EmailJpaEntity>
 }

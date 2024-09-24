@@ -8,17 +8,6 @@ import org.springframework.stereotype.Component
 class AuthUpdater(
     private val authRepository: AuthRepository
 ) {
-
-    fun updatePhoneAuthorized(phoneId: String) {
-        // 사용자 최초 인증 승인
-        authRepository.updatePhoneAuthorized(phoneId)
-    }
-
-    fun updateEmailAuthorized(emailId: String) {
-        // 사용자 최초 인증 승인
-        authRepository.updateEmailAuthorized(emailId)
-    }
-
     fun updateEmailVerificationCode(email: String) {
         // 사용자 인증 코드 업데이트
         authRepository.updateEmailVerificationCode(email)
