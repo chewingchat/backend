@@ -1,6 +1,4 @@
-package org.chewing.v1.dto.response
-
-import org.chewing.v1.model.User
+package org.chewing.v1.dto.response.auth
 
 data class TokenResponse(
     val accessToken: String,

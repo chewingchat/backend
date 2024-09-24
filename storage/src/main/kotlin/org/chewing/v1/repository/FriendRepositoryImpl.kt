@@ -26,10 +26,19 @@ internal class FriendRepositoryImpl(
 
     override fun appendFriend(user: User, friendName: UserName, targetUser: User) {
         friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
+        friendJpaRepository.save(FriendJpaEntity.generate(targetUser, user.name, user))
     }
 
     override fun removeFriend(userId: String, friendId: String) {
         friendJpaRepository.deleteById(FriendId(userId, friendId))
+        friendJpaRepository.deleteById(FriendId(friendId, userId))
+    }
+
+    override fun blockFriend(userId: String, friendId: String) {
+        friendJpaRepository.findById(FriendId(userId, friendId))?.let {
+            it.updateBlock()
+            friendJpaRepository.save(it)
+        }
     }
 
     override fun readFriend(userId: String, friendId: String): FriendInfo? {

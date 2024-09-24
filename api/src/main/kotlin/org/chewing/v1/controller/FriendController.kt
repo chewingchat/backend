@@ -56,6 +56,17 @@ class FriendController(
         return ResponseHelper.successOnly()
     }
 
+    @DeleteMapping("/block")
+    fun blockFriend(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: FriendRequest.Block
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        val friendId = request.friendId
+        friendService.blockFriend(userId, friendId)
+        //성공 응답 200 반환
+        return ResponseHelper.successOnly()
+    }
+
     @PutMapping("")
     fun changeFriendName(
         @RequestAttribute("userId") userId: String,

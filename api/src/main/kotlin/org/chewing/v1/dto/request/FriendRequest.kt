@@ -35,6 +35,10 @@ class FriendRequest(
         val friendId: String = ""
     )
 
+    data class Block(
+        val friendId: String = ""
+    )
+
     data class AddWithPhone(
         val countyCode: String,
         val phone: String,

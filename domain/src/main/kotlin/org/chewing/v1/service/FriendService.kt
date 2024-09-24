@@ -41,6 +41,11 @@ class FriendService(
     fun removeFriend(userId: String, friendId: String) {
         friendRemover.removeFriend(userId, friendId)
     }
+    // 친구 차단
+    fun blockFriend(userId: String, friendId: String) {
+        friendRemover.blockFriend(userId, friendId)
+
+    }
 
     // 친구 목록을 가져옴
     fun getFriends(userId: String, sort: SortCriteria): List<Friend> {

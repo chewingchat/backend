@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
+import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserName
@@ -20,6 +21,8 @@ internal class FriendJpaEntity(
     var favorite: Boolean,
     var friendFirstName: String,
     var friendLastName: String,
+    @Enumerated(EnumType.STRING)
+    private var type: ActivateType
 ) : BaseEntity() {
     companion object {
         fun generate(user: User, friendName: UserName, targetUser: User): FriendJpaEntity {
@@ -28,6 +31,7 @@ internal class FriendJpaEntity(
                 favorite = false,
                 friendFirstName = friendName.firstName(),
                 friendLastName = friendName.lastName(),
+                type = ActivateType.ACTIVATE
             )
         }
     }
@@ -46,6 +50,10 @@ internal class FriendJpaEntity(
             friendId = id.friendId,
             friendName = UserName.of(friendFirstName, friendLastName),
             isFavorite = favorite,
+            type = type
         )
+    }
+    fun updateBlock() {
+        this.type = ActivateType.BLOCK
     }
 }
