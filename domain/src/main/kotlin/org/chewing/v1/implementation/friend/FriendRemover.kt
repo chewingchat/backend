@@ -12,4 +12,9 @@ class FriendRemover(
     fun removeFriend(userId: String, friendId: String) {
         friendRepository.removeFriend(userId, friendId)
     }
+
+    @Transactional
+    fun blockFriend(userId: String, friendId: String) {
+        friendRepository.blockFriend(userId, friendId)
+    }
 }

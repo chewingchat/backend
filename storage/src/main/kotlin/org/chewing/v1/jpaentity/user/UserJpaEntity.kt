@@ -2,13 +2,11 @@ package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
-import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
 import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
-import org.chewing.v1.model.UserType
+import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -31,7 +29,7 @@ internal class UserJpaEntity(
     private var birth: String,
 
     @Enumerated(EnumType.STRING)
-    private var type: UserType
+    private var type: ActivateType
 ) : BaseEntity() {
     companion object {
         fun generate(userContent: UserContent): UserJpaEntity {
@@ -41,7 +39,7 @@ internal class UserJpaEntity(
                 birth = userContent.birth,
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = UserType.ACTIVATE
+                type = ActivateType.ACTIVATE
             )
         }
     }
@@ -67,7 +65,7 @@ internal class UserJpaEntity(
         this.userLastName = userName.lastName
     }
     fun updateDelete() {
-        this.type = UserType.DELETE
+        this.type = ActivateType.DELETE
     }
 
     fun id(): String {

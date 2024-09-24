@@ -7,10 +7,8 @@ import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.*
 import org.chewing.v1.model.auth.AuthInfo
 import org.chewing.v1.model.contact.PhoneNumber
-import org.chewing.v1.repository.UserRepository
 
 import org.springframework.stereotype.Service
-import java.util.*
 
 
 @Service
@@ -18,7 +16,6 @@ class AuthService(
     private val authChecker: AuthChecker,
     private val pushTokenProcessor: PushTokenProcessor,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userRepository: UserRepository,
     private val authReader: AuthReader,
     private val authAppender: AuthAppender,
     private val authRemover: AuthRemover,
@@ -54,7 +51,7 @@ class AuthService(
 
     //트랜잭션 처리 필요없는 부분
     // processor에서 트랜잭션 걸게욥
-    fun verifyPhoneAndLogin(
+    fun verifyPhone(
         phoneNumber: PhoneNumber,
         verificationCode: String,
         appToken: String,
