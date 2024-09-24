@@ -1,6 +1,7 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
+import org.chewing.v1.dto.response.auth.AuthInfoResponse
 import org.chewing.v1.dto.response.auth.TokenResponse
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -24,14 +25,14 @@ class AuthController(
 
     // 넘길때 이와 같이 객체로 넘기면 좋을 것 같아요
     @PostMapping("/verify/phone")
-    fun verifyPhoneAndLogin(@RequestBody request: LoginRequest.Phone): SuccessResponseEntity<TokenResponse> {
-        val (accessToken, refreshToken) = authService.verifyPhone(
+    fun verifyPhone(@RequestBody request: LoginRequest.Phone): SuccessResponseEntity<AuthInfoResponse> {
+        val (token, user) = authService.verifyPhone(
             request.toPhoneNumber(),
             request.toVerificationCode(),
             request.toAppToken(),
             request.toDevice()
         )
-        return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
+        return ResponseHelper.success(AuthInfoResponse.of(token, user))
     }
 
     @PostMapping("/send/email")
@@ -41,32 +42,14 @@ class AuthController(
     }
 
     @PostMapping("/verify/email")
-    fun verifyEmailAndLogin(@RequestBody request: LoginRequest.Email): SuccessResponseEntity<TokenResponse> {
-        val (accessToken, refreshToken) = authService.verifyEmailAndLogin(
+    fun verifyEmail(@RequestBody request: LoginRequest.Email): SuccessResponseEntity<AuthInfoResponse> {
+        val (token, user) = authService.verifyEmail(
             request.toAddress(),
             request.toVerificationCode(),
             request.toAppToken(),
             request.toDevice()
         )
-        return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
-    }
-
-    @PostMapping("/signup/email")
-    fun verifyEmailForSignup(@RequestBody request: VerificationCheckRequest.Email): SuccessResponseEntity<EmailId> {
-        val emailId = authService.verifyEmailAndSignup(
-            request.toAddress(),
-            request.toVerificationCode(),
-        )
-        return ResponseHelper.success(EmailId(emailId))
-    }
-
-    @PostMapping("/signup/phone")
-    fun verifyPhoneForSignup(@RequestBody request: VerificationCheckRequest.Phone): SuccessResponseEntity<PhoneNumberId> {
-        val phoneNumberId = authService.verifyPhoneAndSignup(
-            request.toPhoneNumber(),
-            request.toVerificationCode(),
-        )
-        return ResponseHelper.success(PhoneNumberId.of(phoneNumberId))
+        return ResponseHelper.success(AuthInfoResponse.of(token, user))
     }
 
 
@@ -78,33 +61,7 @@ class AuthController(
 
     @GetMapping("/token/refresh")
     fun refreshAccessToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
-        val (access, refresh) = authService.refreshAccessToken(refreshToken)
-        return ResponseHelper.success(TokenResponse.of(access, refresh))
-    }
-
-    @PostMapping("/signup/email")
-    fun signUpEmail(
-        @RequestBody request: SignupRequest.Email
-    ): SuccessResponseEntity<TokenResponse> {
-        val (accessToken, refreshToken) = authService.signUpWithEmail(
-            request.toEmailId(),
-            request.toUserContent(),
-            request.toDevice(),
-            request.toPushToken()
-        )
-        return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
-    }
-
-    @PostMapping("/signup/phone")
-    fun signUpPhone(
-        @RequestBody request: SignupRequest.Phone
-    ): SuccessResponseEntity<TokenResponse> {
-        val (accessToken, refreshToken) = authService.signUpWithPhone(
-            request.toPhoneId(),
-            request.toUserContent(),
-            request.toDevice(),
-            request.toPushToken()
-        )
-        return ResponseHelper.success(TokenResponse.of(accessToken, refreshToken))
+        val token = authService.refreshAccessToken(refreshToken)
+        return ResponseHelper.success(TokenResponse.of(token))
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional
 class UserProcessor(
     private val userReader: UserReader,
     private val userUpdater: UserUpdater,
-    private val authRemover: AuthRemover,
     private val userRemover: UserRemover,
     private val statusRemover: StatusRemover,
     private val scheduleRemover: ScheduleRemover
@@ -28,7 +27,6 @@ class UserProcessor(
 
     fun processRemoveUser(userId: String) {
         userRemover.remove(userId)
-        authRemover.removeAll(userId)
         statusRemover.removeAll(userId)
         scheduleRemover.removeAll(userId)
     }

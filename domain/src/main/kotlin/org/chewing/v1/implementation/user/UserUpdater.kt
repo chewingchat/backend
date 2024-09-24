@@ -1,6 +1,7 @@
 package org.chewing.v1.implementation.user
 
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.repository.UserRepository
@@ -24,5 +25,8 @@ class UserUpdater(
     @Transactional
     fun updateName(userId: String, userName: UserName) {
         return userRepository.updateName(userId, userName)
+    }
+    fun updateContent(userId: String, content: UserContent) {
+        return userRepository.updateContent(userId, content)
     }
 }

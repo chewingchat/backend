@@ -4,6 +4,7 @@ import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
 import org.chewing.v1.model.UserStatus
 import org.chewing.v1.model.emoticon.EmoticonPack
@@ -47,5 +48,12 @@ class UserService(
     }
     fun findOwnedEmoticonPacks(userId: String) : List<EmoticonPack>{
         return userEmoticonFinder.find(userId)
+    }
+
+    fun accessUser(
+        userId: String,
+        userContent: UserContent,
+    ) {
+        userUpdater.updateContent(userId, userContent)
     }
 }

@@ -4,9 +4,10 @@ import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
 import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -28,18 +29,37 @@ internal class UserJpaEntity(
 
     private var birth: String,
 
+    val emailId: String?,
+
+    val phoneNumberId: String?,
+
     @Enumerated(EnumType.STRING)
     private var type: ActivateType
 ) : BaseEntity() {
     companion object {
-        fun generate(userContent: UserContent): UserJpaEntity {
+        fun generateByEmail(email: Email): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = userContent.name.firstName(),
-                userLastName = userContent.name.lastName(),
-                birth = userContent.birth,
+                userFirstName = "",
+                userLastName = "",
+                birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = ActivateType.ACTIVATE
+                type = ActivateType.NOT_ACCESS,
+                emailId = email.emailId,
+                phoneNumberId = null
+            )
+        }
+
+        fun generateByPhone(phone: Phone): UserJpaEntity {
+            return UserJpaEntity(
+                userFirstName = "",
+                userLastName = "",
+                birth = "",
+                pictureUrl = "",
+                backgroundPictureUrl = "",
+                type = ActivateType.NOT_ACCESS,
+                emailId = null,
+                phoneNumberId = phone.phoneId
             )
         }
     }
@@ -64,8 +84,17 @@ internal class UserJpaEntity(
         this.userFirstName = userName.firstName
         this.userLastName = userName.lastName
     }
+
+    fun updateBirth(birth: String) {
+        this.birth = birth
+    }
+
     fun updateDelete() {
         this.type = ActivateType.DELETE
+    }
+
+    fun updateAccess() {
+        this.type = ActivateType.ACCESS
     }
 
     fun id(): String {

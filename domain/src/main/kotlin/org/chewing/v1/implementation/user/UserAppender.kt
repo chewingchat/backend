@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.user
 
 import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
@@ -16,8 +16,8 @@ class UserAppender(
         userRepository.appendPushToken(device, appToken, user)
     }
 
-    fun appendUser(user: UserContent): User {
-        return userRepository.appendUser(user)
+    fun appendIfNotExsist(contact: Contact): User {
+        return userRepository.appendUser(contact)
     }
 
     fun appendSearched(user: User, search: FriendSearch) {

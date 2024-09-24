@@ -1,5 +1,7 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.PushNotificationJpaEntity
 import org.chewing.v1.jpaentity.friend.FriendSearchJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
@@ -36,6 +38,14 @@ internal class UserRepositoryImpl(
         return userEntities.map { it.toUser() }
     }
 
+    override fun readByContact(contact: Contact): User? {
+        return when (contact) {
+            is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElse(null)
+            is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElse(null)
+            else -> null
+        }
+    }
+
     override fun removePushToken(device: PushToken.Device) {
         pushNotificationJpaRepository.deleteByDeviceIdAndDeviceProvider(device.deviceId, device.provider)
     }
@@ -44,8 +54,16 @@ internal class UserRepositoryImpl(
         pushNotificationJpaRepository.save(PushNotificationJpaEntity.generate(appToken, device, user))
     }
 
-    override fun appendUser(userContent: UserContent): User {
-        return userJpaRepository.save(UserJpaEntity.generate(userContent)).toUser()
+    override fun appendUser(contact: Contact): User {
+        return when (contact) {
+            is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElseGet {
+                userJpaRepository.save(UserJpaEntity.generateByEmail(contact)).toUser()
+            }
+            is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElseGet {
+                userJpaRepository.save(UserJpaEntity.generateByPhone(contact)).toUser()
+            }
+            else -> throw NotFoundException(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 
     override fun remove(userId: String): String? {
@@ -70,6 +88,15 @@ internal class UserRepositoryImpl(
         }
     }
 
+    override fun updateContent(userId: String, content: UserContent) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateUserName(content.name)
+            it.updateBirth(content.birth)
+            it.updateAccess()
+            userJpaRepository.save(it)
+        }
+    }
+
     override fun appendSearchHistory(user: User, search: FriendSearch) {
         friendSearchJpaRepository.save(FriendSearchJpaEntity.fromFriendSearch(user, search))
     }
@@ -82,5 +109,13 @@ internal class UserRepositoryImpl(
 
     override fun readUserEmoticonPacks(userId: String): List<String> {
         return userEmoticonJpaRepository.findAllByIdUserId(userId).map { it.id.emoticonPackId }
+    }
+
+    override fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean {
+        return when (contact) {
+            is Email -> userJpaRepository.existsByEmailIdAndUserIdNot(contact.emailId, userId)
+            is Phone -> userJpaRepository.existsByPhoneNumberIdAndUserIdNot(contact.phoneId, userId)
+            else -> false
+        }
     }
 }
