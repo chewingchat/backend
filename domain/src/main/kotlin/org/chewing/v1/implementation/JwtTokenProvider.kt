@@ -57,14 +57,14 @@ class JwtTokenProvider(
         try {
             val claims = getClaimsFromToken(token)
             if (claims.expiration.before(Date())) {
-                throw UnauthorizedException(ErrorCode.AUTH_4)  // 엑세스 토큰 만료 예외 발생
+                throw UnauthorizedException(ErrorCode.ACCESS_TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
             }
         } catch (e: ExpiredJwtException) {
-            throw UnauthorizedException(ErrorCode.AUTH_4)  // 엑세스 토큰 만료 예외 발생
+            throw UnauthorizedException(ErrorCode.ACCESS_TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
         } catch (e: JwtException) {
-            throw UnauthorizedException(ErrorCode.AUTH_5)  // 리프레시 토큰 만료 예외 발생
+            throw UnauthorizedException(ErrorCode.REFRESH_TOKEN_EXPIRED)  // 리프레시 토큰 만료 예외 발생
         } catch (e: Exception) {
-            throw UnauthorizedException(ErrorCode.AUTH_2)  // 기타 예외 발생
+            throw UnauthorizedException(ErrorCode.VALIDATE_EXPIRED)  // 기타 예외 발생
         }
     }
 

@@ -23,7 +23,6 @@ class AuthController(
         return ResponseHelper.successOnly()
     }
 
-    // 넘길때 이와 같이 객체로 넘기면 좋을 것 같아요
     @PostMapping("/verify/phone")
     fun verifyPhone(@RequestBody request: LoginRequest.Phone): SuccessResponseEntity<AuthInfoResponse> {
         val (token, user) = authService.verifyPhone(

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.implementation.JwtTokenProvider
+import org.springframework.context.annotation.Profile
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -15,6 +16,7 @@ import java.util.*
 
 
 @Component
+@Profile("!test")
 class JwtAuthenticationFilter(
     private val jwtTokenProvider: JwtTokenProvider
 ) : OncePerRequestFilter() {
@@ -53,6 +55,6 @@ class JwtAuthenticationFilter(
         val bearerToken = request.getHeader("Authorization")
         return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             bearerToken.substring(7) // "Bearer " 제거
-        } else throw AuthorizationException(ErrorCode.AUTH_6)
+        } else throw AuthorizationException(ErrorCode.ACCESS_TOKEN_IS_EMPTY)
     }
 }
