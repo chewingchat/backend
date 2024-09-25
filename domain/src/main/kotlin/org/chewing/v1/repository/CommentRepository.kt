@@ -12,7 +12,5 @@ interface CommentRepository {
     fun appendComment(user: User, comment: String, feedInfo: FeedInfo)
     fun readCommented(userId: String): List<CommentInfo>
     fun removeComment(commentId: String)
-    fun removeCommented(userId: String)
-    fun removesByFeedId(feedIds: List<String>)
     fun read(commentId: String): CommentInfo?
 }

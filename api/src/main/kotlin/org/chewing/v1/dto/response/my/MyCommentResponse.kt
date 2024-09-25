@@ -1,6 +1,5 @@
-package org.chewing.v1.dto.response.comment
+package org.chewing.v1.dto.response.my
 
-import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.Friend
@@ -30,6 +29,7 @@ data class MyCommentResponse(
         val friendFirstName: String,
         val friendLastName: String,
         val friendImageUrl: String,
+        val friendActivate: String,
         val feedId: String,
         val feedTopic: String,
         val feedMainDetailFileUrl: String,
@@ -48,6 +48,7 @@ data class MyCommentResponse(
                     friend.name.firstName(),
                     friend.name.lastName(),
                     friend.friend.image.url,
+                    friend.friend.type.name,
                     feed.feed.feedId,
                     feed.feed.topic,
                     feed.feedDetails[0].media.url,

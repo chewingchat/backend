@@ -1,5 +1,7 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.PushNotificationJpaEntity
 import org.chewing.v1.jpaentity.friend.FriendSearchJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
@@ -22,9 +24,9 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
-    private val authJpaRepository: AuthJpaRepository,
     private val friendSearchJpaRepository: FriendSearchJpaRepository,
     private val pushNotificationJpaRepository: PushNotificationJpaRepository,
+    private val userEmoticonJpaRepository: UserEmoticonJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
@@ -35,6 +37,15 @@ internal class UserRepositoryImpl(
         val userEntities = userJpaRepository.findAllById(userIds.map { it })
         return userEntities.map { it.toUser() }
     }
+
+    override fun readByContact(contact: Contact): User? {
+        return when (contact) {
+            is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElse(null)
+            is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElse(null)
+            else -> null
+        }
+    }
+
     override fun removePushToken(device: PushToken.Device) {
         pushNotificationJpaRepository.deleteByDeviceIdAndDeviceProvider(device.deviceId, device.provider)
     }
@@ -43,12 +54,23 @@ internal class UserRepositoryImpl(
         pushNotificationJpaRepository.save(PushNotificationJpaEntity.generate(appToken, device, user))
     }
 
-    override fun appendUser(userContent: UserContent): User {
-        return userJpaRepository.save(UserJpaEntity.generate(userContent)).toUser()
+    override fun appendUser(contact: Contact): User {
+        return when (contact) {
+            is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElseGet {
+                userJpaRepository.save(UserJpaEntity.generateByEmail(contact)).toUser()
+            }
+            is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElseGet {
+                userJpaRepository.save(UserJpaEntity.generateByPhone(contact)).toUser()
+            }
+            else -> throw NotFoundException(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 
     override fun remove(userId: String): String? {
-        userJpaRepository.deleteById(userId)
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateDelete()
+            userJpaRepository.save(it)
+        }
         return userId
     }
 
@@ -58,9 +80,19 @@ internal class UserRepositoryImpl(
             userJpaRepository.save(it)
         }
     }
+
     override fun updateName(userId: String, userName: UserName) {
         userJpaRepository.findById(userId).ifPresent {
             it.updateUserName(userName)
+            userJpaRepository.save(it)
+        }
+    }
+
+    override fun updateContent(userId: String, content: UserContent) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateUserName(content.name)
+            it.updateBirth(content.birth)
+            it.updateAccess()
             userJpaRepository.save(it)
         }
     }
@@ -72,6 +104,18 @@ internal class UserRepositoryImpl(
     override fun readSearchHistory(userId: String): List<FriendSearch> {
         return friendSearchJpaRepository.findAllByUserId(userId).map {
             it.toFriendSearch()
+        }
+    }
+
+    override fun readUserEmoticonPacks(userId: String): List<String> {
+        return userEmoticonJpaRepository.findAllByIdUserId(userId).map { it.id.emoticonPackId }
+    }
+
+    override fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean {
+        return when (contact) {
+            is Email -> userJpaRepository.existsByEmailIdAndUserIdNot(contact.emailId, userId)
+            is Phone -> userJpaRepository.existsByPhoneNumberIdAndUserIdNot(contact.phoneId, userId)
+            else -> false
         }
     }
 }

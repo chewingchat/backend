@@ -34,15 +34,6 @@ class Email private constructor(
                 isAuthorizedFirst = false
             )
         }
-
-        fun authorize(emailAddress: String, authorizedNumber: String): Email {
-            return Email(
-                emailId = "",
-                emailAddress = emailAddress,
-                validationCode = ValidationCode.onlyWithCode(authorizedNumber),
-                isAuthorizedFirst = true
-            )
-        }
     }
 
     fun generateValidationCode(): Email {

@@ -11,13 +11,4 @@ class CommentRemover(
     fun removeComment(commentId: String) {
         commentRepository.removeComment(commentId)
     }
-
-    @Transactional
-    fun removeAll(feedIds: List<String>){
-        commentRepository.removesByFeedId(feedIds)
-    }
-    @Transactional
-    fun removeAllCommented(userId: String) {
-        commentRepository.removeCommented(userId)
-    }
 }

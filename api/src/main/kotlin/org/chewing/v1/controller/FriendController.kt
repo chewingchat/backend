@@ -1,7 +1,6 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
-import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.FriendService
@@ -20,7 +19,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(userId, request.toUserName(), request.toContact())
+        friendService.addFriendByEmail(userId, request.toUserName(), request.toEmail())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -30,7 +29,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(userId, request.toUserName(), request.toContact())
+        friendService.addFriendByPhoneNumber(userId, request.toUserName(), request.toPhoneNumber())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -52,6 +51,17 @@ class FriendController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
         friendService.removeFriend(userId, friendId)
+        //성공 응답 200 반환
+        return ResponseHelper.successOnly()
+    }
+
+    @DeleteMapping("/block")
+    fun blockFriend(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: FriendRequest.Block
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        val friendId = request.friendId
+        friendService.blockFriend(userId, friendId)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }

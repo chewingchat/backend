@@ -8,7 +8,7 @@ class Friend private constructor(
     val friend: User,
     val isFavorite: Boolean,
     val name: UserName,
-    val friendStatus: UserStatus
+    val friendStatus: UserStatus,
 ) {
     companion object {
         fun of(friend: User, favorite: Boolean, friendName: UserName, friendStatus: UserStatus): Friend {

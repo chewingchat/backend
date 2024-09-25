@@ -17,10 +17,9 @@ class MainController(
     @GetMapping("/friend/card")
     fun getMainPageFriendCards(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("sort") sort: String
+        @RequestParam("sort") sort: SortCriteria
     ): SuccessResponseEntity<MainFriendCardsResponse> {
-        val sortCriteria = SortCriteria.valueOf(sort.uppercase())
-        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sortCriteria)
+        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sort)
         //성공 응답 200 반환
         return ResponseHelper.success(MainFriendCardsResponse.ofList(user, userStatus, friends))
     }
@@ -28,10 +27,9 @@ class MainController(
     @GetMapping("/friend/list")
     fun getMainPageFriendList(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("sort") sort: String
+        @RequestParam("sort") sort: SortCriteria
     ): SuccessResponseEntity<MainFriendListResponse> {
-        val sortCriteria = SortCriteria.valueOf(sort.uppercase())
-        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sortCriteria)
+        val (user, userStatus, friends) = mainFacade.getMainPage(userId, sort)
         //성공 응답 200 반환
         return ResponseHelper.success(MainFriendListResponse.ofList(user, userStatus, friends))
     }

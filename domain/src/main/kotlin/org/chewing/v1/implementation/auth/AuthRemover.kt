@@ -12,8 +12,4 @@ class AuthRemover(
     fun removeLoginInfo(authId: String) {
         authRepository.removeLoginInfo(authId)
     }
-    @Transactional
-    fun removeAll(authId: String) {
-        authRepository.removeAuthInfo(authId)
-    }
 }

@@ -8,29 +8,18 @@ import org.chewing.v1.model.contact.Phone
 object AuthValidator {
     fun validatePhoneNumber(phone: Phone, validateCode: String) {
         if (!phone.validationCode.validateCode(validateCode)) {
-            throw ConflictException(ErrorCode.AUTH_1)
+            throw ConflictException(ErrorCode.VALIDATE_WRONG)
         }
         if (phone.validationCode.validateExpired()) {
-            throw ConflictException(ErrorCode.AUTH_2)
+            throw ConflictException(ErrorCode.VALIDATE_EXPIRED)
         }
     }
-    fun phoneValidateIsAuthorizedFirst(phone: Phone) {
-        if (phone.isAuthorizedFirst) {
-            throw ConflictException(ErrorCode.AUTH_3)
-        }
-    }
-    fun emailValidateIsAuthorizedFirst(email: Email) {
-        if (email.isAuthorizedFirst) {
-            throw ConflictException(ErrorCode.AUTH_3)
-        }
-    }
-
     fun validateEmail(email: Email, validateCode: String) {
         if (!email.validationCode.validateCode(validateCode)) {
-            throw ConflictException(ErrorCode.AUTH_1)
+            throw ConflictException(ErrorCode.VALIDATE_WRONG)
         }
         if (email.validationCode.validateExpired()) {
-            throw ConflictException(ErrorCode.AUTH_2)
+            throw ConflictException(ErrorCode.VALIDATE_EXPIRED)
         }
     }
 }

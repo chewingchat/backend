@@ -1,8 +1,6 @@
 package org.chewing.v1.model
 
-import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
-import org.chewing.v1.model.media.Media
 
 
 class User private constructor(
@@ -10,7 +8,8 @@ class User private constructor(
     val name: UserName,
     val birth: String,
     val image: Image,
-    val backgroundImage: Image
+    val backgroundImage: Image,
+    val type: ActivateType
 ) {
     companion object {
         fun of(
@@ -20,13 +19,15 @@ class User private constructor(
             birth: String,
             image: Image,
             backgroundImage: Image,
+            type: ActivateType
         ): User {
             return User(
                 userId = userId,
                 birth = birth,
                 image = image,
                 backgroundImage = backgroundImage,
-                name = UserName.of(firstName, lastName)
+                name = UserName.of(firstName, lastName),
+                type = ActivateType.ACCESS
             )
         }
     }

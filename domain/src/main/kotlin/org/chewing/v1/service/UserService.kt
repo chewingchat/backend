@@ -4,8 +4,10 @@ import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
 import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.UserName
 import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.emoticon.EmoticonPack
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -16,7 +18,8 @@ class UserService(
     private val userProcessor: UserProcessor,
     private val userStatusFinder: UserStatusFinder,
     private val userUpdater: UserUpdater,
-    private val feedReader: FeedReader
+    private val feedReader: FeedReader,
+    private val userEmoticonFinder: UserEmoticonFinder
 ) {
     fun updateUserImage(file: File, userId: String) {
         val media = fileProcessor.processNewFile(userId, file)
@@ -42,5 +45,15 @@ class UserService(
         userProcessor.processRemoveUser(userId)
         fileProcessor.processOldFile(user.image)
         fileProcessor.processOldFiles(feedDetails.map { it.media })
+    }
+    fun findOwnedEmoticonPacks(userId: String) : List<EmoticonPack>{
+        return userEmoticonFinder.find(userId)
+    }
+
+    fun accessUser(
+        userId: String,
+        userContent: UserContent,
+    ) {
+        userUpdater.updateContent(userId, userContent)
     }
 }

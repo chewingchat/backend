@@ -30,7 +30,7 @@ internal class UserStatusJpaEntity(
             return UserStatusJpaEntity(
                 statusId = status.statusId,
                 statusMessage = status.statusMessage,
-                emoticonId = status.emoticon.emoticonId,
+                emoticonId = status.emoticon.id,
                 userId = user.userId,
                 selected = false
             )

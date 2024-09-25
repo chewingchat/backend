@@ -4,6 +4,7 @@ import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
 import org.chewing.v1.dto.request.VerificationCheckRequest
 import org.chewing.v1.dto.request.VerificationRequest
+import org.chewing.v1.dto.response.emoticon.EmoticonPacksResponse
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
@@ -32,6 +33,7 @@ class UserController(
         userService.updateUserImage(convertedFile, userId)
         return ResponseHelper.successOnly()
     }
+
     @PostMapping("/profile/status")
     fun changeProfileStatus(
         @RequestAttribute("userId") userId: String,
@@ -39,6 +41,7 @@ class UserController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         return ResponseHelper.successOnly()
     }
+
     @PostMapping("/profile/phone/send")
     fun sendPhoneVerification(
         @RequestAttribute("userId") userId: String,
@@ -47,6 +50,7 @@ class UserController(
         authService.sendPhoneVerificationForUpdate(userId, request.toPhoneNumber())
         return ResponseHelper.successOnly()
     }
+
     @PostMapping("/profile/email/send")
     fun sendEmailVerification(
         @RequestAttribute("userId") userId: String,
@@ -64,6 +68,7 @@ class UserController(
         authService.verifyPhoneForUpdate(userId, request.toPhoneNumber(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
+
     @PostMapping("/profile/email/check")
     fun changeEmail(
         @RequestAttribute("userId") userId: String,
@@ -81,11 +86,20 @@ class UserController(
         userService.updateUserName(userId, request.toUserName())
         return ResponseHelper.successOnly()
     }
+
     @DeleteMapping("")
     fun deleteUser(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         userService.deleteUser(userId)
         return ResponseHelper.successOnly()
+    }
+
+    @GetMapping("/emoticon")
+    fun getEmoticonPacks(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<EmoticonPacksResponse> {
+        val emoticonPacks = userService.findOwnedEmoticonPacks(userId)
+        return ResponseHelper.success(EmoticonPacksResponse.of(emoticonPacks))
     }
 }

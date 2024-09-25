@@ -14,12 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 class UserProcessor(
     private val userReader: UserReader,
     private val userUpdater: UserUpdater,
-    private val authRemover: AuthRemover,
     private val userRemover: UserRemover,
-    private val feedRemover: FeedRemover,
-    private val commentRemover: CommentRemover,
     private val statusRemover: StatusRemover,
-    private val friendRemover: FriendRemover,
     private val scheduleRemover: ScheduleRemover
 ) {
     @Transactional
@@ -31,14 +27,7 @@ class UserProcessor(
 
     fun processRemoveUser(userId: String) {
         userRemover.remove(userId)
-        authRemover.removeAll(userId)
-        val feedIds = feedRemover.removeAll(userId)
-        commentRemover.removeAll(feedIds)
-        commentRemover.removeAllCommented(userId)
         statusRemover.removeAll(userId)
-        friendRemover.removeAll(userId)
         scheduleRemover.removeAll(userId)
-
-
     }
 }

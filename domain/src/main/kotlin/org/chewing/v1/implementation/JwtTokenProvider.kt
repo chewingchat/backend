@@ -4,6 +4,7 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.UnauthorizedException
+import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -19,8 +20,13 @@ class JwtTokenProvider(
 ) {
     private val secretKey: SecretKey
         get() = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
+    fun createJwtToken(userId: String): JwtToken {
+        val accessToken = createAccessToken(userId)
+        val refreshToken = createRefreshToken(userId)
+        return JwtToken.of(accessToken, refreshToken)
+    }
     // JWT Access Token 생성
-    fun createToken(userId: String): String {
+    fun createAccessToken(userId: String): String {
         val claims: Claims = Jwts.claims().setSubject(userId)
         val now = Date()
         val expiryDate = Date(now.time + accessExpiration)
@@ -51,14 +57,14 @@ class JwtTokenProvider(
         try {
             val claims = getClaimsFromToken(token)
             if (claims.expiration.before(Date())) {
-                throw UnauthorizedException(ErrorCode.AUTH_4)  // 엑세스 토큰 만료 예외 발생
+                throw UnauthorizedException(ErrorCode.ACCESS_TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
             }
         } catch (e: ExpiredJwtException) {
-            throw UnauthorizedException(ErrorCode.AUTH_4)  // 엑세스 토큰 만료 예외 발생
+            throw UnauthorizedException(ErrorCode.ACCESS_TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
         } catch (e: JwtException) {
-            throw UnauthorizedException(ErrorCode.AUTH_5)  // 리프레시 토큰 만료 예외 발생
+            throw UnauthorizedException(ErrorCode.REFRESH_TOKEN_EXPIRED)  // 리프레시 토큰 만료 예외 발생
         } catch (e: Exception) {
-            throw UnauthorizedException(ErrorCode.AUTH_2)  // 기타 예외 발생
+            throw UnauthorizedException(ErrorCode.VALIDATE_EXPIRED)  // 기타 예외 발생
         }
     }
 
