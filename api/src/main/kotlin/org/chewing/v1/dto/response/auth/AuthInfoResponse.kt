@@ -10,7 +10,7 @@ data class AuthInfoResponse(
     companion object {
         fun of(token: JwtToken, user: User): AuthInfoResponse {
             val tokenResponse = TokenResponse.of(token)
-            return AuthInfoResponse(tokenResponse, user.type.toString())
+            return AuthInfoResponse(tokenResponse, user.type.toString().lowercase())
         }
     }
 }

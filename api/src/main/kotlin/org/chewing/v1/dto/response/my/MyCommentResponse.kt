@@ -1,6 +1,5 @@
-package org.chewing.v1.dto.response.comment
+package org.chewing.v1.dto.response.my
 
-import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.Friend

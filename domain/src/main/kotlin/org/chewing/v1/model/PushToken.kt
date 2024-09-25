@@ -6,18 +6,6 @@ class PushToken private constructor(
     val device: Device
 ) {
     companion object {
-        fun generate(
-            appToken: String,
-            provider: String,
-            deviceId: String
-        ): PushToken {
-            return PushToken(
-                pushTokenId = "",
-                appToken = appToken,
-                device = Device.of(deviceId, provider)
-            )
-        }
-
         fun of(
             pushTokenId: String,
             appToken: String,
@@ -47,13 +35,5 @@ class PushToken private constructor(
                 )
             }
         }
-    }
-
-    fun updatePushToken(pushToken: PushToken): PushToken {
-        return PushToken(
-            pushTokenId = pushTokenId,
-            appToken = pushToken.appToken,
-            device = device
-        )
     }
 }
