@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.JwtTokenProvider
+import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.springframework.context.annotation.Profile
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource

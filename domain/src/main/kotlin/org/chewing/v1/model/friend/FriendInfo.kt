@@ -1,7 +1,7 @@
 package org.chewing.v1.model.friend
 
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.UserName
 
 class FriendInfo private constructor(
     val friendId: String,

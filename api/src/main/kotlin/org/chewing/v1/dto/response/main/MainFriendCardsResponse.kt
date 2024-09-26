@@ -1,7 +1,7 @@
 package org.chewing.v1.dto.response.main
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.friend.Friend
 
 data class MainFriendCardsResponse(

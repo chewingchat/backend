@@ -3,7 +3,7 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.token.RefreshToken
@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDateTime
@@ -49,6 +50,12 @@ class AuthControllerTest(
         ActivateType.ACCESS
     )
 
+    private fun performCommonSuccessResponse(result: ResultActions) {
+        result.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
+    }
+
 
     @Test
     @DisplayName("휴대폰 인증번호 전송")
@@ -57,14 +64,12 @@ class AuthControllerTest(
             "countryCode" to "82",
             "phoneNumber" to "010-1234-5678"
         )
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/send/phone")
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/phone/create/send")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
         )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
+        performCommonSuccessResponse(result)
         verify(authService).sendPhoneVerification(any())
     }
 
@@ -74,14 +79,12 @@ class AuthControllerTest(
         val requestBody = mapOf(
             "email" to "test@Example.com"
         )
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/send/email")
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/email/create/send")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
         )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
+        performCommonSuccessResponse(result)
         verify(authService).sendEmailVerification(any())
     }
 
@@ -102,15 +105,15 @@ class AuthControllerTest(
         whenever(authService.verifyPhone(any(), any(), any(), any()))
             .thenReturn(Pair(jwtToken, user))
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/verify/phone")
+            MockMvcRequestBuilders.post("/api/auth/phone/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
 
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value("testAccessToken"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value("testRefreshToken"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
             )
@@ -133,14 +136,14 @@ class AuthControllerTest(
         whenever(authService.verifyEmail(any(), any(), any(), any()))
             .thenReturn(Pair(jwtToken, user))
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/verify/email")
+            MockMvcRequestBuilders.post("/api/auth/email/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value("testAccessToken"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value("testRefreshToken"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
             )
@@ -148,18 +151,85 @@ class AuthControllerTest(
     }
 
     @Test
+    @DisplayName("휴대폰 변경을 위한 인증번호 전송")
+    fun sendPhoneVerificationForUpdate() {
+        val requestBody = mapOf(
+            "countryCode" to "82",
+            "phoneNumber" to "010-1234-5678"
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/phone/update/send")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", "testUserId")
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+        verify(authService).sendPhoneVerificationForUpdate(any(), any())
+    }
+
+    @Test
+    @DisplayName("이메일 변경을 위한 인증번호 전송")
+    fun sendEmailVerificationForUpdate() {
+        val requestBody = mapOf(
+            "email" to "test@example.com"
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/email/update/send")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", "testUserId")
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+        verify(authService).sendEmailVerificationForUpdate(any(), any())
+    }
+
+    @Test
+    @DisplayName("이메일 변경을 위한 인증번호 확인")
+    fun verifyEmailForUpdate() {
+        val requestBody = mapOf(
+            "email" to "test@example.com",
+            "verificationCode" to "123456"
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/email/update/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", "testUserId")
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+        verify(authService).verifyEmailForUpdate(any(), any(), any())
+    }
+
+    @Test
+    @DisplayName("휴대폰 변경을 위한 인증번호 확인")
+    fun verifyPhoneForUpdate() {
+        val requestBody = mapOf(
+            "countryCode" to "82",
+            "phoneNumber" to "010-1234-5678",
+            "verificationCode" to "123456"
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/phone/update/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", "testUserId")
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+        verify(authService).verifyPhoneForUpdate(any(), any(), any())
+    }
+
+    @Test
     @DisplayName("로그아웃")
     fun logout() {
-        mockMvc.perform(
+        val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/auth/logout")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
         )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
+        performCommonSuccessResponse(result)
         verify(authService).logout(any())
     }
+
     @Test
     @DisplayName("토큰 갱신")
     fun refreshAccessToken() {
@@ -167,14 +237,15 @@ class AuthControllerTest(
         whenever(authService.refreshAccessToken(any()))
             .thenReturn(jwtToken)
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/auth/token/refresh")
+            MockMvcRequestBuilders.get("/api/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.accessToken").value("testAccessToken"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.refreshToken").value("testRefreshToken"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.accessToken").value(jwtToken.accessToken))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.refreshToken").value(jwtToken.refreshToken.token))
         verify(authService).refreshAccessToken(any())
     }
+
 }

@@ -6,7 +6,7 @@ import org.chewing.v1.jpaentity.*
 import org.chewing.v1.jpaentity.auth.EmailJpaEntity
 import org.chewing.v1.jpaentity.auth.PhoneNumberJpaEntity
 import org.chewing.v1.jparepository.*
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.contact.PhoneNumber
@@ -21,26 +21,14 @@ internal class AuthRepositoryImpl(
 
 
     ) : AuthRepository {
-    override fun savePhoneVerification(phoneNumber: PhoneNumber): String {
-        return phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
-            .map {
-                it.updateVerificationCode()
-                phoneNumberJpaRepository.save(it).getVerifiedNumber()
-            }
-            .orElseGet {
-                phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(phoneNumber)).getVerifiedNumber()
-            }
+    override fun savePhoneIfNotExists(phoneNumber: PhoneNumber) {
+        phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
+            .orElseGet { phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(phoneNumber)) }
     }
 
-    override fun saveEmailVerification(email: String): String {
-        return emailJpaRepository.findByEmailAddress(email)
-            .map {
-                it.updateVerificationCode()
-                emailJpaRepository.save(it).getAuthorizedNumber()
-            }
-            .orElseGet {
-                emailJpaRepository.save(EmailJpaEntity.generate(email)).getAuthorizedNumber()
-            }
+    override fun saveEmailIfNotExists(email: String) {
+        emailJpaRepository.findByEmailAddress(email)
+            .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(email)) }
     }
 
     override fun readEmail(email: String): Email? {
@@ -54,20 +42,6 @@ internal class AuthRepositoryImpl(
         val phoneNumberConfirmJpaEntity =
             phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
         return phoneNumberConfirmJpaEntity.map { it.toPhone() }.orElse(null)
-    }
-
-    override fun updateEmailAuthorized(emailId: String) {
-        emailJpaRepository.findById(emailId).orElse(null).let {
-            it.updateFirstAuthorized()
-            emailJpaRepository.save(it)
-        }
-    }
-
-    override fun updatePhoneAuthorized(phoneId: String) {
-        phoneNumberJpaRepository.findById(phoneId).orElse(null).let {
-            it.updateFirstAuthorized()
-            phoneNumberJpaRepository.save(it)
-        }
     }
 
     override fun removeLoginInfo(userId: String) {
@@ -105,7 +79,7 @@ internal class AuthRepositoryImpl(
     }
 
 
-    override fun appendLoggedInInfo(refreshToken: RefreshToken, user: User) {
+    override fun appendLoggedIn(refreshToken: RefreshToken, user: User) {
         loggedInJpaRepository.save(LoggedInEntity.fromToken(refreshToken, user))
     }
 }

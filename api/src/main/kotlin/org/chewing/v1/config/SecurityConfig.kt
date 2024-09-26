@@ -27,7 +27,15 @@ class SecurityConfig(
             .and()
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/api/auth/**").permitAll() // 인증 없이 접근 가능
+                    .requestMatchers(
+                        "/api/auth/auth/phone/create/**",
+                        "/api/auth/auth/email/create/**",
+                        "/api/auth/logout",
+                        "/api/auth/refresh"
+                    ).permitAll() // 인증 없이 접근 가능
+                    .requestMatchers(
+                        "/api/auth/phone/update/**",
+                        "/api/auth/email/update/**").authenticated() // 인증 필요
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요(개인적인 부분)
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // JWT 인증 필터 추가

@@ -1,8 +1,7 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.PushToken
-import org.chewing.v1.model.UserContent
-import org.chewing.v1.model.contact.PhoneNumber
+import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.user.UserContent
 
 class SignupRequest {
     data class Email(

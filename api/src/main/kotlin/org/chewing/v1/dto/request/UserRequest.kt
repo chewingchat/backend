@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.UserName
 
 class UserRequest {
     data class UpdateName(
