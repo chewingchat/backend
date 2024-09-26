@@ -1,4 +1,4 @@
-package org.chewing.v1.aws
+package org.chewing.v1.external
 
 import org.chewing.v1.external.ExternalImageClient
 import org.chewing.v1.model.media.Media

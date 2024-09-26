@@ -23,18 +23,20 @@ class AuthService(
     private val userReader: UserReader,
     private val userAppender: UserAppender,
     private val authUpdater: AuthUpdater,
-    // tokenProvider: JwtTokenProvider --> 이건 뭔 뜻이죠?
+    private val authSender: AuthSender,
 ) {
 
 
     fun sendPhoneVerification(phoneNumber: PhoneNumber) {
-        authAppender.appendPhoneVerification(phoneNumber)
-
+        authAppender.appendPhone(phoneNumber)
+        val verificationCode = authUpdater.updatePhoneVerificationCode(phoneNumber)
+        authSender.sendPhoneVerificationCode(phoneNumber, verificationCode)
     }
 
     fun sendEmailVerification(emailAddress: String) {
-        authAppender.appendEmailVerification(emailAddress)
-
+        authAppender.appendEmail(emailAddress)
+        val verificationCode = authUpdater.updateEmailVerificationCode(emailAddress)
+        authSender.sendEmailVerificationCode(emailAddress, verificationCode)
     }
 
     //트랜잭션 처리 필요없는 부분
@@ -46,7 +48,6 @@ class AuthService(
         device: PushToken.Device
     ): Pair<JwtToken, User> {
         // 인증번호 보여주는 것과 사용자가 인증코드 입력하는 건 프론트에서 처리
-
         // 사용자가 인증코드 입력 후 휴대폰 인증 번호 확인용 읽기(인증번호 받음) -> 조
         val savedPhone = authReader.readPhoneNumber(phoneNumber)
         // 받은 휴대폰 인증 번호 비교하여 검증 -> 틀리면 예외 발생, 유효시간 초과시 예외 발생 -> 좋아욥
@@ -55,12 +56,9 @@ class AuthService(
         val user = userAppender.appendIfNotExsist(savedPhone)
         //푸시 토큰 처리
         pushTokenProcessor.processPushToken(user, appToken, device)
-
         // 로그인 처리
         val token = jwtTokenProvider.createJwtToken(user.userId)
-
-        authAppender.appendLoggedInInfo(token.refreshToken, user)
-
+        authAppender.appendLoggedIn(token.refreshToken, user)
         return Pair(token, user)
     }
 
@@ -85,7 +83,7 @@ class AuthService(
         // 로그인 처리
         val token = jwtTokenProvider.createJwtToken(user.userId)
 
-        authAppender.appendLoggedInInfo(token.refreshToken, user)
+        authAppender.appendLoggedIn(token.refreshToken, user)
         return Pair(token, user)
     }
 
@@ -109,20 +107,18 @@ class AuthService(
 
         val newToken = jwtTokenProvider.createJwtToken(user.userId)
 
-        authAppender.appendLoggedInInfo(newToken.refreshToken, user)
+        authAppender.appendLoggedIn(newToken.refreshToken, user)
 
         return newToken
     }
 
-    // 수정 로직 추가(더 추가)
-    // 전화번호 수정 전 인증 요청 로직
     fun sendPhoneVerificationForUpdate(userId: String, phoneNumber: PhoneNumber) {
         // 번호 중복 체크 로직 (이미 사용 중인 번호인지 확인)
         authChecker.checkPhoneNumberIsUsed(phoneNumber, userId)
-        authUpdater.updatePhoneVerificationCode(phoneNumber)
+        authAppender.appendPhone(phoneNumber)
+        val verificationCode = authUpdater.updatePhoneVerificationCode(phoneNumber)
+        authSender.sendPhoneVerificationCode(phoneNumber, verificationCode)
     }
-
-    // 전화번호 인증 및 수정 로직
 
     fun verifyPhoneForUpdate(userId: String, phoneNumber: PhoneNumber, verificationCode: String) {
         // 인증 정보 읽기
@@ -139,8 +135,9 @@ class AuthService(
     fun sendEmailVerificationForUpdate(userId: String, emailAddress: String) {
         // 이메일 중복 체크 로직 (이미 사용 중인 이메일인지 확인)
         authChecker.checkEmailIsUsed(emailAddress, userId)
-
-        authUpdater.updateEmailVerificationCode(emailAddress)
+        authAppender.appendEmail(emailAddress)
+        val verificationCode = authUpdater.updateEmailVerificationCode(emailAddress)
+        authSender.sendEmailVerificationCode(emailAddress, verificationCode)
     }
 
     // 이메일 인증 및 수정 로직

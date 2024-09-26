@@ -30,7 +30,6 @@ internal class PhoneNumberJpaEntity(
 
     @Column(name = "authorized_number")
     private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
-
     ) : BaseEntity(
 ) {
     companion object {
