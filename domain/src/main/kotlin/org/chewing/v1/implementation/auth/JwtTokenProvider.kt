@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.auth
 
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys

@@ -2,7 +2,7 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.ScheduleJpaEntity
 import org.chewing.v1.jparepository.ScheduleJpaRepository
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.schedule.*
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime

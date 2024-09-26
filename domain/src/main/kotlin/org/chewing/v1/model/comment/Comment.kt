@@ -1,6 +1,6 @@
 package org.chewing.v1.model.comment
 
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import java.time.LocalDateTime
 
 class Comment(

@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation.facade
 
 import org.chewing.v1.model.SortCriteria
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.service.FriendService
 import org.chewing.v1.service.UserService

@@ -1,11 +1,10 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class AuthAppender(

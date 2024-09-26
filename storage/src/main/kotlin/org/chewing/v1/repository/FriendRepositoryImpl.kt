@@ -3,11 +3,8 @@ package org.chewing.v1.repository
 import org.chewing.v1.jpaentity.friend.FriendId
 import org.chewing.v1.jpaentity.friend.FriendJpaEntity
 import org.chewing.v1.jparepository.FriendJpaRepository
-import org.chewing.v1.jparepository.UserJpaRepository
-import org.chewing.v1.jparepository.UserStatusJpaRepository
-import org.chewing.v1.model.friend.Friend
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendInfo
 import org.springframework.stereotype.Repository
 

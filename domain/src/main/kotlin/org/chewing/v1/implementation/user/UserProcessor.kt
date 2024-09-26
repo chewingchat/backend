@@ -1,10 +1,5 @@
 package org.chewing.v1.implementation.user
 
-import org.chewing.v1.implementation.StatusRemover
-import org.chewing.v1.implementation.auth.AuthRemover
-import org.chewing.v1.implementation.comment.CommentRemover
-import org.chewing.v1.implementation.feed.FeedRemover
-import org.chewing.v1.implementation.friend.FriendRemover
 import org.chewing.v1.implementation.schedule.ScheduleRemover
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Component

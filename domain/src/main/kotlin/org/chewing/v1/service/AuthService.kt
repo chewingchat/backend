@@ -1,12 +1,13 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.*
 import org.chewing.v1.implementation.auth.*
+import org.chewing.v1.implementation.user.PushTokenProcessor
 import org.chewing.v1.implementation.user.UserAppender
 import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.model.*
 import org.chewing.v1.model.auth.JwtToken
+import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.PhoneNumber
+import org.chewing.v1.model.user.User
 
 import org.springframework.stereotype.Service
 
@@ -27,25 +28,12 @@ class AuthService(
 
 
     fun sendPhoneVerification(phoneNumber: PhoneNumber) {
-        // authChecker.checkPhoneNumberRegistered(phoneNumber) // --> 필요없어보여서 뻄
-        // 휴대폰 인증번호 전송하기 전에 db에 인증 정보 저장하는 로직 구현
-        // 변수에 NULL처리 때문에 객체 생성하는거 막을게요 ㅠㅠㅠ.. 저도 코드 다 바꾸는중 ㅠ
-        authAppender.appendPhoneVerification(phoneNumber) // authinfo에 인증번호 저장
-
-
-        // AWS써서 phoneWithCode = phone.generateValidationCode()에서 생성한 인증번호 전송 로직 필요
-
+        authAppender.appendPhoneVerification(phoneNumber)
 
     }
 
     fun sendEmailVerification(emailAddress: String) {
-        // authChecker.checkEmailRegistered("", emailAddress) --> 필요없어보여서 뺌
-        // 이메일 인증번호 전송하기 전에 db에 인증 정보 저장하는 로직 구현
         authAppender.appendEmailVerification(emailAddress)
-
-        // AWS써서 인증번호 전송
-
-        // 실제 구현: 이메일 전송 API를 사용하여 인증번호 전송
 
     }
 

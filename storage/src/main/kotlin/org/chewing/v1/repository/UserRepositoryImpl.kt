@@ -8,12 +8,11 @@ import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jparepository.*
 import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
-import org.chewing.v1.jparepository.UserStatusJpaRepository
-import org.chewing.v1.model.PushToken
+import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.friend.FriendSearch
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserContent
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone

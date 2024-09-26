@@ -1,10 +1,6 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserName
-import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.contact.PhoneNumber
 
 class FriendRequest(

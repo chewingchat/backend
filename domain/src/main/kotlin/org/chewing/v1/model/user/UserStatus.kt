@@ -1,4 +1,4 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.user
 
 import org.chewing.v1.model.emoticon.Emoticon
 

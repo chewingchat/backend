@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation.user
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserContent
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component

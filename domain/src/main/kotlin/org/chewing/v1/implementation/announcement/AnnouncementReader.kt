@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.announcement
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException

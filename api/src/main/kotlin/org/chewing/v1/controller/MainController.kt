@@ -4,7 +4,6 @@ import org.chewing.v1.dto.response.main.MainFriendCardsResponse
 import org.chewing.v1.dto.response.main.MainFriendListResponse
 import org.chewing.v1.implementation.facade.MainFacade
 import org.chewing.v1.model.SortCriteria
-import org.chewing.v1.model.User
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*

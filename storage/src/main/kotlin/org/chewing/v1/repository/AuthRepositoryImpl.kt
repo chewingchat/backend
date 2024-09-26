@@ -6,7 +6,7 @@ import org.chewing.v1.jpaentity.*
 import org.chewing.v1.jpaentity.auth.EmailJpaEntity
 import org.chewing.v1.jpaentity.auth.PhoneNumberJpaEntity
 import org.chewing.v1.jparepository.*
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.contact.PhoneNumber
