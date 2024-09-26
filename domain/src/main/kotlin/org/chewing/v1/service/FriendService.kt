@@ -5,9 +5,9 @@ import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
-import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.PhoneNumber
 import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.user.UserName
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

@@ -3,8 +3,8 @@ package org.chewing.v1.jpaentity.friend
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendInfo
 import org.hibernate.annotations.DynamicInsert
 

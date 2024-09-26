@@ -1,7 +1,7 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.jparepository.UserStatusJpaRepository
-import org.chewing.v1.model.StatusInfo
+import org.chewing.v1.model.user.StatusInfo
 import org.springframework.stereotype.Repository
 
 @Repository

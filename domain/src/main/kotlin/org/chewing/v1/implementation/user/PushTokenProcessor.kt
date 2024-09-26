@@ -1,11 +1,7 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.user
 
-import org.chewing.v1.implementation.user.UserAppender
-import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.implementation.user.UserRemover
-import org.chewing.v1.implementation.user.UserUpdater
-import org.chewing.v1.model.PushToken
-import org.chewing.v1.model.User
+import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.user.User
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

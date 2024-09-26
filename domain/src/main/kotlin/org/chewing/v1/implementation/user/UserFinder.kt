@@ -1,8 +1,7 @@
 package org.chewing.v1.implementation.user
 
 import org.chewing.v1.implementation.auth.AuthReader
-import org.chewing.v1.model.User
-import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.PhoneNumber
 import org.springframework.stereotype.Component
 

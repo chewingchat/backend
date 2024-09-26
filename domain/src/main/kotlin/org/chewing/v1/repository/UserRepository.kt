@@ -1,10 +1,10 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.PushToken
+import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.friend.FriendSearch
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserContent
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository

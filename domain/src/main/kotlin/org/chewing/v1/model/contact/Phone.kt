@@ -1,6 +1,6 @@
 package org.chewing.v1.model.contact
 
-import org.chewing.v1.model.ValidationCode
+import org.chewing.v1.model.auth.ValidationCode
 import java.time.LocalDateTime
 
 class Phone private constructor(

@@ -1,4 +1,4 @@
-package org.chewing.v1.model
+package org.chewing.v1.model.auth
 
 class PushToken private constructor(
     val pushTokenId: String,

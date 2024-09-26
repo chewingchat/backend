@@ -3,7 +3,7 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.token.RefreshToken

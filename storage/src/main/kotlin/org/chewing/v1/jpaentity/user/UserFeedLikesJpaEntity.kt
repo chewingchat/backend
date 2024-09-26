@@ -2,7 +2,7 @@ package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.model.feed.FeedInfo
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 

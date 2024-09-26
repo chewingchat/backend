@@ -2,7 +2,6 @@ package org.chewing.v1.implementation.emoticon
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.model.User
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.repository.EmoticonRepository

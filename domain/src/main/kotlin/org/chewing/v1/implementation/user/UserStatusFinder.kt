@@ -1,8 +1,7 @@
 package org.chewing.v1.implementation.user
 
-import org.chewing.v1.implementation.StatusReader
 import org.chewing.v1.implementation.emoticon.EmoticonReader
-import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.user.UserStatus
 import org.springframework.stereotype.Component
 
 @Component

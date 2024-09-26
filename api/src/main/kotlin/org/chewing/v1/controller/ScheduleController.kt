@@ -3,7 +3,6 @@ package org.chewing.v1.controller
 import org.chewing.v1.dto.request.ScheduleRequest
 import org.chewing.v1.dto.response.schedule.ScheduleListResponse
 import org.chewing.v1.model.schedule.ScheduleType
-import org.chewing.v1.model.User
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.ScheduleService

@@ -3,10 +3,10 @@ package org.chewing.v1.service
 import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserContent
-import org.chewing.v1.model.UserName
-import org.chewing.v1.model.UserStatus
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserContent
+import org.chewing.v1.model.user.UserName
+import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.emoticon.EmoticonPack
 import org.springframework.stereotype.Service
 import java.io.File
