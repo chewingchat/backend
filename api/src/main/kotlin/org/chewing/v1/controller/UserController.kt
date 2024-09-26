@@ -17,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/user")
 class UserController(
-    private val userService: UserService,
-    private val authService: AuthService
+    private val userService: UserService
 ) {
     /**
      * @param file: 프로파일 이미지를 MultipartFile로 받습니다.
@@ -39,42 +38,6 @@ class UserController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserStatusRequest
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        return ResponseHelper.successOnly()
-    }
-
-    @PostMapping("/profile/phone/send")
-    fun sendPhoneVerification(
-        @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationRequest.Phone
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendPhoneVerificationForUpdate(userId, request.toPhoneNumber())
-        return ResponseHelper.successOnly()
-    }
-
-    @PostMapping("/profile/email/send")
-    fun sendEmailVerification(
-        @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationRequest.Email
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendEmailVerificationForUpdate(userId, request.toAddress())
-        return ResponseHelper.successOnly()
-    }
-
-    @PostMapping("/profile/phone/check")
-    fun changePhone(
-        @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationCheckRequest.Phone
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyPhoneForUpdate(userId, request.toPhoneNumber(), request.toVerificationCode())
-        return ResponseHelper.successOnly()
-    }
-
-    @PostMapping("/profile/email/check")
-    fun changeEmail(
-        @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationCheckRequest.Email
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyEmailForUpdate(userId, request.email, request.verificationCode)
         return ResponseHelper.successOnly()
     }
 
