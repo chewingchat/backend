@@ -14,11 +14,8 @@ import org.springframework.stereotype.Service
 class AuthService(
     private val authChecker: AuthChecker,
     private val userProcessor: UserProcessor,
-    private val jwtTokenProvider: JwtTokenProvider,
     private val authReader: AuthReader,
     private val authAppender: AuthAppender,
-    private val authRemover: AuthRemover,
-    private val userReader: UserReader,
     private val authUpdater: AuthUpdater,
     private val authSender: AuthSender,
     private val authValidator: AuthValidator,
@@ -45,20 +42,12 @@ class AuthService(
     }
 
     fun logout(accessToken: String) {
-        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
-        // 사용자 로그인 정보 삭제 (리프레시 토큰 포함)
-        authRemover.removeLoginInfo(userId)
+        authProcessor.processLogOut(accessToken)
     }
 
     fun refreshAccessToken(refreshToken: String): JwtToken {
-        val token = jwtTokenProvider.cleanedToken(refreshToken)
-        // 리프레시 토큰 유효성 검사(수정)
-        jwtTokenProvider.validateRefreshToken(token)
-        // 리프레시 토큰에서 사용자 ID 추출
-        val userId = jwtTokenProvider.getUserIdFromToken(token)
-        val user = userReader.read(userId)
-        val newToken = jwtTokenProvider.createJwtToken(user.userId)
-        authAppender.appendLoggedIn(newToken.refreshToken, user)
+        val (newToken, userId) = authProcessor.processRefreshToken(refreshToken)
+        authAppender.appendLoggedIn(newToken.refreshToken, userId)
         return newToken
     }
 

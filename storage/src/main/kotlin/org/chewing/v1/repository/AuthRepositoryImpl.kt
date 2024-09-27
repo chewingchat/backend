@@ -84,7 +84,7 @@ internal class AuthRepositoryImpl(
         }
     }
 
-    override fun appendLoggedIn(refreshToken: RefreshToken, user: User) {
-        loggedInJpaRepository.save(LoggedInEntity.fromToken(refreshToken, user))
+    override fun appendLoggedIn(refreshToken: RefreshToken, userId: String) {
+        loggedInJpaRepository.save(LoggedInEntity.fromToken(refreshToken, userId))
     }
 }
