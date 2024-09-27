@@ -1,7 +1,7 @@
 package org.chewing.v1.dto
 
-import org.chewing.v1.model.ChatMessage
-import org.chewing.v1.model.ChatMessageLog
+import org.chewing.v1.model.chat.ChatMessage
+import org.chewing.v1.model.chat.ChatMessageLog
 
 data class ChatLogDto(
     val roomId: String,

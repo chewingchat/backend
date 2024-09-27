@@ -2,7 +2,6 @@ package org.chewing.v1.controller
 
 
 import org.chewing.v1.dto.ChatDto
-import org.chewing.v1.model.MessageType
 import org.chewing.v1.service.ChatService
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.stereotype.Controller

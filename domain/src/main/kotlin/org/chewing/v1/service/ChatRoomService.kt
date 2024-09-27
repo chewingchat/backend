@@ -1,6 +1,8 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.model.*
+import org.chewing.v1.model.chat.ChatLog
+import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.repository.ChatRoomRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -40,4 +42,3 @@ class ChatRoomService(
 
 
 }
-

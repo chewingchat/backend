@@ -1,8 +1,7 @@
 package org.chewing.v1.implementation.chat
 
 
-import org.chewing.v1.model.ChatMessageLog
-import org.chewing.v1.repository.ChatMessageCacheRepository
+import org.chewing.v1.model.chat.ChatMessageLog
 import org.chewing.v1.repository.ChatMessageRepository
 import org.springframework.stereotype.Component
 

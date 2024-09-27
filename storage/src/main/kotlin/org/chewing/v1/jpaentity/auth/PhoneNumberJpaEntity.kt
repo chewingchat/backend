@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.contact.Phone
-import org.chewing.v1.model.contact.PhoneNumber
+import org.chewing.v1.model.auth.PhoneNumber
 import java.time.LocalDateTime
 import java.util.*
 
@@ -30,7 +30,6 @@ internal class PhoneNumberJpaEntity(
 
     @Column(name = "authorized_number")
     private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
-
     ) : BaseEntity(
 ) {
     companion object {

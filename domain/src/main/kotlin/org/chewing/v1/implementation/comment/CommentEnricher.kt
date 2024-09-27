@@ -1,8 +1,7 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.implementation.friend.FriendReader
 import org.chewing.v1.implementation.friend.FriendUpdater
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.friend.FriendInfo

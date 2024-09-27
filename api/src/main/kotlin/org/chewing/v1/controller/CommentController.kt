@@ -17,7 +17,7 @@ class CommentController(
 ) {
     @PostMapping("/comment")
     fun addFeedComment(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: CommentRequest.AddCommentRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
         commentService.comment(
@@ -32,7 +32,7 @@ class CommentController(
 
     @DeleteMapping("/comment")
     fun deleteFeedComment(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: List<CommentRequest.DeleteCommentRequest>
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         commentService.remove(
@@ -46,7 +46,7 @@ class CommentController(
 
     @GetMapping("/{feedId}/comment")
     fun getFeedComments(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FeedCommentsResponse> {
         val friendComment = commentService.fetchComment(userId, feedId)

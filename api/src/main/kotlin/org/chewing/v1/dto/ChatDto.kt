@@ -1,7 +1,7 @@
 package org.chewing.v1.dto
 
-import org.chewing.v1.model.ChatMessage
-import org.chewing.v1.model.MessageType
+import org.chewing.v1.model.chat.ChatMessage
+import org.chewing.v1.model.chat.MessageType
 
 import java.time.LocalDateTime
 

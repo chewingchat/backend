@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.repository.CommentRepository
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class CommentRemover(

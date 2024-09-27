@@ -1,10 +1,7 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserName
-import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.user.UserName
+import org.chewing.v1.model.auth.PhoneNumber
 
 class FriendRequest(
 ) {
@@ -14,7 +11,7 @@ class FriendRequest(
         val lastName: String
     ) {
         fun toUserName(): UserName = UserName.of(firstName, lastName)
-        fun toContact(): Email = Email.generate(email)
+        fun toEmail(): String = email
     }
 
     data class UpdateName(
@@ -35,6 +32,10 @@ class FriendRequest(
         val friendId: String = ""
     )
 
+    data class Block(
+        val friendId: String = ""
+    )
+
     data class AddWithPhone(
         val countyCode: String,
         val phone: String,
@@ -44,9 +45,8 @@ class FriendRequest(
         fun toUserName(): UserName {
             return UserName.of(firstName, lastName)
         }
-
-        fun toContact(): Contact {
-            return Phone.generate(countyCode, phone)
+        fun toPhoneNumber(): PhoneNumber {
+            return PhoneNumber.of(countyCode, phone)
         }
     }
 }

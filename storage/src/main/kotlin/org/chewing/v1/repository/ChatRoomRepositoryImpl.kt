@@ -5,6 +5,9 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.implementation.media.FileProcessor
+import org.chewing.v1.model.chat.ChatFriend
+import org.chewing.v1.model.chat.ChatLog
+import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.util.FileUtil
 import org.springframework.stereotype.Repository
@@ -20,12 +23,8 @@ class ChatRoomRepositoryImpl(
     private val fileProcessor: FileProcessor, // FileProcessor 주입
 
 ) : ChatRoomRepository {
-
-
     private val chatRooms = mutableListOf<ChatRoom>()
     private val chatLogs = mutableMapOf<String, MutableList<ChatLog>>()
-
-
     override fun getChatRooms(userId: String, sort: String): List<ChatRoom> {
 
 
@@ -56,8 +55,6 @@ class ChatRoomRepositoryImpl(
     }
 
     override fun deleteChatRooms(userId: String, chatRoomIds: List<String>) {
-
-
         chatRoomIds.forEach { chatRoomId ->
             val roomToDelete = chatRooms.find { it.chatRoomId == chatRoomId }
                 ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
@@ -68,10 +65,8 @@ class ChatRoomRepositoryImpl(
 
     override fun getChatRoomInfo(userId: String, chatRoomId: String): ChatRoom {
 
-
         val chatRoom = chatRooms.find { it.chatRoomId == chatRoomId }
             ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
-
         // 최신 페이지와 친구가 읽은 시퀀스 번호 계산
         val latestPage = (chatLogs[chatRoomId]?.size ?: 0) / 20
         val friendReadSeqNumber = calculateFriendReadSeqNumber(chatRoom.chatFriends, chatRoomId)
@@ -100,11 +95,8 @@ class ChatRoomRepositoryImpl(
             }
         }
     }
+
     override fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>) {
-
-
-
-
         try {
             // MultipartFile을 File로 변환
             val convertedFiles: List<File> = FileUtil.convertMultipartFilesToFiles(files)
