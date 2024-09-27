@@ -1,57 +1,94 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.request.chat.ChatRoomDeleteRequest
-import org.chewing.v1.model.chat.ChatLogResponse
-import org.chewing.v1.model.chat.ChatRoomResponse
-import org.chewing.v1.model.chat.FileUploadResponse
-
+import org.chewing.v1.dto.request.DeleteChatRoomRequest
+import org.chewing.v1.model.*
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.ChatRoomService
 import org.chewing.v1.util.ResponseHelper
+import org.chewing.v1.implementation.JwtTokenProvider
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.io.File
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/chatRooms")
 class ChatRoomController(
-    private val chatRoomService: ChatRoomService
+    private val chatRoomService: ChatRoomService,
+    private val jwtTokenProvider: JwtTokenProvider
 ) {
 
+    // 채팅방 목록 가져오기
     @GetMapping
-    fun getChatRooms(@RequestParam(required = false) sort: String?): ResponseEntity<List<ChatRoomResponse>> {
-        val chatRooms = chatRoomService.getChatRooms(sort)
-        return ResponseEntity.ok(chatRooms)
+    fun getChatRooms(
+        @RequestHeader("Authorization") accessToken: String,
+        @RequestParam("sort") sort: String
+    ): ResponseEntity<HttpResponse<List<ChatRoom>>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        val chatRooms = chatRoomService.getChatRooms(userId, sort)
+        return ResponseHelper.success(chatRooms)
     }
 
+    // 채팅방 검색
     @GetMapping("/search")
-    fun searchChatRooms(@RequestParam keyword: String): ResponseEntity<List<ChatRoomResponse>> {
-        val chatRooms = chatRoomService.searchChatRooms(keyword)
-        return ResponseEntity.ok(chatRooms)
+    fun searchChatRooms(
+        @RequestHeader("Authorization") accessToken: String,
+        @RequestParam("keyword") keyword: String
+    ): ResponseEntity<HttpResponse<List<ChatRoom>>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        val chatRooms = chatRoomService.searchChatRooms(userId, keyword)
+        return ResponseHelper.success(chatRooms)
     }
 
+    // 채팅방 삭제
     @DeleteMapping
-    fun deleteChatRooms(@RequestBody request: ChatRoomDeleteRequest): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        chatRoomService.deleteChatRooms(request.chatRoomIds)
+    fun deleteChatRooms(
+        @RequestHeader("Authorization") accessToken: String,
+        @RequestBody request: DeleteChatRoomRequest
+    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        chatRoomService.deleteChatRooms(userId, request.chatRoomIds)
         return ResponseHelper.successOnly()
     }
 
+    // 채팅방 접속 후 정보 가져오기
     @GetMapping("/{chatRoomId}")
-    fun getChatRoomInfo(@PathVariable chatRoomId: String): ResponseEntity<ChatRoomResponse> {
-        val chatRoomInfo = chatRoomService.getChatRoomInfo(chatRoomId)
-        return ResponseEntity.ok(chatRoomInfo)
+    fun getChatRoomInfo(
+        @RequestHeader("Authorization") accessToken: String,
+        @PathVariable chatRoomId: String
+    ): ResponseEntity<HttpResponse<ChatRoom>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        val chatRoom = chatRoomService.getChatRoomInfo(userId, chatRoomId)
+        return ResponseHelper.success(chatRoom)
     }
 
+    // 채팅 로그 가져오기
     @GetMapping("/{chatRoomId}/log/{page}")
-    fun getChatLogs(@PathVariable chatRoomId: String, @PathVariable page: Int): ResponseEntity<ChatLogResponse> {
-        val chatLogs = chatRoomService.getChatLogs(chatRoomId, page)
-        return ResponseEntity.ok(chatLogs)
+    fun getChatLogs(
+        @RequestHeader("Authorization") accessToken: String,
+        @PathVariable chatRoomId: String,
+        @PathVariable page: Int
+    ): ResponseEntity<HttpResponse<List<ChatLog>>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        val chatLogs = chatRoomService.getChatLogs(userId, chatRoomId, page)
+        return ResponseHelper.success(chatLogs)
     }
 
+    // 채팅방 파일 업로드
     @PostMapping("/{chatRoomId}/file")
-    fun uploadFiles(@PathVariable chatRoomId: String, @RequestParam("files") files: List<File>): ResponseEntity<FileUploadResponse> {
-        val response = chatRoomService.uploadFiles(chatRoomId, files)
-        return ResponseEntity.ok(response)
+    fun uploadChatRoomFiles(
+        @RequestHeader("Authorization") accessToken: String,
+        @PathVariable chatRoomId: String,
+        @RequestParam("files") files: List<MultipartFile>
+    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        jwtTokenProvider.validateToken(accessToken)
+        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
+        chatRoomService.uploadChatRoomFiles(userId, chatRoomId, files)
+        return ResponseHelper.successOnly()
     }
 }

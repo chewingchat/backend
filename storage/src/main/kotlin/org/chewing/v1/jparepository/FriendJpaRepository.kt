@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-
 @Repository
 internal interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> {
 
@@ -15,6 +14,5 @@ internal interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> 
     fun findById(friendId: FriendId): FriendJpaEntity?
     fun findAllByIdUserId(userId: String): List<FriendJpaEntity>
     fun findAllByIdUserIdInAndIdUserId(friendIds: List<String>, userId: String): List<FriendJpaEntity>
-    fun deleteAllByIdUserIdOrIdFriendId(userId: String, friendId: String)
 
 }

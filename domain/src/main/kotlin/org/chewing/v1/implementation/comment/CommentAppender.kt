@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.model.user.User
+import org.chewing.v1.model.User
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.repository.CommentRepository
 import org.springframework.stereotype.Component

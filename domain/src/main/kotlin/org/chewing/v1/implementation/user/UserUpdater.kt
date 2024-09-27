@@ -1,12 +1,9 @@
 package org.chewing.v1.implementation.user
 
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.user.UserContent
-import org.chewing.v1.model.user.UserName
+import org.chewing.v1.model.User
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * UserUpdater는 사용자 정보를 업데이트하는 구현체입니다.
@@ -19,14 +16,7 @@ class UserUpdater(
     /**
      * 주어진 사용자 정보를 업데이트합니다.
      */
-    fun updateProfileImage(user: User, media: Media) {
-        return userRepository.updateProfileImage(user, media)
-    }
-    @Transactional
-    fun updateName(userId: String, userName: UserName) {
-        return userRepository.updateName(userId, userName)
-    }
-    fun updateContent(userId: String, content: UserContent) {
-        return userRepository.updateContent(userId, content)
+    fun updateUser(user: User, media: Media) {
+        return userRepository.updateProfileImage(user,media)
     }
 }

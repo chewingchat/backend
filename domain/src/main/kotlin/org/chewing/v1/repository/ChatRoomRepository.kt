@@ -1,25 +1,29 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.*
-import org.chewing.v1.model.chat.ChatLogResponse
-import org.chewing.v1.model.chat.ChatRoomResponse
-import org.chewing.v1.model.chat.FileUploadResponse
+import org.chewing.v1.model.ChatLog
+import org.chewing.v1.model.ChatRoom
+import org.chewing.v1.model.media.Media
+import org.springframework.web.multipart.MultipartFile
 
-import org.springframework.stereotype.Repository
-import java.io.File
-
-@Repository
 interface ChatRoomRepository {
 
-    fun findChatRooms(sort: String?): List<ChatRoomResponse>
+    // 채팅방 목록 가져오기
+    fun getChatRooms(userId: String, sort: String): List<ChatRoom>
 
-    fun searchChatRooms(keyword: String): List<ChatRoomResponse>
+    // 채팅방 검색
+    fun searchChatRooms(userId: String, keyword: String): List<ChatRoom>
 
-    fun deleteChatRooms(chatRoomIds: List<String>)
+    // 채팅방 삭제
+    fun deleteChatRooms(userId: String, chatRoomIds: List<String>)
 
-    fun findChatRoomInfo(chatRoomId: String): ChatRoomResponse
+    // 채팅방 접속 후 정보 가져오기
+    fun getChatRoomInfo(userId: String, chatRoomId: String): ChatRoom
 
-    fun findChatLogs(chatRoomId: String, page: Int): ChatLogResponse
+    // 채팅 로그 가져오기
+    fun getChatLogs(userId: String, chatRoomId: String, page: Int): List<ChatLog>
 
-    fun uploadFiles(chatRoomId: String, files: List<File>): FileUploadResponse
+    // 채팅방 파일 업로드
+    fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>)
+
+    fun saveUploadedMedia(chatRoomId: String, mediaList: List<Media>)
 }

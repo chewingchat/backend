@@ -1,7 +1,8 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
-import org.chewing.v1.model.user.User
+import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.model.User
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleTime

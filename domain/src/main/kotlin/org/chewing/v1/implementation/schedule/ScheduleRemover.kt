@@ -11,7 +11,4 @@ class ScheduleRemover(
     fun remove(scheduleId: String) {
         scheduleRepository.removeSchedule(scheduleId)
     }
-    fun removeAll(userId:String){
-        scheduleRepository.removeAll(userId)
-    }
 }

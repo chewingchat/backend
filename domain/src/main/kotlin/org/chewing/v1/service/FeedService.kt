@@ -52,7 +52,7 @@ class FeedService(
 
     fun removes(userId: String, feedIds: List<String>) {
         feedValidator.isFeedsOwner(feedIds, userId)
-        val oldMedias = feedRemover.removes(feedIds)
+        val oldMedias = feedRemover.removeFeeds(feedIds)
         fileProcessor.processOldFiles(oldMedias)
     }
 

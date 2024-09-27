@@ -21,7 +21,7 @@ class FeedController(
 ) {
     @GetMapping("/{feedId}/friend")
     fun getFriendFeed(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
         val friendFeed = feedService.getFeed(userId, feedId)
@@ -31,7 +31,7 @@ class FeedController(
 
     @GetMapping("/{friendId}")
     fun getFriendFeeds(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @PathVariable("friendId") friendId: String
     ): SuccessResponseEntity<FriendDetailResponse> {
         val feeds = feedService.getFriendFeeds(userId, friendId)
@@ -41,7 +41,7 @@ class FeedController(
 
     @GetMapping("/{feedId}/user")
     fun getUserFeed(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<UserFeedResponse> {
         val feed = feedService.getFeed(userId, feedId)
@@ -51,7 +51,7 @@ class FeedController(
 
     @PostMapping("/like")
     fun addFeedLikes(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @RequestBody request: LikesRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val feedId = request.toFeedId()
@@ -62,7 +62,7 @@ class FeedController(
 
     @DeleteMapping("/like")
     fun deleteFeedLikes(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @RequestBody request: LikesRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val feedId = request.toFeedId()
@@ -73,7 +73,7 @@ class FeedController(
 
     @DeleteMapping("")
     fun deleteFeed(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @RequestBody request: List<FeedRequest.Delete>
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedService.removes(userId, request.map { it.toFeedId() })
@@ -83,7 +83,7 @@ class FeedController(
 
     @PostMapping("")
     fun createFeed(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
         @RequestPart("files") files: List<MultipartFile>,
         @RequestParam("topic") topic: String
     ): SuccessResponseEntity<SuccessCreateResponse> {

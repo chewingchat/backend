@@ -7,6 +7,6 @@ import java.util.*
 
 @Repository
 internal interface LoggedInJpaRepository : JpaRepository<LoggedInEntity, String>{
-    fun deleteByUserId(userId: String)
+    fun deleteByAuthId(authId: String)
 
 }

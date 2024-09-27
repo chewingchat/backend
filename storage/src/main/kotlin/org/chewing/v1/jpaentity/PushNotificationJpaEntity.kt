@@ -1,8 +1,9 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
-import org.chewing.v1.model.auth.PushToken
-import org.chewing.v1.model.user.User
+import org.chewing.v1.jpaentity.user.UserJpaEntity
+import org.chewing.v1.model.PushToken
+import org.chewing.v1.model.User
 import java.util.*
 
 @Entity

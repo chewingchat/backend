@@ -1,7 +1,8 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.user.UserName
+import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.User
+import org.chewing.v1.model.UserName
 import org.chewing.v1.model.friend.FriendInfo
 import org.springframework.stereotype.Repository
 
@@ -10,10 +11,9 @@ interface FriendRepository {
 
     fun readFriends(userId: String): List<FriendInfo>
     fun readFriendsByIds(friendIds: List<String>, userId: String): List<FriendInfo>
-    fun appendFriend(user: User, friendName: UserName, targetUser: User)
+    fun appendFriend(user:User, friendName: UserName, targetUser: User)
 
     fun removeFriend(userId: String, friendId: String)
-    fun blockFriend(userId: String, friendId: String)
 
     fun readFriend(userId: String,friendId: String): FriendInfo?
 

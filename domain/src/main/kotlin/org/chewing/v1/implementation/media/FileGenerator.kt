@@ -1,5 +1,6 @@
 package org.chewing.v1.implementation.media
 
+import org.chewing.v1.model.User
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.Video

@@ -5,9 +5,8 @@ import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
-import org.chewing.v1.model.contact.PhoneNumber
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.friend.Friend
-import org.chewing.v1.model.user.UserName
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -23,27 +22,13 @@ class FriendService(
     private val userStatusFinder: UserStatusFinder,
     private val userFinder: UserFinder
 ) {
-    fun addFriendByEmail(
+    fun addFriend(
         userId: String,
         friendName: UserName,
-        emailAddress: String
+        contact: Contact
     ) {
         // 저장할 친구 정보를 읽어옴
-        val targetUser = userFinder.findUserByEmail(emailAddress)
-        // 이미 친구인지 확인
-        friendChecker.isAlreadyFriend(userId, targetUser.userId)
-        // 나의 정보를 읽어온다.
-        val user = userReader.read(userId)
-        // 친구 추가
-        friendAppender.appendFriend(user, friendName, targetUser)
-    }
-    fun addFriendByPhoneNumber(
-        userId: String,
-        friendName: UserName,
-        phoneNumber: PhoneNumber
-    ) {
-        // 저장할 친구 정보를 읽어옴
-        val targetUser = userFinder.findUserByPhoneNumber(phoneNumber)
+        val targetUser = userFinder.findUserByContact(contact)
         // 이미 친구인지 확인
         friendChecker.isAlreadyFriend(userId, targetUser.userId)
         // 나의 정보를 읽어온다.
@@ -55,11 +40,6 @@ class FriendService(
     // 친구 삭제
     fun removeFriend(userId: String, friendId: String) {
         friendRemover.removeFriend(userId, friendId)
-    }
-    // 친구 차단
-    fun blockFriend(userId: String, friendId: String) {
-        friendRemover.blockFriend(userId, friendId)
-
     }
 
     // 친구 목록을 가져옴

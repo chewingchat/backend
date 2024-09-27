@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.user
 
-import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.PushToken
 import org.chewing.v1.repository.UserRepository
 import org.springframework.stereotype.Component
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class UserRemover(
     private val userRepository: UserRepository,
 ) {
-    fun remove(userId: String) {
+    fun removeUser(userId: String) {
         userRepository.remove(userId)
     }
     fun removePushToken(device: PushToken.Device) {

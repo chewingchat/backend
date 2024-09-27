@@ -1,0 +1,21 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID
+            client-secret: YOUR_GOOGLE_CLIENT_SECRET
+            scope: profile, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            authorization-grant-type: authorization_code
+            client-authentication-method: post
+            provider: google
+          apple:
+            client-id: YOUR_APPLE_CLIENT_ID
+            client-secret: YOUR_APPLE_CLIENT_SECRET
+            scope: name, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/apple"
+            authorization-grant-type: authorization_code
+            client-authentication-method: post
+            provider: apple

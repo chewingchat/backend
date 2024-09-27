@@ -2,8 +2,9 @@ package org.chewing.v1.implementation.user
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.model.PushToken
 import org.chewing.v1.model.friend.FriendSearch
-import org.chewing.v1.model.user.User
+import org.chewing.v1.model.User
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.UserRepository
 import org.chewing.v1.repository.UserStatusRepository
@@ -27,21 +28,11 @@ class UserReader(
     fun read(userId: String): User {
         return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
-
-    fun readByContact(contact: Contact): User {
-        return userRepository.readByContact(contact) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-    }
-
     fun reads(userIds: List<String>): List<User> {
         return userRepository.readUsersByIds(userIds)
     }
-
     //유저의 최근 친구 검색 목록을 읽어옴
     fun readSearched(userId: String): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
-    }
-
-    fun readOwnEmoticonPacks(userId: String): List<String> {
-        return userRepository.readUserEmoticonPacks(userId)
     }
 }
