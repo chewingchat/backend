@@ -1,7 +1,9 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.response.my.MyCommentResponse
+import org.chewing.v1.dto.response.comment.MyCommentResponse
 import org.chewing.v1.implementation.facade.MyFacade
+import org.chewing.v1.model.User
+import org.chewing.v1.service.CommentService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +15,7 @@ class MyController(
 ) {
     @GetMapping("/comment")
     fun getMyCommentedFeed(
-        @RequestAttribute("userId") userId: String,
+        @RequestHeader("userId") userId: String,
     ): SuccessResponseEntity<MyCommentResponse> {
         val myCommentedInfo = myFacade.getFeedUserCommented(userId)
         //성공 응답 200 반환

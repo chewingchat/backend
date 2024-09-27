@@ -2,12 +2,11 @@ package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
+import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.media.Image
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.User
+import org.chewing.v1.model.UserContent
 import org.chewing.v1.model.media.Media
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -28,38 +27,26 @@ internal class UserJpaEntity(
     private var userLastName: String,
 
     private var birth: String,
-
-    val emailId: String?,
-
-    val phoneNumberId: String?,
-
-    @Enumerated(EnumType.STRING)
-    private var type: ActivateType
 ) : BaseEntity() {
     companion object {
-        fun generateByEmail(email: Email): UserJpaEntity {
+        fun fromUser(user: User): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
-                birth = "",
-                pictureUrl = "",
-                backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACCESS,
-                emailId = email.emailId,
-                phoneNumberId = null
+                userId = user.userId,
+                userFirstName = user.name.firstName,
+                userLastName = user.name.lastName,
+                birth = user.birth,
+                pictureUrl = user.image.url,
+                backgroundPictureUrl = user.backgroundImage.url
             )
         }
 
-        fun generateByPhone(phone: Phone): UserJpaEntity {
+        fun generate(userContent: UserContent): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
-                birth = "",
+                userFirstName = userContent.name.firstName(),
+                userLastName = userContent.name.lastName(),
+                birth = userContent.birth,
                 pictureUrl = "",
-                backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACCESS,
-                emailId = null,
-                phoneNumberId = phone.phoneId
+                backgroundPictureUrl = ""
             )
         }
     }
@@ -72,29 +59,11 @@ internal class UserJpaEntity(
             this.birth,
             Image.of(this.pictureUrl, 0),
             Image.of(this.backgroundPictureUrl, 0),
-            this.type
         )
     }
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
-    }
-
-    fun updateUserName(userName: UserName) {
-        this.userFirstName = userName.firstName
-        this.userLastName = userName.lastName
-    }
-
-    fun updateBirth(birth: String) {
-        this.birth = birth
-    }
-
-    fun updateDelete() {
-        this.type = ActivateType.DELETE
-    }
-
-    fun updateAccess() {
-        this.type = ActivateType.ACCESS
     }
 
     fun id(): String {

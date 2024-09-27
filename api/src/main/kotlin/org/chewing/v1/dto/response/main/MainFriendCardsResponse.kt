@@ -1,7 +1,7 @@
 package org.chewing.v1.dto.response.main
 
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.user.UserStatus
+import org.chewing.v1.model.User
+import org.chewing.v1.model.UserStatus
 import org.chewing.v1.model.friend.Friend
 
 data class MainFriendCardsResponse(
@@ -19,7 +19,6 @@ data class MainFriendCardsResponse(
         val friendLastName: String,
         val friendBackgroundImageUrl: String,
         val friendImageUrl: String,
-        val friendActivate: String,
         val isFavorite: Boolean,
         val friendStatusMessage: String,
         val friendStatusEmoticon: String,
@@ -33,7 +32,6 @@ data class MainFriendCardsResponse(
                     friendImageUrl = friend.friend.image.url,
                     friendStatusMessage = friend.friendStatus.statusMessage,
                     isFavorite = friend.isFavorite,
-                    friendActivate = friend.friend.type.name,
                     friendBackgroundImageUrl = friend.friend.backgroundImage.url,
                     friendStatusEmoticon = friend.friendStatus.emoticon.media.url
                 )

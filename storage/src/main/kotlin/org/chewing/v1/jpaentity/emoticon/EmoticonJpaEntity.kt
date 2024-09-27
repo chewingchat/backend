@@ -16,7 +16,7 @@ internal class EmoticonJpaEntity(
     companion object {
         fun fromEmoticon(emoticon: Emoticon, emoticonPackId: String): EmoticonJpaEntity {
             return EmoticonJpaEntity(
-                emoticon.id,
+                emoticon.emoticonId,
                 emoticon.media.url,
                 emoticon.name,
                 emoticonPackId

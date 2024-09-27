@@ -11,19 +11,12 @@ internal class EmoticonRepositoryImpl(
     private val emoticonJpaRepository: EmoticonJpaRepository,
     private val emoticonPackJpaRepository: EmoticonPackJpaRepository
 ) : EmoticonRepository {
-    override fun readEmoticonPacks(emoticonPackIds: List<String>): List<EmoticonPack> {
-        val emoticonPacks = emoticonPackJpaRepository.findAllById(emoticonPackIds).associateBy { it.emoticonPackId }
-        val emoticonGroup = emoticonJpaRepository.findAllByEmoticonPackIdIn(emoticonPackIds).groupBy {
-            it.emoticonId
-        }
-        return emoticonPacks.map { (emoticonPackId, emoticonPackJpaEntity) ->
-            val emoticons = emoticonGroup[emoticonPackId]?.map { it.toEmoticon() } ?: emptyList()
-            emoticonPackJpaEntity.toEmoticonPack(emoticons)
-        }.toList()
+    override fun readEmoticonPacks(userId: String): List<EmoticonPack> {
+        TODO("Not yet implemented")
     }
 
-    override fun readEmoticon(emoticonId: String): Emoticon? {
-        return emoticonJpaRepository.findById(emoticonId).map { it.toEmoticon() }.orElse(null)
+    override fun readEmoticon(emoticonId: String): Emoticon {
+        return emoticonJpaRepository.findById(emoticonId).map { it.toEmoticon() }.orElse(Emoticon.empty())
     }
 
     override fun readEmoticons(emoticonIds: List<String>): List<Emoticon> {

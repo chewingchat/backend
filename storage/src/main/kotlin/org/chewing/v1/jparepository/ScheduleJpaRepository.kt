@@ -21,6 +21,4 @@ internal interface ScheduleJpaRepository : JpaRepository<ScheduleJpaEntity, Stri
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): List<ScheduleJpaEntity>
-
-    fun deleteAllByUserId(userId: String)
 }
