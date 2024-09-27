@@ -1,5 +1,6 @@
 package org.chewing.v1.implementation.auth
 
+import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
@@ -14,11 +15,7 @@ class AuthAppender(
         authRepository.appendLoggedIn(refreshToken, user)
     }
 
-    fun appendPhone(phoneNumber: PhoneNumber) {
-        return authRepository.savePhoneIfNotExists(phoneNumber)
-    }
-
-    fun appendEmail(email: String) {
-        return authRepository.saveEmailIfNotExists(email)
+    fun appendCredential(credential: Credential) {
+        authRepository.saveCredentialIfNotExists(credential)
     }
 }

@@ -9,7 +9,6 @@ import org.chewing.v1.model.chat.ChatFriend
 import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.model.media.Media
-import org.chewing.v1.util.FileUtil
 import org.springframework.stereotype.Repository
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -97,20 +96,24 @@ class ChatRoomRepositoryImpl(
     }
 
     override fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>) {
-        try {
-            // MultipartFile을 File로 변환
-            val convertedFiles: List<File> = FileUtil.convertMultipartFilesToFiles(files)
-
-            // 변환된 파일들을 처리하여 미디어로 업로드
-            val uploadedMedia: List<Media> = fileProcessor.processNewFiles(userId, convertedFiles)
-
-            // 업로드된 미디어를 채팅방에 연결하는 로직
-            saveUploadedMedia(chatRoomId, uploadedMedia)
-
-        } catch (e: IOException) {
-            throw IllegalArgumentException("파일 변환에 실패했습니다: ${e.message}")
-        }
+        TODO("Not yet implemented")
     }
+
+//    override fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>) {
+//        try {
+//            // MultipartFile을 File로 변환
+//            val convertedFiles: List<File> = FileUtil.convertMultipartFilesToFiles(files)
+//
+//            // 변환된 파일들을 처리하여 미디어로 업로드
+//            val uploadedMedia: List<Media> = fileProcessor.processNewFiles(userId, convertedFiles)
+//
+//            // 업로드된 미디어를 채팅방에 연결하는 로직
+//            saveUploadedMedia(chatRoomId, uploadedMedia)
+//
+//        } catch (e: IOException) {
+//            throw IllegalArgumentException("파일 변환에 실패했습니다: ${e.message}")
+//        }
+//    }
 
 
     override fun saveUploadedMedia(chatRoomId: String, mediaList: List<Media>) {

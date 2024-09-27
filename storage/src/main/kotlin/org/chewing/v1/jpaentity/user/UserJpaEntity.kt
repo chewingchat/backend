@@ -6,6 +6,7 @@ import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.Media
@@ -29,9 +30,9 @@ internal class UserJpaEntity(
 
     private var birth: String,
 
-    val emailId: String?,
+    var emailId: String?,
 
-    val phoneNumberId: String?,
+    var phoneNumberId: String?,
 
     @Enumerated(EnumType.STRING)
     private var type: ActivateType
@@ -95,6 +96,13 @@ internal class UserJpaEntity(
 
     fun updateAccess() {
         this.type = ActivateType.ACCESS
+    }
+
+    fun updateContact(contact: Contact) {
+        when (contact) {
+            is Email -> this.emailId = contact.emailId
+            is Phone -> this.phoneNumberId = contact.phoneId
+        }
     }
 
     fun id(): String {

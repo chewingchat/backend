@@ -18,6 +18,7 @@ interface UserRepository {
     fun updateProfileImage(user: User, media: Media)
     fun updateName(userId: String, userName: UserName)
     fun updateContent(userId: String, content: UserContent)
+    fun updateContact(userId: String, contact: Contact)
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: String): List<FriendSearch>
     fun removePushToken(device: PushToken.Device)

@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.request
 
+import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
 
@@ -19,8 +20,8 @@ class LoginRequest {
             return appToken
         }
 
-        fun toAddress(): String {
-            return email
+        fun toEmailAddress(): EmailAddress {
+            return EmailAddress.of(email)
         }
 
         fun toVerificationCode(): String {

@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.request
 
+import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 
 class VerificationCheckRequest {
@@ -7,8 +8,8 @@ class VerificationCheckRequest {
         val email: String,
         val verificationCode: String
     ){
-        fun toAddress(): String {
-            return email
+        fun toEmailAddress(): EmailAddress {
+            return EmailAddress.of(email)
         }
 
         fun toVerificationCode(): String {
