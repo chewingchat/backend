@@ -4,9 +4,9 @@ import org.chewing.v1.implementation.chat.ChatLogAppender
 import org.chewing.v1.implementation.chat.ChatLogReader
 import org.chewing.v1.implementation.chat.ChatSender
 import org.chewing.v1.implementation.chat.ChatSequenceUpdater
-import org.chewing.v1.model.ChatMessage
-import org.chewing.v1.model.ChatMessageLog
-import org.chewing.v1.model.MessageType
+import org.chewing.v1.model.chat.ChatMessage
+import org.chewing.v1.model.chat.ChatMessageLog
+import org.chewing.v1.model.chat.MessageType
 import org.springframework.stereotype.Service
 
 @Service

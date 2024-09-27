@@ -1,7 +1,5 @@
 package org.chewing.v1.response
 
-import org.springframework.http.ResponseEntity
-
 
 data class HttpResponse<T>(
     val status: Int,
@@ -23,7 +21,6 @@ data class HttpResponse<T>(
         fun <T> error(status: Int, data: T): HttpResponse<T> {
             return HttpResponse(status, data)
         }
-
     }
 }
 

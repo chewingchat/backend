@@ -9,21 +9,14 @@ enum class ErrorCode(
     val message: String
 ) {
     // Auth errors
-    AUTH_1("AUTH_1", "인증 번호가 틀렸습니다."),
-    AUTH_2("AUTH_2", "전화번호 인증 실패"),
-    AUTH_3("AUTH_3", "회원가입을 먼저 진행해 주세요"),
-    AUTH_4("AUTH_4", "엑세스 토큰이 만료되었습니다."),
-    AUTH_5("AUTH_5", "리프레시 토큰이 만료되었습니다."),
-    PHONE_ALREADY_REGISTERED("AUTH_6", "해당 전화번호로 이미 회원가입이 되어 있습니다."),
-    EMAIL_REGISTERED("AUTH_3", "기존에 회원가입된 휴대폰과 다른 이메일입니다."),
-
-
+    VALIDATE_WRONG("AUTH_1", "인증 번호가 틀렸습니다."),
+    VALIDATE_EXPIRED("AUTH_2", "인증 번호가 만료되었습니다."),
+    TOKEN_EXPIRED("AUTH_3", "토큰이 만료되었습니다."),
+    INVALID_TOKEN("AUTH_4", "토큰을 확인해주세요"),
+    PHONE_NUMBER_IS_USED("AUTH_5", "해당 전화번호로 이미 다른 사람이 사용중입니다."),
+    EMAIL_IS_USED("AUTH_6", "해당 이메일로 이미 다른 사람이 사용중입니다."),
 
     // Common
-    FILE_1("FILE_003", "파일 업로드를 실패 했습니다."),
-    CHATROOM_NOT_FOUND("CHATROOM_NOT_FOUND", "채팅방을 찾을 수 없습니다."),
-    CHATLOG_NOT_FOUND("CHATLOG_NOT_FOUND", "채팅 로그를 찾을 수 없습니다."),  // 여기에 추가
-    //추가
     PATH_WRONG("COMMON_001", "잘못된 메세드입니다."),
     VARIABLE_WRONG("COMMON_002", "요청 변수가 잘못되었습니다."),
     INTERNAL_SERVER_ERROR("COMMON_003", "Internal Server Error"),
@@ -44,7 +37,9 @@ enum class ErrorCode(
     COMMENT_IS_NOT_OWNED("COMMENT_001", "댓글 작성자가 아닙니다."),
     ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_001", "공지사항을 찾을 수 없음."),
     COMMENT_NOT_FOUND("COMMENT_002", "댓글을 찾을 수 없음."),
-    LONGIN_FAILED("LOGIN_001", "로그인 실패"),
+    EMOTICON_NOT_FOUND("EMOTICON_001", "이모티콘을 찾을 수 없음."),
+    CHATROOM_NOT_FOUND("CHATROOM_001", "채팅방을 찾을 수 없음."),
+    CHATLOG_NOT_FOUND("CHATLOG_001", "채팅 로그를 찾을 수 없음."),
     ;
 
     companion object {

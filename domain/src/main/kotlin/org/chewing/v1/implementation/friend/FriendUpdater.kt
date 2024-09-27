@@ -1,8 +1,7 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.model.friend.Friend
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserName
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendInfo
 import org.chewing.v1.repository.FriendRepository
 import org.springframework.stereotype.Component
@@ -27,6 +26,7 @@ class FriendUpdater(
             image = user.image,
             backgroundImage = user.backgroundImage,
             birth = user.birth,
+            type = user.type
         )
     }
 }
