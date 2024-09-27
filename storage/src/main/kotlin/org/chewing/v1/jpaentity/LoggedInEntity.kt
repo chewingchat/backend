@@ -22,10 +22,10 @@ internal class LoggedInEntity(
     val expiredAt: LocalDateTime
 ) {
     companion object {
-        fun fromToken(refreshToken: RefreshToken, user: User): LoggedInEntity {
+        fun fromToken(refreshToken: RefreshToken, userId: String): LoggedInEntity {
             return LoggedInEntity(
                 refreshToken = refreshToken.token,
-                userId = user.userId,
+                userId = userId,
                 expiredAt = refreshToken.expiredAt
             )
         }
