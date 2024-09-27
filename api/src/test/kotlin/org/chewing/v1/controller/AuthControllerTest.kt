@@ -70,7 +70,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendPhoneVerification(any())
+        verify(authService).sendVerification(any())
     }
 
     @Test
@@ -85,7 +85,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendEmailVerification(any())
+        verify(authService).sendVerification(any())
     }
 
     @Test
@@ -102,7 +102,7 @@ class AuthControllerTest(
             "deviceId" to "testDeviceId",
             "provider" to "testProvider"
         )
-        whenever(authService.verifyPhone(any(), any(), any(), any()))
+        whenever(authService.verifyLogin(any(), any(), any(), any()))
             .thenReturn(Pair(jwtToken, user))
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/phone/create/verify")
@@ -117,7 +117,7 @@ class AuthControllerTest(
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
             )
-        verify(authService).verifyPhone(any(), any(), any(), any())
+        verify(authService).verifyLogin(any(), any(), any(), any())
     }
 
     @Test
@@ -133,7 +133,7 @@ class AuthControllerTest(
             "deviceId" to "testDeviceId",
             "provider" to "testProvider"
         )
-        whenever(authService.verifyEmail(any(), any(), any(), any()))
+        whenever(authService.verifyLogin(any(), any(), any(), any()))
             .thenReturn(Pair(jwtToken, user))
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/email/create/verify")
@@ -147,7 +147,7 @@ class AuthControllerTest(
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
             )
-        verify(authService).verifyEmail(any(), any(), any(), any())
+        verify(authService).verifyLogin(any(), any(), any(), any())
     }
 
     @Test
@@ -164,7 +164,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendPhoneVerificationForUpdate(any(), any())
+        verify(authService).sendVerificationForUpdate(any(), any())
     }
 
     @Test
@@ -180,7 +180,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendEmailVerificationForUpdate(any(), any())
+        verify(authService).sendVerificationForUpdate(any(), any())
     }
 
     @Test
@@ -197,7 +197,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).verifyEmailForUpdate(any(), any(), any())
+        verify(authService).verifyCredentialForUpdate(any(), any(), any())
     }
 
     @Test
@@ -215,7 +215,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).verifyPhoneForUpdate(any(), any(), any())
+        verify(authService).verifyCredentialForUpdate(any(), any(), any())
     }
 
     @Test

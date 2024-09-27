@@ -1,5 +1,6 @@
 package org.chewing.v1.implementation.user
 
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
@@ -28,5 +29,9 @@ class UserUpdater(
     }
     fun updateContent(userId: String, content: UserContent) {
         return userRepository.updateContent(userId, content)
+    }
+
+    fun updateContact(userId: String, contact: Contact) {
+        return userRepository.updateContact(userId, contact)
     }
 }

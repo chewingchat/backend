@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.request
 
+import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.auth.PhoneNumber
 
@@ -11,7 +12,7 @@ class FriendRequest(
         val lastName: String
     ) {
         fun toUserName(): UserName = UserName.of(firstName, lastName)
-        fun toEmail(): String = email
+        fun toEmail(): EmailAddress = EmailAddress.of(email)
     }
 
     data class UpdateName(

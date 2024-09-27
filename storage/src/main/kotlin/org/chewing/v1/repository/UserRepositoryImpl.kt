@@ -94,6 +94,12 @@ internal class UserRepositoryImpl(
         }
     }
 
+    override fun updateContact(userId: String, contact: Contact) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateContact(contact)
+            userJpaRepository.save(it)
+        }
+    }
     override fun appendSearchHistory(user: User, search: FriendSearch) {
         friendSearchJpaRepository.save(FriendSearchJpaEntity.fromFriendSearch(user, search))
     }

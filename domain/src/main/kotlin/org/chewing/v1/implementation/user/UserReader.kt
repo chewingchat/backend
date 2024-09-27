@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component
 @Component
 class UserReader(
     private val userRepository: UserRepository,
-    private val userStatusRepository: UserStatusRepository
 ) {
     /**
      * 주어진 사용자 ID에 해당하는 사용자 정보를 읽어옵니다.
