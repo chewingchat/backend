@@ -27,44 +27,40 @@ internal class AuthRepositoryImpl(
 
 
     ) : AuthRepository {
-    override fun savePhoneIfNotExists(phoneNumber: PhoneNumber) {
-        phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
-            .orElseGet { phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(phoneNumber)) }
-    }
+    override fun saveCredentialIfNotExists(credential: Credential) {
+        when (credential) {
+            is EmailAddress -> emailJpaRepository.findByEmailAddress(credential.email)
+                .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(credential)) }
 
-    override fun saveEmailIfNotExists(email: String) {
-        emailJpaRepository.findByEmailAddress(email)
-            .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(email)) }
-    }
+            is PhoneNumber -> phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(
+                credential.number,
+                credential.countryCode
+            )
+                .orElseGet { phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(credential)) }
 
-    override fun readEmail(email: String): Email? {
-        val emailConfirmJpaEntity =
-            emailJpaRepository.findByEmailAddress(email)
-        return emailConfirmJpaEntity.map { it.toEmail() }.orElse(null)
-    }
-
-    override fun readCredential(credential: Credential): Contact? {
-        return when (credential) {
-            is EmailAddress -> emailJpaRepository.findByEmailAddress(credential.email).map { it.toEmail() }.orElse(null)
-            is PhoneNumber -> phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(credential.number, credential.countryCode)
-                .map { it.toPhone() }.orElse(null)
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 
+    override fun readContact(credential: Credential): Contact? {
+        return when (credential) {
+            is EmailAddress -> emailJpaRepository.findByEmailAddress(credential.email).map { it.toEmail() }.orElse(null)
+            is PhoneNumber -> phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(
+                credential.number,
+                credential.countryCode
+            )
+                .map { it.toPhone() }.orElse(null)
 
-    override fun readPhoneNumber(phoneNumber: PhoneNumber): Phone? {
-        val phoneNumberConfirmJpaEntity =
-            phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
-        return phoneNumberConfirmJpaEntity.map { it.toPhone() }.orElse(null)
+            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 
     override fun removeLoginInfo(userId: String) {
         loggedInJpaRepository.deleteByUserId(userId)
     }
 
-    override fun updateEmailVerificationCode(emailAddress: String): String {
-        val emailEntity = emailJpaRepository.findByEmailAddress(emailAddress)
+    override fun updateEmailVerificationCode(emailAddress: EmailAddress): String {
+        val emailEntity = emailJpaRepository.findByEmailAddress(emailAddress.email)
             .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
         emailEntity.updateVerificationCode()
         emailJpaRepository.save(emailEntity)
@@ -80,19 +76,13 @@ internal class AuthRepositoryImpl(
         return phoneEntity.getVerifiedNumber()
     }
 
-    override fun updatePhoneNumber(phoneNumber: PhoneNumber) {
-        val phoneEntity =
-            phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
-                .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
-        phoneEntity.updatePhoneNumber(phoneNumber)
+    override fun updateVerificationCode(credential: Credential): String {
+        return when (credential) {
+            is EmailAddress -> updateEmailVerificationCode(credential)
+            is PhoneNumber -> updatePhoneVerificationCode(credential)
+            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
-
-    override fun updateEmail(email: String) {
-        val emailEntity = emailJpaRepository.findByEmailAddress(email)
-            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
-        emailEntity.updateEmail(email)
-    }
-
 
     override fun appendLoggedIn(refreshToken: RefreshToken, user: User) {
         loggedInJpaRepository.save(LoggedInEntity.fromToken(refreshToken, user))

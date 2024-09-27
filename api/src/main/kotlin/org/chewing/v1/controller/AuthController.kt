@@ -19,13 +19,13 @@ class AuthController(
 
     @PostMapping("/phone/create/send")
     fun sendPhoneVerification(@RequestBody request: VerificationRequest.Phone): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        authService.sendPhoneVerification(request.toPhoneNumber())
+        authService.sendVerification(request.toPhoneNumber())
         return ResponseHelper.successOnly()
     }
 
     @PostMapping("/phone/create/verify")
     fun verifyPhone(@RequestBody request: LoginRequest.Phone): SuccessResponseEntity<AuthInfoResponse> {
-        val (token, user) = authService.verifyPhone(
+        val (token, user) = authService.verifyLogin(
             request.toPhoneNumber(),
             request.toVerificationCode(),
             request.toAppToken(),
@@ -36,14 +36,14 @@ class AuthController(
 
     @PostMapping("/email/create/send")
     fun sendEmailVerification(@RequestBody request: VerificationRequest.Email): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        authService.sendEmailVerification(request.email)
+        authService.sendVerification(request.toEmailAddress())
         return ResponseHelper.successOnly()
     }
 
     @PostMapping("/email/create/verify")
     fun verifyEmail(@RequestBody request: LoginRequest.Email): SuccessResponseEntity<AuthInfoResponse> {
-        val (token, user) = authService.verifyEmail(
-            request.toAddress(),
+        val (token, user) = authService.verifyLogin(
+            request.toEmailAddress(),
             request.toVerificationCode(),
             request.toAppToken(),
             request.toDevice()
@@ -56,7 +56,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationRequest.Phone
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendPhoneVerificationForUpdate(userId, request.toPhoneNumber())
+        authService.sendVerificationForUpdate(userId, request.toPhoneNumber())
         return ResponseHelper.successOnly()
     }
 
@@ -65,7 +65,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationRequest.Email
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendEmailVerificationForUpdate(userId, request.toAddress())
+        authService.sendVerificationForUpdate(userId, request.toEmailAddress())
         return ResponseHelper.successOnly()
     }
 
@@ -74,7 +74,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationCheckRequest.Phone
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyPhoneForUpdate(userId, request.toPhoneNumber(), request.toVerificationCode())
+        authService.verifyCredentialForUpdate(userId, request.toPhoneNumber(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
 
@@ -83,7 +83,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationCheckRequest.Email
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyEmailForUpdate(userId, request.email, request.verificationCode)
+        authService.verifyCredentialForUpdate(userId, request.toEmailAddress(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
 

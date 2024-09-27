@@ -1,5 +1,7 @@
 package org.chewing.v1.external
 
+import org.chewing.v1.model.auth.EmailAddress
+
 interface ExternalEmailClient {
-    fun sendEmail(emailAddress: String, verificationCode: String)
+    fun sendEmail(emailAddress: EmailAddress, verificationCode: String)
 }

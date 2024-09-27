@@ -1,10 +1,11 @@
 package org.chewing.v1.external
 
+import org.chewing.v1.model.auth.EmailAddress
 import org.springframework.stereotype.Component
 
 @Component
 class SMTPExternalAuthClient : ExternalEmailClient {
-    override fun sendEmail(emailAddress: String, verificationCode: String) {
+    override fun sendEmail(emailAddress: EmailAddress, verificationCode: String) {
         println("Sending email to $emailAddress")
     }
 }

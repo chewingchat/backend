@@ -5,6 +5,7 @@ import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
+import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.user.UserName
@@ -26,7 +27,7 @@ class FriendService(
     fun addFriendByEmail(
         userId: String,
         friendName: UserName,
-        emailAddress: String
+        emailAddress: EmailAddress
     ) {
         // 저장할 친구 정보를 읽어옴
         val targetUser = userFinder.findUserByEmail(emailAddress)

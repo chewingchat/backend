@@ -2,6 +2,7 @@ package org.chewing.v1.jpaentity.auth
 
 import jakarta.persistence.*;
 import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.contact.Email
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
@@ -36,9 +37,9 @@ internal class EmailJpaEntity(
             )
         }
 
-        fun generate(email: String): EmailJpaEntity {
+        fun generate(email: EmailAddress): EmailJpaEntity {
             return EmailJpaEntity(
-                emailAddress = email,
+                emailAddress = email.email,
                 firstAuthorized = false,
             )
         }

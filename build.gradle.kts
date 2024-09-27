@@ -45,7 +45,6 @@ allprojects {
         implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
         //
         implementation("org.springframework.boot:spring-boot-starter-websocket")
-        implementation("org.springframework.boot:spring-boot-starter-messaging")
 
         implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
         implementation("org.springframework.security:spring-security-oauth2-client")
