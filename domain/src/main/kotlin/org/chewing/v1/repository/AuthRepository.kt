@@ -17,5 +17,5 @@ interface AuthRepository {
     fun updateEmailVerificationCode(emailAddress: EmailAddress): String
     fun updatePhoneVerificationCode(phoneNumber: PhoneNumber): String
     fun updateVerificationCode(credential: Credential):String
-    fun appendLoggedIn(refreshToken: RefreshToken, user: User)
+    fun appendLoggedIn(refreshToken: RefreshToken, userId: String)
 }

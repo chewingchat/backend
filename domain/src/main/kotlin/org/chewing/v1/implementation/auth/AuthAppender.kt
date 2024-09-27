@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 class AuthAppender(
     private val authRepository: AuthRepository
 ) {
-    fun appendLoggedIn(refreshToken: RefreshToken, user: User) {
-        authRepository.appendLoggedIn(refreshToken, user)
+    fun appendLoggedIn(refreshToken: RefreshToken, userId: String) {
+        authRepository.appendLoggedIn(refreshToken, userId)
     }
 
     fun appendCredential(credential: Credential) {
