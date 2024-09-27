@@ -8,7 +8,7 @@ import org.chewing.v1.jparepository.FeedDetailJpaRepository
 import org.chewing.v1.jparepository.FeedJpaRepository
 import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
-import org.chewing.v1.model.User
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.Media
@@ -41,7 +41,7 @@ internal class FeedRepositoryImpl(
         return feedDetailJpaRepository.findAllByFeedId(feedId).map { it.toFeedDetail() }
     }
 
-    override fun readsDetails(feedIds: List<String>):  List<FeedDetail> {
+    override fun readsDetails(feedIds: List<String>): List<FeedDetail> {
         val feedDetails = feedDetailJpaRepository.findAllByFeedIdIn(feedIds)
         return feedDetails.map { it.toFeedDetail() }
     }

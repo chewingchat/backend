@@ -1,6 +1,5 @@
 package org.chewing.v1.implementation.media
 
-import org.chewing.v1.model.User
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Component
 import java.io.File
@@ -25,7 +24,7 @@ class FileProcessor(
         fileProvider.appendFile(file, media)
         return media
     }
-    fun processPreFile(media: Media) {
+    fun processOldFile(media: Media) {
         fileProvider.removeFile(media)
     }
 

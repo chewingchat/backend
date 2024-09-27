@@ -1,7 +1,7 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.ChatLog
-import org.chewing.v1.model.ChatRoom
+import org.chewing.v1.model.chat.ChatLog
+import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.model.media.Media
 import org.springframework.web.multipart.MultipartFile
 

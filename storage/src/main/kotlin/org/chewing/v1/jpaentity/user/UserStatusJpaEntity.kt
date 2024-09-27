@@ -3,9 +3,9 @@ package org.chewing.v1.jpaentity.user
 import jakarta.persistence.*
 import java.util.*
 
-import org.chewing.v1.model.User
-import org.chewing.v1.model.UserStatus
-import org.chewing.v1.model.StatusInfo
+import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserStatus
+import org.chewing.v1.model.user.StatusInfo
 
 @Entity
 @Table(
@@ -30,7 +30,7 @@ internal class UserStatusJpaEntity(
             return UserStatusJpaEntity(
                 statusId = status.statusId,
                 statusMessage = status.statusMessage,
-                emoticonId = status.emoticon.emoticonId,
+                emoticonId = status.emoticon.id,
                 userId = user.userId,
                 selected = false
             )

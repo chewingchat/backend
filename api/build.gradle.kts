@@ -6,7 +6,6 @@ dependencies {
     implementation(project(":domain"))
     runtimeOnly(project(":storage"))
     runtimeOnly(project(":external"))
-
 }
 
 

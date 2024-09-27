@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.request
 
-import org.chewing.v1.model.contact.PhoneNumber
+import org.chewing.v1.model.auth.PhoneNumber
 
 class VerificationCheckRequest {
     data class Email(

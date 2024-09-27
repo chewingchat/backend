@@ -20,6 +20,7 @@ data class FeedCommentsResponse(
         val friendFirstName: String,
         val friendLastName: String,
         val friendImageUrl: String,
+        val friendActivate: String,
         val comment: String,
         val commentTime: String
     ) {
@@ -32,6 +33,7 @@ data class FeedCommentsResponse(
                     friendFirstName = friendComment.writer.name.firstName(),
                     friendLastName = friendComment.writer.name.lastName(),
                     friendImageUrl = friendComment.writer.image.url,
+                    friendActivate = friendComment.writer.type.name,
                     comment = friendComment.comment,
                     commentTime = friendComment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
                 )

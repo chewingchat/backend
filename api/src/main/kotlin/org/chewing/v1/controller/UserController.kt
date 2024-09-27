@@ -1,6 +1,10 @@
 package org.chewing.v1.controller
 
+import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
+import org.chewing.v1.dto.request.VerificationCheckRequest
+import org.chewing.v1.dto.request.VerificationRequest
+import org.chewing.v1.dto.response.emoticon.EmoticonPacksResponse
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
@@ -13,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/user")
 class UserController(
-    private val userService: UserService,
-    private val authService: AuthService
+    private val userService: UserService
 ) {
     /**
      * @param file: 프로파일 이미지를 MultipartFile로 받습니다.
@@ -23,17 +26,43 @@ class UserController(
     @PostMapping("/profile/upload")
     fun changeProfileImage(
         @RequestPart("file") file: MultipartFile,
-        @RequestHeader("userId") userId: String
+        @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFile(file)
         userService.updateUserImage(convertedFile, userId)
         return ResponseHelper.successOnly()
     }
+
     @PostMapping("/profile/status")
     fun changeProfileStatus(
-        @RequestHeader("userId") userId: String,
+        @RequestAttribute("userId") userId: String,
         @RequestBody request: UserStatusRequest
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         return ResponseHelper.successOnly()
+    }
+
+    @PutMapping("/profile/name")
+    fun changeName(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: UserRequest.UpdateName
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.updateUserName(userId, request.toUserName())
+        return ResponseHelper.successOnly()
+    }
+
+    @DeleteMapping("")
+    fun deleteUser(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.deleteUser(userId)
+        return ResponseHelper.successOnly()
+    }
+
+    @GetMapping("/emoticon")
+    fun getEmoticonPacks(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<EmoticonPacksResponse> {
+        val emoticonPacks = userService.findOwnedEmoticonPacks(userId)
+        return ResponseHelper.success(EmoticonPacksResponse.of(emoticonPacks))
     }
 }
