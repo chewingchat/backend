@@ -5,6 +5,7 @@ import org.chewing.v1.dto.request.LikesRequest
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.UserFeedResponse
 import org.chewing.v1.dto.response.friend.FriendDetailResponse
+import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.FeedService
@@ -87,8 +88,8 @@ class FeedController(
         @RequestPart("files") files: List<MultipartFile>,
         @RequestParam("topic") topic: String
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        val convertFiles = FileUtil.convertMultipartFilesToFiles(files)
-        feedService.make(userId, convertFiles, topic)
+        val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
+        feedService.make(userId, convertFiles, topic, FileCategory.FEED)
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }

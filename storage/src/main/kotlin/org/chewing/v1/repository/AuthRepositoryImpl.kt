@@ -31,13 +31,11 @@ internal class AuthRepositoryImpl(
         when (credential) {
             is EmailAddress -> emailJpaRepository.findByEmailAddress(credential.email)
                 .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(credential)) }
-
             is PhoneNumber -> phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(
                 credential.number,
                 credential.countryCode
             )
                 .orElseGet { phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(credential)) }
-
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }

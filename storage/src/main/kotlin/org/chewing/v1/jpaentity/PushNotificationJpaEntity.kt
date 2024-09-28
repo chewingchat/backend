@@ -1,6 +1,7 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
+import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.user.User
 import java.util.*
@@ -16,7 +17,8 @@ internal class PushNotificationJpaEntity(
 
     private val deviceId: String,
 
-    private val deviceProvider: String,
+    @Enumerated(EnumType.STRING)
+    private var provider: PushToken.Provider,
 
     private val userId: String,
 ) {
@@ -29,7 +31,7 @@ internal class PushNotificationJpaEntity(
             return PushNotificationJpaEntity(
                 appToken = appToken,
                 deviceId = device.deviceId,
-                deviceProvider = device.provider,
+                provider = device.provider,
                 userId = user.userId
             )
         }

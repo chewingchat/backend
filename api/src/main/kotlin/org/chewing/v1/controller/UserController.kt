@@ -2,12 +2,10 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
-import org.chewing.v1.dto.request.VerificationCheckRequest
-import org.chewing.v1.dto.request.VerificationRequest
 import org.chewing.v1.dto.response.emoticon.EmoticonPacksResponse
+import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.AuthService
 import org.chewing.v1.service.UserService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
@@ -19,6 +17,15 @@ import org.springframework.web.multipart.MultipartFile
 class UserController(
     private val userService: UserService
 ) {
+    @PostMapping("/profile/activate")
+    fun makeActivate(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: UserRequest.UpdateProfile,
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.makeActivate(userId, request.toUserContent())
+        return ResponseHelper.successOnly()
+    }
+
     /**
      * @param file: 프로파일 이미지를 MultipartFile로 받습니다.
      * 로그인한 사용자의 프로파일 이미지를 변경합니다.
@@ -28,8 +35,8 @@ class UserController(
         @RequestPart("file") file: MultipartFile,
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        val convertedFile = FileUtil.convertMultipartFileToFile(file)
-        userService.updateUserImage(convertedFile, userId)
+        val convertedFile = FileUtil.convertMultipartFileToFileData(file)
+        userService.updateUserImage(convertedFile, userId, FileCategory.USER_PROFILE)
         return ResponseHelper.successOnly()
     }
 

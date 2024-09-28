@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1
 
 import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.auth.JwtToken

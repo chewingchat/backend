@@ -28,7 +28,7 @@ internal class FriendJpaEntity(
                 favorite = false,
                 friendFirstName = friendName.firstName(),
                 friendLastName = friendName.lastName(),
-                type = ActivateType.ACCESS
+                type = ActivateType.ACTIVATED
             )
         }
     }

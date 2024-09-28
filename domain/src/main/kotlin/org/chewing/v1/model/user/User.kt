@@ -28,7 +28,7 @@ class User private constructor(
                 image = image,
                 backgroundImage = backgroundImage,
                 name = UserName.of(firstName, lastName),
-                type = ActivateType.ACCESS
+                type = type
             )
         }
     }
