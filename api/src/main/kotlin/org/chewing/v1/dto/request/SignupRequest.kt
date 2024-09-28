@@ -7,7 +7,7 @@ class SignupRequest {
     data class Email(
         val emailId: String,
         val deviceId: String,
-        val provider: String,
+        val provider: PushToken.Provider,
         val pushToken: String,
         val firstName: String,
         val lastName: String,
@@ -30,7 +30,7 @@ class SignupRequest {
     data class Phone(
         val phoneNumberId: String,
         val deviceId: String,
-        val provider: String,
+        val provider: PushToken.Provider,
         val pushToken: String,
         val firstName: String,
         val lastName: String,

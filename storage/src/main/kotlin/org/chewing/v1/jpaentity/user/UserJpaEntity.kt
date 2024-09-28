@@ -10,6 +10,7 @@ import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.media.MediaType
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -22,7 +23,13 @@ internal class UserJpaEntity(
 
     private var pictureUrl: String,
 
+    @Enumerated(EnumType.STRING)
+    private var pictureType: MediaType,
+
     private var backgroundPictureUrl: String,
+
+    @Enumerated(EnumType.STRING)
+    private var backgroundPictureType: MediaType,
 
     private var userFirstName: String,
 
@@ -45,9 +52,11 @@ internal class UserJpaEntity(
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACCESS,
+                type = ActivateType.NOT_ACTIVATED,
                 emailId = email.emailId,
-                phoneNumberId = null
+                phoneNumberId = null,
+                pictureType = MediaType.IMAGE_BASIC,
+                backgroundPictureType = MediaType.IMAGE_BASIC
             )
         }
 
@@ -58,9 +67,11 @@ internal class UserJpaEntity(
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACCESS,
+                type = ActivateType.NOT_ACTIVATED,
                 emailId = null,
-                phoneNumberId = phone.phoneId
+                phoneNumberId = phone.phoneId,
+                pictureType = MediaType.IMAGE_BASIC,
+                backgroundPictureType = MediaType.IMAGE_BASIC
             )
         }
     }
@@ -71,8 +82,8 @@ internal class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Image.of(this.pictureUrl, 0),
-            Image.of(this.backgroundPictureUrl, 0),
+            Image.of(this.pictureUrl, 0, this.pictureType),
+            Image.of(this.backgroundPictureUrl, 0, this.backgroundPictureType),
             this.type
         )
     }
@@ -95,7 +106,7 @@ internal class UserJpaEntity(
     }
 
     fun updateAccess() {
-        this.type = ActivateType.ACCESS
+        this.type = ActivateType.ACTIVATED
     }
 
     fun updateContact(contact: Contact) {

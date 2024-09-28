@@ -8,8 +8,9 @@ import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.emoticon.EmoticonPack
+import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
-import java.io.File
 
 @Service
 class UserService(
@@ -19,10 +20,15 @@ class UserService(
     private val userStatusFinder: UserStatusFinder,
     private val userUpdater: UserUpdater,
     private val feedReader: FeedReader,
-    private val userEmoticonFinder: UserEmoticonFinder
+    private val userEmoticonFinder: UserEmoticonFinder,
+    private val userValidator: UserValidator,
 ) {
-    fun updateUserImage(file: File, userId: String) {
-        val media = fileProcessor.processNewFile(userId, file)
+    fun makeActivate(userId: String, userContent: UserContent) {
+        userUpdater.makeActivate(userId, userContent)
+    }
+
+    fun updateUserImage(file: FileData, userId: String, category: FileCategory) {
+        val media = fileProcessor.processNewFile(userId, file, category)
         val preMedia = userProcessor.processChangeImage(userId, media)
         fileProcessor.processOldFile(preMedia)
     }
@@ -30,6 +36,7 @@ class UserService(
     //사용자의 통합된 정보를 가져옴
     fun fulledUser(userId: String): Pair<User, UserStatus> {
         val user = userReader.read(userId)
+        userValidator.isUserActivated(user)
         val userStatus = userStatusFinder.find(userId)
         return Pair(user, userStatus)
     }
@@ -46,14 +53,8 @@ class UserService(
         fileProcessor.processOldFile(user.image)
         fileProcessor.processOldFiles(feedDetails.map { it.media })
     }
-    fun findOwnedEmoticonPacks(userId: String) : List<EmoticonPack>{
-        return userEmoticonFinder.find(userId)
-    }
 
-    fun accessUser(
-        userId: String,
-        userContent: UserContent,
-    ) {
-        userUpdater.updateContent(userId, userContent)
+    fun findOwnedEmoticonPacks(userId: String): List<EmoticonPack> {
+        return userEmoticonFinder.find(userId)
     }
 }

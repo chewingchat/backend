@@ -40,7 +40,7 @@ class JwtAuthenticationFilter(
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val path = request.requestURI
         // 특정 경로를 무시하도록 설정
-        return path.startsWith("/api/auth") && !path.startsWith("/api/auth/phone/update/") && !path.startsWith("/api/auth/email/update/")
+        return path.startsWith("/api/auth/phone/create") || path.startsWith("/api/auth/email/create")
     }
 
 

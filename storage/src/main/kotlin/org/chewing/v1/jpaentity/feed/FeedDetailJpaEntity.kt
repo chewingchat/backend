@@ -32,21 +32,22 @@ class FeedDetailJpaEntity(
             }
         }
     }
+
     fun toDetailId(): String {
         return feedDetailId
     }
 
     fun toFeedDetail(): FeedDetail {
         return when (feedDetailType) {
-            IMAGE -> FeedDetail.of(
+            IMAGE_BASIC, IMAGE_PNG, IMAGE_JPG, IMAGE_JPEG -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Image.of(feedDetailUrl, feedIndex),
+                media = Image.of(feedDetailUrl, feedIndex, feedDetailType),
                 feedId = feedId
             )
 
-            VIDEO -> FeedDetail.of(
+            VIDEO_MP4, VIDEO_BASIC -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Video.of(feedDetailUrl, feedIndex),
+                media = Video.of(feedDetailUrl, feedIndex, feedDetailType),
                 feedId = feedId
             )
         }

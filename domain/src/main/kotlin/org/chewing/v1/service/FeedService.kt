@@ -4,6 +4,8 @@ import org.chewing.v1.implementation.feed.*
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.feed.*
+import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -56,8 +58,8 @@ class FeedService(
         fileProcessor.processOldFiles(oldMedias)
     }
 
-    fun make(userId: String, files: List<File>, topic: String) {
-        val medias = fileProcessor.processNewFiles(userId, files)
+    fun make(userId: String, files: List<FileData>, topic: String, category: FileCategory) {
+        val medias = fileProcessor.processNewFiles(userId, files, category)
         feedProcessor.processNewFeed(medias, userId, topic)
     }
 }

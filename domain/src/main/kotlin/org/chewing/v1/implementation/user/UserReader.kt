@@ -2,11 +2,11 @@ package org.chewing.v1.implementation.user
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.UserRepository
-import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
 
 /**
@@ -24,7 +24,7 @@ class UserReader(
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
     fun read(userId: String): User {
-        return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        return userRepository.readUserById(userId)?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     fun readByContact(contact: Contact): User {

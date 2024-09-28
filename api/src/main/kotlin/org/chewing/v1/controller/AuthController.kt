@@ -1,15 +1,17 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
-import org.chewing.v1.dto.response.auth.AuthInfoResponse
+import org.chewing.v1.dto.response.auth.LogInfoResponse
 import org.chewing.v1.dto.response.auth.TokenResponse
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
+import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/auth")
@@ -19,36 +21,40 @@ class AuthController(
 
     @PostMapping("/phone/create/send")
     fun sendPhoneVerification(@RequestBody request: VerificationRequest.Phone): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        authService.sendVerification(request.toPhoneNumber())
+        authService.makeCredential(request.toPhoneNumber())
         return ResponseHelper.successOnly()
     }
 
     @PostMapping("/phone/create/verify")
-    fun verifyPhone(@RequestBody request: LoginRequest.Phone): SuccessResponseEntity<AuthInfoResponse> {
-        val (token, user) = authService.verifyLogin(
+    fun verifyPhone(
+        @RequestBody request: LoginRequest.Phone,
+    ): SuccessResponseEntity<LogInfoResponse> {
+        val loginInfo = authService.login(
             request.toPhoneNumber(),
             request.toVerificationCode(),
             request.toAppToken(),
-            request.toDevice()
+            request.toDevice(),
         )
-        return ResponseHelper.success(AuthInfoResponse.of(token, user))
+        return ResponseHelper.success(LogInfoResponse.of(loginInfo))
     }
 
     @PostMapping("/email/create/send")
     fun sendEmailVerification(@RequestBody request: VerificationRequest.Email): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        authService.sendVerification(request.toEmailAddress())
+        authService.makeCredential(request.toEmailAddress())
         return ResponseHelper.successOnly()
     }
 
     @PostMapping("/email/create/verify")
-    fun verifyEmail(@RequestBody request: LoginRequest.Email): SuccessResponseEntity<AuthInfoResponse> {
-        val (token, user) = authService.verifyLogin(
+    fun verifyEmail(
+        @RequestBody request: LoginRequest.Email,
+    ): SuccessResponseEntity<LogInfoResponse> {
+        val loginInfo = authService.login(
             request.toEmailAddress(),
             request.toVerificationCode(),
             request.toAppToken(),
-            request.toDevice()
+            request.toDevice(),
         )
-        return ResponseHelper.success(AuthInfoResponse.of(token, user))
+        return ResponseHelper.success(LogInfoResponse.of(loginInfo))
     }
 
     @PostMapping("/phone/update/send")
@@ -56,7 +62,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationRequest.Phone
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendVerificationForUpdate(userId, request.toPhoneNumber())
+        authService.makeUnusedCredential(userId, request.toPhoneNumber())
         return ResponseHelper.successOnly()
     }
 
@@ -65,7 +71,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationRequest.Email
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.sendVerificationForUpdate(userId, request.toEmailAddress())
+        authService.makeUnusedCredential(userId, request.toEmailAddress())
         return ResponseHelper.successOnly()
     }
 
@@ -74,7 +80,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationCheckRequest.Phone
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyCredentialForUpdate(userId, request.toPhoneNumber(), request.toVerificationCode())
+        authService.changeCredential(userId, request.toPhoneNumber(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
 
@@ -83,7 +89,7 @@ class AuthController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: VerificationCheckRequest.Email
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        authService.verifyCredentialForUpdate(userId, request.toEmailAddress(), request.toVerificationCode())
+        authService.changeCredential(userId, request.toEmailAddress(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
 
@@ -96,7 +102,7 @@ class AuthController(
 
     @GetMapping("/refresh")
     fun refreshAccessToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
-        val token = authService.refreshAccessToken(refreshToken)
+        val token = authService.refreshJwtToken(refreshToken)
         return ResponseHelper.success(TokenResponse.of(token))
     }
 }

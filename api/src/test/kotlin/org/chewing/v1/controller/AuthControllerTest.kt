@@ -1,12 +1,11 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.TestDataFactory.createJwtToken
+import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.auth.JwtToken
-import org.chewing.v1.model.media.Image
-import org.chewing.v1.model.token.RefreshToken
+import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.service.AuthService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -14,6 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -23,32 +23,19 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.time.LocalDateTime
 
 @WebMvcTest(AuthController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 class AuthControllerTest(
     @Autowired
     private val mockMvc: MockMvc,
     @Autowired
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
     @MockBean
     private lateinit var authService: AuthService
-
-    private fun createJwtToken() =
-        JwtToken.of("testAccessToken", RefreshToken.of("testRefreshToken", LocalDateTime.now()))
-
-    private fun createUser() = User.of(
-        "testUserId",
-        "testFirstName",
-        "testLastName",
-        "2000-00-00",
-        Image.of("www.example.com", 0),
-        Image.of("www.example.com", 0),
-        ActivateType.ACCESS
-    )
 
     private fun performCommonSuccessResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isOk)
@@ -70,7 +57,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendVerification(any())
+        verify(authService).makeCredential(any())
     }
 
     @Test
@@ -85,7 +72,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendVerification(any())
+        verify(authService).makeCredential(any())
     }
 
     @Test
@@ -93,6 +80,7 @@ class AuthControllerTest(
     fun verifyPhone() {
         val jwtToken = createJwtToken()
         val user = createUser()
+        val loginInfo = LoginInfo.of(jwtToken, user)
 
         val requestBody = mapOf(
             "countryCode" to "82",
@@ -100,10 +88,10 @@ class AuthControllerTest(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "testProvider"
+            "provider" to "apns"
         )
-        whenever(authService.verifyLogin(any(), any(), any(), any()))
-            .thenReturn(Pair(jwtToken, user))
+        whenever(authService.login(any(), any(), any(), any()))
+            .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/phone/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,9 +103,9 @@ class AuthControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
+                MockMvcResultMatchers.jsonPath("$.data.loginType").value(ActivateType.ACTIVATED.toString().lowercase())
             )
-        verify(authService).verifyLogin(any(), any(), any(), any())
+        verify(authService).login(any(), any(), any(), any())
     }
 
     @Test
@@ -125,16 +113,16 @@ class AuthControllerTest(
     fun verifyEmail() {
         val jwtToken = createJwtToken()
         val user = createUser()
-
+        val loginInfo = LoginInfo.of(jwtToken, user)
         val requestBody = mapOf(
             "email" to "test@example.com",
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "testProvider"
+            "provider" to "FCM"
         )
-        whenever(authService.verifyLogin(any(), any(), any(), any()))
-            .thenReturn(Pair(jwtToken, user))
+        whenever(authService.login(any(), any(), any(), any()))
+            .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/email/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,9 +133,9 @@ class AuthControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.authStatus").value(ActivateType.ACCESS.toString().lowercase())
+                MockMvcResultMatchers.jsonPath("$.data.loginType").value(ActivateType.ACTIVATED.toString().lowercase())
             )
-        verify(authService).verifyLogin(any(), any(), any(), any())
+        verify(authService).login(any(), any(), any(), any())
     }
 
     @Test
@@ -164,7 +152,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendVerificationForUpdate(any(), any())
+        verify(authService).makeUnusedCredential(any(), any())
     }
 
     @Test
@@ -180,7 +168,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).sendVerificationForUpdate(any(), any())
+        verify(authService).makeUnusedCredential(any(), any())
     }
 
     @Test
@@ -197,7 +185,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).verifyCredentialForUpdate(any(), any(), any())
+        verify(authService).changeCredential(any(), any(), any())
     }
 
     @Test
@@ -215,7 +203,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).verifyCredentialForUpdate(any(), any(), any())
+        verify(authService).changeCredential(any(), any(), any())
     }
 
     @Test
@@ -234,7 +222,7 @@ class AuthControllerTest(
     @DisplayName("토큰 갱신")
     fun refreshAccessToken() {
         val jwtToken = createJwtToken()
-        whenever(authService.refreshAccessToken(any()))
+        whenever(authService.refreshJwtToken(any()))
             .thenReturn(jwtToken)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/auth/refresh")
@@ -245,6 +233,6 @@ class AuthControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.accessToken").value(jwtToken.accessToken))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.refreshToken").value(jwtToken.refreshToken.token))
-        verify(authService).refreshAccessToken(any())
+        verify(authService).refreshJwtToken(any())
     }
 }

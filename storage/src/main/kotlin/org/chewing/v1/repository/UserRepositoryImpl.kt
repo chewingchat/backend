@@ -46,20 +46,23 @@ internal class UserRepositoryImpl(
     }
 
     override fun removePushToken(device: PushToken.Device) {
-        pushNotificationJpaRepository.deleteByDeviceIdAndDeviceProvider(device.deviceId, device.provider)
+        pushNotificationJpaRepository.deleteByDeviceIdAndProvider(device.deviceId, device.provider)
     }
 
     override fun appendPushToken(device: PushToken.Device, appToken: String, user: User) {
         pushNotificationJpaRepository.save(PushNotificationJpaEntity.generate(appToken, device, user))
     }
+
     override fun appendUser(contact: Contact): User {
         return when (contact) {
             is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElseGet {
                 userJpaRepository.save(UserJpaEntity.generateByEmail(contact)).toUser()
             }
+
             is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElseGet {
                 userJpaRepository.save(UserJpaEntity.generateByPhone(contact)).toUser()
             }
+
             else -> throw NotFoundException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
@@ -100,6 +103,16 @@ internal class UserRepositoryImpl(
             userJpaRepository.save(it)
         }
     }
+
+    override fun makeActivate(userId: String, userContent: UserContent) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateUserName(userContent.name)
+            it.updateBirth(userContent.birth)
+            it.updateAccess()
+            userJpaRepository.save(it)
+        }
+    }
+
     override fun appendSearchHistory(user: User, search: FriendSearch) {
         friendSearchJpaRepository.save(FriendSearchJpaEntity.fromFriendSearch(user, search))
     }

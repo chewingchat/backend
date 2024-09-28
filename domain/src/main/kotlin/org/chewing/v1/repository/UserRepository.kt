@@ -19,6 +19,7 @@ interface UserRepository {
     fun updateName(userId: String, userName: UserName)
     fun updateContent(userId: String, content: UserContent)
     fun updateContact(userId: String, contact: Contact)
+    fun makeActivate(userId: String, userContent: UserContent)
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: String): List<FriendSearch>
     fun removePushToken(device: PushToken.Device)

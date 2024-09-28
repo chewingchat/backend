@@ -34,4 +34,7 @@ class UserUpdater(
     fun updateContact(userId: String, contact: Contact) {
         return userRepository.updateContact(userId, contact)
     }
+    fun makeActivate(userId: String, userContent: UserContent) {
+        return userRepository.makeActivate(userId, userContent)
+    }
 }

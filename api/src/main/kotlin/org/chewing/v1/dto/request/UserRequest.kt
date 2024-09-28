@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.request
 
+import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
 
 class UserRequest {
@@ -8,5 +9,12 @@ class UserRequest {
         val lastName: String
     ){
         fun toUserName(): UserName = UserName.of(firstName, lastName)
+    }
+    data class UpdateProfile(
+        val firstName: String,
+        val lastName: String,
+        val birth: String,
+    ){
+        fun toUserContent(): UserContent = UserContent.of(firstName, lastName, birth)
     }
 }

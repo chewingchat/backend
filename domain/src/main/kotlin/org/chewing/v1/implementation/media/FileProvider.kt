@@ -3,6 +3,7 @@ package org.chewing.v1.implementation.media
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.external.ExternalImageClient
+import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Component
 import java.io.File
@@ -19,7 +20,7 @@ class FileProvider(private val externalImageClient: ExternalImageClient) {
      * @throws ConflictException 이미지 파일 추가에 실패하는 경우,
      * IMAGE_UPLOAD_FAILED 오류 코드와 함께 예외를 발생시킵니다.
      */
-    fun appendFile(file: File, media: Media) {
+    fun appendFile(file: FileData, media: Media) {
         try {
             externalImageClient.uploadFile(file, media)
         } catch (e: Exception) {
