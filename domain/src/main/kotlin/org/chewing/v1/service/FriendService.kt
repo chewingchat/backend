@@ -31,8 +31,7 @@ class FriendService(
         // 저장할 친구 정보를 읽어옴
         val targetUser = userFinder.findByContact(targetContact)
         // 이미 친구인지 확인
-        friendValidator.validateAlreadyFriend(userId, targetUser.userId)
-        friendValidator.validateMyself(userId, targetUser.userId)
+        friendValidator.validateFriendshipAllowed(userId, targetUser.userId)
         // 나의 정보를 읽어온다.
         val user = userReader.read(userId)
         // 친구 추가
@@ -61,7 +60,7 @@ class FriendService(
     }
 
     fun getFriends(friendIds: List<String>, userId: String): List<Friend> {
-        val friendInfos = friendReader.readsIn(friendIds, userId)
+        val friendInfos = friendReader.readsIdIn(friendIds, userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
         val usersStatus = userStatusFinder.finds(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)

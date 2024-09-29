@@ -2,6 +2,7 @@ package org.chewing.v1.implementation.auth
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
@@ -15,11 +16,7 @@ class AuthReader(
     private val authRepository: AuthRepository,
 ) {
     fun readContact(targetContact: Credential): Contact {
-        return authRepository.readContact(targetContact) ?: when (targetContact) {
-            is EmailAddress -> throw ConflictException(ErrorCode.EMAIL_NOT_FOUND)
-            is PhoneNumber -> throw ConflictException(ErrorCode.PHONE_NUMBER_NOT_FOUND)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
-        }
+        return authRepository.readContact(targetContact) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     fun readLoggedInId(refreshToken: String): String {

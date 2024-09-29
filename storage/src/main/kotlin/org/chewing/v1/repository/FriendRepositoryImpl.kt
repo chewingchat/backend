@@ -45,6 +45,17 @@ internal class FriendRepositoryImpl(
         return friendJpaRepository.existsById(FriendId(userId, friendId))
     }
 
+    override fun readFriendShip(userId: String, friendId: String): Pair<FriendInfo, FriendInfo>? {
+        val friendIds = listOf(FriendId(userId, friendId), FriendId(friendId, userId))
+        val friends = friendJpaRepository.findAllByIdIn(friendIds)
+
+        if (friends.size < 2) return null // 두 관계가 모두 존재해야 함
+
+        val toTarget = friends.find { it.id == FriendId(userId, friendId) }?: return null
+        val fromTarget = friends.find { it.id == FriendId(friendId, userId) }?: return null
+        return toTarget.toFriendInfo() to fromTarget.toFriendInfo()
+    }
+
     override fun updateFavorite(user: User, friendId: String, favorite: Boolean) {
         friendJpaRepository.findById(FriendId(user.userId, friendId))?.updateFavorite(favorite)
     }

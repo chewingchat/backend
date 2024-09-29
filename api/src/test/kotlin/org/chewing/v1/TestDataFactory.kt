@@ -67,6 +67,6 @@ object TestDataFactory {
     }
 
     fun createFriend(): Friend {
-        return Friend.of(createUser(), true, createFriendName(), createUserStatus())
+        return Friend.of(createUser(), true, createFriendName(), createUserStatus(), AccessStatus.ACCESS)
     }
 }

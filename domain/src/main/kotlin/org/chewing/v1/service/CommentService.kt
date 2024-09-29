@@ -41,7 +41,7 @@ class CommentService(
     fun fetchComment(userId: String, feedId: String): List<Comment> {
         feedValidator.isOwner(feedId, userId)
         val comments = commentReader.reads(feedId)
-        val friends = friendReader.readsIn(comments.map { it.userId }, userId)
+        val friends = friendReader.readsIdIn(comments.map { it.userId }, userId)
         val users = userReader.reads(friends.map { it.friendId })
         return commentEnricher.enrich(comments, friends, users)
     }

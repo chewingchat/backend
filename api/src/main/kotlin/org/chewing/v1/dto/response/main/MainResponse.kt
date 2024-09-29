@@ -5,12 +5,12 @@ import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.friend.Friend
 
-data class MainFriendCardsResponse(
-    val friends: List<FriendCardResponse>,
+data class MainResponse(
+    val friends: List<FriendMainResponse>,
     val user: UserResponse,
     val totalFriends: Int
 ) {
-    data class FriendCardResponse(
+    data class FriendMainResponse(
         val friendId: String,
         val firstName: String,
         val lastName: String,
@@ -24,8 +24,8 @@ data class MainFriendCardsResponse(
         val statusEmoticon: String,
     ) {
         companion object {
-            fun of(friend: Friend): FriendCardResponse {
-                return FriendCardResponse(
+            fun of(friend: Friend): FriendMainResponse {
+                return FriendMainResponse(
                     friendId = friend.user.userId,
                     firstName = friend.name.firstName(),
                     lastName = friend.name.lastName(),
@@ -43,9 +43,9 @@ data class MainFriendCardsResponse(
     }
 
     companion object {
-        fun ofList(user: User, userStatus: UserStatus, friends: List<Friend>): MainFriendCardsResponse {
-            return MainFriendCardsResponse(
-                friends = friends.map { FriendCardResponse.of(it) },
+        fun ofList(user: User, userStatus: UserStatus, friends: List<Friend>): MainResponse {
+            return MainResponse(
+                friends = friends.map { FriendMainResponse.of(it) },
                 user = UserResponse.of(user, userStatus),
                 totalFriends = friends.size,
             )
