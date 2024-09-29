@@ -19,12 +19,11 @@ interface UserRepository {
     fun updateName(userId: String, userName: UserName)
     fun updateContent(userId: String, content: UserContent)
     fun updateContact(userId: String, contact: Contact)
-    fun updateActivate(userId: String, userContent: UserContent)
+    fun updateAccess(userId: String, userContent: UserContent)
     fun appendSearchHistory(user: User, search: FriendSearch)
     fun readSearchHistory(userId: String): List<FriendSearch>
     fun removePushToken(device: PushToken.Device)
     fun appendPushToken(device: PushToken.Device, appToken: String, user: User)
     fun appendUser(contact: Contact): User
-    fun readUserEmoticonPacks(userId: String): List<String>
     fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean
 }

@@ -21,7 +21,7 @@ data class MainResponse(
         val access: String,
         val favorite: Boolean,
         val statusMessage: String,
-        val statusEmoticon: String,
+        val statusEmoji: String,
     ) {
         companion object {
             fun of(friend: Friend): FriendMainResponse {
@@ -36,7 +36,7 @@ data class MainResponse(
                     access = friend.user.type.name.lowercase(),
                     backgroundImageUrl = friend.user.backgroundImage.url,
                     backgroundImageType = friend.user.backgroundImage.type.toString().lowercase(),
-                    statusEmoticon = friend.status.emoticon.media.url
+                    statusEmoji = friend.status.emoji
                 )
             }
         }

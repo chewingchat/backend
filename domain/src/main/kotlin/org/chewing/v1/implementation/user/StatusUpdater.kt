@@ -5,16 +5,16 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class StatusRemover(
+class StatusUpdater(
     private val statusRepository: UserStatusRepository
 ) {
     @Transactional
-    fun removeAll(userId: String){
-        statusRepository.removeAllByUserId(userId)
+    fun updateSelectedStatusTrue(userId: String, statusId: String) {
+        statusRepository.updateSelectedStatusFalse(userId)
+        statusRepository.updateSelectedStatusTrue(userId, statusId)
     }
-
     @Transactional
-    fun removes(statusesId: List<String>){
-        statusRepository.removes(statusesId)
+    fun updateDeselectedStatusFalse(userId: String) {
+        statusRepository.updateSelectedStatusFalse(userId)
     }
 }

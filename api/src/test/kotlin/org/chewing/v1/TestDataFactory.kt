@@ -43,9 +43,11 @@ object TestDataFactory {
     fun createJwtToken(): JwtToken {
         return JwtToken.of("accessToken", RefreshToken.of("refreshToken", LocalDateTime.now()))
     }
+
     fun createFriendName(): UserName {
         return UserName.of("testFriendFirstName", "testFriendLastName")
     }
+
     fun createUser(): User {
         return User.of(
             "testUserId",
@@ -58,12 +60,9 @@ object TestDataFactory {
         )
     }
 
-    fun createEmoticon(): Emoticon {
-        return Emoticon.of("testEmoticonId", "testEmoticonName", "testEmoticonUrl")
-    }
 
     fun createUserStatus(): UserStatus {
-        return UserStatus.of("testStatusId", "testMessage", createEmoticon(), "testUserId")
+        return UserStatus.of("testStatusId", "testMessage", "testEmoji", "testUserId", true)
     }
 
     fun createFriend(): Friend {

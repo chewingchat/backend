@@ -56,13 +56,13 @@ class MyControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].access").value(friends[0].user.type.name.lowercase()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].backgroundImageUrl").value(friends[0].user.backgroundImage.url))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].backgroundImageType").value("image/png"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].statusEmoticon").value(friends[0].status.emoticon.media.url))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].statusEmoji").value(friends[0].status.emoji))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.totalFriends").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.firstName").value(user.name.firstName))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.lastName").value(user.name.lastName))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.imageUrl").value(user.image.url))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.imageType").value("image/png"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.statusEmoticon").value(status.emoticon.media.url))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.statusEmoji").value(status.emoji))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.statusMessage").value(status.message))
     }
 }
