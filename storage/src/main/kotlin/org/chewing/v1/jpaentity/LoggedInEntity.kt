@@ -1,6 +1,7 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
+import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.token.RefreshToken
 import java.time.LocalDateTime
@@ -11,15 +12,15 @@ import java.util.UUID
 internal class LoggedInEntity(
     @Id
     @Column(name = "logged_in_id")
-    val loggedInId: String = UUID.randomUUID().toString(),
+    private val loggedInId: String = UUID.randomUUID().toString(),
 
     @Column(name = "refresh_token")
-    val refreshToken: String,
+    private var refreshToken: String,
 
-    val userId: String,
+    private val userId: String,
 
     @Column(name = "expired_at")
-    val expiredAt: LocalDateTime
+    private var expiredAt: LocalDateTime
 ) {
     companion object {
         fun fromToken(refreshToken: RefreshToken, userId: String): LoggedInEntity {
@@ -29,5 +30,14 @@ internal class LoggedInEntity(
                 expiredAt = refreshToken.expiredAt
             )
         }
+    }
+
+    fun toLoggedInId(): String {
+        return loggedInId
+    }
+
+    fun updateRefreshToken(refreshToken: RefreshToken) {
+        this.refreshToken = refreshToken.token
+        this.expiredAt = refreshToken.expiredAt
     }
 }

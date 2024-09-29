@@ -1,41 +1,42 @@
 package org.chewing.v1.dto.response.main
 
+import org.chewing.v1.dto.response.user.UserResponse
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.model.friend.Friend
 
 data class MainFriendCardsResponse(
     val friends: List<FriendCardResponse>,
-    val userStatusMessage: String,
-    val userStatusEmoticon: String,
-    val userImageUrl: String,
-    val userFirstName: String,
-    val userLastName: String,
+    val user: UserResponse,
     val totalFriends: Int
 ) {
     data class FriendCardResponse(
         val friendId: String,
-        val friendFirstName: String,
-        val friendLastName: String,
-        val friendBackgroundImageUrl: String,
-        val friendImageUrl: String,
-        val friendActivate: String,
-        val isFavorite: Boolean,
-        val friendStatusMessage: String,
-        val friendStatusEmoticon: String,
+        val firstName: String,
+        val lastName: String,
+        val backgroundImageUrl: String,
+        val backgroundImageType: String,
+        val imageUrl: String,
+        val imageType: String,
+        val access: String,
+        val favorite: Boolean,
+        val statusMessage: String,
+        val statusEmoticon: String,
     ) {
         companion object {
             fun of(friend: Friend): FriendCardResponse {
                 return FriendCardResponse(
-                    friendId = friend.friend.userId,
-                    friendFirstName = friend.name.firstName(),
-                    friendLastName = friend.name.lastName(),
-                    friendImageUrl = friend.friend.image.url,
-                    friendStatusMessage = friend.friendStatus.statusMessage,
-                    isFavorite = friend.isFavorite,
-                    friendActivate = friend.friend.type.name,
-                    friendBackgroundImageUrl = friend.friend.backgroundImage.url,
-                    friendStatusEmoticon = friend.friendStatus.emoticon.media.url
+                    friendId = friend.user.userId,
+                    firstName = friend.name.firstName(),
+                    lastName = friend.name.lastName(),
+                    imageUrl = friend.user.image.url,
+                    imageType = friend.user.image.type.toString().lowercase(),
+                    statusMessage = friend.status.message,
+                    favorite = friend.isFavorite,
+                    access = friend.user.type.name.lowercase(),
+                    backgroundImageUrl = friend.user.backgroundImage.url,
+                    backgroundImageType = friend.user.backgroundImage.type.toString().lowercase(),
+                    statusEmoticon = friend.status.emoticon.media.url
                 )
             }
         }
@@ -45,12 +46,8 @@ data class MainFriendCardsResponse(
         fun ofList(user: User, userStatus: UserStatus, friends: List<Friend>): MainFriendCardsResponse {
             return MainFriendCardsResponse(
                 friends = friends.map { FriendCardResponse.of(it) },
-                userStatusMessage = userStatus.statusMessage,
-                userImageUrl = user.image.url,
-                userFirstName = user.name.firstName(),
-                userLastName = user.name.lastName(),
+                user = UserResponse.of(user, userStatus),
                 totalFriends = friends.size,
-                userStatusEmoticon = userStatus.emoticon.media.url
             )
         }
     }

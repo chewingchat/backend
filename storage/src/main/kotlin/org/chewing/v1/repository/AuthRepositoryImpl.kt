@@ -9,13 +9,8 @@ import org.chewing.v1.jpaentity.auth.PhoneNumberJpaEntity
 import org.chewing.v1.jparepository.*
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.contact.ContactType
-import org.chewing.v1.model.contact.ContactType.*
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
@@ -31,11 +26,13 @@ internal class AuthRepositoryImpl(
         when (credential) {
             is EmailAddress -> emailJpaRepository.findByEmailAddress(credential.email)
                 .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(credential)) }
+
             is PhoneNumber -> phoneNumberJpaRepository.findByPhoneNumberAndCountryCode(
                 credential.number,
                 credential.countryCode
             )
                 .orElseGet { phoneNumberJpaRepository.save(PhoneNumberJpaEntity.generate(credential)) }
+
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
@@ -74,7 +71,7 @@ internal class AuthRepositoryImpl(
         return phoneEntity.getVerifiedNumber()
     }
 
-    override fun updateVerificationCode(credential: Credential): String {
+    override fun generateVerificationCode(credential: Credential): String {
         return when (credential) {
             is EmailAddress -> updateEmailVerificationCode(credential)
             is PhoneNumber -> updatePhoneVerificationCode(credential)
@@ -82,7 +79,14 @@ internal class AuthRepositoryImpl(
         }
     }
 
-    override fun appendLoggedIn(refreshToken: RefreshToken, userId: String) {
-        loggedInJpaRepository.save(LoggedInEntity.fromToken(refreshToken, userId))
+    override fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String) {
+        loggedInJpaRepository.findById(loggedInId).ifPresent {
+            it.updateRefreshToken(refreshToken)
+            loggedInJpaRepository.save(it)
+        }
+    }
+
+    override fun readLoggedId(refreshToken: String): String? {
+        return loggedInJpaRepository.findByRefreshToken(refreshToken).orElse(null).toLoggedInId()
     }
 }

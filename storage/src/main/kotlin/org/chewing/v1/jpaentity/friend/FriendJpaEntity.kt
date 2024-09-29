@@ -2,7 +2,7 @@ package org.chewing.v1.jpaentity.friend
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendInfo
@@ -19,7 +19,7 @@ internal class FriendJpaEntity(
     var friendFirstName: String,
     var friendLastName: String,
     @Enumerated(EnumType.STRING)
-    private var type: ActivateType
+    private var type: AccessStatus
 ) : BaseEntity() {
     companion object {
         fun generate(user: User, friendName: UserName, targetUser: User): FriendJpaEntity {
@@ -28,7 +28,7 @@ internal class FriendJpaEntity(
                 favorite = false,
                 friendFirstName = friendName.firstName(),
                 friendLastName = friendName.lastName(),
-                type = ActivateType.ACTIVATED
+                type = AccessStatus.ACCESS
             )
         }
     }
@@ -51,6 +51,6 @@ internal class FriendJpaEntity(
         )
     }
     fun updateBlock() {
-        this.type = ActivateType.BLOCK
+        this.type = AccessStatus.BLOCK
     }
 }

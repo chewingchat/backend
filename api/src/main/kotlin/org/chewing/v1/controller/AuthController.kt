@@ -6,12 +6,10 @@ import org.chewing.v1.dto.response.auth.TokenResponse
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.AuthService
-import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/auth")
@@ -101,7 +99,7 @@ class AuthController(
     }
 
     @GetMapping("/refresh")
-    fun refreshAccessToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
+    fun refreshToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
         val token = authService.refreshJwtToken(refreshToken)
         return ResponseHelper.success(TokenResponse.of(token))
     }

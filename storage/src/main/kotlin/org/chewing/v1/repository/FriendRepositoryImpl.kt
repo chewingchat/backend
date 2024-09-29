@@ -23,7 +23,6 @@ internal class FriendRepositoryImpl(
 
     override fun appendFriend(user: User, friendName: UserName, targetUser: User) {
         friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
-        friendJpaRepository.save(FriendJpaEntity.generate(targetUser, user.name, user))
     }
 
     override fun removeFriend(userId: String, friendId: String) {

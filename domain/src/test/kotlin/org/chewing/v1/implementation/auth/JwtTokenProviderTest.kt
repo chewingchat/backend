@@ -30,8 +30,8 @@ class JwtTokenProviderTest {
     fun setup() {
         secretKeyString =
             "mysecretkey12345asdfvasdfvhjaaaaaaaaaaaaaaaaaaaaaaaaaslfdjasdlkr231243123412"
-        accessExpiration = 1000 * 60 * 15
-        refreshExpiration = 1000 * 60 * 60 * 24 * 30
+        accessExpiration = 1000L * 60 * 15
+        refreshExpiration = 1000L * 60 * 60 * 24 * 30
 
         secretKey = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
         jwtTokenProvider = JwtTokenProvider(secretKeyString, accessExpiration, refreshExpiration)

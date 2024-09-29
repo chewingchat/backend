@@ -44,11 +44,11 @@ data class MyCommentResponse(
                 comments: List<CommentInfo>
             ): MyCommentFeedResponse {
                 return MyCommentFeedResponse(
-                    friend.friend.userId,
+                    friend.user.userId,
                     friend.name.firstName(),
                     friend.name.lastName(),
-                    friend.friend.image.url,
-                    friend.friend.type.name,
+                    friend.user.image.url,
+                    friend.user.type.name,
                     feed.feed.feedId,
                     feed.feed.topic,
                     feed.feedDetails[0].media.url,

@@ -1,7 +1,6 @@
 package org.chewing.v1.jpaentity
 
 import jakarta.persistence.*
-import org.chewing.v1.model.ActivateType
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.user.User
 import java.util.*

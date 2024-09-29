@@ -32,12 +32,12 @@ class AuthProcessor(
 
     fun processRefreshToken(
         refreshToken: String
-    ): Pair<JwtToken, String> {
+    ): JwtToken {
         val token = jwtTokenProvider.cleanedToken(refreshToken)
         // 리프레시 토큰 유효성 검사(수정)
         jwtTokenProvider.validateRefreshToken(token)
         // 리프레시 토큰에서 사용자 ID 추출
         val userId = jwtTokenProvider.getUserIdFromToken(token)
-        return Pair(jwtTokenProvider.createJwtToken(userId), userId)
+        return jwtTokenProvider.createJwtToken(userId)
     }
 }

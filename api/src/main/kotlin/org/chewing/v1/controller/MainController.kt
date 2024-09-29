@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*
 class MainController(
     private val mainFacade: MainFacade
 ) {
-    @GetMapping("/friend/card")
-    fun getMainPageFriendCards(
+    @GetMapping("/card")
+    fun getMainPageCards(
         @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: SortCriteria
     ): SuccessResponseEntity<MainFriendCardsResponse> {
@@ -23,8 +23,8 @@ class MainController(
         return ResponseHelper.success(MainFriendCardsResponse.ofList(user, userStatus, friends))
     }
 
-    @GetMapping("/friend/list")
-    fun getMainPageFriendList(
+    @GetMapping("/list")
+    fun getMainPageList(
         @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: SortCriteria
     ): SuccessResponseEntity<MainFriendListResponse> {

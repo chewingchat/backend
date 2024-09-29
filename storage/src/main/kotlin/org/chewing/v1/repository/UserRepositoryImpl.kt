@@ -104,7 +104,7 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun makeActivate(userId: String, userContent: UserContent) {
+    override fun updateActivate(userId: String, userContent: UserContent) {
         userJpaRepository.findById(userId).ifPresent {
             it.updateUserName(userContent.name)
             it.updateBirth(userContent.birth)

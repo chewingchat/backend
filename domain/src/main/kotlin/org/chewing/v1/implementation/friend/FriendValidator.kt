@@ -6,15 +6,20 @@ import org.chewing.v1.repository.FriendRepository
 import org.springframework.stereotype.Component
 
 @Component
-class FriendChecker(
+class FriendValidator(
     private val friendRepository: FriendRepository
 ) {
-    fun isAlreadyFriend(userId: String, friendId: String) {
+    fun validateAlreadyFriend(userId: String, friendId: String) {
          if(friendRepository.checkFriend(userId, friendId)) {
              throw ConflictException(ErrorCode.FRIEND_ALREADY_CREATED)
          }
     }
-    fun isFriend(userId: String, friendId: String) {
+    fun validateMyself(userId: String, friendId: String) {
+        if(userId == friendId) {
+            throw ConflictException(ErrorCode.FRIEND_MYSELF)
+        }
+    }
+    fun validateIsFriend(userId: String, friendId: String) {
         if(!friendRepository.checkFriend(userId, friendId)) {
             throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
         }

@@ -16,15 +16,15 @@ object FriendSortEngine {
 
     private fun getFriendComparator(sortCriteria: SortCriteria): Comparator<Friend> {
         return when (sortCriteria) {
-            SortCriteria.NAME -> Comparator.comparing<Friend?, String?> { it.friend.name.lastName() }.thenComparing(
-                Comparator.comparing { it.friend.name.firstName() }
+            SortCriteria.NAME -> Comparator.comparing<Friend?, String?> { it.user.name.lastName() }.thenComparing(
+                Comparator.comparing { it.user.name.firstName() }
             )
 
             SortCriteria.FAVORITE -> Comparator.comparing<Friend?, Int?> {
                 if (it.isFavorite) 0 else 1
             }.thenComparing(
-                Comparator.comparing<Friend?, String?> { it.friend.name.lastName() }.thenComparing(
-                    Comparator.comparing { it.friend.name.firstName() }
+                Comparator.comparing<Friend?, String?> { it.user.name.lastName() }.thenComparing(
+                    Comparator.comparing { it.user.name.firstName() }
                 )
             )
 

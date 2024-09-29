@@ -1,9 +1,9 @@
 package org.chewing.v1.implementation
 
-import org.chewing.v1.model.ActivateType
-import org.chewing.v1.model.auth.JwtToken
-import org.chewing.v1.model.auth.PushToken
-import org.chewing.v1.model.auth.PhoneNumber
+import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.auth.*
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.token.RefreshToken
@@ -25,7 +25,11 @@ object TestDataFactory {
     }
 
     fun createVerificationCode(): String {
-        return "123456"
+        return "testCode"
+    }
+
+    fun createWrongVerificationCode(): String {
+        return "wrongCode"
     }
 
     fun createAppToken(): String {
@@ -48,7 +52,31 @@ object TestDataFactory {
             "2000-00-00",
             Image.of("www.example.com", 0, MediaType.IMAGE_PNG),
             Image.of("www.example.com", 0, MediaType.IMAGE_PNG),
-            ActivateType.ACTIVATED
+            AccessStatus.ACCESS
         )
+    }
+
+    fun createEmailCredential(): Credential {
+        return EmailAddress.of("test@example.com")
+    }
+
+    fun createPhoneNumberCredential(): Credential {
+        return PhoneNumber.of("82", "1234567890")
+    }
+
+    fun createValidEmailContact(): Email {
+        return Email.of("testEmailId", "test@Example.com", "testCode", LocalDateTime.now().plusMinutes(1))
+    }
+
+    fun createValidPhoneContact(): Phone {
+        return Phone.of("testPhoneId", "82", "1234567890", "testCode", LocalDateTime.now().plusMinutes(1))
+    }
+
+    fun createExpiredEmailContact(): Email {
+        return Email.of("testEmailId", "test@Example.com", "testCode", LocalDateTime.now().minusMinutes(1))
+    }
+
+    fun createExpiredPhoneContact(): Phone {
+        return Phone.of("testPhoneId", "82", "1234567890", "testCode", LocalDateTime.now().minusMinutes(1))
     }
 }

@@ -9,4 +9,5 @@ import java.util.*
 internal interface LoggedInJpaRepository : JpaRepository<LoggedInEntity, String>{
     fun deleteByUserId(userId: String)
 
+    fun findByRefreshToken(refreshToken: String): Optional<LoggedInEntity>
 }
