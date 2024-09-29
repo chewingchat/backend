@@ -4,23 +4,27 @@ import org.chewing.v1.model.friend.Friend
 
 data class FriendResponse(
     val friendId: String,
-    val friendFirstName: String,
-    val friendLastName: String,
-    val friendImageUrl: String,
-    val isFavorite: Boolean,
-    val friendStatusMessage: String,
-    val friendStatusEmoticon: String,
+    val firstName: String,
+    val lastName: String,
+    val imageUrl: String,
+    val imageType: String,
+    val access: String,
+    val favorite: Boolean,
+    val statusMessage: String,
+    val statusEmoticon: String,
 ) {
     companion object {
         fun of(friend: Friend): FriendResponse {
             return FriendResponse(
-                friendId = friend.friend.userId,
-                friendFirstName = friend.name.firstName(),
-                friendLastName = friend.name.lastName(),
-                friendImageUrl = friend.friend.image.url,
-                friendStatusMessage = friend.friendStatus.statusMessage,
-                isFavorite = friend.isFavorite,
-                friendStatusEmoticon = friend.friendStatus.emoticon.media.url
+                friendId = friend.user.userId,
+                firstName = friend.name.firstName(),
+                lastName = friend.name.lastName(),
+                imageUrl = friend.user.image.url,
+                access = friend.user.type.name.lowercase(),
+                statusMessage = friend.status.message,
+                favorite = friend.isFavorite,
+                statusEmoticon = friend.status.emoticon.media.url,
+                imageType = friend.user.image.type.toString().lowercase(),
             )
         }
     }

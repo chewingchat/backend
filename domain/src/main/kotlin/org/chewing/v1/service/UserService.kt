@@ -24,7 +24,7 @@ class UserService(
     private val userValidator: UserValidator,
 ) {
     fun makeActivate(userId: String, userContent: UserContent) {
-        userUpdater.makeActivate(userId, userContent)
+        userUpdater.updateActivate(userId, userContent)
     }
 
     fun updateUserImage(file: FileData, userId: String, category: FileCategory) {
@@ -34,9 +34,9 @@ class UserService(
     }
 
     //사용자의 통합된 정보를 가져옴
-    fun fulledUser(userId: String): Pair<User, UserStatus> {
+    fun getFulledAccessUser(userId: String): Pair<User, UserStatus> {
         val user = userReader.read(userId)
-        userValidator.isUserActivated(user)
+        userValidator.isUserAccess(user)
         val userStatus = userStatusFinder.find(userId)
         return Pair(user, userStatus)
     }

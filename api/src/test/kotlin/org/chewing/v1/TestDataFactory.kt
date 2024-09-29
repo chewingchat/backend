@@ -1,13 +1,17 @@
 package org.chewing.v1
 
-import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
+import org.chewing.v1.model.emoticon.Emoticon
+import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserName
+import org.chewing.v1.model.user.UserStatus
 import java.time.LocalDateTime
 
 object TestDataFactory {
@@ -39,7 +43,9 @@ object TestDataFactory {
     fun createJwtToken(): JwtToken {
         return JwtToken.of("accessToken", RefreshToken.of("refreshToken", LocalDateTime.now()))
     }
-
+    fun createFriendName(): UserName {
+        return UserName.of("testFriendFirstName", "testFriendLastName")
+    }
     fun createUser(): User {
         return User.of(
             "testUserId",
@@ -48,7 +54,19 @@ object TestDataFactory {
             "2000-00-00",
             Image.of("www.example.com", 0, MediaType.IMAGE_PNG),
             Image.of("www.example.com", 0, MediaType.IMAGE_PNG),
-            ActivateType.ACTIVATED
+            AccessStatus.ACCESS
         )
+    }
+
+    fun createEmoticon(): Emoticon {
+        return Emoticon.of("testEmoticonId", "testEmoticonName", "testEmoticonUrl")
+    }
+
+    fun createUserStatus(): UserStatus {
+        return UserStatus.of("testStatusId", "testMessage", createEmoticon(), "testUserId")
+    }
+
+    fun createFriend(): Friend {
+        return Friend.of(createUser(), true, createFriendName(), createUserStatus())
     }
 }

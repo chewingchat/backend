@@ -5,7 +5,7 @@ import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
@@ -42,7 +42,7 @@ internal class UserJpaEntity(
     var phoneNumberId: String?,
 
     @Enumerated(EnumType.STRING)
-    private var type: ActivateType
+    private var type: AccessStatus
 ) : BaseEntity() {
     companion object {
         fun generateByEmail(email: Email): UserJpaEntity {
@@ -52,7 +52,7 @@ internal class UserJpaEntity(
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACTIVATED,
+                type = AccessStatus.NOT_ACCESS,
                 emailId = email.emailId,
                 phoneNumberId = null,
                 pictureType = MediaType.IMAGE_BASIC,
@@ -67,7 +67,7 @@ internal class UserJpaEntity(
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
-                type = ActivateType.NOT_ACTIVATED,
+                type = AccessStatus.NOT_ACCESS,
                 emailId = null,
                 phoneNumberId = phone.phoneId,
                 pictureType = MediaType.IMAGE_BASIC,
@@ -102,11 +102,11 @@ internal class UserJpaEntity(
     }
 
     fun updateDelete() {
-        this.type = ActivateType.DELETE
+        this.type = AccessStatus.DELETE
     }
 
     fun updateAccess() {
-        this.type = ActivateType.ACTIVATED
+        this.type = AccessStatus.ACCESS
     }
 
     fun updateContact(contact: Contact) {

@@ -4,7 +4,7 @@ import org.chewing.v1.model.emoticon.Emoticon
 
 class UserStatus private constructor(
     val statusId: String,
-    val statusMessage: String,
+    val message: String,
     val emoticon: Emoticon,
     val userId: String
 ) {

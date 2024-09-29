@@ -24,9 +24,9 @@ class FriendSearchEngine(
 
     private fun personalized(friends: List<Friend>, keyword: String): List<Friend> {
         return friends.filter { friend ->
-            val fullName = "${friend.friend.name.firstName()} ${friend.friend.name.lastName()}"
-            val alternativeFullName = "${friend.friend.name.lastName()} ${friend.friend.name.firstName()}"
-            val concatenatedNames = "${friend.friend.name.firstName()}${friend.friend.name.lastName()}"
+            val fullName = "${friend.user.name.firstName()} ${friend.user.name.lastName()}"
+            val alternativeFullName = "${friend.user.name.lastName()} ${friend.user.name.firstName()}"
+            val concatenatedNames = "${friend.user.name.firstName()}${friend.user.name.lastName()}"
 
             listOf(fullName, alternativeFullName, concatenatedNames).any {
                 it.contains(keyword, ignoreCase = true)

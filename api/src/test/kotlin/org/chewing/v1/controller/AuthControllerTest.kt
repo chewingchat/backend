@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createJwtToken
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
-import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.service.AuthService
 import org.junit.jupiter.api.DisplayName
@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @WebMvcTest(AuthController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-@AutoConfigureMockMvc
 class AuthControllerTest(
     @Autowired
     private val mockMvc: MockMvc,
@@ -103,7 +102,7 @@ class AuthControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.loginType").value(ActivateType.ACTIVATED.toString().lowercase())
+                MockMvcResultMatchers.jsonPath("$.data.access").value(AccessStatus.ACCESS.toString().lowercase())
             )
         verify(authService).login(any(), any(), any(), any())
     }
@@ -133,7 +132,7 @@ class AuthControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.accessToken").value(jwtToken.accessToken))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.token.refreshToken").value(jwtToken.refreshToken.token))
             .andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.loginType").value(ActivateType.ACTIVATED.toString().lowercase())
+                MockMvcResultMatchers.jsonPath("$.data.access").value(AccessStatus.ACCESS.toString().lowercase())
             )
         verify(authService).login(any(), any(), any(), any())
     }

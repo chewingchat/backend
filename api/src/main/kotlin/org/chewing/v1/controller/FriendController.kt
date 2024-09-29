@@ -19,7 +19,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriendByEmail(userId, request.toUserName(), request.toEmail())
+        friendService.addFriend(userId, request.toUserName(), request.toEmail())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -29,7 +29,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriendByPhoneNumber(userId, request.toUserName(), request.toPhoneNumber())
+        friendService.addFriend(userId, request.toUserName(), request.toPhoneNumber())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }

@@ -8,7 +8,6 @@ class Phone private constructor(
     val country: String,
     val number: String,
     val validationCode: ValidationCode,
-    val isAuthorizedFirst: Boolean
 ) : Contact {
     companion object {
         fun of(
@@ -17,7 +16,6 @@ class Phone private constructor(
             number: String,
             authorizedNumber: String,
             expiredTime: LocalDateTime,
-            isAuthorized: Boolean
         ): Phone {
             return Phone(
                 phoneId = phoneId,
@@ -27,17 +25,6 @@ class Phone private constructor(
                     authorizedNumber,
                     expiredTime
                 ),
-                isAuthorizedFirst = isAuthorized
-            )
-        }
-
-        fun generate(country: String, number: String): Phone {
-            return Phone(
-                phoneId = "",
-                country = country,
-                number = number,
-                validationCode = ValidationCode.empty(),
-                isAuthorizedFirst = false
             )
         }
     }

@@ -27,14 +27,10 @@ class UserUpdater(
     fun updateName(userId: String, userName: UserName) {
         return userRepository.updateName(userId, userName)
     }
-    fun updateContent(userId: String, content: UserContent) {
-        return userRepository.updateContent(userId, content)
-    }
-
     fun updateContact(userId: String, contact: Contact) {
         return userRepository.updateContact(userId, contact)
     }
-    fun makeActivate(userId: String, userContent: UserContent) {
-        return userRepository.makeActivate(userId, userContent)
+    fun updateActivate(userId: String, userContent: UserContent) {
+        return userRepository.updateActivate(userId, userContent)
     }
 }

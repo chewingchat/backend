@@ -1,8 +1,6 @@
 package org.chewing.v1.implementation.auth
 
 import org.chewing.v1.model.auth.Credential
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component
@@ -11,11 +9,14 @@ import org.springframework.stereotype.Component
 class AuthAppender(
     private val authRepository: AuthRepository
 ) {
-    fun appendLoggedIn(refreshToken: RefreshToken, userId: String) {
-        authRepository.appendLoggedIn(refreshToken, userId)
+    fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String) {
+        authRepository.appendLoggedIn(refreshToken, loggedInId)
     }
 
     fun appendCredential(credential: Credential) {
         authRepository.saveCredentialIfNotExists(credential)
+    }
+    fun generateVerificationCode(credential: Credential): String {
+        return authRepository.generateVerificationCode(credential)
     }
 }

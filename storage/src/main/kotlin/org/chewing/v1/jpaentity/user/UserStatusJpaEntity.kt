@@ -29,7 +29,7 @@ internal class UserStatusJpaEntity(
         fun generate(user: User, status: UserStatus): UserStatusJpaEntity {
             return UserStatusJpaEntity(
                 statusId = status.statusId,
-                statusMessage = status.statusMessage,
+                statusMessage = status.message,
                 emoticonId = status.emoticon.id,
                 userId = user.userId,
                 selected = false
