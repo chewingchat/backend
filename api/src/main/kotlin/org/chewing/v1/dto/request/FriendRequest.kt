@@ -38,8 +38,8 @@ class FriendRequest(
     )
 
     data class AddWithPhone(
-        val countyCode: String,
-        val phone: String,
+        val countryCode: String,
+        val phoneNumber: String,
         val firstName: String,
         val lastName: String,
     ) {
@@ -47,7 +47,7 @@ class FriendRequest(
             return UserName.of(firstName, lastName)
         }
         fun toPhoneNumber(): PhoneNumber {
-            return PhoneNumber.of(countyCode, phone)
+            return PhoneNumber.of(countryCode, phoneNumber)
         }
     }
 }

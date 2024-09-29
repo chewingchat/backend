@@ -35,6 +35,8 @@ enum class ErrorCode(
     FRIEND_NOT_FOUND("FRIEND_1", "친구를 찾을 수 없음."),
     FRIEND_ALREADY_CREATED("FRIEND_2", "이미 추가된 친구입니다."),
     FRIEND_MYSELF("FRIEND_3", "자기 자신을 친구로 추가할 수 없습니다."),
+    FRIEND_BLOCK("FRIEND_4", "차단한 친구입니다."),
+    FRIEND_BLOCKED("FRIEND_5", "차단당한 친구입니다."),
 
     FILE_UPLOAD_FAILED("IMAGE_1", "파일 업로드 실패."),
     FILE_DELETE_FAILED("IMAGE_2", "파일 삭제 실패"),
