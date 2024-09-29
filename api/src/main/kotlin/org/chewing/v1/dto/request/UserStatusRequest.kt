@@ -5,8 +5,8 @@ class UserStatusRequest {
         val statusId : String = ""
     )
     data class Add(
-        val emoticonId: String = "",
-        val statusMessage: String = ""
+        val emoji: String = "",
+        val message: String = ""
     )
     data class Delete(
         val statusId: String = ""

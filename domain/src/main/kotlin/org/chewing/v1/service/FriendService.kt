@@ -1,9 +1,9 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.friend.*
+import org.chewing.v1.implementation.user.StatusReader
 import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.implementation.user.UserStatusFinder
 import org.chewing.v1.model.*
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.friend.Friend
@@ -20,8 +20,8 @@ class FriendService(
     private val userReader: UserReader,
     private val friendValidator: FriendValidator,
     private val friendEnricher: FriendEnricher,
-    private val userStatusFinder: UserStatusFinder,
-    private val userFinder: UserFinder
+    private val userFinder: UserFinder,
+    private val statusReader: StatusReader
 ) {
     fun addFriend(
         userId: String,
@@ -54,7 +54,7 @@ class FriendService(
     fun getSortedFriends(userId: String, sort: SortCriteria): List<Friend> {
         val friendInfos = friendReader.reads(userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
-        val usersStatus = userStatusFinder.finds(friendInfos.map { it.friendId })
+        val usersStatus = statusReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
         return FriendSortEngine.sort(friends, sort)
     }
@@ -62,7 +62,7 @@ class FriendService(
     fun getFriends(friendIds: List<String>, userId: String): List<Friend> {
         val friendInfos = friendReader.readsIdIn(friendIds, userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
-        val usersStatus = userStatusFinder.finds(friendInfos.map { it.friendId })
+        val usersStatus = statusReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
         return friends
     }

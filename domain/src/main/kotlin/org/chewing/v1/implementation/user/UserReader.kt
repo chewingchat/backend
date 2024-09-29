@@ -38,8 +38,4 @@ class UserReader(
     fun readSearched(userId: String): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
     }
-
-    fun readOwnEmoticonPacks(userId: String): List<String> {
-        return userRepository.readUserEmoticonPacks(userId)
-    }
 }

@@ -3,6 +3,7 @@ package org.chewing.v1.controller
 import org.chewing.v1.dto.request.FriendSearchRequest
 import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
 import org.chewing.v1.dto.response.search.FriendSearchResultResponse
+import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.service.SearchService
 import org.chewing.v1.util.ResponseHelper
@@ -40,7 +41,7 @@ class FriendSearchController(
     fun getSearchFriendHistory(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<FriendSearchHistoryResponse> {
-        val friends = searchService.getSearchedFriend(userId)
+        val friends = searchService.getSearchedFriend(userId, SortCriteria.DATE)
         //성공 응답 200 반환
         return ResponseHelper.success(FriendSearchHistoryResponse.ofList(friends))
     }

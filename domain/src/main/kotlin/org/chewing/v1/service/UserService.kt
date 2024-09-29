@@ -7,7 +7,6 @@ import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.user.UserStatus
-import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
@@ -17,14 +16,16 @@ class UserService(
     private val userReader: UserReader,
     private val fileProcessor: FileProcessor,
     private val userProcessor: UserProcessor,
-    private val userStatusFinder: UserStatusFinder,
     private val userUpdater: UserUpdater,
     private val feedReader: FeedReader,
-    private val userEmoticonFinder: UserEmoticonFinder,
     private val userValidator: UserValidator,
+    private val statusUpdater: StatusUpdater,
+    private val statusRemover: StatusRemover,
+    private val statusReader: StatusReader,
+    private val statusAppender: StatusAppender,
 ) {
-    fun makeActivate(userId: String, userContent: UserContent) {
-        userUpdater.updateActivate(userId, userContent)
+    fun makeAccess(userId: String, userContent: UserContent) {
+        userUpdater.updateAccess(userId, userContent)
     }
 
     fun updateUserImage(file: FileData, userId: String, category: FileCategory) {
@@ -37,7 +38,7 @@ class UserService(
     fun getFulledAccessUser(userId: String): Pair<User, UserStatus> {
         val user = userReader.read(userId)
         userValidator.isUserAccess(user)
-        val userStatus = userStatusFinder.find(userId)
+        val userStatus = statusReader.readSelectedStatus(userId)
         return Pair(user, userStatus)
     }
 
@@ -54,7 +55,19 @@ class UserService(
         fileProcessor.processOldFiles(feedDetails.map { it.media })
     }
 
-    fun findOwnedEmoticonPacks(userId: String): List<EmoticonPack> {
-        return userEmoticonFinder.find(userId)
+    fun selectUserStatus(userId: String, statusId: String) {
+        statusUpdater.updateSelectedStatusTrue(userId, statusId)
+    }
+
+    fun deselectUserStatus(userId: String) {
+        statusUpdater.updateDeselectedStatusFalse(userId)
+    }
+
+    fun deleteUserStatuses(statusesId: List<String>) {
+        statusRemover.removes(statusesId)
+    }
+
+    fun addUserStatus(userId: String, message: String, emoji: String) {
+        statusAppender.append(userId, message, emoji)
     }
 }

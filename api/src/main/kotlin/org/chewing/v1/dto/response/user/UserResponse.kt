@@ -5,7 +5,7 @@ import org.chewing.v1.model.user.UserStatus
 
 data class UserResponse(
     val statusMessage: String,
-    val statusEmoticon: String,
+    val statusEmoji: String,
     val imageUrl: String,
     val imageType: String,
     val firstName: String,
@@ -18,7 +18,7 @@ data class UserResponse(
         ): UserResponse {
             return UserResponse(
                 statusMessage = userStatus.message,
-                statusEmoticon = userStatus.emoticon.media.url,
+                statusEmoji = userStatus.emoji,
                 imageUrl = user.image.url,
                 imageType = user.image.type.toString().lowercase(),
                 firstName = user.name.firstName(),

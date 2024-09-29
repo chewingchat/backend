@@ -25,7 +25,6 @@ internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
     private val friendSearchJpaRepository: FriendSearchJpaRepository,
     private val pushNotificationJpaRepository: PushNotificationJpaRepository,
-    private val userEmoticonJpaRepository: UserEmoticonJpaRepository
 ) : UserRepository {
     override fun readUserById(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
@@ -104,7 +103,7 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun updateActivate(userId: String, userContent: UserContent) {
+    override fun updateAccess(userId: String, userContent: UserContent) {
         userJpaRepository.findById(userId).ifPresent {
             it.updateUserName(userContent.name)
             it.updateBirth(userContent.birth)
@@ -121,10 +120,6 @@ internal class UserRepositoryImpl(
         return friendSearchJpaRepository.findAllByUserId(userId).map {
             it.toFriendSearch()
         }
-    }
-
-    override fun readUserEmoticonPacks(userId: String): List<String> {
-        return userEmoticonJpaRepository.findAllByIdUserId(userId).map { it.id.emoticonPackId }
     }
 
     override fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean {

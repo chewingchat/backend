@@ -2,7 +2,6 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
-import org.chewing.v1.dto.response.emoticon.EmoticonPacksResponse
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -17,12 +16,12 @@ import org.springframework.web.multipart.MultipartFile
 class UserController(
     private val userService: UserService
 ) {
-    @PostMapping("/profile/activate")
-    fun makeActivate(
+    @PostMapping("/profile/access")
+    fun makeAccess(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserRequest.UpdateProfile,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        userService.makeActivate(userId, request.toUserContent())
+        userService.makeAccess(userId, request.toUserContent())
         return ResponseHelper.successOnly()
     }
 
@@ -40,13 +39,41 @@ class UserController(
         return ResponseHelper.successOnly()
     }
 
-    @PostMapping("/profile/status")
-    fun changeProfileStatus(
+    @PutMapping("/profile/status/select")
+    fun changeProfileSelectedStatus(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: UserStatusRequest
+        @RequestBody request: UserStatusRequest.Update
     ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.selectUserStatus(userId, request.statusId)
         return ResponseHelper.successOnly()
     }
+
+    @DeleteMapping("profile/status/select")
+    fun deleteProfileSelectedStatus(
+        @RequestAttribute("userId") userId: String,
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.deselectUserStatus(userId)
+        return ResponseHelper.successOnly()
+    }
+
+    @DeleteMapping("/profile/status")
+    fun deleteProfileStatus(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: List<UserStatusRequest.Delete>
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.deleteUserStatuses(request.map { it.statusId })
+        return ResponseHelper.successOnly()
+    }
+
+    @PostMapping("/profile/status")
+    fun addProfileStatus(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: UserStatusRequest.Add
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.addUserStatus(userId, request.message, request.emoji)
+        return ResponseHelper.successOnly()
+    }
+
 
     @PutMapping("/profile/name")
     fun changeName(
@@ -63,13 +90,5 @@ class UserController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         userService.deleteUser(userId)
         return ResponseHelper.successOnly()
-    }
-
-    @GetMapping("/emoticon")
-    fun getEmoticonPacks(
-        @RequestAttribute("userId") userId: String
-    ): SuccessResponseEntity<EmoticonPacksResponse> {
-        val emoticonPacks = userService.findOwnedEmoticonPacks(userId)
-        return ResponseHelper.success(EmoticonPacksResponse.of(emoticonPacks))
     }
 }

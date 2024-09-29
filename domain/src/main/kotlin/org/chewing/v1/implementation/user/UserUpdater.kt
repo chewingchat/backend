@@ -30,7 +30,7 @@ class UserUpdater(
     fun updateContact(userId: String, contact: Contact) {
         return userRepository.updateContact(userId, contact)
     }
-    fun updateActivate(userId: String, userContent: UserContent) {
-        return userRepository.updateActivate(userId, userContent)
+    fun updateAccess(userId: String, userContent: UserContent) {
+        return userRepository.updateAccess(userId, userContent)
     }
 }

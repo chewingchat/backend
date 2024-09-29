@@ -5,7 +5,6 @@ import java.util.*
 
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserStatus
-import org.chewing.v1.model.user.StatusInfo
 
 @Entity
 @Table(
@@ -15,29 +14,37 @@ import org.chewing.v1.model.user.StatusInfo
 )
 internal class UserStatusJpaEntity(
     @Id
-    val statusId: String = UUID.randomUUID().toString(),
+    private val statusId: String = UUID.randomUUID().toString(),
 
-    val statusMessage: String,
+    private val statusMessage: String,
 
-    val emoticonId: String,
+    private val emoji: String,
 
-    val userId: String,
+    private val userId: String,
 
-    val selected: Boolean = false
+    private var selected: Boolean
 ) {
     companion object {
-        fun generate(user: User, status: UserStatus): UserStatusJpaEntity {
+        fun generate(userId: String, message: String, emoji: String): UserStatusJpaEntity {
             return UserStatusJpaEntity(
-                statusId = status.statusId,
-                statusMessage = status.message,
-                emoticonId = status.emoticon.id,
-                userId = user.userId,
+                statusMessage = message,
+                emoji = emoji,
+                userId = userId,
                 selected = false
             )
         }
     }
 
-    fun toUserStatusInfo(): StatusInfo {
-        return StatusInfo.of(statusId, statusMessage, userId, selected, emoticonId)
+    fun toUserStatus(): UserStatus {
+        return UserStatus.of(statusId, statusMessage, userId, emoji, selected)
     }
+
+    fun updateSelectedFalse() {
+        this.selected = false
+    }
+
+    fun updateSelectedTrue() {
+        this.selected = true
+    }
+
 }
