@@ -10,6 +10,7 @@ import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedOwner
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
@@ -33,8 +34,12 @@ internal class FeedRepositoryImpl(
         return feedJpaRepository.findAllById(feedIds.map { it }).map { it.toFeedInfo() }
     }
 
-    override fun readsByUserId(userId: String): List<FeedInfo> {
-        return feedJpaRepository.findByUserId(userId).map { it.toFeedInfo() }
+    override fun readsByUserId(userId: String, feedOwner: FeedOwner): List<FeedInfo> {
+        return when (feedOwner) {
+            FeedOwner.OWNED -> feedJpaRepository.findAllByUserId(userId).map { it.toFeedInfo() }
+            FeedOwner.FRIEND -> feedJpaRepository.findAllByUserIdAndHideFalse(userId).map { it.toFeedInfo() }
+            FeedOwner.HIDDEN -> feedJpaRepository.findAllByUserIdAndHideTrue(userId).map { it.toFeedInfo() }
+        }
     }
 
     override fun readDetails(feedId: String): List<FeedDetail> {
@@ -82,6 +87,10 @@ internal class FeedRepositoryImpl(
             }
             feedJpaRepository.saveAndFlush(it)
         }
+    }
+
+    override fun checkLike(feedId: String, userId: String): Boolean {
+        return feedLikesRepository.existsById(UserFeedId(userId, feedId))
     }
 
     override fun removes(feedIds: List<String>) {

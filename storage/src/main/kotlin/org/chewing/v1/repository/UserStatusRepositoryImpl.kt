@@ -47,4 +47,7 @@ internal class UserStatusRepositoryImpl(
     override fun append(userId: String, statusMessage: String, emoji: String) {
         userStatusJpaRepository.save(UserStatusJpaEntity.generate(userId, statusMessage, emoji))
     }
+    override fun readsUserStatus(userId: String): List<UserStatus> {
+        return userStatusJpaRepository.findAllByUserId(userId).map { it.toUserStatus() }
+    }
 }

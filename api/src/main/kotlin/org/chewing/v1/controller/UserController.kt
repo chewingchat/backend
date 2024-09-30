@@ -2,7 +2,10 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
+import org.chewing.v1.dto.response.user.UserProfileResponse
+import org.chewing.v1.dto.response.user.UserStatusesResponse
 import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.UserService
@@ -16,7 +19,14 @@ import org.springframework.web.multipart.MultipartFile
 class UserController(
     private val userService: UserService
 ) {
-    @PostMapping("/profile/access")
+    @GetMapping("/profile")
+    fun getUserProfile(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<UserProfileResponse> {
+        val userProfile = userService.getUserProfile(userId)
+        return ResponseHelper.success(UserProfileResponse.of(userProfile))
+    }
+    @PostMapping("/access")
     fun makeAccess(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserRequest.UpdateProfile,
@@ -29,17 +39,18 @@ class UserController(
      * @param file: 프로파일 이미지를 MultipartFile로 받습니다.
      * 로그인한 사용자의 프로파일 이미지를 변경합니다.
      */
-    @PostMapping("/profile/upload")
-    fun changeProfileImage(
+    @PostMapping("/image")
+    fun changeUserImage(
         @RequestPart("file") file: MultipartFile,
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
+        @RequestParam("category") category: FileCategory
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
-        userService.updateUserImage(convertedFile, userId, FileCategory.USER_PROFILE)
+        userService.updateProfileImage(convertedFile, userId, category)
         return ResponseHelper.successOnly()
     }
 
-    @PutMapping("/profile/status/select")
+    @PutMapping("/status/select")
     fun changeProfileSelectedStatus(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserStatusRequest.Update
@@ -48,7 +59,7 @@ class UserController(
         return ResponseHelper.successOnly()
     }
 
-    @DeleteMapping("profile/status/select")
+    @DeleteMapping("/status/select")
     fun deleteProfileSelectedStatus(
         @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
@@ -56,7 +67,7 @@ class UserController(
         return ResponseHelper.successOnly()
     }
 
-    @DeleteMapping("/profile/status")
+    @DeleteMapping("/status")
     fun deleteProfileStatus(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: List<UserStatusRequest.Delete>
@@ -65,22 +76,31 @@ class UserController(
         return ResponseHelper.successOnly()
     }
 
-    @PostMapping("/profile/status")
+    @PostMapping("/status")
     fun addProfileStatus(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserStatusRequest.Add
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
+    ): SuccessResponseEntity<SuccessCreateResponse> {
         userService.addUserStatus(userId, request.message, request.emoji)
-        return ResponseHelper.successOnly()
+        return ResponseHelper.successCreate()
     }
 
 
-    @PutMapping("/profile/name")
+    @PutMapping("/name")
     fun changeName(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserRequest.UpdateName
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        userService.updateUserName(userId, request.toUserName())
+        userService.updateName(userId, request.toUserName())
+        return ResponseHelper.successOnly()
+    }
+
+    @PutMapping("birth")
+    fun changeBirth(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: UserRequest.UpdateBirth
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        userService.updateBirth(userId, request.toBirth())
         return ResponseHelper.successOnly()
     }
 
@@ -90,5 +110,13 @@ class UserController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         userService.deleteUser(userId)
         return ResponseHelper.successOnly()
+    }
+
+    @GetMapping("/status")
+    fun getUserStatus(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<UserStatusesResponse> {
+        val userStatuses = userService.getUserStatuses(userId)
+        return ResponseHelper.success(UserStatusesResponse.of(userStatuses))
     }
 }

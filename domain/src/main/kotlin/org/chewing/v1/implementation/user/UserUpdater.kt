@@ -6,6 +6,7 @@ import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,21 +17,41 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class UserUpdater(
     private val userRepository: UserRepository,
+    private val statusRepository: UserStatusRepository
 ) {
     /**
      * 주어진 사용자 정보를 업데이트합니다.
      */
-    fun updateProfileImage(user: User, media: Media) {
+    fun updateImage(user: User, media: Media) {
         return userRepository.updateProfileImage(user, media)
     }
     @Transactional
     fun updateName(userId: String, userName: UserName) {
         return userRepository.updateName(userId, userName)
     }
+
+    @Transactional
     fun updateContact(userId: String, contact: Contact) {
         return userRepository.updateContact(userId, contact)
     }
+
+    @Transactional
     fun updateAccess(userId: String, userContent: UserContent) {
         return userRepository.updateAccess(userId, userContent)
+    }
+
+    @Transactional
+    fun updateBirth(userId: String, birth: String) {
+        return userRepository.updateBirth(userId, birth)
+    }
+
+    @Transactional
+    fun updateSelectedStatusTrue(userId: String, statusId: String) {
+        statusRepository.updateSelectedStatusFalse(userId)
+        statusRepository.updateSelectedStatusTrue(userId, statusId)
+    }
+    @Transactional
+    fun updateDeselectedStatusFalse(userId: String) {
+        statusRepository.updateSelectedStatusFalse(userId)
     }
 }

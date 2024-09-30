@@ -3,24 +3,28 @@ package org.chewing.v1.dto.response.feed
 import org.chewing.v1.model.feed.Feed
 import java.time.format.DateTimeFormatter
 
-data class FriendFeedResponse(
+data class OwnedFeedResponse(
     val feedId: String,
-    val liked: Boolean,
+    val likes: Int,
     val uploadTime: String,
     val topic: String,
+    val comments: Int,
+    val isLiked: Boolean,
     val details: List<FeedDetailResponse>
 ) {
     companion object {
         fun of(
             feed: Feed,
             isLiked: Boolean
-        ): FriendFeedResponse {
+        ): OwnedFeedResponse {
             val formattedUploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-            return FriendFeedResponse(
+            return OwnedFeedResponse(
                 feedId = feed.feed.feedId,
-                liked = isLiked,
+                likes = feed.feed.likes,
                 uploadTime = formattedUploadTime,
                 topic = feed.feed.topic,
+                comments = feed.feed.comments,
+                isLiked = isLiked,
                 details = feed.feedDetails.map { FeedDetailResponse.of(it) }
             )
         }

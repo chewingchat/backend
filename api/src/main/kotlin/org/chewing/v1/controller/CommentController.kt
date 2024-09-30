@@ -1,7 +1,7 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.CommentRequest
-import org.chewing.v1.dto.response.comment.FeedCommentsResponse
+import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -24,7 +24,7 @@ class CommentController(
             userId,
             request.toFeedId(),
             request.toComment(),
-            request.toUpdateType()
+            FeedTarget.COMMENTS
         )
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
@@ -48,9 +48,9 @@ class CommentController(
     fun getFeedComments(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
-    ): SuccessResponseEntity<FeedCommentsResponse> {
+    ): SuccessResponseEntity<FeedFriendCommentedResponse> {
         val friendComment = commentService.fetchComment(userId, feedId)
         //성공 응답 200 반환
-        return ResponseHelper.success(FeedCommentsResponse.of(friendComment))
+        return ResponseHelper.success(FeedFriendCommentedResponse.of(friendComment))
     }
 }

@@ -3,8 +3,9 @@ package org.chewing.v1.controller
 import org.chewing.v1.dto.request.FeedRequest
 import org.chewing.v1.dto.request.LikesRequest
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
-import org.chewing.v1.dto.response.feed.UserFeedResponse
-import org.chewing.v1.dto.response.friend.FriendDetailResponse
+import org.chewing.v1.dto.response.feed.OwnedFeedResponse
+import org.chewing.v1.dto.response.friend.FeedsResponse
+import org.chewing.v1.model.feed.FeedOwner
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -20,37 +21,57 @@ import org.springframework.web.multipart.MultipartFile
 class FeedController(
     private val feedService: FeedService
 ) {
-    @GetMapping("/{feedId}/friend")
+    @GetMapping("/list/{friendId}")
+    fun getFriendFeeds(
+        @RequestAttribute("userId") userId: String,
+        @PathVariable("friendId") targetUserId: String
+    ): SuccessResponseEntity<FeedsResponse> {
+        val feedOwner = FeedOwner.target(userId, targetUserId)
+        val feeds = feedService.getFeeds(targetUserId, feedOwner)
+        //성공 응답 200 반환
+        return ResponseHelper.success(FeedsResponse.of(feeds))
+    }
+
+    @GetMapping("/list")
+    fun getOwnedFeeds(
+        @RequestAttribute("userId") userId: String,
+    ): SuccessResponseEntity<FeedsResponse> {
+        val feedOwner = FeedOwner.target(userId, userId)
+        val feeds = feedService.getFeeds(userId, feedOwner)
+        //성공 응답 200 반환
+        return ResponseHelper.success(FeedsResponse.of(feeds))
+    }
+
+    @GetMapping("/{feedId}/detail/friend")
     fun getFriendFeed(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
-        val friendFeed = feedService.getFeed(userId, feedId)
+        val (feed, isLiked) = feedService.getFeed(userId, feedId, FeedOwner.FRIEND)
         //성공 응답 200 반환
-        return ResponseHelper.success(FriendFeedResponse.of(friendFeed))
+        return ResponseHelper.success(FriendFeedResponse.of(feed, isLiked))
     }
 
-    @GetMapping("/{friendId}")
-    fun getFriendFeeds(
+    @GetMapping("/{feedId}/detail/owned")
+    fun getOwnedFeed(
         @RequestAttribute("userId") userId: String,
-        @PathVariable("friendId") friendId: String
-    ): SuccessResponseEntity<FriendDetailResponse> {
-        val feeds = feedService.getFriendFeeds(userId, friendId)
+        @PathVariable("feedId") feedId: String,
+    ): SuccessResponseEntity<OwnedFeedResponse> {
+        val (feed, isLiked) = feedService.getFeed(userId, feedId, FeedOwner.OWNED)
         //성공 응답 200 반환
-        return ResponseHelper.success(FriendDetailResponse.of(feeds))
+        return ResponseHelper.success(OwnedFeedResponse.of(feed, isLiked))
     }
 
-    @GetMapping("/{feedId}/user")
-    fun getUserFeed(
-        @RequestAttribute("userId") userId: String,
-        @PathVariable("feedId") feedId: String
-    ): SuccessResponseEntity<UserFeedResponse> {
-        val feed = feedService.getFeed(userId, feedId)
+    @GetMapping("/hide")
+    fun getHiddenFeeds(
+        @RequestAttribute("userId") userId: String
+    ): SuccessResponseEntity<FeedsResponse> {
+        val feeds = feedService.getFeeds(userId, FeedOwner.HIDDEN)
         //성공 응답 200 반환
-        return ResponseHelper.success(UserFeedResponse.of(feed))
+        return ResponseHelper.success(FeedsResponse.of(feeds))
     }
 
-    @PostMapping("/like")
+    @PostMapping("/likes")
     fun addFeedLikes(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: LikesRequest.Add
@@ -61,7 +82,7 @@ class FeedController(
         return ResponseHelper.successCreate()
     }
 
-    @DeleteMapping("/like")
+    @DeleteMapping("/likes")
     fun deleteFeedLikes(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: LikesRequest.Delete
@@ -73,7 +94,7 @@ class FeedController(
     }
 
     @DeleteMapping("")
-    fun deleteFeed(
+    fun deleteFeeds(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: List<FeedRequest.Delete>
     ): SuccessResponseEntity<SuccessOnlyResponse> {

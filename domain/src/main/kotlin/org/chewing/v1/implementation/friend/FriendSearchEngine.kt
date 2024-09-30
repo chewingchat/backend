@@ -1,6 +1,5 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.implementation.user.StatusReader
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Component
@@ -10,12 +9,11 @@ class FriendSearchEngine(
     private val friendReader: FriendReader,
     private val userReader: UserReader,
     private val friendEnricher: FriendEnricher,
-    private val statusReader: StatusReader
 ) {
     fun search(userId: String, keyword: String): List<Friend> {
         val friendsInfo = friendReader.reads(userId)
         val users = userReader.reads(friendsInfo.map { it.friendId })
-        val friendsStatus = statusReader.readSelectedStatuses(friendsInfo.map { it.friendId })
+        val friendsStatus = userReader.readSelectedStatuses(friendsInfo.map { it.friendId })
         val enrichedFriends = friendEnricher.enriches(friendsInfo, users, friendsStatus)
         return personalized(enrichedFriends, cleanKeyword(keyword))
     }

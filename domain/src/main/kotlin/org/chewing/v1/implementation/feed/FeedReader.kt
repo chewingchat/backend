@@ -4,6 +4,7 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedOwner
 import org.chewing.v1.repository.FeedRepository
 import org.springframework.stereotype.Component
 
@@ -20,8 +21,8 @@ class FeedReader(
         return feedRepository.readsLike(feedIds, userId)
     }
 
-    fun readsByUser(userId: String): List<FeedInfo> {
-        return feedRepository.readsByUserId(userId)
+    fun readsByUserId(userId: String, feedOwner: FeedOwner): List<FeedInfo> {
+        return feedRepository.readsByUserId(userId, feedOwner)
     }
 
     fun reads(feedIds: List<String>): List<FeedInfo> {

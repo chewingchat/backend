@@ -6,6 +6,8 @@ import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Repository
 
@@ -19,4 +21,6 @@ interface AuthRepository {
     fun generateVerificationCode(credential: Credential):String
     fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String)
     fun readLoggedId(refreshToken: String): String?
+    fun readContactByEmailId(emailId: String): Email?
+    fun readContactByPhoneNumberId(phoneNumberId: String): Phone?
 }

@@ -1,7 +1,6 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.friend.*
-import org.chewing.v1.implementation.user.StatusReader
 import org.chewing.v1.implementation.user.UserFinder
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.*
@@ -21,7 +20,6 @@ class FriendService(
     private val friendValidator: FriendValidator,
     private val friendEnricher: FriendEnricher,
     private val userFinder: UserFinder,
-    private val statusReader: StatusReader
 ) {
     fun addFriend(
         userId: String,
@@ -44,17 +42,15 @@ class FriendService(
     fun removeFriend(userId: String, friendId: String) {
         friendRemover.removeFriend(userId, friendId)
     }
-
     // 친구 차단
     fun blockFriend(userId: String, friendId: String) {
         friendRemover.blockFriend(userId, friendId)
     }
-
     // 친구 목록을 가져옴
     fun getSortedFriends(userId: String, sort: SortCriteria): List<Friend> {
         val friendInfos = friendReader.reads(userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
-        val usersStatus = statusReader.readSelectedStatuses(friendInfos.map { it.friendId })
+        val usersStatus = userReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
         return FriendSortEngine.sort(friends, sort)
     }
@@ -62,7 +58,7 @@ class FriendService(
     fun getFriends(friendIds: List<String>, userId: String): List<Friend> {
         val friendInfos = friendReader.readsIdIn(friendIds, userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
-        val usersStatus = statusReader.readSelectedStatuses(friendInfos.map { it.friendId })
+        val usersStatus = userReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
         return friends
     }

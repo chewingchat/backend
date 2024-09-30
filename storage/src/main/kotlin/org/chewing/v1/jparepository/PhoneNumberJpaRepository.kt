@@ -9,4 +9,6 @@ import java.util.Optional
 @Repository
 internal interface PhoneNumberJpaRepository : JpaRepository<PhoneNumberJpaEntity, String> {
     fun findByPhoneNumberAndCountryCode(phoneNumber: String, countryCode: String): Optional<PhoneNumberJpaEntity>
+
+    fun findByPhoneNumberId(phoneNumberId: String): Optional<PhoneNumberJpaEntity>
 }

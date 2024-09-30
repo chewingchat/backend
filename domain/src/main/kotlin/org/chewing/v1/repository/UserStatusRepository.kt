@@ -11,4 +11,5 @@ interface UserStatusRepository {
     fun updateSelectedStatusTrue(userId: String, statusId: String)
     fun updateSelectedStatusFalse(userId: String)
     fun append(userId: String, statusMessage: String, emoji: String)
+    fun readsUserStatus(userId: String): List<UserStatus>
 }

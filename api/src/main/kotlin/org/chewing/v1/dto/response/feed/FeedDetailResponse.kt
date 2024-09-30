@@ -4,7 +4,7 @@ import org.chewing.v1.model.feed.FeedDetail
 
 data class FeedDetailResponse(
     val index: Int,
-    val feedDetailFileUrl: String,
+    val fileUrl: String,
     val type: String
 ) {
     companion object {

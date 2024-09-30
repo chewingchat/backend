@@ -10,21 +10,23 @@ class Schedule(
     companion object {
         fun of(
             scheduleId: String,
-            scheduleTitle: String,
-            scheduleText: String,
-            scheduleStartTime: LocalDateTime,
-            scheduleEndTime: LocalDateTime,
+            title: String,
+            memo: String,
+            startTime: LocalDateTime,
+            endTime: LocalDateTime,
             notificationTime: LocalDateTime,
+            location: String,
         ): Schedule {
             return Schedule(
                 scheduleId,
                 ScheduleContent.of(
-                    scheduleTitle,
-                    scheduleText,
-                ),
+                    title,
+                    memo,
+                    location
+                    ),
                 ScheduleTime.of(
-                    scheduleStartTime,
-                    scheduleEndTime,
+                    startTime,
+                    endTime,
                     notificationTime,
                 ),
             )
