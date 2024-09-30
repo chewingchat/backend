@@ -21,7 +21,8 @@ class ScheduleJpaEntity(
     val scheduleStartAt: LocalDateTime,
     val scheduleEndAt: LocalDateTime,
     val notificationAt: LocalDateTime,
-    val userId: String
+    val userId: String,
+    val location: String,
 ) {
     companion object {
         fun generate(
@@ -31,11 +32,12 @@ class ScheduleJpaEntity(
         ): ScheduleJpaEntity {
             return ScheduleJpaEntity(
                 scheduleName = scheduleContent.title,
-                scheduleContent = scheduleContent.text,
+                scheduleContent = scheduleContent.memo,
                 scheduleStartAt = scheduleTime.startAt,
                 scheduleEndAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
-                userId = writer.userId
+                userId = writer.userId,
+                location = scheduleContent.location
             )
         }
     }
@@ -47,7 +49,8 @@ class ScheduleJpaEntity(
             scheduleContent,
             scheduleStartAt,
             scheduleEndAt,
-            notificationAt
+            notificationAt,
+            location
         )
     }
 }

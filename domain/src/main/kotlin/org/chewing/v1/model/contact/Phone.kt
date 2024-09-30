@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 class Phone private constructor(
     val phoneId: String,
-    val country: String,
+    val countryCode: String,
     val number: String,
     val validationCode: ValidationCode,
 ) : Contact {
@@ -19,7 +19,7 @@ class Phone private constructor(
         ): Phone {
             return Phone(
                 phoneId = phoneId,
-                country = country,
+                countryCode = country,
                 number = number,
                 validationCode = ValidationCode.of(
                     authorizedNumber,

@@ -10,6 +10,6 @@ class ScheduleReader(
     private val scheduleRepository: ScheduleRepository
 ) {
     fun reads(userId: String, type: ScheduleType): List<Schedule> {
-        return scheduleRepository.readSchedule(userId, type)
+        return scheduleRepository.read(userId, type)
     }
 }

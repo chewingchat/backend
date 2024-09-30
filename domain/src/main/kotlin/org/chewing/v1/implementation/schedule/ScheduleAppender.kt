@@ -11,6 +11,6 @@ class ScheduleAppender(
     val scheduleRepository: ScheduleRepository
 ) {
     fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User) {
-        scheduleRepository.appendSchedule(scheduleTime, scheduleContent, writer)
+        scheduleRepository.append(scheduleTime, scheduleContent, writer)
     }
 }

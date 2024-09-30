@@ -16,6 +16,7 @@ import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 
 import org.springframework.stereotype.Repository
@@ -31,6 +32,10 @@ internal class UserRepositoryImpl(
         return userEntity.map { it.toUser() }.orElse(null)
     }
 
+    override fun readContactId(userId: String): Pair<String?, String?> {
+        val userEntity = userJpaRepository.findById(userId)
+        return userEntity.map { it.emailId to it.phoneNumberId }.orElse(null to null)
+    }
     override fun readUsersByIds(userIds: List<String>): List<User> {
         val userEntities = userJpaRepository.findAllById(userIds.map { it })
         return userEntities.map { it.toUser() }
@@ -75,7 +80,18 @@ internal class UserRepositoryImpl(
 
     override fun updateProfileImage(user: User, media: Media) {
         userJpaRepository.findById(user.userId).ifPresent {
-            it.updateUserPictureUrl(media)
+            when (media.category) {
+                FileCategory.PROFILE -> it.updateUserPictureUrl(media)
+                FileCategory.BACKGROUND -> it.updateBackgroundPictureUrl(media)
+                else -> {}
+            }
+            userJpaRepository.save(it)
+        }
+    }
+
+    override fun updateBackgroundImage(user: User, media: Media) {
+        userJpaRepository.findById(user.userId).ifPresent {
+            it.updateBackgroundPictureUrl(media)
             userJpaRepository.save(it)
         }
     }
@@ -127,6 +143,13 @@ internal class UserRepositoryImpl(
             is Email -> userJpaRepository.existsByEmailIdAndUserIdNot(contact.emailId, userId)
             is Phone -> userJpaRepository.existsByPhoneNumberIdAndUserIdNot(contact.phoneId, userId)
             else -> false
+        }
+    }
+
+    override fun updateBirth(userId: String, birth: String) {
+        userJpaRepository.findById(userId).ifPresent {
+            it.updateBirth(birth)
+            userJpaRepository.save(it)
         }
     }
 }

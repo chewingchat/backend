@@ -9,6 +9,7 @@ import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
 import org.hibernate.annotations.DynamicInsert
@@ -82,14 +83,18 @@ internal class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Image.of(this.pictureUrl, 0, this.pictureType),
-            Image.of(this.backgroundPictureUrl, 0, this.backgroundPictureType),
+            Image.of(FileCategory.PROFILE,this.pictureUrl, 0, this.pictureType),
+            Image.of(FileCategory.BACKGROUND,this.backgroundPictureUrl, 0, this.backgroundPictureType),
             this.type
         )
     }
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
+    }
+
+    fun updateBackgroundPictureUrl(media: Media) {
+        this.backgroundPictureUrl = media.url
     }
 
     fun updateUserName(userName: UserName) {

@@ -7,7 +7,6 @@ import org.chewing.v1.model.feed.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
-import java.io.File
 
 @Service
 class FeedService(
@@ -18,13 +17,14 @@ class FeedService(
     private val fileProcessor: FileProcessor,
     private val feedProcessor: FeedProcessor,
     private val feedEnricher: FeedEnricher,
+    private val feedChecker: FeedChecker
 ) {
     // 피드를 가져옴
-    fun getFeed(userId: String, feedId: String): Feed {
+    fun getFeed(userId: String, feedId: String, type: FeedOwner): Pair<Feed, Boolean> {
         val feed = feedReader.readFeed(feedId)
         val feedDetails = feedReader.readFeedDetails(feedId)
-
-        return Feed.of(feed, feedDetails)
+        val isLiked = feedChecker.checkLike(feedId, userId)
+        return Pair(Feed.of(feed, feedDetails), isLiked)
     }
 
     fun getFeeds(feedsId: List<String>): List<Feed> {
@@ -33,13 +33,11 @@ class FeedService(
         return feedEnricher.enrichFeeds(feeds, feedsDetails)
     }
 
-    //좋아요 유무가 포함되어야 함
-    fun getFriendFeeds(userId: String, friendId: String): List<FriendFeed> {
-        val feeds = feedReader.readsByUser(friendId)
+    fun getFeeds(targetUserId: String, feedOwner: FeedOwner): List<Feed> {
+        val feeds = feedReader.readsByUserId(targetUserId, feedOwner)
         val feedsDetail = feedReader.readsDetails(feeds.map { it.feedId })
-        val likedFeedIds = feedReader.readsLike(feeds.map { it.feedId }, userId)
-        val friendFeeds = feedEnricher.enrichFriendFeeds(feeds, likedFeedIds, feedsDetail)
-        return FeedSortEngine.sort(friendFeeds, SortCriteria.DATE)
+        val enrichedFeeds = feedEnricher.enrichFeeds(feeds, feedsDetail)
+        return FeedSortEngine.sort(enrichedFeeds, SortCriteria.DATE)
     }
 
     fun likes(userId: String, feedId: String, target: FeedTarget) {

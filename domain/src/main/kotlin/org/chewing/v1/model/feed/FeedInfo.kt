@@ -9,6 +9,7 @@ class FeedInfo private constructor(
     val comments: Int,
     val uploadAt: LocalDateTime,
     val userId: String,
+    val hide: Boolean,
 ) {
     companion object {
         fun of(
@@ -17,9 +18,10 @@ class FeedInfo private constructor(
             likes: Int,
             comments: Int,
             uploadAt: LocalDateTime,
-            userId: String
+            userId: String,
+            hide: Boolean
         ): FeedInfo {
-            return FeedInfo(feedId, topic, likes, comments, uploadAt,userId)
+            return FeedInfo(feedId, topic, likes, comments, uploadAt, userId, hide)
         }
     }
 }

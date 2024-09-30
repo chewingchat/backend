@@ -11,4 +11,7 @@ internal interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun existsAllByFeedIdInAndUserId(feedId: List<String>, writerId: String): Boolean
     fun findAllByFeedIdInAndUserIdIn(feedId: List<String>, writerId: List<String>): List<FeedJpaEntity>
     fun deleteAllByUserId(userId: String)
+    fun findAllByUserId(userId: String): List<FeedJpaEntity>
+    fun findAllByUserIdAndHideFalse(userId: String): List<FeedJpaEntity>
+    fun findAllByUserIdAndHideTrue(userId: String): List<FeedJpaEntity>
 }

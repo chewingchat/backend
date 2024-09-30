@@ -3,6 +3,7 @@ package org.chewing.v1.model.media
 import java.util.*
 
 class Video private constructor(
+    override val category: FileCategory,
     override val url: String,
     override val index: Int,
     override val type: MediaType
@@ -12,9 +13,11 @@ class Video private constructor(
         fun upload(category: FileCategory, userId: String, fileName: String, type: MediaType): Video {
             val randomId = UUID.randomUUID().toString()
             val path = "${DEFAULT_VIDEO_URL}/{${category.name}/$userId/$randomId/$fileName"
-            return Video(path, fileName.split(".")[0].toInt(), type)
+            return Video(category, path, fileName.split(".")[0].toInt(), type)
         }
-        fun of(imagePath: String, index: Int, type: MediaType): Video = Video(imagePath, index, type)
+
+        fun of(category: FileCategory, imagePath: String, index: Int, type: MediaType): Video =
+            Video(category,imagePath, index, type)
     }
 
     override val isBasic: Boolean

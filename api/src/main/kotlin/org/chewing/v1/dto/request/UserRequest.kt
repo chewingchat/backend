@@ -10,6 +10,12 @@ class UserRequest {
     ){
         fun toUserName(): UserName = UserName.of(firstName, lastName)
     }
+
+    data class UpdateBirth(
+        val birth: String = ""
+    ){
+        fun toBirth(): String = birth
+    }
     data class UpdateProfile(
         val firstName: String,
         val lastName: String,

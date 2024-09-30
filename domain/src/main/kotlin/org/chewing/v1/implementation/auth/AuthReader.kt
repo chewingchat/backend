@@ -7,6 +7,8 @@ import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.contact.Email
+import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.repository.AuthRepository
 import org.springframework.stereotype.Component
 
@@ -21,5 +23,13 @@ class AuthReader(
 
     fun readLoggedInId(refreshToken: String): String {
         return authRepository.readLoggedId(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
+    }
+
+    fun readEmailByEmailId(emailId: String): Email? {
+        return authRepository.readContactByEmailId(emailId)
+    }
+
+    fun readPhoneByPhoneNumberId(phoneNumberId: String): Phone? {
+        return authRepository.readContactByPhoneNumberId(phoneNumberId)
     }
 }

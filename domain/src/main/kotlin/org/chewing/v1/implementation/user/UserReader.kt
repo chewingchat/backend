@@ -2,10 +2,14 @@ package org.chewing.v1.implementation.user
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.implementation.auth.AuthReader
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.user.UserProfile
+import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
 
 /**
@@ -16,6 +20,8 @@ import org.springframework.stereotype.Component
 @Component
 class UserReader(
     private val userRepository: UserRepository,
+    private val userStatusRepository: UserStatusRepository,
+    private val authReader: AuthReader
 ) {
     /**
      * 주어진 사용자 ID에 해당하는 사용자 정보를 읽어옵니다.
@@ -23,7 +29,15 @@ class UserReader(
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
     fun read(userId: String): User {
-        return userRepository.readUserById(userId)?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+    }
+
+    fun readProfile(userId: String): UserProfile {
+        val user = userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        val (emailId, phoneNumberId) = userRepository.readContactId(userId)
+        val email = emailId?.let { authReader.readEmailByEmailId(it) }
+        val phoneNumber = phoneNumberId?.let { authReader.readPhoneByPhoneNumberId(it) }
+        return UserProfile.of(user, email, phoneNumber)
     }
 
     fun readByContact(contact: Contact): User {
@@ -37,5 +51,17 @@ class UserReader(
     //유저의 최근 친구 검색 목록을 읽어옴
     fun readSearched(userId: String): List<FriendSearch> {
         return userRepository.readSearchHistory(userId)
+    }
+
+    fun readSelectedStatuses(userIds: List<String>): List<UserStatus> {
+        return userStatusRepository.readSelectedUsersStatus(userIds)
+    }
+
+    fun readSelectedStatus(userId: String): UserStatus {
+        return userStatusRepository.readSelectedUserStatus(userId)
+    }
+
+    fun readsUserStatus(userId: String): List<UserStatus> {
+        return userStatusRepository.readsUserStatus(userId)
     }
 }

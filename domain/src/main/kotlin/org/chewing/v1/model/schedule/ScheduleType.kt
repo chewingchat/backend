@@ -4,13 +4,13 @@ import java.time.Month
 import java.time.Year
 
 class ScheduleType private constructor(
-     val year: Year,
-     val month: Month,
+     val year: Int,
+     val month: Int,
 ) {
     companion object {
         fun of(
-            year: Year,
-            month: Month,
+            year: Int,
+            month: Int,
         ): ScheduleType {
             return ScheduleType(year, month)
         }

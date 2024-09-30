@@ -20,8 +20,8 @@ class ScheduleController(
     @GetMapping("")
     fun getSchedule(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("year") year: Year,
-        @RequestParam("month") month: Month
+        @RequestParam("year") year: Int,
+        @RequestParam("month") month: Int
     ): SuccessResponseEntity<ScheduleListResponse> {
         val type = ScheduleType.of(year, month)
         val schedules = scheduleService.fetches(userId, type)
