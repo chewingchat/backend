@@ -29,4 +29,5 @@ interface UserRepository {
     fun appendUser(contact: Contact): User
     fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean
     fun updateBirth(userId: String, birth: String)
+    fun readsPushToken(userId: String):List<PushToken>
 }

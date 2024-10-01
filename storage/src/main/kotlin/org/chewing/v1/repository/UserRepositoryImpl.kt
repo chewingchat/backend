@@ -152,4 +152,9 @@ internal class UserRepositoryImpl(
             userJpaRepository.save(it)
         }
     }
+
+    override fun readsPushToken(userId: String): List<PushToken> {
+        val pushNotifications = pushNotificationJpaRepository.findAllByUserId(userId)
+        return pushNotifications.map { it.toPushToken() }
+    }
 }

@@ -2,6 +2,8 @@ package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.repository.FeedRepository
 import org.springframework.stereotype.Component
 
@@ -9,8 +11,8 @@ import org.springframework.stereotype.Component
 class FeedValidator(
     private val feedRepository: FeedRepository
 ) {
-    fun isOwner(feedId: String, userId: String) {
-        if(!feedRepository.isOwner(feedId, userId)){
+    fun isOwned(feed: FeedInfo, userId: String) {
+        if(feed.userId != userId){
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
@@ -21,8 +23,8 @@ class FeedValidator(
         }
     }
 
-    fun isNotOwner(feedId: String, userId: String) {
-        if(feedRepository.isOwner(feedId, userId)){
+    fun isNotOwned(feed: FeedInfo, userId: String) {
+        if(feed.userId == userId){
             throw ConflictException(ErrorCode.FEED_IS_OWNED)
         }
     }

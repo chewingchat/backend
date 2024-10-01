@@ -1,19 +1,14 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.external.ExternalEmailClient
-import org.chewing.v1.external.ExternalPhoneClient
 import org.chewing.v1.implementation.TestDataFactory
-import org.chewing.v1.implementation.user.UserChecker
 import org.chewing.v1.implementation.user.UserProcessor
 import org.chewing.v1.implementation.user.UserUpdater
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.repository.AuthRepository
 import org.chewing.v1.service.AuthService
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.reset
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 

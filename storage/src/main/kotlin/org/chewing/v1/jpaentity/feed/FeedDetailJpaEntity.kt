@@ -38,13 +38,13 @@ class FeedDetailJpaEntity(
         return when (feedDetailType) {
             IMAGE_BASIC, IMAGE_PNG, IMAGE_JPG, IMAGE_JPEG -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Image.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
+                media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
                 feedId = feedId
             )
 
             VIDEO_MP4, VIDEO_BASIC -> FeedDetail.of(
                 feedDetailId = feedDetailId,
-                media = Video.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
+                media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
                 feedId = feedId
             )
         }

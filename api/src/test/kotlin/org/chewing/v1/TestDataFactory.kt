@@ -12,7 +12,7 @@ import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.token.RefreshToken
@@ -61,8 +61,8 @@ object TestDataFactory {
             "testFirstName",
             "testLastName",
             "2000-00-00",
-            Image.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_PNG),
-            Image.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_PNG),
             AccessStatus.ACCESS
         )
     }
@@ -91,7 +91,7 @@ object TestDataFactory {
     fun createFeedDetail1(): FeedDetail {
         return FeedDetail.of(
             "testFeedDetailId",
-            Image.of(FileCategory.FEED, "www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.FEED, "www.example.com", 0, MediaType.IMAGE_PNG),
             "feedId",
         )
     }
@@ -110,7 +110,7 @@ object TestDataFactory {
     fun createFeedDetail2(): FeedDetail {
         return FeedDetail.of(
             "feedDetailId",
-            Image.of(FileCategory.FEED, "www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.FEED, "www.example.com", 0, MediaType.IMAGE_PNG),
             "feedId"
         )
     }

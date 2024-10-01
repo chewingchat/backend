@@ -60,9 +60,6 @@ internal class FeedRepositoryImpl(
         return feedLikesRepository.findAllByUserIdAndFeedIdIn(userId, feedIds.map { it }).map { it.userFeedId.feedId }
     }
 
-    override fun isOwner(feedId: String, userId: String): Boolean {
-        return feedJpaRepository.existsByFeedIdAndUserId(feedId, userId)
-    }
 
     override fun isAllOwner(feedIds: List<String>, userId: String): Boolean {
         return feedJpaRepository.existsAllByFeedIdInAndUserId(feedIds.map { it }, userId)
