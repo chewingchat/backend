@@ -2,68 +2,64 @@ package org.chewing.v1.service
 
 import org.chewing.v1.implementation.auth.*
 import org.chewing.v1.implementation.user.UserProcessor
-import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.user.UserUpdater
 import org.chewing.v1.model.auth.*
-import org.chewing.v1.model.user.User
 
 import org.springframework.stereotype.Service
 
 
 @Service
 class AuthService(
-    private val authChecker: AuthChecker,
     private val userProcessor: UserProcessor,
     private val authReader: AuthReader,
     private val authAppender: AuthAppender,
-    private val authUpdater: AuthUpdater,
     private val authSender: AuthSender,
     private val authValidator: AuthValidator,
     private val authProcessor: AuthProcessor,
-    private val userUpdater: UserUpdater
+    private val userUpdater: UserUpdater,
 ) {
-    fun sendVerification(credential: Credential) {
+    fun makeCredential(credential: Credential) {
         authAppender.appendCredential(credential)
-        val verificationCode = authUpdater.updateVerificationCode(credential)
+        val verificationCode = authAppender.generateVerificationCode(credential)
         authSender.sendVerificationCode(credential, verificationCode)
     }
 
-    fun verifyLogin(
+    fun login(
         credential: Credential, verificationCode: String,
         appToken: String,
-        device: PushToken.Device
-    ): Pair<JwtToken, User> {
-        val savedCredential = authReader.readContact(credential)
-        authValidator.validate(savedCredential, verificationCode)
-        val (token, user) = authProcessor.processLogin(savedCredential)
-        //푸시 토큰 처리
+        device: PushToken.Device,
+    ): LoginInfo {
+        val existingCredential = authReader.readContact(credential)
+        authValidator.validateCode(existingCredential, verificationCode)
+        val (token, user) = authProcessor.processLogin(existingCredential)
         userProcessor.processPushToken(user, appToken, device)
-        return Pair(token, user)
+        return LoginInfo.of(token, user)
     }
 
     fun logout(accessToken: String) {
-        authProcessor.processLogOut(accessToken)
+        authProcessor.processLogout(accessToken)
     }
 
-    fun refreshAccessToken(refreshToken: String): JwtToken {
-        val (newToken, userId) = authProcessor.processRefreshToken(refreshToken)
-        authAppender.appendLoggedIn(newToken.refreshToken, userId)
+    fun refreshJwtToken(refreshToken: String): JwtToken {
+        val loggedInId = authReader.readLoggedInId(refreshToken)
+        val newToken = authProcessor.processRefreshToken(refreshToken)
+        authAppender.appendLoggedIn(newToken.refreshToken, loggedInId)
         return newToken
     }
 
-    fun sendVerificationForUpdate(userId: String, credential: Credential) {
-        authChecker.checkCredentialIsUsed(credential, userId)
+    fun makeUnusedCredential(userId: String, credential: Credential) {
+        authValidator.validateIsUsed(credential, userId)
         authAppender.appendCredential(credential)
-        val verificationCode = authUpdater.updateVerificationCode(credential)
+        val verificationCode = authAppender.generateVerificationCode(credential)
         authSender.sendVerificationCode(credential, verificationCode)
     }
 
-    fun verifyCredentialForUpdate(userId: String, credential: Credential, verificationCode: String) {
+    fun changeCredential(userId: String, credential: Credential, verificationCode: String) {
         // 인증 정보 읽기
-        val savedCredential = authReader.readContact(credential)
+        val existingCredential = authReader.readContact(credential)
         // 인증번호 검증
-        authValidator.validate(savedCredential, verificationCode)
+        authValidator.validateCode(existingCredential, verificationCode)
         // 업데이트 로직 실행
-        userUpdater.updateContact(userId, savedCredential)
+        userUpdater.updateContact(userId, existingCredential)
     }
 }

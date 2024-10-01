@@ -1,10 +1,9 @@
 package org.chewing.v1.implementation.facade
 
-import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.implementation.my.MyAggregator
 import org.chewing.v1.model.comment.CommentInfo
+import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedDetail
-import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.service.CommentService
 import org.chewing.v1.service.FeedService
@@ -15,21 +14,13 @@ import org.springframework.stereotype.Service
 class MyFacade(
     private val commentService: CommentService,
     private val feedService: FeedService,
-    private val friendService: FriendService
+    private val friendService: FriendService,
+    private val myAggregator: MyAggregator
 ) {
-    fun getFeedUserCommented(userId: String): List<Triple<Feed, Friend, CommentInfo>> {
+    fun getFeedUserCommented(userId: String): List<UserCommentedInfo> {
         val comments = commentService.getUserCommented(userId)
         val feeds = feedService.getFeeds(comments.map { it.feedId })
-        val friends = friendService.getFriendsIn(feeds.map { it.feed.userId }, userId)
-            .associateBy { it.friend.userId }
-        return comments.mapNotNull { comment ->
-            val feed = feeds.find { it.feed.feedId == comment.feedId }
-            val friend = feed?.let { friends[it.feed.feedId] }
-            if (feed != null && friend != null) {
-                Triple(feed, friend, comment)
-            } else {
-                null
-            }
-        }.filterNotNull()
+        val friends = friendService.getFriends(feeds.map { it.feed.userId }, userId)
+        return myAggregator.aggregateUserCommented(feeds, friends, comments)
     }
 }

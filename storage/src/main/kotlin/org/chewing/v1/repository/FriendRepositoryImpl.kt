@@ -23,7 +23,6 @@ internal class FriendRepositoryImpl(
 
     override fun appendFriend(user: User, friendName: UserName, targetUser: User) {
         friendJpaRepository.save(FriendJpaEntity.generate(user, friendName, targetUser))
-        friendJpaRepository.save(FriendJpaEntity.generate(targetUser, user.name, user))
     }
 
     override fun removeFriend(userId: String, friendId: String) {
@@ -44,6 +43,17 @@ internal class FriendRepositoryImpl(
 
     override fun checkFriend(userId: String, friendId: String): Boolean {
         return friendJpaRepository.existsById(FriendId(userId, friendId))
+    }
+
+    override fun readFriendShip(userId: String, friendId: String): Pair<FriendInfo, FriendInfo>? {
+        val friendIds = listOf(FriendId(userId, friendId), FriendId(friendId, userId))
+        val friends = friendJpaRepository.findAllByIdIn(friendIds)
+
+        if (friends.size < 2) return null // 두 관계가 모두 존재해야 함
+
+        val toTarget = friends.find { it.id == FriendId(userId, friendId) }?: return null
+        val fromTarget = friends.find { it.id == FriendId(friendId, userId) }?: return null
+        return toTarget.toFriendInfo() to fromTarget.toFriendInfo()
     }
 
     override fun updateFavorite(user: User, friendId: String, favorite: Boolean) {

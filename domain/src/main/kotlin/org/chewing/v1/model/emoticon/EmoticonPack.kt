@@ -1,7 +1,9 @@
 package org.chewing.v1.model.emoticon
 
+import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.media.MediaType
 
 
 class EmoticonPack private constructor(
@@ -20,7 +22,7 @@ class EmoticonPack private constructor(
             return EmoticonPack(
                 id = id,
                 name = name,
-                media = Image.of(url, 0),
+                media = Image.of(FileCategory.EMOTICON,url, 0, MediaType.IMAGE_PNG),
                 emoticons = emoticons
             )
         }

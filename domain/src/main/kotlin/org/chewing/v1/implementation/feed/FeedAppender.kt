@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component
 class FeedAppender(
     private val feedRepository: FeedRepository
 ) {
-    fun appendFeedLikes(feedInfo: FeedInfo, user: User) {
-        feedRepository.likes(feedInfo, user)
+    fun appendFeedLikes(feedInfo: FeedInfo, userId: String) {
+        feedRepository.likes(feedInfo, userId)
     }
-    fun appendFeed(medias: List<Media>, user: User, topic: String): String {
-        return feedRepository.append(medias, user, topic)
+    fun appendFeed(medias: List<Media>, userId: String, topic: String): String {
+        return feedRepository.append(medias, userId, topic)
     }
 }

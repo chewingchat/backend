@@ -19,8 +19,6 @@ internal class PhoneNumberJpaEntity(
     private val phoneNumberId: String = UUID.randomUUID().toString(),
     @Column(name = "phone_number")
     private var phoneNumber: String,
-    @Column(name = "first_authorized")
-    private var firstAuthorized: Boolean,
 
     @Column(name = "country_code")
     private var countryCode: String,
@@ -36,7 +34,6 @@ internal class PhoneNumberJpaEntity(
         fun generate(phoneNumber: PhoneNumber): PhoneNumberJpaEntity {
             return PhoneNumberJpaEntity(
                 phoneNumber = phoneNumber.number,
-                firstAuthorized = false,
                 countryCode = phoneNumber.countryCode
             )
         }
@@ -48,12 +45,7 @@ internal class PhoneNumberJpaEntity(
             country = countryCode,
             authorizedNumber = authorizedNumber,
             expiredTime = expiredAt,
-            isAuthorized = firstAuthorized,
         )
-    }
-
-    fun updateFirstAuthorized() {
-        firstAuthorized = true
     }
 
     fun getVerifiedNumber(): String {

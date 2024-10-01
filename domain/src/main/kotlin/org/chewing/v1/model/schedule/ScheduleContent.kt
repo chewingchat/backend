@@ -2,16 +2,19 @@ package org.chewing.v1.model.schedule
 
 class ScheduleContent private constructor(
     val title: String,
-    val text: String
+    val memo: String,
+    val location: String
 ) {
     companion object {
         fun of(
             title: String,
-            text: String
+            memo: String,
+            location: String
         ): ScheduleContent {
             return ScheduleContent(
                 title,
-                text
+                memo,
+                location
             )
         }
     }

@@ -1,6 +1,6 @@
 package org.chewing.v1.model.user
 
-import org.chewing.v1.model.ActivateType
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.media.Image
 
 
@@ -10,7 +10,7 @@ class User private constructor(
     val birth: String,
     val image: Image,
     val backgroundImage: Image,
-    val type: ActivateType
+    val status: AccessStatus,
 ) {
     companion object {
         fun of(
@@ -20,7 +20,7 @@ class User private constructor(
             birth: String,
             image: Image,
             backgroundImage: Image,
-            type: ActivateType
+            status: AccessStatus
         ): User {
             return User(
                 userId = userId,
@@ -28,7 +28,7 @@ class User private constructor(
                 image = image,
                 backgroundImage = backgroundImage,
                 name = UserName.of(firstName, lastName),
-                type = ActivateType.ACCESS
+                status = status
             )
         }
     }

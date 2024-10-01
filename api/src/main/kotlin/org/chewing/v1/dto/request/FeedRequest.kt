@@ -8,4 +8,12 @@ class FeedRequest {
             return feedId
         }
     }
+
+    data class Hide(
+        val feedId: String = ""
+    ) {
+        fun toFeedId(): String {
+            return feedId
+        }
+    }
 }

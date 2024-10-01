@@ -5,22 +5,23 @@ import java.time.format.DateTimeFormatter
 
 data class FriendFeedResponse(
     val feedId: String,
-    val totalLiked: Int,
-    val feedUploadTime: String,
-    val feedTopic: String,
-    val feedDetails: List<FeedDetailResponse>
+    val liked: Boolean,
+    val uploadTime: String,
+    val topic: String,
+    val details: List<FeedDetailResponse>
 ) {
     companion object {
         fun of(
-            feed: Feed
+            feed: Feed,
+            isLiked: Boolean
         ): FriendFeedResponse {
             val formattedUploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return FriendFeedResponse(
                 feedId = feed.feed.feedId,
-                totalLiked = feed.feed.likes,
-                feedUploadTime = formattedUploadTime,
-                feedTopic = feed.feed.topic,
-                feedDetails = feed.feedDetails.map { FeedDetailResponse.of(it) }
+                liked = isLiked,
+                uploadTime = formattedUploadTime,
+                topic = feed.feed.topic,
+                details = feed.feedDetails.map { FeedDetailResponse.of(it) }
             )
         }
     }

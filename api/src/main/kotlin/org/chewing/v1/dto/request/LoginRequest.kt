@@ -13,7 +13,7 @@ class LoginRequest {
         val appToken: String
     ){
         fun toDevice(): PushToken.Device {
-            return PushToken.Device.of(deviceId, provider)
+            return PushToken.Device.of(deviceId, PushToken.Provider.valueOf(provider.uppercase()))
         }
 
         fun toAppToken(): String {
@@ -37,7 +37,7 @@ class LoginRequest {
         val appToken: String
     ) {
         fun toDevice(): PushToken.Device {
-            return PushToken.Device.of(deviceId, provider)
+            return PushToken.Device.of(deviceId, PushToken.Provider.valueOf(provider.uppercase()))
         }
 
         fun toAppToken(): String {

@@ -16,7 +16,8 @@ internal class PushNotificationJpaEntity(
 
     private val deviceId: String,
 
-    private val deviceProvider: String,
+    @Enumerated(EnumType.STRING)
+    private var provider: PushToken.Provider,
 
     private val userId: String,
 ) {
@@ -29,7 +30,7 @@ internal class PushNotificationJpaEntity(
             return PushNotificationJpaEntity(
                 appToken = appToken,
                 deviceId = device.deviceId,
-                deviceProvider = device.provider,
+                provider = device.provider,
                 userId = user.userId
             )
         }

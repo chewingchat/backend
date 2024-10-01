@@ -16,8 +16,8 @@ interface FriendRepository {
     fun blockFriend(userId: String, friendId: String)
 
     fun readFriend(userId: String,friendId: String): FriendInfo?
-
     fun checkFriend(userId: String, friendId: String): Boolean
+    fun readFriendShip(userId: String, friendId: String): Pair<FriendInfo,FriendInfo>?
     fun updateFavorite(user: User, friendId: String, favorite: Boolean)
     fun updateName(user: User, friendId: String, friendName: UserName)
 }

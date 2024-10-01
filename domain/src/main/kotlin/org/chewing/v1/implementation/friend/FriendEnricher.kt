@@ -16,7 +16,7 @@ class FriendEnricher {
             val user = userMap[friendInfo.friendId]
             val status = statusMap[friendInfo.friendId]
             status?.let {
-                Friend.of(user!!, friendInfo.isFavorite, user.name, it)
+                Friend.of(user!!, friendInfo.isFavorite, user.name, it, friendInfo.type)
             }
         }
     }

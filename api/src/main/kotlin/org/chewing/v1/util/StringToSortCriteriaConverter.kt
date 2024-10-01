@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class StringToSortCriteriaConverter : Converter<String, SortCriteria> {
-    override fun convert(source: String): SortCriteria? {
-        return SortCriteria.valueOf(source.uppercase()) // 대문자로 변환
+    override fun convert(source: String): SortCriteria {
+        return SortCriteria.valueOf(source.uppercase())
     }
 }

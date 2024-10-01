@@ -12,11 +12,11 @@ import java.time.temporal.TemporalAdjusters
 internal class ScheduleRepositoryImpl(
     private val scheduleJpaRepository: ScheduleJpaRepository
 ) : ScheduleRepository {
-    override fun appendSchedule(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User) {
+    override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User) {
         scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, writer))
     }
 
-    override fun removeSchedule(scheduleId: String) {
+    override fun remove(scheduleId: String) {
         scheduleJpaRepository.deleteById(scheduleId)
     }
 
@@ -25,8 +25,8 @@ internal class ScheduleRepositoryImpl(
     }
 
 
-    override fun readSchedule(userId: String, type: ScheduleType): List<Schedule> {
-        val startDateTime = LocalDateTime.of(type.year.value, type.month, 1, 0, 0)
+    override fun read(userId: String, type: ScheduleType): List<Schedule> {
+        val startDateTime = LocalDateTime.of(type.year, type.month, 1, 0, 0)
         val endDateTime = startDateTime
             .with(TemporalAdjusters.firstDayOfNextMonth()) // 다음 달의 첫 날로 설정
             .minusNanos(1) // 1나노초 전으로 설정하여 현재 월의 마지막 초까지 포함

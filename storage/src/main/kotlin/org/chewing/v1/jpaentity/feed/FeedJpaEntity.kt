@@ -9,7 +9,9 @@ import java.util.*
 
 @DynamicInsert
 @Entity
-@Table(name = "feed", schema = "chewing")
+@Table(name = "feed", schema = "chewing",
+    indexes = [Index(name = "idx_feed_hide", columnList = "hide")]
+)
 class FeedJpaEntity(
     @Id
     private val feedId: String = UUID.randomUUID().toString(),
@@ -18,18 +20,20 @@ class FeedJpaEntity(
     private var comments: Int,
     @Version
     var version: Long? = 0,
-    val userId: String
+    val userId: String,
+    var hide: Boolean,
 ) : BaseEntity() {
     companion object {
         fun generate(
             topic: String,
-            writer: User,
+            userId: String,
         ): FeedJpaEntity {
             return FeedJpaEntity(
                 feedTopic = topic,
                 likes = 0,
                 comments = 0,
-                userId = writer.userId,
+                userId = userId,
+                hide = false
             )
         }
     }
@@ -50,18 +54,27 @@ class FeedJpaEntity(
         this.comments -= 1
     }
 
+    fun updateHide() {
+        this.hide = true
+    }
+
+    fun updateUnHide() {
+        this.hide = false
+    }
+
     fun toFeedId(): String {
         return feedId
     }
 
     fun toFeedInfo(): FeedInfo {
-        return FeedInfo.of(
+        return FeedInfo.
+        of(
             feedId = feedId,
             topic = feedTopic,
             likes = likes,
             comments = comments,
             uploadAt = createdAt!!,
-            userId = userId
+            userId = userId,
         )
     }
 

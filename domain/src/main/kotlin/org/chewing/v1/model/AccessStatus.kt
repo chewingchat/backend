@@ -1,6 +1,6 @@
 package org.chewing.v1.model
 
-enum class ActivateType {
+enum class AccessStatus {
     ACCESS,
     NOT_ACCESS,
     DELETE,

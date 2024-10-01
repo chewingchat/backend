@@ -19,9 +19,6 @@ internal class EmailJpaEntity(
     @Column(name = "email")
     private var emailAddress: String, // email 수정
 
-    @Column(name = "first_authorized")
-    private var firstAuthorized: Boolean,
-
     @Column(name = "expired_at")
     private var expiredAt: LocalDateTime = LocalDateTime.now().plusMinutes(5),
 
@@ -33,14 +30,12 @@ internal class EmailJpaEntity(
             return EmailJpaEntity(
                 emailId = email.emailId,
                 emailAddress = email.emailAddress,
-                firstAuthorized = email.isAuthorizedFirst,
             )
         }
 
         fun generate(email: EmailAddress): EmailJpaEntity {
             return EmailJpaEntity(
                 emailAddress = email.email,
-                firstAuthorized = false,
             )
         }
     }
@@ -50,12 +45,7 @@ internal class EmailJpaEntity(
             emailAddress = emailAddress,
             authorizedNumber = authorizedNumber,
             expiredTime = expiredAt,
-            isAuthorized = firstAuthorized,
         )
-    }
-
-    fun updateFirstAuthorized() {
-        firstAuthorized = true
     }
 
     fun getAuthorizedNumber(): String {

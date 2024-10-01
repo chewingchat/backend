@@ -17,9 +17,9 @@ class FeedInfo private constructor(
             likes: Int,
             comments: Int,
             uploadAt: LocalDateTime,
-            userId: String
+            userId: String,
         ): FeedInfo {
-            return FeedInfo(feedId, topic, likes, comments, uploadAt,userId)
+            return FeedInfo(feedId, topic, likes, comments, uploadAt, userId)
         }
     }
 }

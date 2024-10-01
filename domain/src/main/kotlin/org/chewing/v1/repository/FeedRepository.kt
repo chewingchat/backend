@@ -3,6 +3,7 @@ package org.chewing.v1.repository
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedOwner
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository
 interface FeedRepository {
     fun read(feedId: String): FeedInfo?
     fun reads(feedIds: List<String>): List<FeedInfo>
-    fun readsByUserId(userId: String): List<FeedInfo>
+    fun readsByUserId(userId: String,feedOwner: FeedOwner): List<FeedInfo>
     fun readDetails(feedId: String): List<FeedDetail>
     fun readsDetails(feedIds: List<String>):  List<FeedDetail>
     fun readsByOwner(feedIds: List<String>, userIds:List<String>): List<FeedInfo>
@@ -19,10 +20,11 @@ interface FeedRepository {
     fun readsLike(feedIds: List<String>, userId: String): List<String>
     fun isOwner(feedId: String, userId: String): Boolean
     fun isAllOwner(feedIds: List<String>, userId: String): Boolean
-    fun likes(feedInfo: FeedInfo, user: User)
-    fun unlikes(feedInfo: FeedInfo, user: User)
+    fun likes(feedInfo: FeedInfo, userId: String)
+    fun unlikes(feedInfo: FeedInfo, userId: String)
     fun removes(feedIds: List<String>)
     fun removesDetails(feedIds: List<String>): List<Media>
-    fun append(medias: List<Media>, user: User, topic: String): String
+    fun append(medias: List<Media>,userId: String, topic: String): String
     fun update(feedId: String, target: FeedTarget)
+    fun checkLike(feedId: String, userId: String): Boolean
 }

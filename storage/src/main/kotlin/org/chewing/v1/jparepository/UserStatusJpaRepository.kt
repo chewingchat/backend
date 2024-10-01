@@ -9,7 +9,8 @@ import java.util.Optional
 @Repository
 internal interface UserStatusJpaRepository : JpaRepository<UserStatusJpaEntity, String> {
     fun findAllByUserId(userId: String): List<UserStatusJpaEntity>
-    fun findBySelectedTrue(): Optional<UserStatusJpaEntity>
+    fun deleteAllByStatusIdIn(statusesId: List<String>)
+    fun findBySelectedTrueAndUserId(userId: String): Optional<UserStatusJpaEntity>
     fun findAllBySelectedTrueAndUserIdIn(userIds: List<String>): List<UserStatusJpaEntity>
     fun deleteAllByUserId(userId: String)
 }

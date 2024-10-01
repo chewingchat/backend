@@ -9,7 +9,7 @@ class PushToken private constructor(
         fun of(
             pushTokenId: String,
             appToken: String,
-            provider: String,
+            provider: Provider,
             deviceId: String
         ): PushToken {
             return PushToken(
@@ -22,12 +22,12 @@ class PushToken private constructor(
 
     class Device private constructor(
         val deviceId: String,
-        val provider: String
+        val provider: Provider
     ) {
         companion object {
             fun of(
                 deviceId: String,
-                provider: String
+                provider: Provider
             ): Device {
                 return Device(
                     deviceId = deviceId,

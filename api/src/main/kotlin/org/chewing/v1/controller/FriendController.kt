@@ -19,7 +19,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriendByEmail(userId, request.toUserName(), request.toEmail())
+        friendService.addFriend(userId, request.toUserName(), request.toEmail())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -29,13 +29,13 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriendByPhoneNumber(userId, request.toUserName(), request.toPhoneNumber())
+        friendService.addFriend(userId, request.toUserName(), request.toPhoneNumber())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
 
-    @PostMapping("/favorite")
-    fun addFavorite(
+    @PutMapping("/favorite")
+    fun changeFavorite(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.UpdateFavorite
     ): SuccessResponseEntity<SuccessOnlyResponse> {
@@ -66,14 +66,12 @@ class FriendController(
         return ResponseHelper.successOnly()
     }
 
-    @PutMapping("")
+    @PutMapping("/name")
     fun changeFriendName(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.UpdateName
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        val friendName = request.toFriendName()
-        val friendId = request.toFriendId()
-        friendService.changeFriendName(userId, friendId, friendName)
+        friendService.changeFriendName(userId, request.toFriendId(), request.toFriendName())
         //생성 완료 응답 201 반환
         return ResponseHelper.successOnly()
     }
