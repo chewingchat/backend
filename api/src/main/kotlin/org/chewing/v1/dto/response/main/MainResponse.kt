@@ -33,7 +33,7 @@ data class MainResponse(
                     imageType = friend.user.image.type.toString().lowercase(),
                     statusMessage = friend.status.message,
                     favorite = friend.isFavorite,
-                    access = friend.user.type.name.lowercase(),
+                    access = friend.user.status.name.lowercase(),
                     backgroundImageUrl = friend.user.backgroundImage.url,
                     backgroundImageType = friend.user.backgroundImage.type.toString().lowercase(),
                     statusEmoji = friend.status.emoji

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class UserValidator {
     fun isUserAccess(user: User) {
-        if (user.type != AccessStatus.ACCESS) {
+        if (user.status != AccessStatus.ACCESS) {
             throw ConflictException(ErrorCode.USER_NOT_ACCESS)
         }
     }

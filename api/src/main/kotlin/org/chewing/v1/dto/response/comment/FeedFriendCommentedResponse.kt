@@ -25,7 +25,13 @@ data class FeedFriendCommentedResponse(
                 friendComment: Comment
             ): FriendCommentResponse {
                 return FriendCommentResponse(
-                    friend = FriendInfoResponse.of(friendComment.writer),
+                    friend = FriendInfoResponse.of(
+                        friendId = friendComment.writer.userId,
+                        userName = friendComment.writer.name,
+                        imageUrl = friendComment.writer.image.url,
+                        access = friendComment.writer.status,
+                        imageType = friendComment.writer.image.type.toString().lowercase()
+                    ),
                     comment = CommentResponse.of(friendComment)
                 )
             }

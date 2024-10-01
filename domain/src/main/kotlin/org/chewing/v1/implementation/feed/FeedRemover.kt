@@ -12,8 +12,8 @@ class FeedRemover(
     val feedRepository: FeedRepository
 ) {
     @Transactional
-    fun removeLikes(feedInfo: FeedInfo, user: User) {
-        feedRepository.unlikes(feedInfo, user)
+    fun removeLikes(feedInfo: FeedInfo, userId: String) {
+        feedRepository.unlikes(feedInfo, userId)
     }
 
     @Transactional

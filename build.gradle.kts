@@ -48,6 +48,9 @@ allprojects {
 
         implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
         implementation("org.springframework.security:spring-security-oauth2-client")
+
+        //코루틴
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     }
 
     java {

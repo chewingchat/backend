@@ -15,9 +15,9 @@ internal class UserFeedLikesJpaEntity(
     val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
-        fun fromUserFeed(user: User, feedInfo: FeedInfo): UserFeedLikesJpaEntity {
+        fun fromUserFeed(userId: String, feedInfo: FeedInfo): UserFeedLikesJpaEntity {
             return UserFeedLikesJpaEntity(
-                userFeedId = UserFeedId(userId = user.userId, feedId = feedInfo.feedId),
+                userFeedId = UserFeedId(userId = userId, feedId = feedInfo.feedId),
             )
         }
     }

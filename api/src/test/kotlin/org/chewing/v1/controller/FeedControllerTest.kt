@@ -166,7 +166,7 @@ class FeedControllerTest(
     }
 
     @Test
-    @DisplayName("숨김 피드 가져오기")
+    @DisplayName("숨긴 피드 가져오기")
     fun `getHiddenFeeds`() {
         val userId = "testUserId"
         val feed = createFeed()
@@ -271,5 +271,45 @@ class FeedControllerTest(
         performCommonSuccessCreateResponse(result)
     }
 
+    @Test
+    @DisplayName("피드 숨김")
+    fun `hideFeeds`() {
+        val userId = "testUserId"
+        val requestBody = listOf(
+            mapOf(
+                "feedId" to "testFeedId"
+            ),
+            mapOf(
+                "feedId" to "testFeedId2"
+            )
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/feed/hide")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", userId)
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+    }
 
+    @Test
+    @DisplayName("피드 숨김 해제")
+    fun `unHideFeeds`() {
+        val userId = "testUserId"
+        val requestBody = listOf(
+            mapOf(
+                "feedId" to "testFeedId"
+            ),
+            mapOf(
+                "feedId" to "testFeedId2"
+            )
+        )
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/api/feed/hide")
+                .contentType(MediaType.APPLICATION_JSON)
+                .requestAttr("userId", userId)
+                .content(objectMapper.writeValueAsString(requestBody))
+        )
+        performCommonSuccessResponse(result)
+    }
 }

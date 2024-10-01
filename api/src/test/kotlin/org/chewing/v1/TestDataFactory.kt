@@ -1,6 +1,7 @@
 package org.chewing.v1
 
 import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
@@ -103,7 +104,6 @@ object TestDataFactory {
             1,
             LocalDateTime.now(),
             "testUserId",
-            false
         )
     }
 
@@ -124,5 +124,9 @@ object TestDataFactory {
 
     fun createComment(): Comment {
         return Comment.of("commentId", "comment", LocalDateTime.now(), createUser())
+    }
+
+    fun createAnnouncement(): Announcement {
+        return Announcement.of("announcementId", "title", LocalDateTime.now(), "content")
     }
 }
