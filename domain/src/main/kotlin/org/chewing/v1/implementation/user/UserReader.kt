@@ -3,6 +3,7 @@ package org.chewing.v1.implementation.user
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.auth.AuthReader
+import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
@@ -63,5 +64,9 @@ class UserReader(
 
     fun readsUserStatus(userId: String): List<UserStatus> {
         return userStatusRepository.readsUserStatus(userId)
+    }
+
+    fun readsPushToken(userId: String): List<PushToken> {
+        return userRepository.readsPushToken(userId)
     }
 }

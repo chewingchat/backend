@@ -5,7 +5,7 @@ import org.chewing.v1.model.auth.*
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.User
@@ -51,8 +51,8 @@ object TestDataFactory {
             "testFirstName",
             "testLastName",
             "2000-00-00",
-            Image.of(FileCategory.PROFILE,"www.example.com", 0, MediaType.IMAGE_PNG),
-            Image.of(FileCategory.BACKGROUND,"www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.PROFILE,"www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.BACKGROUND,"www.example.com", 0, MediaType.IMAGE_PNG),
             AccessStatus.ACCESS
         )
     }

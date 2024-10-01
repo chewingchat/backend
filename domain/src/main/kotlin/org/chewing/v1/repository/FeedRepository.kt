@@ -18,7 +18,6 @@ interface FeedRepository {
     fun readsByOwner(feedIds: List<String>, userIds:List<String>): List<FeedInfo>
     fun isAlreadyLiked(feedId: String, userId: String): Boolean
     fun readsLike(feedIds: List<String>, userId: String): List<String>
-    fun isOwner(feedId: String, userId: String): Boolean
     fun isAllOwner(feedIds: List<String>, userId: String): Boolean
     fun likes(feedInfo: FeedInfo, userId: String)
     fun unlikes(feedInfo: FeedInfo, userId: String)

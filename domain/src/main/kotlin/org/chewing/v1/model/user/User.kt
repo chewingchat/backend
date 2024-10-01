@@ -1,15 +1,15 @@
 package org.chewing.v1.model.user
 
 import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.media.Image
+import org.chewing.v1.model.media.Media
 
 
 class User private constructor(
     val userId: String,
     val name: UserName,
     val birth: String,
-    val image: Image,
-    val backgroundImage: Image,
+    val image: Media,
+    val backgroundImage: Media,
     val status: AccessStatus,
 ) {
     companion object {
@@ -18,8 +18,8 @@ class User private constructor(
             firstName: String,
             lastName: String,
             birth: String,
-            image: Image,
-            backgroundImage: Image,
+            image: Media,
+            backgroundImage: Media,
             status: AccessStatus
         ): User {
             return User(

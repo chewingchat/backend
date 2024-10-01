@@ -35,4 +35,13 @@ internal class PushNotificationJpaEntity(
             )
         }
     }
+
+    fun toPushToken(): PushToken {
+        return PushToken.of(
+            pushTokenId = pushId,
+            appToken = appToken,
+            deviceId = deviceId,
+            provider = provider
+        )
+    }
 }

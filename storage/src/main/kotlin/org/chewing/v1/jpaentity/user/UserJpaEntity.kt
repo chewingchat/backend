@@ -2,7 +2,6 @@ package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.media.Image
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.AccessStatus
@@ -83,8 +82,8 @@ internal class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Image.of(FileCategory.PROFILE,this.pictureUrl, 0, this.pictureType),
-            Image.of(FileCategory.BACKGROUND,this.backgroundPictureUrl, 0, this.backgroundPictureType),
+            Media.of(FileCategory.PROFILE,this.pictureUrl, 0, this.pictureType),
+            Media.of(FileCategory.BACKGROUND,this.backgroundPictureUrl, 0, this.backgroundPictureType),
             this.type
         )
     }
