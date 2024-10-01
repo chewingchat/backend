@@ -6,6 +6,7 @@ import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.OwnedFeedResponse
 import org.chewing.v1.dto.response.friend.FeedsResponse
 import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -69,6 +70,26 @@ class FeedController(
         val feeds = feedService.getFeeds(userId, FeedOwner.HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
+    }
+
+    @PostMapping("/hide")
+    fun hideFeeds(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: List<FeedRequest.Hide>
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        feedService.hides(userId, request.map { it.toFeedId() },FeedTarget.HIDE)
+        //성공 응답 200 반환
+        return ResponseHelper.successOnly()
+    }
+
+    @DeleteMapping("/hide")
+    fun unHideFeeds(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: List<FeedRequest.Hide>
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        feedService.unHides(userId, request.map { it.toFeedId() },FeedTarget.UNHIDE)
+        //성공 응답 200 반환
+        return ResponseHelper.successOnly()
     }
 
     @PostMapping("/likes")

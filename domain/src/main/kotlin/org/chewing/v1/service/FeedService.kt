@@ -56,6 +56,18 @@ class FeedService(
         fileProcessor.processOldFiles(oldMedias)
     }
 
+
+
+    fun hides(userId: String, feedIds: List<String>, target: FeedTarget) {
+        feedValidator.isFeedsOwner(feedIds, userId)
+        feedLocker.lockFeedHides(feedIds, target)
+    }
+
+    fun unHides(userId: String, feedIds: List<String>, target: FeedTarget) {
+        feedValidator.isFeedsOwner(feedIds, userId)
+        feedLocker.lockFeedUnHides(feedIds, target)
+    }
+
     fun make(userId: String, files: List<FileData>, topic: String, category: FileCategory) {
         val medias = fileProcessor.processNewFiles(userId, files, category)
         feedProcessor.processNewFeed(medias, userId, topic)

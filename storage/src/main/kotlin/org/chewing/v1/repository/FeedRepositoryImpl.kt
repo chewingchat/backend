@@ -68,13 +68,13 @@ internal class FeedRepositoryImpl(
         return feedJpaRepository.existsAllByFeedIdInAndUserId(feedIds.map { it }, userId)
     }
 
-    override fun likes(feedInfo: FeedInfo, user: User) {
-        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(user, feedInfo)
+    override fun likes(feedInfo: FeedInfo, userId: String) {
+        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(userId, feedInfo)
         feedLikesRepository.saveAndFlush(userFeedJpaEntity)
     }
 
-    override fun unlikes(feedInfo: FeedInfo, user: User) {
-        feedLikesRepository.deleteById(UserFeedId(user.userId, feedInfo.feedId))
+    override fun unlikes(feedInfo: FeedInfo, userId: String) {
+        feedLikesRepository.deleteById(UserFeedId(userId, feedInfo.feedId))
     }
 
     override fun update(feedId: String, target: FeedTarget) {
@@ -84,6 +84,8 @@ internal class FeedRepositoryImpl(
                 FeedTarget.UNLIKES -> it.updateUnLikes()
                 FeedTarget.COMMENTS -> it.updateComments()
                 FeedTarget.UNCOMMENTS -> it.updateUnComments()
+                FeedTarget.HIDE -> it.updateHide()
+                FeedTarget.UNHIDE -> it.updateUnHide()
             }
             feedJpaRepository.saveAndFlush(it)
         }
@@ -103,8 +105,8 @@ internal class FeedRepositoryImpl(
         return details.map { it.media }
     }
 
-    override fun append(medias: List<Media>, user: User, topic: String): String {
-        val feedId = feedJpaRepository.save(FeedJpaEntity.generate(topic, user)).toFeedId()
+    override fun append(medias: List<Media>, userId: String, topic: String): String {
+        val feedId = feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
         feedDetailJpaRepository.saveAll(FeedDetailJpaEntity.generate(medias, feedId)).map { it.toDetailId() }
         return feedId
     }

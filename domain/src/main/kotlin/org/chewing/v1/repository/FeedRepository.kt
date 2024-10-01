@@ -20,11 +20,11 @@ interface FeedRepository {
     fun readsLike(feedIds: List<String>, userId: String): List<String>
     fun isOwner(feedId: String, userId: String): Boolean
     fun isAllOwner(feedIds: List<String>, userId: String): Boolean
-    fun likes(feedInfo: FeedInfo, user: User)
-    fun unlikes(feedInfo: FeedInfo, user: User)
+    fun likes(feedInfo: FeedInfo, userId: String)
+    fun unlikes(feedInfo: FeedInfo, userId: String)
     fun removes(feedIds: List<String>)
     fun removesDetails(feedIds: List<String>): List<Media>
-    fun append(medias: List<Media>, user: User, topic: String): String
+    fun append(medias: List<Media>,userId: String, topic: String): String
     fun update(feedId: String, target: FeedTarget)
     fun checkLike(feedId: String, userId: String): Boolean
 }

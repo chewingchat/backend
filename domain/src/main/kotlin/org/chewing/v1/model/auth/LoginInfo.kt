@@ -9,7 +9,7 @@ class LoginInfo private constructor(
 ) {
     companion object {
         fun of(jwtToken: JwtToken, user: User): LoginInfo {
-            return LoginInfo(jwtToken, user.type)
+            return LoginInfo(jwtToken, user.status)
         }
     }
 }

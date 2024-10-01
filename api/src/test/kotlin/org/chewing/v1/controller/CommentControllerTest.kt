@@ -2,7 +2,6 @@ package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.service.CommentService
 import org.junit.jupiter.api.DisplayName
@@ -105,7 +104,8 @@ class CommentControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.firstName").value(comment.writer.name.firstName()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.lastName").value(comment.writer.name.lastName()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageUrl").value(comment.writer.image.url))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.access").value(comment.writer.type.name.lowercase()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageType").value(comment.writer.image.type.toString().lowercase()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.access").value(comment.writer.status.name.lowercase()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentId").value(comment.id))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.comment").value(comment.comment))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentTime").value(formattedCommentTime))

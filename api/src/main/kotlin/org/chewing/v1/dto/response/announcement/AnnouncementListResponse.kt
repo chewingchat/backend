@@ -18,19 +18,19 @@ data class AnnouncementListResponse(
 
     data class AnnouncementResponse(
         val announcementId: String,
-        val announcementTopic: String,
-        val announcementUploadTime: String
+        val topic: String,
+        val uploadTime: String
     ) {
         companion object {
             fun of(
                 announcement: Announcement,
             ): AnnouncementResponse {
                 val formattedUploadTime =
-                    announcement.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd"))
+                    announcement.uploadAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 return AnnouncementResponse(
                     announcementId = announcement.id,
-                    announcementTopic = announcement.topic,
-                    announcementUploadTime = formattedUploadTime
+                    topic = announcement.topic,
+                    uploadTime = formattedUploadTime
                 )
             }
         }

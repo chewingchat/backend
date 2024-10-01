@@ -21,18 +21,18 @@ class FeedJpaEntity(
     @Version
     var version: Long? = 0,
     val userId: String,
-    val hide: Boolean,
+    var hide: Boolean,
 ) : BaseEntity() {
     companion object {
         fun generate(
             topic: String,
-            writer: User,
+            userId: String,
         ): FeedJpaEntity {
             return FeedJpaEntity(
                 feedTopic = topic,
                 likes = 0,
                 comments = 0,
-                userId = writer.userId,
+                userId = userId,
                 hide = false
             )
         }
@@ -54,6 +54,14 @@ class FeedJpaEntity(
         this.comments -= 1
     }
 
+    fun updateHide() {
+        this.hide = true
+    }
+
+    fun updateUnHide() {
+        this.hide = false
+    }
+
     fun toFeedId(): String {
         return feedId
     }
@@ -67,7 +75,6 @@ class FeedJpaEntity(
             comments = comments,
             uploadAt = createdAt!!,
             userId = userId,
-            hide = hide
         )
     }
 

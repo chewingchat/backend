@@ -10,7 +10,7 @@ class User private constructor(
     val birth: String,
     val image: Image,
     val backgroundImage: Image,
-    val type: AccessStatus,
+    val status: AccessStatus,
 ) {
     companion object {
         fun of(
@@ -20,7 +20,7 @@ class User private constructor(
             birth: String,
             image: Image,
             backgroundImage: Image,
-            type: AccessStatus
+            status: AccessStatus
         ): User {
             return User(
                 userId = userId,
@@ -28,7 +28,7 @@ class User private constructor(
                 image = image,
                 backgroundImage = backgroundImage,
                 name = UserName.of(firstName, lastName),
-                type = type
+                status = status
             )
         }
     }

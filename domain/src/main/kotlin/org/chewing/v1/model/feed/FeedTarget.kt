@@ -4,5 +4,7 @@ enum class FeedTarget {
     LIKES,
     UNLIKES,
     COMMENTS,
-    UNCOMMENTS;
+    UNCOMMENTS,
+    HIDE,
+    UNHIDE;
 }

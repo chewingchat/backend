@@ -53,7 +53,7 @@ class MyControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].imageType").value("image/png"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].statusMessage").value(friends[0].status.message))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].favorite").value(friends[0].isFavorite.toString()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].access").value(friends[0].user.type.name.lowercase()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].access").value(friends[0].user.status.name.lowercase()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].backgroundImageUrl").value(friends[0].user.backgroundImage.url))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].backgroundImageType").value("image/png"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.friends[0].statusEmoji").value(friends[0].status.emoji))

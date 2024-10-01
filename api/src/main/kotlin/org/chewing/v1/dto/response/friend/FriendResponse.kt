@@ -20,7 +20,7 @@ data class FriendResponse(
                 firstName = friend.name.firstName(),
                 lastName = friend.name.lastName(),
                 imageUrl = friend.user.image.url,
-                access = friend.user.type.name.lowercase(),
+                access = friend.user.status.name.lowercase(),
                 statusMessage = friend.status.message,
                 favorite = friend.isFavorite,
                 statusEmoji = friend.status.emoji,
