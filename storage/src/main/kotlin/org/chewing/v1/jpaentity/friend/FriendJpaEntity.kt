@@ -14,10 +14,10 @@ import org.hibernate.annotations.DynamicInsert
 @Table(name = "friend", schema = "chewing")
 internal class FriendJpaEntity(
     @EmbeddedId
-    val id: FriendId,
-    var favorite: Boolean,
-    var friendFirstName: String,
-    var friendLastName: String,
+    private val id: FriendId,
+    private var favorite: Boolean,
+    private var friendFirstName: String,
+    private var friendLastName: String,
     @Enumerated(EnumType.STRING)
     private var type: AccessStatus
 ) : BaseEntity() {
@@ -52,5 +52,9 @@ internal class FriendJpaEntity(
     }
     fun updateBlock() {
         this.type = AccessStatus.BLOCK
+    }
+
+    fun getId(): FriendId {
+        return id
     }
 }

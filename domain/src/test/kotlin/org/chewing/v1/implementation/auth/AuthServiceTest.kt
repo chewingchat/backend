@@ -1,5 +1,6 @@
 package org.chewing.v1.implementation.auth
 
+import org.chewing.v1.external.ExternalAuthClient
 import org.chewing.v1.implementation.TestDataFactory
 import org.chewing.v1.implementation.user.UserProcessor
 import org.chewing.v1.implementation.user.UserUpdater
@@ -14,13 +15,12 @@ import org.mockito.kotlin.whenever
 
 
 class AuthServiceTest {
-    private val externalEmailClient: ExternalEmailClient = mock()
-    private val externalPhoneClient: ExternalPhoneClient = mock()
+    private val externalAuthClient: ExternalAuthClient = mock()
     private val authRepository: AuthRepository = mock()
     private val userProcessor: UserProcessor = mock()
     private val authReader: AuthReader = AuthReader(authRepository)
     private val authAppender: AuthAppender = AuthAppender(authRepository)
-    private val authSender: AuthSender = AuthSender(externalPhoneClient, externalEmailClient)
+    private val authSender: AuthSender = AuthSender(externalAuthClient)
     private val authValidator: AuthValidator = mock()
     private val authProcessor: AuthProcessor = mock()
     private val userUpdater: UserUpdater = mock()
@@ -46,7 +46,7 @@ class AuthServiceTest {
         authService.makeCredential(emailCredential)
         // Then
         // externalEmailClient.sendEmail() 메서드가 호출되면 인증 번호를 이메일로 전송
-        verify(externalEmailClient).sendEmail(emailCredential as EmailAddress, verificationCode)
+        verify(externalAuthClient).sendEmail(emailCredential as EmailAddress, verificationCode)
     }
 
     @Test
@@ -60,7 +60,7 @@ class AuthServiceTest {
         authService.makeCredential(phoneCredential)
         // Then
         // externalPhoneClient.sendSms() 메서드가 호출되면 인증 번호를 SMS로 전송
-        verify(externalPhoneClient).sendSms(phoneCredential as PhoneNumber, verificationCode)
+        verify(externalAuthClient).sendSms(phoneCredential as PhoneNumber, verificationCode)
     }
 
 
