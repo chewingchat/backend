@@ -8,10 +8,10 @@ import java.util.*
 @Table(name = "emoticon", schema = "chewing")
 internal class EmoticonJpaEntity(
     @Id
-    val emoticonId: String = UUID.randomUUID().toString(),
-    val emoticonUrl: String,
-    val emoticonName: String,
-    val emoticonPackId: String,
+    private val emoticonId: String = UUID.randomUUID().toString(),
+    private val emoticonUrl: String,
+    private val emoticonName: String,
+    private val emoticonPackId: String,
 ) {
     companion object {
         fun fromEmoticon(emoticon: Emoticon, emoticonPackId: String): EmoticonJpaEntity {
@@ -30,5 +30,9 @@ internal class EmoticonJpaEntity(
             emoticonName,
             emoticonUrl
         )
+    }
+
+    fun getEmoticonId(): String {
+        return emoticonId
     }
 }

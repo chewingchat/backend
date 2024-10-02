@@ -1,6 +1,5 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.auth.AuthReader
 import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
@@ -79,5 +78,11 @@ class UserService(
 
     fun getUserStatuses(userId: String): List<UserStatus> {
         return userReader.readsUserStatus(userId)
+    }
+
+    fun changeTTS(userId: String, fileData: FileData) {
+        val media = fileProcessor.processNewFile(userId, fileData, FileCategory.TTS)
+        val oldMedia =  userUpdater.updateTTS(userId,media)
+        fileProcessor.processOldFile(oldMedia)
     }
 }

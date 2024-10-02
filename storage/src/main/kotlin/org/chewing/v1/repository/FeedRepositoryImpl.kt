@@ -6,9 +6,8 @@ import org.chewing.v1.jpaentity.user.UserFeedId
 import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
 import org.chewing.v1.jparepository.FeedDetailJpaRepository
 import org.chewing.v1.jparepository.FeedJpaRepository
-import org.chewing.v1.jparepository.UserFeedLikesJpaRepository
+import org.chewing.v1.jparepository.FeedLikesJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedOwner
 import org.chewing.v1.model.feed.FeedTarget
@@ -18,14 +17,8 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
-    private val feedLikesRepository: UserFeedLikesJpaRepository,
     private val feedDetailJpaRepository: FeedDetailJpaRepository,
 ) : FeedRepository {
-    override fun isAlreadyLiked(feedId: String, userId: String): Boolean {
-        val userFeedId = UserFeedId(userId = userId, feedId = feedId)
-        return feedLikesRepository.existsById(userFeedId)
-    }
-
     override fun read(feedId: String): FeedInfo? {
         return feedJpaRepository.findById(feedId).map { it.toFeedInfo() }.orElse(null)
     }
@@ -56,26 +49,10 @@ internal class FeedRepositoryImpl(
             .map { it.toFeedInfo() }
     }
 
-    override fun readsLike(feedIds: List<String>, userId: String): List<String> {
-        return feedLikesRepository.findAllByUserIdAndFeedIdIn(userId, feedIds.map { it }).map { it.userFeedId.feedId }
-    }
-
-    override fun isOwner(feedId: String, userId: String): Boolean {
-        return feedJpaRepository.existsByFeedIdAndUserId(feedId, userId)
-    }
-
     override fun isAllOwner(feedIds: List<String>, userId: String): Boolean {
         return feedJpaRepository.existsAllByFeedIdInAndUserId(feedIds.map { it }, userId)
     }
 
-    override fun likes(feedInfo: FeedInfo, userId: String) {
-        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(userId, feedInfo)
-        feedLikesRepository.saveAndFlush(userFeedJpaEntity)
-    }
-
-    override fun unlikes(feedInfo: FeedInfo, userId: String) {
-        feedLikesRepository.deleteById(UserFeedId(userId, feedInfo.feedId))
-    }
 
     override fun update(feedId: String, target: FeedTarget) {
         feedJpaRepository.findById(feedId).orElseThrow().let {
@@ -89,10 +66,6 @@ internal class FeedRepositoryImpl(
             }
             feedJpaRepository.saveAndFlush(it)
         }
-    }
-
-    override fun checkLike(feedId: String, userId: String): Boolean {
-        return feedLikesRepository.existsById(UserFeedId(userId, feedId))
     }
 
     override fun removes(feedIds: List<String>) {

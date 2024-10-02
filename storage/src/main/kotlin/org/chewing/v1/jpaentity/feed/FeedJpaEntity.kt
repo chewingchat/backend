@@ -12,16 +12,16 @@ import java.util.*
 @Table(name = "feed", schema = "chewing",
     indexes = [Index(name = "idx_feed_hide", columnList = "hide")]
 )
-class FeedJpaEntity(
+internal class FeedJpaEntity(
     @Id
     private val feedId: String = UUID.randomUUID().toString(),
     private val feedTopic: String,
     private var likes: Int,
     private var comments: Int,
     @Version
-    var version: Long? = 0,
-    val userId: String,
-    var hide: Boolean,
+    private var version: Long? = 0,
+    private val userId: String,
+    private var hide: Boolean,
 ) : BaseEntity() {
     companion object {
         fun generate(

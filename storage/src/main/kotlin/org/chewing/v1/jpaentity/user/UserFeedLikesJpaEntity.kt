@@ -11,8 +11,8 @@ import java.time.LocalDateTime
 @Table(name = "feed_likes", schema = "chewing")
 internal class UserFeedLikesJpaEntity(
     @EmbeddedId
-    val userFeedId: UserFeedId,
-    val likeTime: LocalDateTime = LocalDateTime.now()
+    private val userFeedId: UserFeedId,
+    private val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
         fun fromUserFeed(userId: String, feedInfo: FeedInfo): UserFeedLikesJpaEntity {

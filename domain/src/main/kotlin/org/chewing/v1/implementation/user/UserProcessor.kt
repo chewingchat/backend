@@ -36,5 +36,4 @@ class UserProcessor(
         userRemover.removePushToken(device)
         userAppender.appendUserPushToken(user, appToken, device)
     }
-
 }

@@ -3,12 +3,15 @@ package org.chewing.v1.implementation.user
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.auth.AuthReader
-import org.chewing.v1.model.friend.FriendSearch
+import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.user.UserProfile
 import org.chewing.v1.model.user.UserStatus
+import org.chewing.v1.repository.PushNotificationRepository
 import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.UserSearchRepository
 import org.chewing.v1.repository.UserStatusRepository
 import org.springframework.stereotype.Component
 
@@ -21,7 +24,9 @@ import org.springframework.stereotype.Component
 class UserReader(
     private val userRepository: UserRepository,
     private val userStatusRepository: UserStatusRepository,
-    private val authReader: AuthReader
+    private val authReader: AuthReader,
+    private val pushNotificationRepository: PushNotificationRepository,
+    private val userSearchRepository: UserSearchRepository
 ) {
     /**
      * 주어진 사용자 ID에 해당하는 사용자 정보를 읽어옵니다.
@@ -49,8 +54,8 @@ class UserReader(
     }
 
     //유저의 최근 친구 검색 목록을 읽어옴
-    fun readSearched(userId: String): List<FriendSearch> {
-        return userRepository.readSearchHistory(userId)
+    fun readSearched(userId: String): List<UserSearch> {
+        return userSearchRepository.readSearchHistory(userId)
     }
 
     fun readSelectedStatuses(userIds: List<String>): List<UserStatus> {
@@ -63,5 +68,9 @@ class UserReader(
 
     fun readsUserStatus(userId: String): List<UserStatus> {
         return userStatusRepository.readsUserStatus(userId)
+    }
+
+    fun readsPushToken(userId: String): List<PushToken> {
+        return pushNotificationRepository.readsPushToken(userId)
     }
 }

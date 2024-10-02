@@ -11,12 +11,12 @@ import java.util.*
 @Entity
 @DynamicInsert
 @Table(name = "feed_comment", schema = "chewing")
-class FeedCommentJpaEntity(
+internal class FeedCommentJpaEntity(
     @Id
-    val feedCommentId: String = UUID.randomUUID().toString(),
-    val comment: String,
-    val userId: String,
-    val feedId: String
+    private val feedCommentId: String = UUID.randomUUID().toString(),
+    private val comment: String,
+    private val userId: String,
+    private val feedId: String
 ) : BaseEntity() {
     companion object {
         fun generate(comment: String, writer: User, feedInfo: FeedInfo): FeedCommentJpaEntity {

@@ -3,6 +3,7 @@ package org.chewing.v1.implementation.media
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.media.MediaType
 import org.springframework.stereotype.Component
 import java.io.File
 
@@ -30,7 +31,7 @@ class FileProcessor(
     }
 
     fun processOldFile(media: Media) {
-        if (!media.isBasic) {
+        if (media.type != MediaType.IMAGE_BASIC) {
             fileProvider.removeFile(media)
         }
     }

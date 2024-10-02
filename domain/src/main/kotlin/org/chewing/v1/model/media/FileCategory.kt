@@ -4,5 +4,6 @@ enum class FileCategory {
     PROFILE,
     BACKGROUND,
     FEED,
-    EMOTICON
+    EMOTICON,
+    TTS
 }
