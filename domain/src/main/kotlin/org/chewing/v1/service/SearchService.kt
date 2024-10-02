@@ -4,7 +4,7 @@ import org.chewing.v1.implementation.user.UserAppender
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.friend.FriendSortEngine
-import org.chewing.v1.model.friend.FriendSearch
+import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.friend.Friend
 import org.springframework.stereotype.Service
@@ -20,11 +20,11 @@ class SearchService(
         return FriendSortEngine.sort(friends, SortCriteria.NAME)
     }
 
-    fun addSearchedFriend(userId: String, search: FriendSearch) {
+    fun addSearchedFriend(userId: String, search: UserSearch) {
         val user = userReader.read(userId)
         return userAppender.appendSearched(user, search)
     }
-    fun getSearchedFriend(userId: String,sortCriteria: SortCriteria): List<FriendSearch> {
+    fun getSearchedFriend(userId: String,sortCriteria: SortCriteria): List<UserSearch> {
         val friendSearchHistory = userReader.readSearched(userId)
         return FriendSortEngine.sortFriendSearchedHistory(friendSearchHistory,sortCriteria)
     }

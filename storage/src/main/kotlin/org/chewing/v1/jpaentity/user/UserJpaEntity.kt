@@ -40,6 +40,9 @@ internal class UserJpaEntity(
     var emailId: String?,
 
     var phoneNumberId: String?,
+    var ttsUrl: String?,
+    @Enumerated(EnumType.STRING)
+    private var ttsType: MediaType,
 
     @Enumerated(EnumType.STRING)
     private var type: AccessStatus
@@ -56,7 +59,9 @@ internal class UserJpaEntity(
                 emailId = email.emailId,
                 phoneNumberId = null,
                 pictureType = MediaType.IMAGE_BASIC,
-                backgroundPictureType = MediaType.IMAGE_BASIC
+                backgroundPictureType = MediaType.IMAGE_BASIC,
+                ttsUrl = null,
+                ttsType = MediaType.VIDEO_BASIC
             )
         }
 
@@ -71,7 +76,9 @@ internal class UserJpaEntity(
                 emailId = null,
                 phoneNumberId = phone.phoneId,
                 pictureType = MediaType.IMAGE_BASIC,
-                backgroundPictureType = MediaType.IMAGE_BASIC
+                backgroundPictureType = MediaType.IMAGE_BASIC,
+                ttsUrl = null,
+                ttsType = MediaType.VIDEO_BASIC
             )
         }
     }
@@ -82,8 +89,8 @@ internal class UserJpaEntity(
             this.userFirstName,
             this.userLastName,
             this.birth,
-            Media.of(FileCategory.PROFILE,this.pictureUrl, 0, this.pictureType),
-            Media.of(FileCategory.BACKGROUND,this.backgroundPictureUrl, 0, this.backgroundPictureType),
+            Media.of(FileCategory.PROFILE, this.pictureUrl, 0, this.pictureType),
+            Media.of(FileCategory.BACKGROUND, this.backgroundPictureUrl, 0, this.backgroundPictureType),
             this.type
         )
     }
@@ -118,6 +125,15 @@ internal class UserJpaEntity(
             is Email -> this.emailId = contact.emailId
             is Phone -> this.phoneNumberId = contact.phoneId
         }
+    }
+
+    fun updateTTS(tts: Media) {
+        this.ttsUrl = tts.url
+        this.ttsType = tts.type
+    }
+
+    fun toTTS(): Media {
+        return Media.of(FileCategory.TTS, this.ttsUrl ?: "", 0, this.ttsType)
     }
 
     fun id(): String {

@@ -2,14 +2,8 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.jpaentity.PushNotificationJpaEntity
-import org.chewing.v1.jpaentity.friend.FriendSearchJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
-import org.chewing.v1.jparepository.*
-import org.chewing.v1.jparepository.FriendSearchJpaRepository
 import org.chewing.v1.jparepository.UserJpaRepository
-import org.chewing.v1.model.auth.PushToken
-import org.chewing.v1.model.friend.FriendSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
@@ -24,8 +18,6 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
-    private val friendSearchJpaRepository: FriendSearchJpaRepository,
-    private val pushNotificationJpaRepository: PushNotificationJpaRepository,
 ) : UserRepository {
     override fun readUserById(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
@@ -47,14 +39,6 @@ internal class UserRepositoryImpl(
             is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElse(null)
             else -> null
         }
-    }
-
-    override fun removePushToken(device: PushToken.Device) {
-        pushNotificationJpaRepository.deleteByDeviceIdAndProvider(device.deviceId, device.provider)
-    }
-
-    override fun appendPushToken(device: PushToken.Device, appToken: String, user: User) {
-        pushNotificationJpaRepository.save(PushNotificationJpaEntity.generate(appToken, device, user))
     }
 
     override fun appendUser(contact: Contact): User {
@@ -128,16 +112,6 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun appendSearchHistory(user: User, search: FriendSearch) {
-        friendSearchJpaRepository.save(FriendSearchJpaEntity.fromFriendSearch(user, search))
-    }
-
-    override fun readSearchHistory(userId: String): List<FriendSearch> {
-        return friendSearchJpaRepository.findAllByUserId(userId).map {
-            it.toFriendSearch()
-        }
-    }
-
     override fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean {
         return when (contact) {
             is Email -> userJpaRepository.existsByEmailIdAndUserIdNot(contact.emailId, userId)
@@ -152,9 +126,10 @@ internal class UserRepositoryImpl(
             userJpaRepository.save(it)
         }
     }
-
-    override fun readsPushToken(userId: String): List<PushToken> {
-        val pushNotifications = pushNotificationJpaRepository.findAllByUserId(userId)
-        return pushNotifications.map { it.toPushToken() }
+    override fun updateTTS(userId: String, tts: Media): Media? {
+        val userEntity = userJpaRepository.findById(userId).orElse(null)
+        userEntity?.updateTTS(tts)
+        userJpaRepository.save(userEntity)
+        return userEntity.toTTS()
     }
 }

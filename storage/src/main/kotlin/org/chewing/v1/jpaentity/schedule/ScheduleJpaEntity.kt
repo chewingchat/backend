@@ -1,4 +1,4 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.schedule
 
 import jakarta.persistence.*
 import org.chewing.v1.model.user.User

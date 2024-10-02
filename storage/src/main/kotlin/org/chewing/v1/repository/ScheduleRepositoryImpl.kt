@@ -1,6 +1,6 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jpaentity.ScheduleJpaEntity
+import org.chewing.v1.jpaentity.schedule.ScheduleJpaEntity
 import org.chewing.v1.jparepository.ScheduleJpaRepository
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.schedule.*

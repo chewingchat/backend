@@ -23,14 +23,14 @@ enum class ErrorCode(
     VARIABLE_WRONG("COMMON_2", "요청 변수가 잘못되었습니다."),
     INTERNAL_SERVER_ERROR("COMMON_3", "Internal Server Error"),
 
-    FILE_CONVERT_FAILED("FILE_1", "파일 변환 실패"),
-    FILE_NAME_COULD_NOT_EMPTY("FILE_2", "파일 이름 없음"),
-    NOT_SUPPORT_FILE_TYPE("FILE_3", "지원하지 않는 형식의 파일"),
+    FILE_UPLOAD_FAILED("FILE_1", "파일 업로드를 실패하였습니다."),
+    FILE_DELETE_FAILED("FILE_2", "파일 삭제를 실패하였습니다."),
+    FILE_CONVERT_FAILED("FILE_3", "파일 변환에 실패하였습니다."),
+    FILE_NAME_COULD_NOT_EMPTY("FILE_4", "파일 이름이 없습니다"),
+    NOT_SUPPORT_FILE_TYPE("FILE_5", "지원하지 않는 형식의 파일입니다."),
 
     USER_NOT_FOUND("USER_1", "회원을 찾을 수 없음."),
-    USER_CREATE_FAILED("USER_2", "사용자 저장 실패 실패."),
-    USER_UPDATE_FAILED("USER_3", "사용자 정보 수정 실패."),
-    USER_NOT_ACCESS("USER_4", "사용자가 활성화되지 않았습니다."),
+    USER_NOT_ACCESS("USER_2", "사용자가 활성화되지 않았습니다."),
 
     FRIEND_NOT_FOUND("FRIEND_1", "친구를 찾을 수 없음."),
     FRIEND_ALREADY_CREATED("FRIEND_2", "이미 추가된 친구입니다."),
@@ -38,19 +38,21 @@ enum class ErrorCode(
     FRIEND_BLOCK("FRIEND_4", "차단한 친구입니다."),
     FRIEND_BLOCKED("FRIEND_5", "차단당한 친구입니다."),
 
-    FILE_UPLOAD_FAILED("IMAGE_1", "파일 업로드 실패."),
-    FILE_DELETE_FAILED("IMAGE_2", "파일 삭제 실패"),
     FEED_NOT_FOUND("FEED_1", "피드를 찾을 수 없음."),
     FEED_ALREADY_LIKED("FEED_2", "이미 공감한 피드입니다."),
     FEED_ALREADY_UNLIKED("FEED_3", "이미 공감을 취소한 피드입니다."),
     FEED_IS_NOT_OWNED("FEED_4", "피드 작성자가 아닙니다."),
     FEED_IS_OWNED("FEED_5", "피드 작성자입니다."),
+
     COMMENT_IS_NOT_OWNED("COMMENT_1", "댓글 작성자가 아닙니다."),
-    ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_1", "공지사항을 찾을 수 없음."),
     COMMENT_NOT_FOUND("COMMENT_2", "댓글을 찾을 수 없음."),
+
     EMOTICON_NOT_FOUND("EMOTICON_1", "이모티콘을 찾을 수 없음."),
+
     CHATROOM_NOT_FOUND("CHATROOM_1", "채팅방을 찾을 수 없음."),
     CHATLOG_NOT_FOUND("CHATLOG_1", "채팅 로그를 찾을 수 없음."),
+
+    ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_1", "공지사항을 찾을 수 없음."),
     ;
 
     companion object {

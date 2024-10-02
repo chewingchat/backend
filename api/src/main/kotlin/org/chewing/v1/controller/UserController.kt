@@ -26,6 +26,7 @@ class UserController(
         val userProfile = userService.getUserProfile(userId)
         return ResponseHelper.success(UserProfileResponse.of(userProfile))
     }
+
     @PostMapping("/access")
     fun makeAccess(
         @RequestAttribute("userId") userId: String,
@@ -118,5 +119,15 @@ class UserController(
     ): SuccessResponseEntity<UserStatusesResponse> {
         val userStatuses = userService.getUserStatuses(userId)
         return ResponseHelper.success(UserStatusesResponse.of(userStatuses))
+    }
+
+    @PostMapping("/tts")
+    fun changeTTS(
+        @RequestAttribute("userId") userId: String,
+        @RequestPart("file") file: MultipartFile,
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
+        val convertedFile = FileUtil.convertMultipartFileToFileData(file)
+        userService.changeTTS(userId, convertedFile)
+        return ResponseHelper.successOnly()
     }
 }
