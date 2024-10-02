@@ -9,27 +9,39 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
-import org.chewing.v1.repository.AuthRepository
+import org.chewing.v1.repository.EmailRepository
+import org.chewing.v1.repository.LoggedInRepository
+import org.chewing.v1.repository.PhoneRepository
 import org.springframework.stereotype.Component
 
 
 @Component
 class AuthReader(
-    private val authRepository: AuthRepository,
+    private val phoneRepository: PhoneRepository,
+    private val emailRepository: EmailRepository,
+    private val loggedInRepository: LoggedInRepository
 ) {
     fun readContact(targetContact: Credential): Contact {
-        return authRepository.readContact(targetContact) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        return when (targetContact) {
+            is EmailAddress -> emailRepository.readEmail(targetContact)
+                ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+
+            is PhoneNumber -> phoneRepository.readPhone(targetContact)
+                ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+
+            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 
     fun readLoggedInId(refreshToken: String): String {
-        return authRepository.readLoggedId(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
+        return loggedInRepository.readLoggedId(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
     }
 
     fun readEmailByEmailId(emailId: String): Email? {
-        return authRepository.readContactByEmailId(emailId)
+        return emailRepository.readEmailByEmailId(emailId)
     }
 
     fun readPhoneByPhoneNumberId(phoneNumberId: String): Phone? {
-        return authRepository.readContactByPhoneNumberId(phoneNumberId)
+        return phoneRepository.readPhoneByPhoneNumberId(phoneNumberId)
     }
 }
