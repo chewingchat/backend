@@ -17,10 +17,6 @@ class FeedReader(
         return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
 
-    fun readsLike(feedIds: List<String>, userId: String): List<String> {
-        return feedRepository.readsLike(feedIds, userId)
-    }
-
     fun readsByUserId(userId: String, feedOwner: FeedOwner): List<FeedInfo> {
         return feedRepository.readsByUserId(userId, feedOwner)
     }

@@ -1,4 +1,4 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.announcement
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

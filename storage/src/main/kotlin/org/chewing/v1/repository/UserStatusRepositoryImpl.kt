@@ -50,4 +50,5 @@ internal class UserStatusRepositoryImpl(
     override fun readsUserStatus(userId: String): List<UserStatus> {
         return userStatusJpaRepository.findAllByUserId(userId).map { it.toUserStatus() }
     }
+
 }

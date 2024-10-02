@@ -1,4 +1,4 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.model.auth.PushToken

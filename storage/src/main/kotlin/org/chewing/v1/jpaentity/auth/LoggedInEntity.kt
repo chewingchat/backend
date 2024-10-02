@@ -1,8 +1,6 @@
-package org.chewing.v1.jpaentity
+package org.chewing.v1.jpaentity.auth
 
 import jakarta.persistence.*
-import org.chewing.v1.model.auth.LoginInfo
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.token.RefreshToken
 import java.time.LocalDateTime
 import java.util.UUID
