@@ -12,9 +12,9 @@ import java.util.UUID
 @Table(name = "friend_search", schema = "chewing")
 internal class UserSearchJpaEntity(
     @Id
-    val searchId: String = UUID.randomUUID().toString(),
-    val searchText: String,
-    val userId: String,
+    private val searchId: String = UUID.randomUUID().toString(),
+    private val searchText: String,
+    private val userId: String,
 ): BaseEntity() {
     fun toFriendSearch(): UserSearch {
         return UserSearch.of(

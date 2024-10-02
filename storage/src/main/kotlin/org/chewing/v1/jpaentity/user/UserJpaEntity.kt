@@ -37,10 +37,10 @@ internal class UserJpaEntity(
 
     private var birth: String,
 
-    var emailId: String?,
+    private var emailId: String?,
 
-    var phoneNumberId: String?,
-    var ttsUrl: String?,
+    private var phoneNumberId: String?,
+    private var ttsUrl: String?,
     @Enumerated(EnumType.STRING)
     private var ttsType: MediaType,
 
@@ -136,7 +136,11 @@ internal class UserJpaEntity(
         return Media.of(FileCategory.TTS, this.ttsUrl ?: "", 0, this.ttsType)
     }
 
-    fun id(): String {
-        return this.userId
+    fun getEmailId(): String? {
+        return this.emailId
+    }
+
+    fun getPhoneNumberId(): String? {
+        return this.phoneNumberId
     }
 }

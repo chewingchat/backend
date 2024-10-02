@@ -12,11 +12,11 @@ import java.util.*
 @Table(name = "emoticon_pack", schema = "chewing")
 internal class EmoticonPackJpaEntity(
     @Id
-    val emoticonPackId: String = UUID.randomUUID().toString(),
+    private val emoticonPackId: String = UUID.randomUUID().toString(),
 
-    val emoticonPackUrl: String,
+    private val emoticonPackUrl: String,
 
-    val emoticonPackName: String,
+    private val emoticonPackName: String,
 ) : BaseEntity() {
     fun toEmoticonPack(emoticons: List<Emoticon>): EmoticonPack {
         return EmoticonPack.of(
@@ -25,5 +25,8 @@ internal class EmoticonPackJpaEntity(
             emoticonPackUrl,
             emoticons
         )
+    }
+    fun getEmoticonId(): String {
+        return emoticonPackId
     }
 }

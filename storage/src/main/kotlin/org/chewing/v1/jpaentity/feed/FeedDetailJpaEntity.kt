@@ -8,14 +8,14 @@ import java.util.*
 
 @Entity
 @Table(name = "feed_detail", schema = "chewing")
-class FeedDetailJpaEntity(
+internal class FeedDetailJpaEntity(
     @Id
-    val feedDetailId: String = UUID.randomUUID().toString(),
-    val feedIndex: Int,
+    private val feedDetailId: String = UUID.randomUUID().toString(),
+    private val feedIndex: Int,
     private val feedDetailUrl: String,
     @Enumerated(EnumType.STRING)
     private val feedDetailType: MediaType,
-    val feedId: String,
+    private val feedId: String,
 ) {
     companion object {
         fun generate(medias: List<Media>, feedId: String): List<FeedDetailJpaEntity> {

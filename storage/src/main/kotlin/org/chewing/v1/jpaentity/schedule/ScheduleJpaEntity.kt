@@ -13,16 +13,16 @@ import java.util.*
     name = "schedule", indexes = [Index(name = "idx_start_at", columnList = "scheduleStartAt"),
         Index(name = "idx_end_at", columnList = "scheduleEndAt")]
 )
-class ScheduleJpaEntity(
+internal class ScheduleJpaEntity(
     @Id
-    val scheduleId: String = UUID.randomUUID().toString(),
-    val scheduleName: String,
-    val scheduleContent: String,
-    val scheduleStartAt: LocalDateTime,
-    val scheduleEndAt: LocalDateTime,
-    val notificationAt: LocalDateTime,
-    val userId: String,
-    val location: String,
+    private val scheduleId: String = UUID.randomUUID().toString(),
+    private val scheduleName: String,
+    private val scheduleContent: String,
+    private val scheduleStartAt: LocalDateTime,
+    private val scheduleEndAt: LocalDateTime,
+    private val notificationAt: LocalDateTime,
+    private val userId: String,
+    private val location: String,
 ) {
     companion object {
         fun generate(

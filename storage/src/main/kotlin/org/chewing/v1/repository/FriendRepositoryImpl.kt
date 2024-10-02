@@ -51,8 +51,8 @@ internal class FriendRepositoryImpl(
 
         if (friends.size < 2) return null // 두 관계가 모두 존재해야 함
 
-        val toTarget = friends.find { it.id == FriendId(userId, friendId) }?: return null
-        val fromTarget = friends.find { it.id == FriendId(friendId, userId) }?: return null
+        val toTarget = friends.find { it.getId() == FriendId(userId, friendId) }?: return null
+        val fromTarget = friends.find { it.getId() == FriendId(friendId, userId) }?: return null
         return toTarget.toFriendInfo() to fromTarget.toFriendInfo()
     }
 

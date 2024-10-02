@@ -7,7 +7,7 @@ import org.chewing.v1.model.user.User
 @Table(name = "user_emoticon", schema = "chewing")
 internal class UserEmoticonJpaEntity(
     @EmbeddedId
-    val id: UserEmoticonId,
+    private val id: UserEmoticonId,
 ) {
     companion object {
         fun fromUserEmoticon(user: User, emoticonPack: EmoticonPack): UserEmoticonJpaEntity {

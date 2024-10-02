@@ -26,7 +26,7 @@ internal class UserRepositoryImpl(
 
     override fun readContactId(userId: String): Pair<String?, String?> {
         val userEntity = userJpaRepository.findById(userId)
-        return userEntity.map { it.emailId to it.phoneNumberId }.orElse(null to null)
+        return userEntity.map { it.getEmailId() to it.getPhoneNumberId() }.orElse(null to null)
     }
     override fun readUsersByIds(userIds: List<String>): List<User> {
         val userEntities = userJpaRepository.findAllById(userIds.map { it })

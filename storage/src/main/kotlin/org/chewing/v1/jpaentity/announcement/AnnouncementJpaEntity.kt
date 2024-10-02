@@ -14,9 +14,9 @@ import java.util.UUID
 @Table(name = "announcement", schema = "chewing")
 internal class AnnouncementJpaEntity(
     @Id
-    val announcementId: String = UUID.randomUUID().toString(),
-    val announcementTopic: String,
-    val announcementContent: String
+    private val announcementId: String = UUID.randomUUID().toString(),
+    private val announcementTopic: String,
+    private val announcementContent: String
 ) : BaseEntity() {
     fun toAnnouncement(): Announcement {
         return Announcement.of(

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createFeed
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.model.feed.FeedOwner
-import org.chewing.v1.service.AuthService
 import org.chewing.v1.service.FeedService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
