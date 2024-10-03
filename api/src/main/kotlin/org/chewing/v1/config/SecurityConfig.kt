@@ -30,7 +30,8 @@ class SecurityConfig(
                     .requestMatchers(
                         "/api/auth/phone/create/**",
                         "/api/auth/email/create/**",
-                        "/api/auth/refresh"
+                        "/api/auth/refresh",
+                        "/api/auth/logout",
                     ).permitAll() // 인증 없이 접근 가능
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요(개인적인 부분)
             }
