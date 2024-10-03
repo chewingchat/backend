@@ -7,27 +7,28 @@ import java.util.UUID
 
 @Entity
 @Table(name = "logged_in", schema = "chewing")
-internal class LoggedInEntity(
+internal class LoggedInJpaEntity(
     @Id
-    @Column(name = "logged_in_id")
     private val loggedInId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "refresh_token")
     private var refreshToken: String,
 
     private val userId: String,
 
-    @Column(name = "expired_at")
     private var expiredAt: LocalDateTime
 ) {
     companion object {
-        fun fromToken(refreshToken: RefreshToken, userId: String): LoggedInEntity {
-            return LoggedInEntity(
+        fun generate(refreshToken: RefreshToken, userId: String): LoggedInJpaEntity {
+            return LoggedInJpaEntity(
                 refreshToken = refreshToken.token,
                 userId = userId,
                 expiredAt = refreshToken.expiredAt
             )
         }
+    }
+
+    fun toRefreshToken(): RefreshToken {
+        return RefreshToken.of(refreshToken, expiredAt)
     }
 
     fun toLoggedInId(): String {

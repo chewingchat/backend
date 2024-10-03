@@ -9,6 +9,7 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.EmailRepository
 import org.chewing.v1.repository.PhoneRepository
 import org.springframework.stereotype.Component
@@ -47,12 +48,18 @@ class AuthValidator(
 
     fun validateIsUsed(credential: Credential, userId: String) {
         val contact = when (credential) {
-            is EmailAddress -> emailRepository.readEmail(credential)
-            is PhoneNumber -> phoneRepository.readPhone(credential)
+            is EmailAddress -> emailRepository.read(credential)
+            is PhoneNumber -> phoneRepository.read(credential)
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
         if (contact != null) {
             userChecker.checkContactIsUsed(contact, userId)
+        }
+    }
+
+    fun validateIsOwnRefreshToken(refreshToken: String, targetRefreshToken: RefreshToken){
+        if(refreshToken != targetRefreshToken.token){
+            throw ConflictException(ErrorCode.INVALID_TOKEN)
         }
     }
 }

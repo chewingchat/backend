@@ -2,10 +2,11 @@ package org.chewing.v1.repository
 
 
 import org.chewing.v1.model.token.RefreshToken
-import org.springframework.stereotype.Repository
 
 interface LoggedInRepository {
-    fun removeLoginInfo(userId: String)
-    fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String)
-    fun readLoggedId(refreshToken: String): String?
+    fun remove(refreshToken: String)
+    fun append(refreshToken: RefreshToken, userId: String)
+
+    fun update(refreshToken: RefreshToken, preRefreshToken: RefreshToken)
+    fun read(refreshToken: String): RefreshToken?
 }

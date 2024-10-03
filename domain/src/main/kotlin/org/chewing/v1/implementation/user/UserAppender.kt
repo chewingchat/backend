@@ -19,15 +19,15 @@ class UserAppender(
 ) {
 
     fun appendUserPushToken(user: User, appToken: String, device: PushToken.Device) {
-        pushNotificationRepository.appendPushToken(device, appToken, user)
+        pushNotificationRepository.append(device, appToken, user)
     }
 
     fun appendIfNotExist(contact: Contact): User {
-        return userRepository.appendUser(contact)
+        return userRepository.append(contact)
     }
 
-    fun appendSearched(user: User, search: UserSearch) {
-        return userSearchRepository.appendSearchHistory(user, search)
+    fun appendSearched(user: User, keyword: String) {
+        return userSearchRepository.appendSearchHistory(user, keyword)
     }
 
     fun appendStatus(userId: String, statusMessage: String, emoji: String) {

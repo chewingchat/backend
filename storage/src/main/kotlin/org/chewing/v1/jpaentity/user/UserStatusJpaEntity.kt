@@ -3,7 +3,6 @@ package org.chewing.v1.jpaentity.user
 import jakarta.persistence.*
 import java.util.*
 
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserStatus
 
 @Entity
@@ -16,7 +15,7 @@ internal class UserStatusJpaEntity(
     @Id
     private val statusId: String = UUID.randomUUID().toString(),
 
-    private val statusMessage: String,
+    private val message: String,
 
     private val emoji: String,
 
@@ -27,7 +26,7 @@ internal class UserStatusJpaEntity(
     companion object {
         fun generate(userId: String, message: String, emoji: String): UserStatusJpaEntity {
             return UserStatusJpaEntity(
-                statusMessage = message,
+                message = message,
                 emoji = emoji,
                 userId = userId,
                 selected = false
@@ -36,7 +35,7 @@ internal class UserStatusJpaEntity(
     }
 
     fun toUserStatus(): UserStatus {
-        return UserStatus.of(statusId, statusMessage, userId, emoji, selected)
+        return UserStatus.of(statusId, message, userId, emoji, selected)
     }
 
     fun updateSelectedFalse() {

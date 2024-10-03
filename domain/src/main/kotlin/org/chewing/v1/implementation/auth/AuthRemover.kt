@@ -9,7 +9,7 @@ class AuthRemover(
     private val loggedInRepository: LoggedInRepository
 ) {
     @Transactional
-    fun removeLoginInfo(authId: String) {
-        loggedInRepository.removeLoginInfo(authId)
+    fun removeLoginInfo(refreshToken: String) {
+        loggedInRepository.remove(refreshToken)
     }
 }

@@ -11,11 +11,11 @@ class AnnouncementReader(
     private val announcementRepository: AnnouncementRepository
 ) {
     fun readAnnouncements(): List<Announcement> {
-        return announcementRepository.readAnnouncements()
+        return announcementRepository.reads()
     }
 
     fun readAnnouncement(announcementId: String): Announcement {
-        return announcementRepository.readAnnouncement(announcementId)
+        return announcementRepository.read(announcementId)
             ?: throw NotFoundException(ErrorCode.ANNOUNCEMENT_NOT_FOUND)
     }
 }

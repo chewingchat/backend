@@ -9,8 +9,8 @@ import java.util.*
 internal class EmoticonJpaEntity(
     @Id
     private val emoticonId: String = UUID.randomUUID().toString(),
-    private val emoticonUrl: String,
-    private val emoticonName: String,
+    private val url: String,
+    private val name: String,
     private val emoticonPackId: String,
 ) {
     companion object {
@@ -27,8 +27,8 @@ internal class EmoticonJpaEntity(
     fun toEmoticon(): Emoticon {
         return Emoticon.of(
             emoticonId,
-            emoticonName,
-            emoticonUrl
+            name,
+            url
         )
     }
 

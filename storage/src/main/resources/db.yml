@@ -18,6 +18,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        default_schema: chewing
   h2:
     console:
       enabled: true
@@ -25,7 +26,7 @@ chewing:
   datasource:
     main:
       driver-class-name: org.h2.Driver
-      jdbcUrl: jdbc:h2:mem:chewing;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbcUrl: jdbc:h2:mem:CHEWING;MODE=MySQL;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS CHEWING;DB_CLOSE_ON_EXIT=FALSE
       username: sa
       pool-name: main-db-pool
       data-source-properties:

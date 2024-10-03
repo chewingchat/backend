@@ -13,36 +13,32 @@ import java.util.*
 @Table(name = "email", schema = "chewing")
 internal class EmailJpaEntity(
     @Id
-    @Column(name = "email_id")
     private val emailId: String = UUID.randomUUID().toString(),
 
-    @Column(name = "email")
-    private var emailAddress: String, // email 수정
+    private var address: String,
 
-    @Column(name = "expired_at")
     private var expiredAt: LocalDateTime = LocalDateTime.now().plusMinutes(5),
 
-    @Column(name = "authorized_number")
     private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
 ) : BaseEntity() {
     companion object {
         fun fromEmail(email: Email): EmailJpaEntity {
             return EmailJpaEntity(
                 emailId = email.emailId,
-                emailAddress = email.emailAddress,
+                address = email.emailAddress,
             )
         }
 
         fun generate(email: EmailAddress): EmailJpaEntity {
             return EmailJpaEntity(
-                emailAddress = email.email,
+                address = email.email,
             )
         }
     }
     fun toEmail(): Email {
         return Email.of(
             emailId = emailId,
-            emailAddress = emailAddress,
+            emailAddress = address,
             authorizedNumber = authorizedNumber,
             expiredTime = expiredAt,
         )
@@ -58,6 +54,6 @@ internal class EmailJpaEntity(
     }
 
     fun updateEmail(email: String) {
-        emailAddress = email
+        address = email
     }
 }

@@ -11,9 +11,8 @@ import java.time.LocalDateTime
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 internal abstract class BaseEntity {
-    @CreatedDate
     @Column(name = "created_at", columnDefinition = "datetime(6)", updatable = false)
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @LastModifiedDate

@@ -93,13 +93,15 @@ class AuthController(
 
 
     @DeleteMapping("/logout")
-    fun logout(@RequestHeader("Authorization") accessToken: String): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        authService.logout(accessToken)
+    fun logout(
+        @RequestHeader("Authorization") refreshToken: String,
+    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        authService.logout(refreshToken)
         return ResponseHelper.successOnly()
     }
 
     @GetMapping("/refresh")
-    fun refreshToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
+    fun refreshJwtToken(@RequestHeader("Authorization") refreshToken: String): SuccessResponseEntity<TokenResponse> {
         val token = authService.refreshJwtToken(refreshToken)
         return ResponseHelper.success(TokenResponse.of(token))
     }

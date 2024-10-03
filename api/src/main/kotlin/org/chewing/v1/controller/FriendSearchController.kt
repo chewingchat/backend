@@ -29,10 +29,9 @@ class FriendSearchController(
     @PostMapping("")
     fun addSearchFriend(
         @RequestAttribute("userId") userId: String,
-        @RequestBody friendRequest: FriendSearchRequest
+        @RequestBody request: FriendSearchRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        val friendSearch = friendRequest.toSearchFriend()
-        searchService.addSearchedFriend(userId, friendSearch)
+        searchService.addSearchedFriend(userId, request.keyword)
         //성공 응답 200 반환
         return ResponseHelper.successCreate()
     }

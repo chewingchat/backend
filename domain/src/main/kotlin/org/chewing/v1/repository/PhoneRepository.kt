@@ -4,8 +4,8 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Phone
 
 interface PhoneRepository {
-    fun savePhoneNumberIfNotExists(phoneNumber: PhoneNumber)
-    fun readPhone(phoneNumber: PhoneNumber): Phone?
-    fun updatePhoneVerificationCode(phoneNumber: PhoneNumber): String
-    fun readPhoneByPhoneNumberId(phoneNumberId: String): Phone?
+    fun appendIfNotExists(phoneNumber: PhoneNumber)
+    fun read(phoneNumber: PhoneNumber): Phone?
+    fun updateVerificationCode(phoneNumber: PhoneNumber): String
+    fun readById(phoneNumberId: String): Phone?
 }

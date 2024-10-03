@@ -17,6 +17,7 @@ class AuthService(
     private val authValidator: AuthValidator,
     private val authProcessor: AuthProcessor,
     private val userUpdater: UserUpdater,
+    private val authUpdater: AuthUpdater
 ) {
     fun makeCredential(credential: Credential) {
         authAppender.appendCredential(credential)
@@ -36,14 +37,15 @@ class AuthService(
         return LoginInfo.of(token, user)
     }
 
-    fun logout(accessToken: String) {
-        authProcessor.processLogout(accessToken)
+    fun logout(refreshToken: String) {
+        authProcessor.processLogout(refreshToken)
     }
 
     fun refreshJwtToken(refreshToken: String): JwtToken {
-        val loggedInId = authReader.readLoggedInId(refreshToken)
         val newToken = authProcessor.processRefreshToken(refreshToken)
-        authAppender.appendLoggedIn(newToken.refreshToken, loggedInId)
+        val ownedRefreshToken = authReader.readRefreshToken(refreshToken)
+        authValidator.validateIsOwnRefreshToken(refreshToken, ownedRefreshToken)
+        authUpdater.updateRefreshToken(newToken.refreshToken, ownedRefreshToken)
         return newToken
     }
 

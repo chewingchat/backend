@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository
 internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
 ) : UserRepository {
-    override fun readUserById(userId: String): User? {
+    override fun readyId(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
         return userEntity.map { it.toUser() }.orElse(null)
     }
@@ -28,7 +28,7 @@ internal class UserRepositoryImpl(
         val userEntity = userJpaRepository.findById(userId)
         return userEntity.map { it.getEmailId() to it.getPhoneNumberId() }.orElse(null to null)
     }
-    override fun readUsersByIds(userIds: List<String>): List<User> {
+    override fun readsByIds(userIds: List<String>): List<User> {
         val userEntities = userJpaRepository.findAllById(userIds.map { it })
         return userEntities.map { it.toUser() }
     }
@@ -41,7 +41,7 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun appendUser(contact: Contact): User {
+    override fun append(contact: Contact): User {
         return when (contact) {
             is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElseGet {
                 userJpaRepository.save(UserJpaEntity.generateByEmail(contact)).toUser()
@@ -62,7 +62,7 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun updateProfileImage(user: User, media: Media) {
+    override fun updateImage(user: User, media: Media) {
         userJpaRepository.findById(user.userId).ifPresent {
             when (media.category) {
                 FileCategory.PROFILE -> it.updateUserPictureUrl(media)
@@ -83,15 +83,6 @@ internal class UserRepositoryImpl(
     override fun updateName(userId: String, userName: UserName) {
         userJpaRepository.findById(userId).ifPresent {
             it.updateUserName(userName)
-            userJpaRepository.save(it)
-        }
-    }
-
-    override fun updateContent(userId: String, content: UserContent) {
-        userJpaRepository.findById(userId).ifPresent {
-            it.updateUserName(content.name)
-            it.updateBirth(content.birth)
-            it.updateAccess()
             userJpaRepository.save(it)
         }
     }
