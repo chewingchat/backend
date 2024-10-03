@@ -34,11 +34,11 @@ class UserReader(
      * USER_NOT_FOUND 오류 코드와 함께 예외를 발생시킵니다.
      */
     fun read(userId: String): User {
-        return userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        return userRepository.readyId(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     fun readProfile(userId: String): UserProfile {
-        val user = userRepository.readUserById(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+        val user = userRepository.readyId(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
         val (emailId, phoneNumberId) = userRepository.readContactId(userId)
         val email = emailId?.let { authReader.readEmailByEmailId(it) }
         val phoneNumber = phoneNumberId?.let { authReader.readPhoneByPhoneNumberId(it) }
@@ -50,7 +50,7 @@ class UserReader(
     }
 
     fun reads(userIds: List<String>): List<User> {
-        return userRepository.readUsersByIds(userIds)
+        return userRepository.readsByIds(userIds)
     }
 
     //유저의 최근 친구 검색 목록을 읽어옴
@@ -71,6 +71,6 @@ class UserReader(
     }
 
     fun readsPushToken(userId: String): List<PushToken> {
-        return pushNotificationRepository.readsPushToken(userId)
+        return pushNotificationRepository.reads(userId)
     }
 }

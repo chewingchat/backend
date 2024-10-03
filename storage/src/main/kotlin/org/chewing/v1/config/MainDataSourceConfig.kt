@@ -17,6 +17,7 @@ class MainDataSourceConfig {
 
     @Bean
     fun mainDataSource(@Qualifier("mainHikariConfig") config: HikariConfig): HikariDataSource {
+        println("Test JDBC URL: " + config.jdbcUrl)
         return HikariDataSource(config)
     }
 }

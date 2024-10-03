@@ -17,21 +17,22 @@ class AuthAppender(
     private val emailRepository: EmailRepository,
     private val phoneRepository: PhoneRepository
 ) {
-    fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String) {
-        loggedInRepository.appendLoggedIn(refreshToken, loggedInId)
+    fun appendLoggedIn(newRefreshToken: RefreshToken, userId: String) {
+        loggedInRepository.append(newRefreshToken, userId)
     }
+
 
     fun appendCredential(credential: Credential) {
         when(credential) {
-            is EmailAddress -> emailRepository.saveEmailIfNotExists(credential)
-            is PhoneNumber -> phoneRepository.savePhoneNumberIfNotExists(credential)
+            is EmailAddress -> emailRepository.appendIfNotExists(credential)
+            is PhoneNumber -> phoneRepository.appendIfNotExists(credential)
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
     fun generateVerificationCode(credential: Credential): String {
         return when(credential) {
-            is EmailAddress -> emailRepository.updateEmailVerificationCode(credential)
-            is PhoneNumber -> phoneRepository.updatePhoneVerificationCode(credential)
+            is EmailAddress -> emailRepository.updateVerificationCode(credential)
+            is PhoneNumber -> phoneRepository.updateVerificationCode(credential)
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }

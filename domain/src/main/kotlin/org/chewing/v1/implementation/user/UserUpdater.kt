@@ -25,7 +25,7 @@ class UserUpdater(
      * 주어진 사용자 정보를 업데이트합니다.
      */
     fun updateImage(user: User, media: Media) {
-        return userRepository.updateProfileImage(user, media)
+        return userRepository.updateImage(user, media)
     }
     @Transactional
     fun updateName(userId: String, userName: UserName) {

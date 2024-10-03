@@ -9,9 +9,6 @@ import org.springframework.stereotype.Repository
 internal class UserStatusRepositoryImpl(
     private val userStatusJpaRepository: UserStatusJpaRepository,
 ) : UserStatusRepository {
-    override fun readUserStatuses(userId: String): List<UserStatus> {
-        return userStatusJpaRepository.findAllByUserId(userId).map { it.toUserStatus() }
-    }
 
     override fun removes(statusesId: List<String>) {
         userStatusJpaRepository.deleteAllByStatusIdIn(statusesId)

@@ -9,6 +9,7 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.EmailRepository
 import org.chewing.v1.repository.LoggedInRepository
 import org.chewing.v1.repository.PhoneRepository
@@ -23,25 +24,25 @@ class AuthReader(
 ) {
     fun readContact(targetContact: Credential): Contact {
         return when (targetContact) {
-            is EmailAddress -> emailRepository.readEmail(targetContact)
+            is EmailAddress -> emailRepository.read(targetContact)
                 ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
 
-            is PhoneNumber -> phoneRepository.readPhone(targetContact)
+            is PhoneNumber -> phoneRepository.read(targetContact)
                 ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
 
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 
-    fun readLoggedInId(refreshToken: String): String {
-        return loggedInRepository.readLoggedId(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
+    fun readRefreshToken(refreshToken: String): RefreshToken {
+        return loggedInRepository.read(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
     }
 
     fun readEmailByEmailId(emailId: String): Email? {
-        return emailRepository.readEmailByEmailId(emailId)
+        return emailRepository.readById(emailId)
     }
 
     fun readPhoneByPhoneNumberId(phoneNumberId: String): Phone? {
-        return phoneRepository.readPhoneByPhoneNumberId(phoneNumberId)
+        return phoneRepository.readById(phoneNumberId)
     }
 }

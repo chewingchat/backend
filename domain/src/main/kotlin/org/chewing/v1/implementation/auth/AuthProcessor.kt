@@ -24,10 +24,10 @@ class AuthProcessor(
     }
 
     fun processLogout(
-        accessToken: String
+        refreshToken: String
     ) {
-        val userId = jwtTokenProvider.getUserIdFromToken(accessToken)
-        authRemover.removeLoginInfo(userId)
+        jwtTokenProvider.validateToken(refreshToken)
+        authRemover.removeLoginInfo(refreshToken)
     }
 
     fun processRefreshToken(

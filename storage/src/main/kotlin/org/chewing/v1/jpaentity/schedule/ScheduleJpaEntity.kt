@@ -10,16 +10,16 @@ import java.util.*
 
 @Entity
 @Table(
-    name = "schedule", indexes = [Index(name = "idx_start_at", columnList = "scheduleStartAt"),
-        Index(name = "idx_end_at", columnList = "scheduleEndAt")]
+    name = "schedule", indexes = [Index(name = "idx_start_at", columnList = "startAt"),
+        Index(name = "idx_end_at", columnList = "endAt")]
 )
 internal class ScheduleJpaEntity(
     @Id
     private val scheduleId: String = UUID.randomUUID().toString(),
-    private val scheduleName: String,
-    private val scheduleContent: String,
-    private val scheduleStartAt: LocalDateTime,
-    private val scheduleEndAt: LocalDateTime,
+    private val name: String,
+    private val content: String,
+    private val startAt: LocalDateTime,
+    private val endAt: LocalDateTime,
     private val notificationAt: LocalDateTime,
     private val userId: String,
     private val location: String,
@@ -31,10 +31,10 @@ internal class ScheduleJpaEntity(
             writer: User
         ): ScheduleJpaEntity {
             return ScheduleJpaEntity(
-                scheduleName = scheduleContent.title,
-                scheduleContent = scheduleContent.memo,
-                scheduleStartAt = scheduleTime.startAt,
-                scheduleEndAt = scheduleTime.endAt,
+                name = scheduleContent.title,
+                content = scheduleContent.memo,
+                startAt = scheduleTime.startAt,
+                endAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
                 userId = writer.userId,
                 location = scheduleContent.location
@@ -42,13 +42,13 @@ internal class ScheduleJpaEntity(
         }
     }
 
-    fun toScheduleInfo(): Schedule {
+    fun toSchedule(): Schedule {
         return Schedule.of(
             scheduleId,
-            scheduleName,
-            scheduleContent,
-            scheduleStartAt,
-            scheduleEndAt,
+            name,
+            content,
+            startAt,
+            endAt,
             notificationAt,
             location
         )

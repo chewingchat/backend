@@ -35,18 +35,10 @@ internal class FeedDetailJpaEntity(
     }
 
     fun toFeedDetail(): FeedDetail {
-        return when (feedDetailType) {
-            IMAGE_BASIC, IMAGE_PNG, IMAGE_JPG, IMAGE_JPEG -> FeedDetail.of(
-                feedDetailId = feedDetailId,
-                media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
-                feedId = feedId
-            )
-
-            VIDEO_MP4, VIDEO_BASIC -> FeedDetail.of(
-                feedDetailId = feedDetailId,
-                media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
-                feedId = feedId
-            )
-        }
+        return FeedDetail.of(
+            feedDetailId = feedDetailId,
+            media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
+            feedId = feedId
+        )
     }
 }

@@ -20,9 +20,9 @@ class SearchService(
         return FriendSortEngine.sort(friends, SortCriteria.NAME)
     }
 
-    fun addSearchedFriend(userId: String, search: UserSearch) {
+    fun addSearchedFriend(userId: String, keyword: String) {
         val user = userReader.read(userId)
-        return userAppender.appendSearched(user, search)
+        return userAppender.appendSearched(user, keyword)
     }
     fun getSearchedFriend(userId: String,sortCriteria: SortCriteria): List<UserSearch> {
         val friendSearchHistory = userReader.readSearched(userId)

@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 internal interface ScheduleJpaRepository : JpaRepository<ScheduleJpaEntity, String> {
     @Query(
         "SELECT s FROM ScheduleJpaEntity s WHERE s.userId = :userId AND " +
-                "s.scheduleStartAt BETWEEN :startDateTime AND :endDateTime"
+                "s.startAt BETWEEN :startDateTime AND :endDateTime"
     )
     fun findByUserIdAndType(
         userId: String,

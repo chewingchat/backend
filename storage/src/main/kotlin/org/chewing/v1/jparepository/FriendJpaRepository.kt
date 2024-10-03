@@ -16,6 +16,5 @@ internal interface FriendJpaRepository : JpaRepository<FriendJpaEntity, String> 
     fun findById(friendId: FriendId): FriendJpaEntity?
     fun findAllByIdUserId(userId: String): List<FriendJpaEntity>
     fun findAllByIdUserIdInAndIdUserId(friendIds: List<String>, userId: String): List<FriendJpaEntity>
-
     fun findAllByIdIn(friendIds: List<FriendId>) : List<FriendJpaEntity>
 }

@@ -19,7 +19,7 @@ class UserRemover(
     }
     @Transactional
     fun removePushToken(device: PushToken.Device) {
-        pushNotificationRepository.removePushToken(device)
+        pushNotificationRepository.remove(device)
     }
     @Transactional
     fun removeAllStatus(userId: String){

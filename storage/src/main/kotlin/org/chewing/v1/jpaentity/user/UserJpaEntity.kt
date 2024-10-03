@@ -31,9 +31,9 @@ internal class UserJpaEntity(
     @Enumerated(EnumType.STRING)
     private var backgroundPictureType: MediaType,
 
-    private var userFirstName: String,
+    private var firstName: String,
 
-    private var userLastName: String,
+    private var lastName: String,
 
     private var birth: String,
 
@@ -50,8 +50,8 @@ internal class UserJpaEntity(
     companion object {
         fun generateByEmail(email: Email): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
+                firstName = "",
+                lastName = "",
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
@@ -67,8 +67,8 @@ internal class UserJpaEntity(
 
         fun generateByPhone(phone: Phone): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
+                firstName = "",
+                lastName = "",
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
@@ -86,8 +86,8 @@ internal class UserJpaEntity(
     fun toUser(): User {
         return User.of(
             this.userId,
-            this.userFirstName,
-            this.userLastName,
+            this.firstName,
+            this.lastName,
             this.birth,
             Media.of(FileCategory.PROFILE, this.pictureUrl, 0, this.pictureType),
             Media.of(FileCategory.BACKGROUND, this.backgroundPictureUrl, 0, this.backgroundPictureType),
@@ -104,8 +104,8 @@ internal class UserJpaEntity(
     }
 
     fun updateUserName(userName: UserName) {
-        this.userFirstName = userName.firstName
-        this.userLastName = userName.lastName
+        this.firstName = userName.firstName
+        this.lastName = userName.lastName
     }
 
     fun updateBirth(birth: String) {

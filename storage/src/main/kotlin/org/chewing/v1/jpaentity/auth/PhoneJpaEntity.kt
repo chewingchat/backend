@@ -13,27 +13,22 @@ import java.util.*
 
 @Entity
 @Table(name = "phone_number", schema = "chewing")
-internal class PhoneNumberJpaEntity(
+internal class PhoneJpaEntity(
     @Id
-    @Column(name = "phone_number_id")
     private val phoneNumberId: String = UUID.randomUUID().toString(),
-    @Column(name = "phone_number")
-    private var phoneNumber: String,
+    private var number: String,
 
-    @Column(name = "country_code")
     private var countryCode: String,
 
-    @Column(name = "expired_at")
     private var expiredAt: LocalDateTime = LocalDateTime.now().plusMinutes(5),
 
-    @Column(name = "authorized_number")
     private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
     ) : BaseEntity(
 ) {
     companion object {
-        fun generate(phoneNumber: PhoneNumber): PhoneNumberJpaEntity {
-            return PhoneNumberJpaEntity(
-                phoneNumber = phoneNumber.number,
+        fun generate(phoneNumber: PhoneNumber): PhoneJpaEntity {
+            return PhoneJpaEntity(
+                number = phoneNumber.number,
                 countryCode = phoneNumber.countryCode
             )
         }
@@ -41,7 +36,7 @@ internal class PhoneNumberJpaEntity(
     fun toPhone(): Phone {
         return Phone.of(
             phoneId = phoneNumberId,
-            number = phoneNumber,
+            number = number,
             country = countryCode,
             authorizedNumber = authorizedNumber,
             expiredTime = expiredAt,
@@ -59,6 +54,6 @@ internal class PhoneNumberJpaEntity(
 
     fun updatePhoneNumber(phoneNumber: PhoneNumber) {
         countryCode = phoneNumber.countryCode
-        this.phoneNumber = phoneNumber.number
+        this.number = phoneNumber.number
     }
 }
