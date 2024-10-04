@@ -2,7 +2,6 @@ package org.chewing.v1.jpaentity.feed
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.feed.FeedInfo
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -33,39 +32,38 @@ internal class FeedJpaEntity(
                 likes = 0,
                 comments = 0,
                 userId = userId,
-                hide = false
+                hide = false,
             )
         }
     }
 
-    fun updateLikes() {
+    fun likes() {
         this.likes += 1
     }
 
-    fun updateUnLikes() {
+    fun unLikes() {
         this.likes -= 1
     }
 
-    fun updateComments() {
+    fun comments() {
         this.comments += 1
     }
 
-    fun updateUnComments() {
+    fun unComments() {
         this.comments -= 1
     }
 
-    fun updateHide() {
+    fun hide() {
         this.hide = true
     }
 
-    fun updateUnHide() {
+    fun unHide() {
         this.hide = false
     }
 
     fun toFeedId(): String {
         return feedId
     }
-
     fun toFeedInfo(): FeedInfo {
         return FeedInfo.
         of(
@@ -73,12 +71,8 @@ internal class FeedJpaEntity(
             topic = feedTopic,
             likes = likes,
             comments = comments,
-            uploadAt = createdAt!!,
+            uploadAt = createdAt,
             userId = userId,
         )
-    }
-
-    fun toUserId(): String {
-        return userId
     }
 }

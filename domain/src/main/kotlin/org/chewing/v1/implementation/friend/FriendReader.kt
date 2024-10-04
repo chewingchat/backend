@@ -1,18 +1,19 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.model.friend.FriendInfo
-import org.chewing.v1.repository.FriendRepository
+import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.repository.FriendShipRepository
 import org.springframework.stereotype.Component
 
 @Component
 class FriendReader(
-    private val friendRepository: FriendRepository,
+    private val friendShipRepository: FriendShipRepository,
 ) {
-    fun reads(userId: String): List<FriendInfo> {
-        return friendRepository.readFriends(userId)
+    fun readsAccess(userId: String): List<FriendShip> {
+        return friendShipRepository.reads(userId, AccessStatus.ACCESS)
     }
 
-    fun readsIdIn(friendIds: List<String>, userId: String): List<FriendInfo> {
-        return friendRepository.readFriendsByIds(friendIds, userId)
+    fun readsAccessIdIn(friendIds: List<String>, userId: String): List<FriendShip> {
+        return friendShipRepository.readsByIds(friendIds, userId, AccessStatus.ACCESS)
     }
 }

@@ -5,7 +5,7 @@ import org.chewing.v1.model.contact.ContactType
 class PhoneNumber(
     val countryCode: String,
     val number: String
-) : Credential {
+) : Credential() {
     companion object {
         fun of(
             countryCode: String,
@@ -17,7 +17,4 @@ class PhoneNumber(
             )
         }
     }
-
-    override val type: ContactType
-        get() = ContactType.PHONE
 }

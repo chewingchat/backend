@@ -37,10 +37,8 @@ class FeedEnricher {
         feedDetails: List<FeedDetail>
     ): List<Feed> {
         val feedDetailMap = feedDetails.groupBy { it.feedId }
-
         return feeds.map { feedInfo ->
             val details = feedDetailMap[feedInfo.feedId] ?: emptyList()
-
             Feed.of(
                 feedInfo,
                 details,

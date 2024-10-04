@@ -4,32 +4,33 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedDetail
-import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedStatus
+import org.chewing.v1.repository.FeedDetailRepository
 import org.chewing.v1.repository.FeedRepository
 import org.springframework.stereotype.Component
 
 @Component
 class FeedReader(
     private val feedRepository: FeedRepository,
+    private val feedDetailRepository: FeedDetailRepository
 ) {
-    fun readFeed(feedId: String): FeedInfo {
-        val feed = feedRepository.read(feedId)
-        return feed ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
+    fun readInfo(feedId: String): FeedInfo {
+        return feedRepository.read(feedId)?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
 
-    fun readsByUserId(userId: String, feedOwner: FeedOwner): List<FeedInfo> {
-        return feedRepository.readsByUserId(userId, feedOwner)
+    fun readsOwnedInfo(userId: String, feedStatus: FeedStatus): List<FeedInfo> {
+        return feedRepository.readsOwned(userId, feedStatus)
     }
 
-    fun reads(feedIds: List<String>): List<FeedInfo> {
+    fun readsInfo(feedIds: List<String>): List<FeedInfo> {
         return feedRepository.reads(feedIds)
     }
 
-    fun readFeedDetails(feedId: String): List<FeedDetail> {
-        return feedRepository.readDetails(feedId)
+    fun readDetails(feedId: String): List<FeedDetail> {
+        return feedDetailRepository.read(feedId)
     }
 
-    fun readsDetails(feedIds: List<String>): List<FeedDetail> {
-        return feedRepository.readsDetails(feedIds)
+    fun readsMainDetails(feedIds: List<String>): List<FeedDetail> {
+        return feedDetailRepository.readsFirstIndex(feedIds)
     }
 }

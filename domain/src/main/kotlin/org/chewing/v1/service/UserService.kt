@@ -1,9 +1,10 @@
 package org.chewing.v1.service
 
+import org.chewing.v1.implementation.feed.FeedProcessor
 import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
-import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.user.*
@@ -19,6 +20,7 @@ class UserService(
     private val userValidator: UserValidator,
     private val userRemover: UserRemover,
     private val userAppender: UserAppender,
+    private val feedProcessor: FeedProcessor
 ) {
     fun getUserProfile(userId: String): UserProfile {
         return userReader.readProfile(userId)
@@ -53,11 +55,13 @@ class UserService(
 
     fun deleteUser(userId: String) {
         val user = userReader.read(userId)
-        val feeds = feedReader.readsByUserId(userId, FeedOwner.OWNED)
-        val feedDetails = feedReader.readsDetails(feeds.map { it.feedId })
         userProcessor.processRemoveUser(userId)
-        fileProcessor.processOldFile(user.image)
-        fileProcessor.processOldFiles(feedDetails.map { it.media })
+        val feedIds = feedReader.readsOwnedInfo(userId, FeedStatus.ALL).map { it.feedId }
+        val oldFiles = feedProcessor.processFeedRemoves(feedIds)
+        val allFiles = sequenceOf(oldFiles, listOfNotNull(user.image, user.backgroundImage))
+            .flatMap { it.asSequence() }
+            .toList()
+        fileProcessor.processOldFiles(allFiles)
     }
 
     fun selectUserStatus(userId: String, statusId: String) {
@@ -82,7 +86,7 @@ class UserService(
 
     fun changeTTS(userId: String, fileData: FileData) {
         val media = fileProcessor.processNewFile(userId, fileData, FileCategory.TTS)
-        val oldMedia =  userUpdater.updateTTS(userId,media)
+        val oldMedia = userUpdater.updateTTS(userId, media)
         fileProcessor.processOldFile(oldMedia)
     }
 }

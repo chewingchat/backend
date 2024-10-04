@@ -8,7 +8,7 @@ class Email private constructor(
     val emailId: String,
     val emailAddress: String,
     val validationCode: ValidationCode,
-) : Contact {
+) : Contact() {
     companion object {
         fun of(
             emailId: String,
@@ -23,7 +23,4 @@ class Email private constructor(
             )
         }
     }
-
-    override val type: ContactType
-        get() = ContactType.EMAIL
 }

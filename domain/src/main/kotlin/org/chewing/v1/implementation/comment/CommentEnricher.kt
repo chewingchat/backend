@@ -4,14 +4,14 @@ import org.chewing.v1.implementation.friend.FriendUpdater
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.CommentInfo
-import org.chewing.v1.model.friend.FriendInfo
+import org.chewing.v1.model.friend.FriendShip
 import org.springframework.stereotype.Component
 
 @Component
 class CommentEnricher(
     private val friendUpdater: FriendUpdater
 ) {
-    fun enrich(commentsInfo: List<CommentInfo>, friendsInfo: List<FriendInfo>, users: List<User>): List<Comment> {
+    fun enrich(commentsInfo: List<CommentInfo>, friendsInfo: List<FriendShip>, users: List<User>): List<Comment> {
         // 친구 정보와 사용자 정보를 사전 형태로 변환
         val friendsMap = friendsInfo.associateBy { it.friendId }
         val usersMap = users.associateBy { it.userId }

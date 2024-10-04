@@ -13,16 +13,16 @@ internal class EmailRepositoryImpl(
     private val emailJpaRepository: EmailJpaRepository,
 ):EmailRepository {
     override fun appendIfNotExists(emailAddress: EmailAddress) {
-        emailJpaRepository.findByAddress(emailAddress.email)
+        emailJpaRepository.findByAddress(emailAddress.address)
             .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(emailAddress)) }
     }
 
     override fun read(emailAddress: EmailAddress): Email? {
-        return emailJpaRepository.findByAddress(emailAddress.email).map { it.toEmail() }.orElse(null)
+        return emailJpaRepository.findByAddress(emailAddress.address).map { it.toEmail() }.orElse(null)
     }
 
     override fun updateVerificationCode(emailAddress: EmailAddress): String {
-        val emailEntity = emailJpaRepository.findByAddress(emailAddress.email)
+        val emailEntity = emailJpaRepository.findByAddress(emailAddress.address)
             .orElseThrow { NotFoundException(ErrorCode.EMAIL_NOT_FOUND) }
         emailEntity.updateVerificationCode()
         emailJpaRepository.save(emailEntity)

@@ -32,7 +32,7 @@ internal class EmailRepositoryTest(
         val result = emailRepositoryImpl.read(emailAddress)
 
         assert(result != null)
-        assert(result!!.emailAddress == emailAddress.email)
+        assert(result!!.emailAddress == emailAddress.address)
     }
 
     @Test
@@ -56,7 +56,7 @@ internal class EmailRepositoryTest(
         val newEmailAddress = EmailProvider.buildNormalAddress()
 
         emailRepositoryImpl.appendIfNotExists(newEmailAddress)
-        val result = emailJpaRepository.findByAddress(newEmailAddress.email)
+        val result = emailJpaRepository.findByAddress(newEmailAddress.address)
 
         assert(result.isPresent)
         assert(result.get().toEmail().emailId == oldEmail.emailId)
@@ -65,12 +65,13 @@ internal class EmailRepositoryTest(
     @Test
     fun `이메일이 존재하지 않는다면 저장한다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
-
         testDataGenerator.emailEntityData(emailAddress)
 
-        val result = emailJpaRepository.findByAddress(emailAddress.email)
+        emailRepositoryImpl.appendIfNotExists(emailAddress)
+
+        val result = emailJpaRepository.findByAddress(emailAddress.address)
         assert(result.isPresent)
-        assert(result.get().toEmail().emailAddress == emailAddress.email)
+        assert(result.get().toEmail().emailAddress == emailAddress.address)
     }
 
     @Test

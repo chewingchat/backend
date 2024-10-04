@@ -5,16 +5,16 @@ import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.friend.FriendInfo
+import org.chewing.v1.model.friend.FriendShip
 import org.hibernate.annotations.DynamicInsert
 
 
 @DynamicInsert
 @Entity
-@Table(name = "friend", schema = "chewing")
-internal class FriendJpaEntity(
+@Table(name = "friend_ship", schema = "chewing")
+internal class FriendShipJpaEntity(
     @EmbeddedId
-    private val id: FriendId,
+    private val id: FriendShipId,
     private var favorite: Boolean,
     private var friendFirstName: String,
     private var friendLastName: String,
@@ -22,9 +22,9 @@ internal class FriendJpaEntity(
     private var type: AccessStatus
 ) : BaseEntity() {
     companion object {
-        fun generate(user: User, friendName: UserName, targetUser: User): FriendJpaEntity {
-            return FriendJpaEntity(
-                id = FriendId(user.userId, targetUser.userId),
+        fun generate(user: User, friendName: UserName, targetUser: User): FriendShipJpaEntity {
+            return FriendShipJpaEntity(
+                id = FriendShipId(user.userId, targetUser.userId),
                 favorite = false,
                 friendFirstName = friendName.firstName(),
                 friendLastName = friendName.lastName(),
@@ -42,19 +42,27 @@ internal class FriendJpaEntity(
         this.friendLastName = friendName.lastName()
     }
 
-    fun toFriendInfo(): FriendInfo {
-        return FriendInfo.of(
+    fun toFriendShip(): FriendShip {
+        return FriendShip.of(
             friendId = id.friendId,
             friendName = UserName.of(friendFirstName, friendLastName),
             isFavorite = favorite,
             type = type
         )
     }
+
     fun updateBlock() {
         this.type = AccessStatus.BLOCK
     }
 
-    fun getId(): FriendId {
+    fun updateBlocked() {
+        this.type = AccessStatus.BLOCKED
+    }
+    fun updateDelete() {
+        this.type = AccessStatus.DELETE
+    }
+
+    fun getId(): FriendShipId {
         return id
     }
 }

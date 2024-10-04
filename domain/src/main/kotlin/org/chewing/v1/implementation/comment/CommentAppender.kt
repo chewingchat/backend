@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class CommentAppender(
     private val commentRepository: CommentRepository
 ) {
-    fun appendComment(user: User, comment: String, feedInfo: FeedInfo) {
-        commentRepository.appendComment(user,comment, feedInfo)
+    fun appendComment(userId: String, feedId: String, comment: String) {
+        commentRepository.appendComment(userId,comment, feedId)
     }
 }

@@ -37,7 +37,6 @@ internal class UserRepositoryImpl(
         return when (contact) {
             is Email -> userJpaRepository.findByEmailId(contact.emailId).map { it.toUser() }.orElse(null)
             is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElse(null)
-            else -> null
         }
     }
 
@@ -50,8 +49,6 @@ internal class UserRepositoryImpl(
             is Phone -> userJpaRepository.findByPhoneNumberId(contact.phoneId).map { it.toUser() }.orElseGet {
                 userJpaRepository.save(UserJpaEntity.generateByPhone(contact)).toUser()
             }
-
-            else -> throw NotFoundException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 
@@ -107,7 +104,6 @@ internal class UserRepositoryImpl(
         return when (contact) {
             is Email -> userJpaRepository.existsByEmailIdAndUserIdNot(contact.emailId, userId)
             is Phone -> userJpaRepository.existsByPhoneNumberIdAndUserIdNot(contact.phoneId, userId)
-            else -> false
         }
     }
 

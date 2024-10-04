@@ -29,8 +29,6 @@ class AuthReader(
 
             is PhoneNumber -> phoneRepository.read(targetContact)
                 ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 

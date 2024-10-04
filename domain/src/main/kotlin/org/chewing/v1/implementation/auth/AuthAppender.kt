@@ -26,14 +26,12 @@ class AuthAppender(
         when(credential) {
             is EmailAddress -> emailRepository.appendIfNotExists(credential)
             is PhoneNumber -> phoneRepository.appendIfNotExists(credential)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
     fun generateVerificationCode(credential: Credential): String {
         return when(credential) {
             is EmailAddress -> emailRepository.updateVerificationCode(credential)
             is PhoneNumber -> phoneRepository.updateVerificationCode(credential)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 }

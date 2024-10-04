@@ -21,12 +21,16 @@ internal class CommentRepositoryImpl(
         }
     }
 
-    override fun removeComment(commentId: String) {
+    override fun remove(commentId: String) {
         commentJpaRepository.deleteById(commentId)
     }
 
-    override fun appendComment(user: User, comment: String, feedInfo: FeedInfo) {
-        commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, user, feedInfo))
+    override fun removes(feedIds: List<String>) {
+        commentJpaRepository.deleteAllByFeedIdIn(feedIds)
+    }
+
+    override fun appendComment(userId: String, feedId: String, comment: String) {
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, userId, feedId))
     }
 
     override fun readCommented(userId: String): List<CommentInfo> {

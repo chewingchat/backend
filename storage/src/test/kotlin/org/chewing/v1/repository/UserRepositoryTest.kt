@@ -1,10 +1,14 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jparepository.UserJpaRepository
 import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.support.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.mock
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserRepositoryTest : DbContextTest() {
@@ -39,6 +43,17 @@ class UserRepositoryTest : DbContextTest() {
     }
 
     @Test
+    fun `유저 휴대폰으로 읽기`() {
+        val phone = PhoneProvider.buildNormal()
+        val user = testDataGenerator.userEntityPhoneData(phone)
+
+        val result = userRepositoryImpl.readByContact(phone)
+
+        assert(result!!.userId == user.userId)
+    }
+
+
+    @Test
     fun `이메일로 유저 신규 생성`() {
         val email = EmailProvider.buildNormal()
 
@@ -57,11 +72,21 @@ class UserRepositoryTest : DbContextTest() {
     }
 
     @Test
-    fun `이미 유저가 있다면 신규 생성하면 안됨`() {
+    fun `이미 이메일 유저가 있다면 신규 생성하면 안됨`() {
         val email = EmailProvider.buildNormal()
         val user = testDataGenerator.userEntityEmailData(email)
 
         val result = userRepositoryImpl.append(email)
+
+        assert(result.userId == user.userId)
+    }
+
+    @Test
+    fun `이미 휴대폰 유저가 있다면 신규 생성하면 안됨`() {
+        val phone = PhoneProvider.buildNormal()
+        val user = testDataGenerator.userEntityPhoneData(phone)
+
+        val result = userRepositoryImpl.append(phone)
 
         assert(result.userId == user.userId)
     }

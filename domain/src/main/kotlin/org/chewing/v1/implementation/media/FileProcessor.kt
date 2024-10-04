@@ -1,9 +1,12 @@
 package org.chewing.v1.implementation.media
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.util.IoScope
 import org.springframework.stereotype.Component
 import java.io.File
 
@@ -11,14 +14,17 @@ import java.io.File
 class FileProcessor(
     private val fileProvider: FileProvider,
     private val fileGenerator: FileGenerator,
-    private val fileValidator: FileValidator
+    private val fileValidator: FileValidator,
+    @IoScope private val ioScope: CoroutineScope
 ) {
     fun processNewFiles(userId: String, files: List<FileData>, category: FileCategory): List<Media> {
         fileValidator.validateFilesNameCorrect(files)
         val mediaWithFiles = fileGenerator.generateMedias(files, userId, category)
         mediaWithFiles.forEach {
-            val (file, media) = it
-            fileProvider.appendFile(file, media)
+            ioScope.launch {
+                val (file, media) = it
+                fileProvider.appendFile(file, media)
+            }
         }
         return mediaWithFiles.map { it.second }
     }
@@ -38,7 +44,9 @@ class FileProcessor(
 
     fun processOldFiles(medias: List<Media>) {
         medias.forEach {
-            fileProvider.removeFile(it)
+            ioScope.launch {
+                fileProvider.removeFile(it)
+            }
         }
     }
 }

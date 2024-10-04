@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository
 interface CommentRepository {
     fun isCommentsOwner(userId: String, commentIds: List<String>): Boolean
     fun readComment(feedId: String): List<CommentInfo>
-    fun appendComment(user: User, comment: String, feedInfo: FeedInfo)
+    fun appendComment(userId: String, feedId: String, comment: String)
     fun readCommented(userId: String): List<CommentInfo>
-    fun removeComment(commentId: String)
+    fun remove(commentId: String)
+    fun removes(feedIds: List<String>)
     fun read(commentId: String): CommentInfo?
 }

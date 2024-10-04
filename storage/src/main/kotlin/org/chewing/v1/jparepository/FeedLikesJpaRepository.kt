@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 internal interface FeedLikesJpaRepository : JpaRepository<UserFeedLikesJpaEntity, UserFeedId> {
+    fun deleteAllByUserFeedIdFeedIdIn(feedIds: List<String>)
 }

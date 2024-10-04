@@ -1,20 +1,20 @@
 package org.chewing.v1.implementation.friend
 
-import org.chewing.v1.repository.FriendRepository
+import org.chewing.v1.repository.FriendShipRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 class FriendRemover(
-    private val friendRepository: FriendRepository
+    private val friendShipRepository: FriendShipRepository
 ) {
     @Transactional
     fun removeFriend(userId: String, friendId: String) {
-        friendRepository.removeFriend(userId, friendId)
+        friendShipRepository.remove(userId, friendId)
     }
 
     @Transactional
     fun blockFriend(userId: String, friendId: String) {
-        friendRepository.blockFriend(userId, friendId)
+        friendShipRepository.block(userId, friendId)
     }
 }
