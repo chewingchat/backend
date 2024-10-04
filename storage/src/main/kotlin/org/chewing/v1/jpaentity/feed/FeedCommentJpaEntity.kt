@@ -19,11 +19,11 @@ internal class FeedCommentJpaEntity(
     private val feedId: String
 ) : BaseEntity() {
     companion object {
-        fun generate(comment: String, writer: User, feedInfo: FeedInfo): FeedCommentJpaEntity {
+        fun generate(userId: String, feedId: String, comment: String): FeedCommentJpaEntity {
             return FeedCommentJpaEntity(
                 comment = comment,
-                userId = writer.userId,
-                feedId = feedInfo.feedId
+                userId = userId,
+                feedId = feedId
             )
         }
     }
@@ -32,7 +32,7 @@ internal class FeedCommentJpaEntity(
         return CommentInfo.of(
             feedCommentId,
             comment,
-            this.createdAt!!,
+            this.createdAt,
             userId,
             feedId
         )

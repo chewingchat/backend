@@ -1,10 +1,7 @@
 package org.chewing.v1.implementation.facade
 
 import org.chewing.v1.implementation.my.MyAggregator
-import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.comment.UserCommentedInfo
-import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.service.CommentService
 import org.chewing.v1.service.FeedService
 import org.chewing.v1.service.FriendService

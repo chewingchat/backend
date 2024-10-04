@@ -15,13 +15,17 @@ internal class FeedLikesRepositoryImpl(
         return feedLikesRepository.existsById(userFeedId)
     }
 
-    override fun likes(feedInfo: FeedInfo, userId: String) {
-        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(userId, feedInfo)
+    override fun likes(feedId: String, userId: String) {
+        val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(userId, feedId)
         feedLikesRepository.saveAndFlush(userFeedJpaEntity)
     }
 
-    override fun unlikes(feedInfo: FeedInfo, userId: String) {
-        feedLikesRepository.deleteById(UserFeedId(userId, feedInfo.feedId))
+    override fun unlikes(feedId: String, userId: String) {
+        feedLikesRepository.deleteById(UserFeedId(userId, feedId))
+    }
+
+    override fun unlikeAll(feedIds: List<String>) {
+        feedLikesRepository.deleteAllByUserFeedIdFeedIdIn(feedIds)
     }
 
     override fun checkLike(feedId: String, userId: String): Boolean {

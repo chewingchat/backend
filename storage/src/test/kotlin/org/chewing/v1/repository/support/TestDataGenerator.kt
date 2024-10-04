@@ -4,6 +4,8 @@ import org.chewing.v1.jpaentity.announcement.AnnouncementJpaEntity
 import org.chewing.v1.jpaentity.auth.EmailJpaEntity
 import org.chewing.v1.jpaentity.auth.LoggedInJpaEntity
 import org.chewing.v1.jpaentity.auth.PhoneJpaEntity
+import org.chewing.v1.jpaentity.feed.FeedDetailJpaEntity
+import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jpaentity.schedule.ScheduleJpaEntity
 import org.chewing.v1.jpaentity.user.PushNotificationJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
@@ -20,6 +22,8 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
@@ -55,6 +59,13 @@ class TestDataGenerator(
 
     @Autowired
     private lateinit var pushNotificationJpaRepository: PushNotificationJpaRepository
+
+    @Autowired
+    private lateinit var feedJpaRepository: FeedJpaRepository
+
+    @Autowired
+    private lateinit var feedDetailJpaRepository: FeedDetailJpaRepository
+
     fun emailEntityData(emailAddress: EmailAddress): Email {
         val email = EmailJpaEntity.generate(emailAddress)
         emailJpaRepository.save(email)
@@ -123,6 +134,7 @@ class TestDataGenerator(
                 it.message,
                 it.emoji
             )
+            statusEntity.updateSelectedTrue()
             userStatusJpaRepository.save(statusEntity)
             return statusEntity.toUserStatus()
         }
@@ -153,6 +165,24 @@ class TestDataGenerator(
                 user
             )
         ).toPushToken()
+    }
 
+    fun feedEntityData(userId: String): FeedInfo {
+        return feedJpaRepository.save(FeedJpaEntity.generate("topic", userId)).toFeedInfo()
+    }
+
+    fun feedEntityDataList(userId: String): List<FeedInfo> {
+        val feedJpaEntityList = (1..10).map {
+            FeedJpaEntity.generate("topic $it", userId)
+        }
+        feedJpaRepository.saveAll(feedJpaEntityList)
+        return feedJpaEntityList.map { it.toFeedInfo() }
+    }
+
+    fun feedDetailEntityDataAsc(feedId: String): List<FeedDetail> {
+        val medias = MediaProvider.buildFeedContents()
+        val feedEntities = FeedDetailJpaEntity.generate(medias, feedId)
+        feedDetailJpaRepository.saveAll(feedEntities)
+        return feedEntities.map { it.toFeedDetail() }
     }
 }

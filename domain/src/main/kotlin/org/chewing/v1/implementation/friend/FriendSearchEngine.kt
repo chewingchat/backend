@@ -11,7 +11,7 @@ class FriendSearchEngine(
     private val friendEnricher: FriendEnricher,
 ) {
     fun search(userId: String, keyword: String): List<Friend> {
-        val friendsInfo = friendReader.reads(userId)
+        val friendsInfo = friendReader.readsAccess(userId)
         val users = userReader.reads(friendsInfo.map { it.friendId })
         val friendsStatus = userReader.readSelectedStatuses(friendsInfo.map { it.friendId })
         val enrichedFriends = friendEnricher.enriches(friendsInfo, users, friendsStatus)

@@ -5,7 +5,7 @@ import org.chewing.v1.dto.request.LikesRequest
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.OwnedFeedResponse
 import org.chewing.v1.dto.response.friend.FeedsResponse
-import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
@@ -27,8 +27,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("friendId") targetUserId: String
     ): SuccessResponseEntity<FeedsResponse> {
-        val feedOwner = FeedOwner.target(userId, targetUserId)
-        val feeds = feedService.getFeeds(targetUserId, feedOwner)
+        val feeds = feedService.getOwnedFeeds(targetUserId, FeedStatus.NOT_HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }
@@ -37,8 +36,7 @@ class FeedController(
     fun getOwnedFeeds(
         @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<FeedsResponse> {
-        val feedOwner = FeedOwner.target(userId, userId)
-        val feeds = feedService.getFeeds(userId, feedOwner)
+        val feeds = feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }
@@ -48,7 +46,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
-        val (feed, isLiked) = feedService.getFeed(userId, feedId, FeedOwner.FRIEND)
+        val (feed, isLiked) = feedService.getOwnedFeed(userId, feedId, FeedStatus.NOT_HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(FriendFeedResponse.of(feed, isLiked))
     }
@@ -58,7 +56,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String,
     ): SuccessResponseEntity<OwnedFeedResponse> {
-        val (feed, isLiked) = feedService.getFeed(userId, feedId, FeedOwner.OWNED)
+        val (feed, isLiked) = feedService.getOwnedFeed(userId, feedId, FeedStatus.NOT_HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(OwnedFeedResponse.of(feed, isLiked))
     }
@@ -67,7 +65,7 @@ class FeedController(
     fun getHiddenFeeds(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<FeedsResponse> {
-        val feeds = feedService.getFeeds(userId, FeedOwner.HIDDEN)
+        val feeds = feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }

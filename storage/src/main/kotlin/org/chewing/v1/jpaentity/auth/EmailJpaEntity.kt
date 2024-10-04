@@ -31,7 +31,7 @@ internal class EmailJpaEntity(
 
         fun generate(email: EmailAddress): EmailJpaEntity {
             return EmailJpaEntity(
-                address = email.email,
+                address = email.address,
             )
         }
     }

@@ -8,7 +8,6 @@ import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.user.UserName
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class FriendService(
@@ -28,8 +27,8 @@ class FriendService(
     ) {
         // 저장할 친구 정보를 읽어옴
         val targetUser = userFinder.findByContact(targetContact)
-        // 이미 친구인지 확인
-        friendValidator.validateFriendshipAllowed(userId, targetUser.userId)
+        // 친구 추가 가능한지 확인
+        friendValidator.validateAddAllowed(userId, targetUser.userId)
         // 나의 정보를 읽어온다.
         val user = userReader.read(userId)
         // 친구 추가
@@ -48,7 +47,7 @@ class FriendService(
     }
     // 친구 목록을 가져옴
     fun getSortedFriends(userId: String, sort: SortCriteria): List<Friend> {
-        val friendInfos = friendReader.reads(userId)
+        val friendInfos = friendReader.readsAccess(userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
         val usersStatus = userReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
@@ -56,7 +55,7 @@ class FriendService(
     }
 
     fun getFriends(friendIds: List<String>, userId: String): List<Friend> {
-        val friendInfos = friendReader.readsIdIn(friendIds, userId)
+        val friendInfos = friendReader.readsAccessIdIn(friendIds, userId)
         val users = userReader.reads(friendInfos.map { it.friendId })
         val usersStatus = userReader.readSelectedStatuses(friendInfos.map { it.friendId })
         val friends = friendEnricher.enriches(friendInfos, users, usersStatus)
@@ -64,24 +63,18 @@ class FriendService(
     }
 
     // 친구 즐겨찾기 변경
-    @Transactional
     fun changeFriendFavorite(userId: String, friendId: String, favorite: Boolean) {
-        // 사용자 정보를 읽어옴
-        val user = userReader.read(userId)
         // 친구인지 확인
-        friendValidator.validateIsFriend(userId, friendId)
+        friendValidator.validateFriendShipAllowed(userId, friendId)
         // 친구 즐겨찾기 변경
-        friendUpdater.updateFavorite(user, friendId, favorite)
+        friendUpdater.updateFavorite(userId, friendId, favorite)
     }
 
     // 친구 이름 변경
-    @Transactional
     fun changeFriendName(userId: String, friendId: String, friendName: UserName) {
-        // 사용자 정보를 읽어옴
-        val user = userReader.read(userId)
         // 친구인지 확인
-        friendValidator.validateIsFriend(userId, friendId)
+        friendValidator.validateFriendShipAllowed(userId, friendId)
         // 친구 이름 변경
-        friendUpdater.updateName(user, friendId, friendName)
+        friendUpdater.updateName(userId, friendId, friendName)
     }
 }

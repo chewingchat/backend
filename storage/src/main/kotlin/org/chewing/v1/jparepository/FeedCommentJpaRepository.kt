@@ -9,4 +9,5 @@ internal interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity
     fun findAllByUserId(userId: String): List<FeedCommentJpaEntity>
     fun findAllByFeedId(feedId: String): List<FeedCommentJpaEntity>
     fun existsAllByFeedCommentIdInAndUserId(feedCommentIds: List<String>, userId: String): Boolean
+    fun deleteAllByFeedIdIn(feedIds: List<String>)
 }

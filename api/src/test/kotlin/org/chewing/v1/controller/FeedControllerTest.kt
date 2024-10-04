@@ -3,7 +3,7 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createFeed
 import org.chewing.v1.config.TestSecurityConfig
-import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.service.FeedService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -51,7 +51,7 @@ class FeedControllerTest(
         val testFriendId = "testFriendId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getFeeds(testFriendId, FeedOwner.FRIEND))
+        whenever(feedService.getOwnedFeeds(testFriendId, FeedStatus.NOT_HIDDEN))
             .thenReturn(listOf(feed))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/list/$testFriendId")
@@ -75,7 +75,7 @@ class FeedControllerTest(
     fun `getOwnedFeeds`() {
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getFeeds(userId, FeedOwner.OWNED))
+        whenever(feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN))
             .thenReturn(listOf(feed))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/list")
@@ -101,7 +101,7 @@ class FeedControllerTest(
         val userId = "testUserId"
         val feed = createFeed()
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-        whenever(feedService.getFeed(userId, testFeedId, FeedOwner.FRIEND))
+        whenever(feedService.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
             .thenReturn(Pair(feed, true))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/$testFeedId/detail/friend")
@@ -134,7 +134,7 @@ class FeedControllerTest(
         val testFeedId = "testFeedId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getFeed(userId, testFeedId, FeedOwner.OWNED))
+        whenever(feedService.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
             .thenReturn(Pair(feed, true))
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
         mockMvc.perform(
@@ -169,7 +169,7 @@ class FeedControllerTest(
     fun `getHiddenFeeds`() {
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getFeeds(userId, FeedOwner.HIDDEN))
+        whenever(feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN))
             .thenReturn(listOf(feed))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/hide")

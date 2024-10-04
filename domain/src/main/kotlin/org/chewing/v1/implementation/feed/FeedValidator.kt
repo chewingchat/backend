@@ -2,7 +2,6 @@ package org.chewing.v1.implementation.feed
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.repository.FeedLikesRepository
 import org.chewing.v1.repository.FeedRepository
@@ -13,20 +12,20 @@ class FeedValidator(
     private val feedRepository: FeedRepository,
     private val feedLikesRepository: FeedLikesRepository
 ) {
-    fun isOwned(feed: FeedInfo, userId: String) {
-        if(feed.userId != userId){
+    fun isOwned(feedId: String, userId: String) {
+        if (!feedRepository.isOwned(feedId, userId)) {
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
 
     fun isFeedsOwner(feedIds: List<String>, userId: String) {
-        if (feedRepository.isAllOwner(feedIds, userId)) {
+        if (!feedRepository.isAllOwned(feedIds, userId)) {
             throw ConflictException(ErrorCode.FEED_IS_NOT_OWNED)
         }
     }
 
-    fun isNotOwned(feed: FeedInfo, userId: String) {
-        if(feed.userId == userId){
+    fun isNotOwned(feedId: String, userId: String) {
+        if (feedId == userId) {
             throw ConflictException(ErrorCode.FEED_IS_OWNED)
         }
     }

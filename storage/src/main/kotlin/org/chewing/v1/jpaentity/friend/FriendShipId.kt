@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable
 import java.io.Serializable
 
 @Embeddable
-data class FriendId(
+data class FriendShipId(
     @Column(name = "user_id")
     val userId: String,
 

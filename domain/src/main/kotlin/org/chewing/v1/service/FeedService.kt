@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service
 class FeedService(
     private val feedReader: FeedReader,
     private val feedLocker: FeedLocker,
-    private val feedRemover: FeedRemover,
     private val feedValidator: FeedValidator,
     private val fileProcessor: FileProcessor,
     private val feedProcessor: FeedProcessor,
@@ -20,22 +19,22 @@ class FeedService(
     private val feedChecker: FeedChecker
 ) {
     // 피드를 가져옴
-    fun getFeed(userId: String, feedId: String, type: FeedOwner): Pair<Feed, Boolean> {
-        val feed = feedReader.readFeed(feedId)
-        val feedDetails = feedReader.readFeedDetails(feedId)
+    fun getOwnedFeed(userId: String, feedId: String, type: FeedStatus): Pair<Feed, Boolean> {
+        val feed = feedReader.readInfo(feedId)
+        val feedDetails = feedReader.readDetails(feedId)
         val isLiked = feedChecker.checkLike(feedId, userId)
         return Pair(Feed.of(feed, feedDetails), isLiked)
     }
 
     fun getFeeds(feedsId: List<String>): List<Feed> {
-        val feeds = feedReader.reads(feedsId)
-        val feedsDetails = feedReader.readsDetails(feedsId)
+        val feeds = feedReader.readsInfo(feedsId)
+        val feedsDetails = feedReader.readsMainDetails(feedsId)
         return feedEnricher.enrichFeeds(feeds, feedsDetails)
     }
 
-    fun getFeeds(targetUserId: String, feedOwner: FeedOwner): List<Feed> {
-        val feeds = feedReader.readsByUserId(targetUserId, feedOwner)
-        val feedsDetail = feedReader.readsDetails(feeds.map { it.feedId })
+    fun getOwnedFeeds(targetUserId: String, feedStatus: FeedStatus): List<Feed> {
+        val feeds = feedReader.readsOwnedInfo(targetUserId, feedStatus)
+        val feedsDetail = feedReader.readsMainDetails(feeds.map { it.feedId })
         val enrichedFeeds = feedEnricher.enrichFeeds(feeds, feedsDetail)
         return FeedSortEngine.sort(enrichedFeeds, SortCriteria.DATE)
     }
@@ -52,10 +51,9 @@ class FeedService(
 
     fun removes(userId: String, feedIds: List<String>) {
         feedValidator.isFeedsOwner(feedIds, userId)
-        val oldMedias = feedRemover.removes(feedIds)
+        val oldMedias = feedProcessor.processFeedRemoves(feedIds)
         fileProcessor.processOldFiles(oldMedias)
     }
-
 
 
     fun hides(userId: String, feedIds: List<String>, target: FeedTarget) {

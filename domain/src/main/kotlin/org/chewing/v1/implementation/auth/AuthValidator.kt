@@ -42,7 +42,6 @@ class AuthValidator(
         when (contact) {
             is Phone -> validatePhoneNumber(contact, validateCode)
             is Email -> validateEmail(contact, validateCode)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 
@@ -50,7 +49,6 @@ class AuthValidator(
         val contact = when (credential) {
             is EmailAddress -> emailRepository.read(credential)
             is PhoneNumber -> phoneRepository.read(credential)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
         if (contact != null) {
             userChecker.checkContactIsUsed(contact, userId)

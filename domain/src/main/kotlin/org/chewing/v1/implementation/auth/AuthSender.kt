@@ -17,7 +17,6 @@ class AuthSender(
         when (credential) {
             is PhoneNumber -> externalAuthClient.sendSms(credential, verificationCode)
             is EmailAddress -> externalAuthClient.sendEmail(credential, verificationCode)
-            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 }

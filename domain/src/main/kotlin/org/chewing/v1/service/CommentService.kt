@@ -19,7 +19,6 @@ class CommentService(
     private val commentReader: CommentReader,
     private val commentLocker: CommentLocker,
     private val feedValidator: FeedValidator,
-    private val feedReader: FeedReader,
     private val commentValidator: CommentValidator,
     private val userReader: UserReader,
     private val friendReader: FriendReader,
@@ -34,11 +33,10 @@ class CommentService(
     }
 
     fun comment(userId: String, feedId: String, comment: String, target: FeedTarget) {
-        val feed = feedReader.readFeed(feedId)
         val user = userReader.read(userId)
-        feedValidator.isNotOwned(feed, userId)
+        feedValidator.isNotOwned(feedId, userId)
         commentLocker.lockComments(userId, feedId, comment, target)
-        notificationProcessor.processCommentNotification(user, feed)
+        notificationProcessor.processCommentNotification(user, feedId)
     }
 
     fun getUserCommented(userId: String): List<CommentInfo> {
@@ -46,10 +44,9 @@ class CommentService(
     }
 
     fun fetchComment(userId: String, feedId: String): List<Comment> {
-        val feed = feedReader.readFeed(feedId)
-        feedValidator.isOwned(feed, userId)
+        feedValidator.isOwned(feedId, userId)
         val comments = commentReader.reads(feedId)
-        val friends = friendReader.readsIdIn(comments.map { it.userId }, userId)
+        val friends = friendReader.readsAccessIdIn(comments.map { it.userId }, userId)
         val users = userReader.reads(friends.map { it.friendId })
         return commentEnricher.enrich(comments, friends, users)
     }
