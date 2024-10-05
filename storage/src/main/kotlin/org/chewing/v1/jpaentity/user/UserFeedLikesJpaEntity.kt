@@ -1,8 +1,6 @@
 package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import org.chewing.v1.model.feed.FeedInfo
-import org.chewing.v1.model.user.User
 import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 
@@ -11,13 +9,13 @@ import java.time.LocalDateTime
 @Table(name = "feed_likes", schema = "chewing")
 internal class UserFeedLikesJpaEntity(
     @EmbeddedId
-    private val userFeedId: UserFeedId,
+    private val feedLikeId: FeedLikeId,
     private val likeTime: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
         fun fromUserFeed(userId: String, feedId: String): UserFeedLikesJpaEntity {
             return UserFeedLikesJpaEntity(
-                userFeedId = UserFeedId(userId = userId, feedId = feedId),
+                feedLikeId = FeedLikeId(userId = userId, feedId = feedId),
             )
         }
     }

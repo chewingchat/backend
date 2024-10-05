@@ -1,5 +1,7 @@
 package org.chewing.v1.implementation.friend
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendShip
@@ -13,12 +15,12 @@ class FriendUpdater(
 ) {
     @Transactional
     fun updateFavorite(userId: String, friendId: String, favorite: Boolean) {
-        friendShipRepository.updateFavorite(userId, friendId, favorite)
+        friendShipRepository.updateFavorite(userId, friendId, favorite) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }
 
     @Transactional
     fun updateName(userId: String, friendId: String, friendName: UserName) {
-        friendShipRepository.updateName(userId, friendId, friendName)
+        friendShipRepository.updateName(userId, friendId, friendName) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }
 
     fun updateToUser(user: User, friend: FriendShip): User {

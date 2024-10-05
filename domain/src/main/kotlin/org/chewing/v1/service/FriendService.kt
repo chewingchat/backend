@@ -33,8 +33,6 @@ class FriendService(
         val user = userReader.read(userId)
         // 친구 추가
         friendAppender.appendFriend(user, friendName, targetUser)
-        // 상대방도 친구 맺기
-        friendAppender.appendFriend(targetUser, targetUser.name, user)
     }
 
     // 친구 삭제

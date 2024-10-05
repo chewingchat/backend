@@ -10,10 +10,8 @@ interface FeedRepository {
     fun read(feedId: String): FeedInfo?
     fun reads(feedIds: List<String>): List<FeedInfo>
     fun readsOwned(userId: String, feedStatus: FeedStatus): List<FeedInfo>
-    fun isAllOwned(feedIds: List<String>, userId: String): Boolean
-    fun isOwned(feedId: String, userId: String): Boolean
     fun removes(feedIds: List<String>)
     fun removesOwned(userId: String)
     fun append(userId: String, topic: String): String
-    fun update(feedId: String, target: FeedTarget)
+    fun update(feedId: String, target: FeedTarget): String?
 }

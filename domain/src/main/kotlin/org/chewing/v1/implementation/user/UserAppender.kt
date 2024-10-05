@@ -3,7 +3,6 @@ package org.chewing.v1.implementation.user
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.repository.PushNotificationRepository
 import org.chewing.v1.repository.UserRepository
 import org.chewing.v1.repository.UserSearchRepository
@@ -26,8 +25,8 @@ class UserAppender(
         return userRepository.append(contact)
     }
 
-    fun appendSearched(user: User, keyword: String) {
-        return userSearchRepository.appendSearchHistory(user, keyword)
+    fun appendSearched(userId: String, keyword: String) {
+        return userSearchRepository.appendHistory(userId, keyword)
     }
 
     fun appendStatus(userId: String, statusMessage: String, emoji: String) {

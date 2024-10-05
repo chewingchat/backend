@@ -24,10 +24,10 @@ internal class UserSearchJpaEntity(
     }
 
     companion object {
-        fun fromFriendSearch(user: User, keyword: String): UserSearchJpaEntity {
+        fun fromFriendSearch(userId: String, keyword: String): UserSearchJpaEntity {
             return UserSearchJpaEntity(
                 searchText = keyword,
-                userId = user.userId
+                userId = userId
             )
         }
     }

@@ -1,5 +1,7 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jparepository.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
@@ -31,17 +33,8 @@ internal class FeedRepositoryImpl(
         }
     }
 
-    override fun isAllOwned(feedIds: List<String>, userId: String): Boolean {
-        return feedJpaRepository.existsAllByFeedIdInAndUserId(feedIds.map { it }, userId)
-    }
-
-    override fun isOwned(feedId: String, userId: String): Boolean {
-        return feedJpaRepository.existsByFeedIdAndUserId(feedId, userId)
-    }
-
-
-    override fun update(feedId: String, target: FeedTarget) {
-        feedJpaRepository.findById(feedId).orElseThrow().let {
+    override fun update(feedId: String, target: FeedTarget): String? {
+        return feedJpaRepository.findById(feedId).map{
             when (target) {
                 FeedTarget.LIKES -> it.likes()
                 FeedTarget.UNLIKES -> it.unLikes()
@@ -51,7 +44,8 @@ internal class FeedRepositoryImpl(
                 FeedTarget.UNHIDE -> it.unHide()
             }
             feedJpaRepository.saveAndFlush(it)
-        }
+            feedId
+        }.orElse(null)
     }
 
     override fun removes(feedIds: List<String>) {
@@ -63,7 +57,6 @@ internal class FeedRepositoryImpl(
     }
 
     override fun append(userId: String, topic: String): String {
-        val feedId = feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
-        return feedId
+        return feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
     }
 }

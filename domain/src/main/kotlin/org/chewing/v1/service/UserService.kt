@@ -30,9 +30,9 @@ class UserService(
         userUpdater.updateAccess(userId, userContent)
     }
 
-    fun updateProfileImage(file: FileData, userId: String, category: FileCategory) {
+    fun updateImage(file: FileData, userId: String, category: FileCategory) {
         val media = fileProcessor.processNewFile(userId, file, category)
-        val preMedia = userProcessor.processChangeImage(userId, media, category)
+        val preMedia = userProcessor.processChangeUrl(userId, media, category)
         fileProcessor.processOldFile(preMedia)
     }
 
@@ -84,9 +84,9 @@ class UserService(
         return userReader.readsUserStatus(userId)
     }
 
-    fun changeTTS(userId: String, fileData: FileData) {
-        val media = fileProcessor.processNewFile(userId, fileData, FileCategory.TTS)
-        val oldMedia = userUpdater.updateTTS(userId, media)
-        fileProcessor.processOldFile(oldMedia)
+    fun changeTTS(userId: String, fileData: FileData, category: FileCategory) {
+        val media = fileProcessor.processNewFile(userId, fileData, category)
+        val preMedia = userProcessor.processChangeUrl(userId, media, category)
+        fileProcessor.processOldFile(preMedia)
     }
 }

@@ -1,7 +1,5 @@
 package org.chewing.v1.implementation.feed
 
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.repository.FeedDetailRepository
 import org.chewing.v1.repository.FeedLikesRepository
@@ -14,7 +12,7 @@ class FeedAppender(
     private val feedLikesRepository: FeedLikesRepository,
     private val feedDetailRepository: FeedDetailRepository
 ) {
-    fun appendFeedLikes(feedId: String, userId: String) {
+    fun appendLikes(feedId: String, userId: String) {
         feedLikesRepository.likes(feedId, userId)
     }
 

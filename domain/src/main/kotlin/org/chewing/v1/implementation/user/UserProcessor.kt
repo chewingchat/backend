@@ -17,11 +17,13 @@ class UserProcessor(
     private val userAppender: UserAppender
 ) {
     @Transactional
-    fun processChangeImage(userId: String, media: Media, category: FileCategory): Media {
+    fun processChangeUrl(userId: String, media: Media, category: FileCategory): Media {
         val user = userReader.read(userId)
-        userUpdater.updateImage(user, media)
+        userUpdater.updateFileUrl(user, media)
         return user.image
     }
+
+
 
     fun processRemoveUser(userId: String) {
         userRemover.remove(userId)
