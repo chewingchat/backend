@@ -65,7 +65,6 @@ internal class EmailRepositoryTest(
     @Test
     fun `이메일이 존재하지 않는다면 저장한다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
-        testDataGenerator.emailEntityData(emailAddress)
 
         emailRepositoryImpl.appendIfNotExists(emailAddress)
 

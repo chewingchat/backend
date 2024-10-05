@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository
 internal class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository,
 ) : UserRepository {
-    override fun readyId(userId: String): User? {
+    override fun read(userId: String): User? {
         val userEntity = userJpaRepository.findById(userId)
         return userEntity.map { it.toUser() }.orElse(null)
     }
@@ -28,7 +28,8 @@ internal class UserRepositoryImpl(
         val userEntity = userJpaRepository.findById(userId)
         return userEntity.map { it.getEmailId() to it.getPhoneNumberId() }.orElse(null to null)
     }
-    override fun readsByIds(userIds: List<String>): List<User> {
+
+    override fun reads(userIds: List<String>): List<User> {
         val userEntities = userJpaRepository.findAllById(userIds.map { it })
         return userEntities.map { it.toUser() }
     }
@@ -52,52 +53,52 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun remove(userId: String) {
-        userJpaRepository.findById(userId).ifPresent {
-            it.updateDelete()
-            userJpaRepository.save(it)
-        }
+    override fun remove(userId: String): String? {
+        return userJpaRepository.findById(userId)
+            .map { entity ->
+                entity.updateDelete()
+                userJpaRepository.save(entity)
+                userId
+            }.orElse(null)
     }
 
-    override fun updateImage(user: User, media: Media) {
-        userJpaRepository.findById(user.userId).ifPresent {
+    override fun updateMedia(user: User, media: Media) : String? {
+        return userJpaRepository.findById(user.userId).map {
             when (media.category) {
                 FileCategory.PROFILE -> it.updateUserPictureUrl(media)
                 FileCategory.BACKGROUND -> it.updateBackgroundPictureUrl(media)
+                FileCategory.TTS -> it.updateTTS(media)
                 else -> {}
             }
             userJpaRepository.save(it)
-        }
+            user.userId
+        }.orElse(null)
     }
 
-    override fun updateBackgroundImage(user: User, media: Media) {
-        userJpaRepository.findById(user.userId).ifPresent {
-            it.updateBackgroundPictureUrl(media)
-            userJpaRepository.save(it)
-        }
-    }
-
-    override fun updateName(userId: String, userName: UserName) {
-        userJpaRepository.findById(userId).ifPresent {
+    override fun updateName(userId: String, userName: UserName): String? {
+        return userJpaRepository.findById(userId).map {
             it.updateUserName(userName)
             userJpaRepository.save(it)
-        }
+            userId
+        }.orElse(null)
     }
 
-    override fun updateContact(userId: String, contact: Contact) {
-        userJpaRepository.findById(userId).ifPresent {
+    override fun updateContact(userId: String, contact: Contact): String? {
+        return userJpaRepository.findById(userId).map {
             it.updateContact(contact)
             userJpaRepository.save(it)
-        }
+            userId
+        }.orElse(null)
     }
 
-    override fun updateAccess(userId: String, userContent: UserContent) {
-        userJpaRepository.findById(userId).ifPresent {
+    override fun updateAccess(userId: String, userContent: UserContent): String? {
+        return userJpaRepository.findById(userId).map {
             it.updateUserName(userContent.name)
             it.updateBirth(userContent.birth)
             it.updateAccess()
             userJpaRepository.save(it)
-        }
+            userId
+        }.orElse(null)
     }
 
     override fun checkContactIsUsedByElse(contact: Contact, userId: String): Boolean {
@@ -107,16 +108,11 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun updateBirth(userId: String, birth: String) {
-        userJpaRepository.findById(userId).ifPresent {
+    override fun updateBirth(userId: String, birth: String): String? {
+        return userJpaRepository.findById(userId).map {
             it.updateBirth(birth)
             userJpaRepository.save(it)
-        }
-    }
-    override fun updateTTS(userId: String, tts: Media): Media? {
-        val userEntity = userJpaRepository.findById(userId).orElse(null)
-        userEntity?.updateTTS(tts)
-        userJpaRepository.save(userEntity)
-        return userEntity.toTTS()
+            userId
+        }.orElse(null)
     }
 }

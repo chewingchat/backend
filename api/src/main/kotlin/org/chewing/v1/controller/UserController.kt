@@ -47,7 +47,7 @@ class UserController(
         @RequestParam("category") category: FileCategory
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
-        userService.updateProfileImage(convertedFile, userId, category)
+        userService.updateImage(convertedFile, userId, category)
         return ResponseHelper.successOnly()
     }
 
@@ -127,7 +127,7 @@ class UserController(
         @RequestPart("file") file: MultipartFile,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
-        userService.changeTTS(userId, convertedFile)
+        userService.changeTTS(userId, convertedFile, FileCategory.TTS)
         return ResponseHelper.successOnly()
     }
 }

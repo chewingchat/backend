@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 internal interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
-    fun existsAllByFeedIdInAndUserId(feedId: List<String>, writerId: String): Boolean
-    fun existsByFeedIdAndUserId(feedId: String, writerId: String): Boolean
     fun findAllByUserIdAndHideTrueOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>
     fun findAllByUserIdAndHideFalseOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>
     fun findAllByUserIdOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>

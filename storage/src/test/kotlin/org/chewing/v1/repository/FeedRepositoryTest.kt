@@ -47,23 +47,6 @@ internal class FeedRepositoryTest : DbContextTest() {
     }
 
     @Test
-    fun `모든 피드가 소유자의 것인지 확인해야 한다`() {
-        val userId = "userId4"
-        val feedInfoList = testDataGenerator.feedEntityDataList(userId)
-        val result = feedRepositoryImpl.isAllOwned(feedInfoList.map { it.feedId }, userId)
-        assert(result)
-    }
-
-    @Test
-    fun `모든 피드가 소유자의 것이 아니여야 한다`() {
-        val userId = "userId4"
-        val newUserId = "userId5"
-        val feedInfoList = testDataGenerator.feedEntityDataList(userId)
-        val result = feedRepositoryImpl.isAllOwned(feedInfoList.map { it.feedId }, newUserId)
-        assert(!result)
-    }
-
-    @Test
     fun `피드를 삭제해야 한다`() {
         val userId = "userId5"
         val feedInfoList = testDataGenerator.feedEntityDataList(userId)
@@ -167,13 +150,5 @@ internal class FeedRepositoryTest : DbContextTest() {
         val result = feedRepositoryImpl.readsOwned(userId, FeedStatus.NOT_HIDDEN)
         assert(result.isNotEmpty())
         assert(result.size == feedInfoList.size - 1)
-    }
-
-    @Test
-    fun `피드의 소유자여야 한다`(){
-        val userId = "userId16"
-        val feedInfo = testDataGenerator.feedEntityData(userId)
-        val result = feedRepositoryImpl.isOwned(feedInfo.feedId, userId)
-        assert(result)
     }
 }

@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-internal interface FriendShipJpaRepository : JpaRepository<FriendShipJpaEntity, String> {
+internal interface FriendShipJpaRepository : JpaRepository<FriendShipJpaEntity, FriendShipId> {
 
-    fun findById(friendShipId: FriendShipId): FriendShipJpaEntity?
     fun findAllByIdUserIdAndType(userId: String, type: AccessStatus): List<FriendShipJpaEntity>
     fun findAllByIdInAndType(friendShipIds: List<FriendShipId>, type: AccessStatus): List<FriendShipJpaEntity>
 }

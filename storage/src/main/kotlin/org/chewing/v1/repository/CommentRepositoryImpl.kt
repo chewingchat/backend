@@ -11,12 +11,15 @@ import org.springframework.stereotype.Repository
 internal class CommentRepositoryImpl(
     private val commentJpaRepository: FeedCommentJpaRepository
 ) : CommentRepository {
-    override fun isCommentsOwner(userId: String, commentIds: List<String>): Boolean {
-        return commentJpaRepository.existsAllByFeedCommentIdInAndUserId(commentIds, userId)
+
+    override fun reads(feedId: String): List<CommentInfo> {
+        return commentJpaRepository.findAllByFeedId(feedId).map {
+            it.toCommentInfo()
+        }
     }
 
-    override fun readComment(feedId: String): List<CommentInfo> {
-        return commentJpaRepository.findAllByFeedId(feedId).map {
+    override fun readsIn(commentIds: List<String>): List<CommentInfo> {
+        return commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
             it.toCommentInfo()
         }
     }
@@ -29,19 +32,13 @@ internal class CommentRepositoryImpl(
         commentJpaRepository.deleteAllByFeedIdIn(feedIds)
     }
 
-    override fun appendComment(userId: String, feedId: String, comment: String) {
-        commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, userId, feedId))
+    override fun append(userId: String, feedId: String, comment: String) {
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
     }
 
-    override fun readCommented(userId: String): List<CommentInfo> {
+    override fun readsCommented(userId: String): List<CommentInfo> {
         return commentJpaRepository.findAllByUserId(userId).map {
             it.toCommentInfo()
         }
-    }
-
-    override fun read(commentId: String): CommentInfo? {
-        return commentJpaRepository.findById(commentId).map {
-            it.toCommentInfo()
-        }.orElse(null)
     }
 }

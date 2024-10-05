@@ -4,8 +4,11 @@ import org.chewing.v1.jpaentity.announcement.AnnouncementJpaEntity
 import org.chewing.v1.jpaentity.auth.EmailJpaEntity
 import org.chewing.v1.jpaentity.auth.LoggedInJpaEntity
 import org.chewing.v1.jpaentity.auth.PhoneJpaEntity
+import org.chewing.v1.jpaentity.feed.FeedCommentJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedDetailJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
+import org.chewing.v1.jpaentity.friend.FriendShipId
+import org.chewing.v1.jpaentity.friend.FriendShipJpaEntity
 import org.chewing.v1.jpaentity.schedule.ScheduleJpaEntity
 import org.chewing.v1.jpaentity.user.PushNotificationJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
@@ -16,10 +19,12 @@ import org.chewing.v1.jparepository.EmailJpaRepository
 import org.chewing.v1.jparepository.LoggedInJpaRepository
 import org.chewing.v1.jparepository.PhoneJpaRepository
 import org.chewing.v1.jparepository.ScheduleJpaRepository
+import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.feed.FeedDetail
@@ -65,6 +70,12 @@ class TestDataGenerator(
 
     @Autowired
     private lateinit var feedDetailJpaRepository: FeedDetailJpaRepository
+
+    @Autowired
+    private lateinit var commentJpaRepository: FeedCommentJpaRepository
+
+    @Autowired
+    private lateinit var friendShipJpaRepository: FriendShipJpaRepository
 
     fun emailEntityData(emailAddress: EmailAddress): Email {
         val email = EmailJpaEntity.generate(emailAddress)
@@ -184,5 +195,32 @@ class TestDataGenerator(
         val feedEntities = FeedDetailJpaEntity.generate(medias, feedId)
         feedDetailJpaRepository.saveAll(feedEntities)
         return feedEntities.map { it.toFeedDetail() }
+    }
+
+    fun feedCommentEntityDataList(userId: String, feedId: String): List<CommentInfo> {
+        (1..10).map {
+            FeedCommentJpaEntity.generate(userId, feedId, "comment")
+        }.let { commentEntities ->
+            commentJpaRepository.saveAll(commentEntities)
+            return commentEntities.map { it.toCommentInfo() }
+        }
+    }
+
+    fun feedCommentEntityData(userId: String, feedId: String): CommentInfo {
+        return commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, "comment")).toCommentInfo()
+    }
+
+    fun friendShipEntityData(userId: String, friendId: String, access: AccessStatus) {
+        val friendName = UserProvider.buildFriendName()
+        val user = UserProvider.buildNormal(userId)
+        val targetUser = UserProvider.buildNormal(friendId)
+        val entity = FriendShipJpaEntity.generate(user, friendName, targetUser)
+        when(access) {
+            AccessStatus.DELETE -> entity.updateDelete()
+            AccessStatus.BLOCK -> entity.updateBlock()
+            AccessStatus.BLOCKED -> entity.updateBlocked()
+            else -> {}
+        }
+        friendShipJpaRepository.save(entity)
     }
 }

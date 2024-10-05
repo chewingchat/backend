@@ -11,5 +11,6 @@ class FriendAppender(
 ) {
     fun appendFriend(user: User, friendName: UserName, targetUser: User) {
         friendShipRepository.append(user, friendName, targetUser)
+        friendShipRepository.append(targetUser, targetUser.name, user)
     }
 }

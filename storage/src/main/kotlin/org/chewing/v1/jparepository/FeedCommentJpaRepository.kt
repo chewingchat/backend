@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param
 internal interface FeedCommentJpaRepository : JpaRepository<FeedCommentJpaEntity, String> {
     fun findAllByUserId(userId: String): List<FeedCommentJpaEntity>
     fun findAllByFeedId(feedId: String): List<FeedCommentJpaEntity>
-    fun existsAllByFeedCommentIdInAndUserId(feedCommentIds: List<String>, userId: String): Boolean
     fun deleteAllByFeedIdIn(feedIds: List<String>)
+    fun findAllByFeedCommentIdIn(feedCommentIds: List<String>): List<FeedCommentJpaEntity>
 }

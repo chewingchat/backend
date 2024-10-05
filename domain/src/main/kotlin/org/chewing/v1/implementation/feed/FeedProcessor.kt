@@ -15,14 +15,14 @@ class FeedProcessor(
 ) {
     @Transactional
     fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
-        feedAppender.appendFeedLikes(feedId, userId)
-        feedUpdater.updateFeed(feedId, target)
+        feedAppender.appendLikes(feedId, userId)
+        feedUpdater.update(feedId, target)
     }
 
     @Transactional
     fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
         feedRemover.removeLikes(feedId, userId)
-        feedUpdater.updateFeed(feedId, target)
+        feedUpdater.update(feedId, target)
     }
 
     @Transactional
@@ -32,12 +32,12 @@ class FeedProcessor(
 
     @Transactional
     fun processFeedHides(feedId: String, target: FeedTarget) {
-        feedUpdater.updateFeed(feedId, target)
+        feedUpdater.update(feedId, target)
     }
 
     @Transactional
     fun processFeedUnHides(feedId: String, target: FeedTarget) {
-        feedUpdater.updateFeed(feedId, target)
+        feedUpdater.update(feedId, target)
     }
 
     @Transactional

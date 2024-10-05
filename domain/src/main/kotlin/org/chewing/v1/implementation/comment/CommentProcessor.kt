@@ -1,7 +1,5 @@
 package org.chewing.v1.implementation.comment
 
-import org.chewing.v1.implementation.user.UserReader
-import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.feed.FeedUpdater
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.stereotype.Component
@@ -15,14 +13,14 @@ class CommentProcessor(
 ) {
 
     @Transactional
-    fun processFeedComments(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
-        feedUpdater.updateFeed(feedId, updateType)
+    fun processComment(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
+        feedUpdater.update(feedId, updateType)
         commentAppender.appendComment(userId, comment, feedId)
     }
 
     @Transactional
-    fun processFeedUnComments(commentId: String, updateType: FeedTarget) {
-        feedUpdater.updateFeed(commentId, updateType)
+    fun processUnComment(commentId: String, updateType: FeedTarget) {
+        feedUpdater.update(commentId, updateType)
         commentRemover.remove(commentId)
     }
 }

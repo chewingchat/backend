@@ -97,10 +97,12 @@ internal class UserJpaEntity(
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
+        this.pictureType = media.type
     }
 
     fun updateBackgroundPictureUrl(media: Media) {
         this.backgroundPictureUrl = media.url
+        this.backgroundPictureType = media.type
     }
 
     fun updateUserName(userName: UserName) {

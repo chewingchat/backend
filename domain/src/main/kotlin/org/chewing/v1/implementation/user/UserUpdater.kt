@@ -24,27 +24,28 @@ class UserUpdater(
     /**
      * 주어진 사용자 정보를 업데이트합니다.
      */
-    fun updateImage(user: User, media: Media) {
-        return userRepository.updateImage(user, media)
+    fun updateFileUrl(user: User, media: Media) {
+        userRepository.updateMedia(user, media) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
+
     @Transactional
     fun updateName(userId: String, userName: UserName) {
-        return userRepository.updateName(userId, userName)
+        userRepository.updateName(userId, userName) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional
     fun updateContact(userId: String, contact: Contact) {
-        return userRepository.updateContact(userId, contact)
+        userRepository.updateContact(userId, contact) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional
     fun updateAccess(userId: String, userContent: UserContent) {
-        return userRepository.updateAccess(userId, userContent)
+        userRepository.updateAccess(userId, userContent) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional
     fun updateBirth(userId: String, birth: String) {
-        return userRepository.updateBirth(userId, birth)
+        userRepository.updateBirth(userId, birth) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional
@@ -52,12 +53,9 @@ class UserUpdater(
         statusRepository.updateSelectedStatusFalse(userId)
         statusRepository.updateSelectedStatusTrue(userId, statusId)
     }
+
     @Transactional
     fun updateDeselectedStatusFalse(userId: String) {
         statusRepository.updateSelectedStatusFalse(userId)
-    }
-    @Transactional
-    fun updateTTS(userId: String, tts: Media): Media {
-        return userRepository.updateTTS(userId, tts)?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 }

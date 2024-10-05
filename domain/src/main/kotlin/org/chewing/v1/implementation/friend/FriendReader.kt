@@ -10,10 +10,10 @@ class FriendReader(
     private val friendShipRepository: FriendShipRepository,
 ) {
     fun readsAccess(userId: String): List<FriendShip> {
-        return friendShipRepository.reads(userId, AccessStatus.ACCESS)
+        return friendShipRepository.readsOwned(userId, AccessStatus.ACCESS)
     }
 
     fun readsAccessIdIn(friendIds: List<String>, userId: String): List<FriendShip> {
-        return friendShipRepository.readsByIds(friendIds, userId, AccessStatus.ACCESS)
+        return friendShipRepository.reads(friendIds, userId, AccessStatus.ACCESS)
     }
 }

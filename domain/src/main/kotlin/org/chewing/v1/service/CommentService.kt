@@ -4,7 +4,6 @@ import org.chewing.v1.implementation.comment.CommentEnricher
 import org.chewing.v1.implementation.comment.CommentLocker
 import org.chewing.v1.implementation.comment.CommentReader
 import org.chewing.v1.implementation.comment.CommentValidator
-import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.feed.FeedValidator
 import org.chewing.v1.implementation.friend.FriendReader
 import org.chewing.v1.implementation.notification.NotificationProcessor
@@ -26,16 +25,14 @@ class CommentService(
     private val notificationProcessor: NotificationProcessor
 ) {
     fun remove(userId: String, commentIds: List<String>, target: FeedTarget) {
-        commentValidator.isOwner(userId, commentIds)
-        commentIds.forEach {
-            commentLocker.lockUnComments(it, target)
-        }
+        commentValidator.isOwned(userId, commentIds)
+        commentLocker.lockUnComments(commentIds, target)
     }
 
     fun comment(userId: String, feedId: String, comment: String, target: FeedTarget) {
         val user = userReader.read(userId)
         feedValidator.isNotOwned(feedId, userId)
-        commentLocker.lockComments(userId, feedId, comment, target)
+        commentLocker.lockComment(userId, feedId, comment, target)
         notificationProcessor.processCommentNotification(user, feedId)
     }
 

@@ -20,6 +20,21 @@ object UserProvider {
             AccessStatus.NOT_ACCESS
         )
     }
+    fun buildFriend(userId: String): User {
+        return User.of(
+            userId,
+            "friendFirstName",
+            "friendLastName",
+            "2000-00-00",
+            Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_BASIC),
+            Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_BASIC),
+            AccessStatus.NOT_ACCESS
+        )
+    }
+    fun buildFriendName(): UserName {
+        return UserName.of("friendFirstName", "friendLastName")
+    }
+
 
     fun buildNewUserName(): UserName {
         return UserName.of("newFirstName", "newLastName")

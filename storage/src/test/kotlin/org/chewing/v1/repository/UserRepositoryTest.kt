@@ -1,14 +1,10 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jparepository.UserJpaRepository
 import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.repository.support.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserRepositoryTest : DbContextTest() {
@@ -27,7 +23,7 @@ class UserRepositoryTest : DbContextTest() {
         val email = EmailProvider.buildNormal()
         val user = testDataGenerator.userEntityEmailData(email)
 
-        val result = userRepositoryImpl.readyId(user.userId)
+        val result = userRepositoryImpl.read(user.userId)
 
         assert(result!!.userId == user.userId)
     }
@@ -107,10 +103,10 @@ class UserRepositoryTest : DbContextTest() {
         val user = testDataGenerator.userEntityEmailData(email)
         val media = MediaProvider.buildProfileContent()
 
-        userRepositoryImpl.updateImage(user, media)
+        userRepositoryImpl.updateMedia(user, media)
         val result = userJpaRepository.findById(user.userId).get().toUser()
 
-        assert(result.image.type != media.type)
+        assert(result.image.type == media.type)
     }
 
     @Test
@@ -119,10 +115,22 @@ class UserRepositoryTest : DbContextTest() {
         val user = testDataGenerator.userEntityEmailData(email)
         val media = MediaProvider.buildBackgroundContent()
 
-        userRepositoryImpl.updateBackgroundImage(user, media)
+        userRepositoryImpl.updateMedia(user, media)
         val result = userJpaRepository.findById(user.userId).get().toUser()
 
-        assert(result.backgroundImage.type != media.type)
+        assert(result.backgroundImage.type == media.type)
+    }
+
+    @Test
+    fun `유저 TTS업데이트`() {
+        val email = EmailProvider.buildNormal()
+        val user = testDataGenerator.userEntityEmailData(email)
+        val media = MediaProvider.buildTTSContent()
+
+        userRepositoryImpl.updateMedia(user, media)
+        val result = userJpaRepository.findById(user.userId).get().toTTS()
+        assert(result.url == media.url)
+
     }
 
     @Test
@@ -203,16 +211,37 @@ class UserRepositoryTest : DbContextTest() {
     }
 
     @Test
-    fun `TTS 파일 경로 수정`(){
+    fun `연락 아이디 읽기`(){
         val email = EmailProvider.buildNormal()
+        val phone = PhoneProvider.buildNormal()
         val user = testDataGenerator.userEntityEmailData(email)
 
-        val tts = MediaProvider.buildTTSContent()
 
-        userRepositoryImpl.updateTTS(user.userId, tts)
-        val result = userJpaRepository.findById(user.userId).get().toTTS()
 
-        assert(result.url == tts.url)
+        userJpaRepository.findById(user.userId).ifPresent {
+            it.updateContact(phone)
+            userJpaRepository.save(it)
+        }
+
+        val entity = userJpaRepository.findById(user.userId)
+
+        val (emailId, phoneId) = userRepositoryImpl.readContactId(user.userId)
+
+
+        assert(emailId == entity.get().getEmailId())
+        assert(phoneId == entity.get().getPhoneNumberId())
     }
 
+    @Test
+    fun `유저Ids의 모든 정보 가져오기`(){
+        val email1 = EmailProvider.buildNormal()
+        val user = testDataGenerator.userEntityEmailData(email1)
+
+        val email2 = EmailProvider.buildNormal()
+        val user2 = testDataGenerator.userEntityEmailData(email2)
+
+        val result = userRepositoryImpl.reads(listOf(user.userId, user2.userId))
+
+        assert(result.size == 2)
+    }
 }
