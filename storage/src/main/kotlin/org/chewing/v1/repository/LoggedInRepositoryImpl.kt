@@ -24,7 +24,7 @@ internal class LoggedInRepositoryImpl(
         }
     }
 
-    override fun read(refreshToken: String): RefreshToken? {
-        return loggedInJpaRepository.findByRefreshToken(refreshToken).orElse(null).toRefreshToken()
+    override fun read(refreshToken: String, userId: String): RefreshToken? {
+        return loggedInJpaRepository.findByRefreshTokenAndUserId(refreshToken, userId).orElse(null).toRefreshToken()
     }
 }

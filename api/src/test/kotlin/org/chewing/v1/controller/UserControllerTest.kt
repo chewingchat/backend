@@ -3,10 +3,12 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.implementation.facade.AccountFacade
 import org.chewing.v1.service.UserService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -31,6 +33,9 @@ class UserControllerTest(
 ) {
     @MockBean
     private lateinit var userService: UserService
+
+    @MockBean
+    private lateinit var accountFacade: AccountFacade
 
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isCreated)
@@ -164,6 +169,7 @@ class UserControllerTest(
             MockMvcRequestBuilders.delete("/api/user")
                 .requestAttr("userId", "testUserId")  // userId 전달
         )
+        verify(accountFacade).deleteAccount(any())
         performCommonSuccessResponse(result)
     }
 

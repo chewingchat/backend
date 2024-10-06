@@ -2,8 +2,8 @@ package org.chewing.v1.implementation.auth
 
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
+import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.beans.factory.annotation.Value
@@ -21,11 +21,13 @@ class JwtTokenProvider(
 ) {
     private val secretKey: SecretKey
         get() = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
+
     fun createJwtToken(userId: String): JwtToken {
         val accessToken = createAccessToken(userId)
         val refreshToken = createRefreshToken(userId)
         return JwtToken.of(accessToken, refreshToken)
     }
+
     // JWT Access Token 생성
     fun createAccessToken(userId: String): String {
         val claims: Claims = Jwts.claims().setSubject(userId)
@@ -58,12 +60,12 @@ class JwtTokenProvider(
         try {
             val claims = getClaimsFromToken(token)
             if (claims.expiration.before(Date())) {
-                throw UnauthorizedException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
+                throw AuthorizationException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
             }
         } catch (e: ExpiredJwtException) {
-            throw UnauthorizedException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
+            throw AuthorizationException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
         } catch (e: JwtException) {
-            throw UnauthorizedException(ErrorCode.INVALID_TOKEN)  // JWT 관련 일반 예외 발생
+            throw AuthorizationException(ErrorCode.INVALID_TOKEN)  // JWT 관련 일반 예외 발생
         }
     }
 
@@ -79,6 +81,7 @@ class JwtTokenProvider(
         val claims = getClaimsFromToken(token)
         return claims.subject
     }
+
     // 토큰에서 클레임 추출
     private fun getClaimsFromToken(token: String): Claims {
         return Jwts.parserBuilder()
@@ -90,5 +93,12 @@ class JwtTokenProvider(
 
     fun cleanedToken(token: String): String {
         return token.removePrefix("Bearer ").trim()
+    }
+
+    fun refresh(token: String): Pair<JwtToken, String> {
+        val cleanedToken = cleanedToken(token)
+        validateRefreshToken(cleanedToken)
+        val userId = getUserIdFromToken(cleanedToken)
+        return Pair(createJwtToken(userId), userId)
     }
 }

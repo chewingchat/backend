@@ -1,7 +1,6 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.jparepository.PhoneJpaRepository
 import org.chewing.v1.jparepository.ScheduleJpaRepository
 import org.chewing.v1.model.schedule.ScheduleType
 import org.chewing.v1.repository.support.ScheduleProvider
@@ -48,7 +47,7 @@ class ScheduleRepositoryTest : DbContextTest() {
         val time = ScheduleProvider.buildTime()
         val user = UserProvider.buildNormal(userId)
         val schedule = testDataGenerator.scheduleEntityData(content, time, user)
-        scheduleRepositoryImpl.removeAll(user.userId)
+        scheduleRepositoryImpl.removeUsers(user.userId)
         assert(scheduleJpaRepository.findById(schedule.id).isEmpty)
     }
 

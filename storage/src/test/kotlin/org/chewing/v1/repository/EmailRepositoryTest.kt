@@ -84,24 +84,4 @@ internal class EmailRepositoryTest(
         assert(result != null)
         assert(result!!.emailId == email.emailId)
     }
-
-    @Test
-    fun `이메일 인증번호를 업데이트 한다`() {
-        val emailAddress = EmailProvider.buildNormalAddress()
-
-        val email = testDataGenerator.emailEntityData(emailAddress)
-
-        val result = emailRepositoryImpl.updateVerificationCode(emailAddress)
-
-        assert(result != email.validationCode.code)
-    }
-
-    @Test
-    fun `잘못된 접근으로 이메일 인증번호를 업데이트 할 수 없다`() {
-        val emailAddress = EmailProvider.buildNormalAddress()
-        val exception = assertThrows<NotFoundException> {
-            emailRepositoryImpl.updateVerificationCode(emailAddress)
-        }
-        assert(exception.errorCode == ErrorCode.EMAIL_NOT_FOUND)
-    }
 }

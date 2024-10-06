@@ -9,19 +9,20 @@ enum class ErrorCode(
     val message: String
 ) {
     // Auth errors
-    VALIDATE_WRONG("AUTH_1", "인증 번호가 틀렸습니다."),
-    VALIDATE_EXPIRED("AUTH_2", "인증 번호가 만료되었습니다."),
+    WRONG_VALIDATE_CODE("AUTH_1", "인증 번호가 틀렸습니다."),
+    EXPIRED_VALIDATE_CODE("AUTH_2", "인증 번호가 만료되었습니다."),
     TOKEN_EXPIRED("AUTH_3", "토큰이 만료되었습니다."),
     INVALID_TOKEN("AUTH_4", "토큰을 확인해주세요"),
     PHONE_NUMBER_IS_USED("AUTH_5", "해당 전화번호로 이미 다른 사람이 사용중입니다."),
-    EMAIL_IS_USED("AUTH_6", "해당 이메일로 이미 다른 사람이 사용중입니다."),
+    EMAIL_ADDRESS_IS_USED("AUTH_6", "해당 이메일로 이미 다른 사람이 사용중입니다."),
     EMAIL_NOT_FOUND("AUTH_7", "해당 이메일을 찾을 수 없습니다."),
     PHONE_NUMBER_NOT_FOUND("AUTH_8", "해당 전화번호를 찾을 수 없습니다."),
 
     // Common
     PATH_WRONG("COMMON_1", "잘못된 메세드입니다."),
     VARIABLE_WRONG("COMMON_2", "요청 변수가 잘못되었습니다."),
-    INTERNAL_SERVER_ERROR("COMMON_3", "Internal Server Error"),
+    WRONG_ACCESS("COMMON_3", "잘못된 접근입니다."),
+    INTERNAL_SERVER_ERROR("COMMON_4", "Internal Server Error"),
 
     FILE_UPLOAD_FAILED("FILE_1", "파일 업로드를 실패하였습니다."),
     FILE_DELETE_FAILED("FILE_2", "파일 삭제를 실패하였습니다."),

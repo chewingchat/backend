@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class LoggedInRepositoryImplTest : DbContextTest() {
     @Autowired
     private lateinit var loggedInJpaRepository: LoggedInJpaRepository
+
     @Autowired
     private lateinit var testDataGenerator: TestDataGenerator
 
@@ -59,7 +60,7 @@ class LoggedInRepositoryImplTest : DbContextTest() {
         testDataGenerator.loggedInEntityData(refreshToken)
 
 
-        val result = loggedInRepositoryImpl.read(refreshToken.token)
+        val result = loggedInRepositoryImpl.read(refreshToken.token, "userId")
         assert(result != null)
         assert(result!!.token == refreshToken.token)
     }

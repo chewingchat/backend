@@ -11,22 +11,20 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class EmailRepositoryImpl(
     private val emailJpaRepository: EmailJpaRepository,
-):EmailRepository {
-    override fun appendIfNotExists(emailAddress: EmailAddress) {
-        emailJpaRepository.findByAddress(emailAddress.address)
-            .orElseGet { emailJpaRepository.save(EmailJpaEntity.generate(emailAddress)) }
+) : EmailRepository {
+    override fun appendIfNotExists(emailAddress: EmailAddress): String {
+        return emailJpaRepository.findByAddress(emailAddress.address).map {
+            it.updateVerificationCode()
+            emailJpaRepository.save(it)
+            it.getAuthorizedNumber()
+        }.orElseGet {
+            val newEmailEntity = EmailJpaEntity.generate(emailAddress)
+            emailJpaRepository.save(newEmailEntity)
+            newEmailEntity.getAuthorizedNumber()
+        }
     }
-
     override fun read(emailAddress: EmailAddress): Email? {
         return emailJpaRepository.findByAddress(emailAddress.address).map { it.toEmail() }.orElse(null)
-    }
-
-    override fun updateVerificationCode(emailAddress: EmailAddress): String {
-        val emailEntity = emailJpaRepository.findByAddress(emailAddress.address)
-            .orElseThrow { NotFoundException(ErrorCode.EMAIL_NOT_FOUND) }
-        emailEntity.updateVerificationCode()
-        emailJpaRepository.save(emailEntity)
-        return emailEntity.getAuthorizedNumber()
     }
 
     override fun readById(emailId: String): Email? {

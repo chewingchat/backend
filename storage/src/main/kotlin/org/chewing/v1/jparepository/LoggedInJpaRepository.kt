@@ -10,4 +10,6 @@ internal interface LoggedInJpaRepository : JpaRepository<LoggedInJpaEntity, Stri
     fun deleteByRefreshToken(refreshToken: String)
 
     fun findByRefreshToken(refreshToken: String): Optional<LoggedInJpaEntity>
+
+    fun findByRefreshTokenAndUserId(refreshToken: String, userId: String): Optional<LoggedInJpaEntity>
 }

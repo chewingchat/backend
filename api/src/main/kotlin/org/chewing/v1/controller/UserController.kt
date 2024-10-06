@@ -4,6 +4,7 @@ import org.chewing.v1.dto.request.UserRequest
 import org.chewing.v1.dto.request.UserStatusRequest
 import org.chewing.v1.dto.response.user.UserProfileResponse
 import org.chewing.v1.dto.response.user.UserStatusesResponse
+import org.chewing.v1.implementation.facade.AccountFacade
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
@@ -17,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/user")
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val accountFacade: AccountFacade
 ) {
     @GetMapping("/profile")
     fun getUserProfile(
@@ -47,7 +49,7 @@ class UserController(
         @RequestParam("category") category: FileCategory
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
-        userService.updateImage(convertedFile, userId, category)
+        userService.updateFile(convertedFile, userId, category)
         return ResponseHelper.successOnly()
     }
 
@@ -82,7 +84,7 @@ class UserController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: UserStatusRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        userService.addUserStatus(userId, request.message, request.emoji)
+        userService.createUserStatus(userId, request.message, request.emoji)
         return ResponseHelper.successCreate()
     }
 
@@ -109,7 +111,7 @@ class UserController(
     fun deleteUser(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        userService.deleteUser(userId)
+        accountFacade.deleteAccount(userId)
         return ResponseHelper.successOnly()
     }
 
@@ -127,7 +129,7 @@ class UserController(
         @RequestPart("file") file: MultipartFile,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
-        userService.changeTTS(userId, convertedFile, FileCategory.TTS)
+        userService.updateFile(convertedFile, userId, FileCategory.TTS)
         return ResponseHelper.successOnly()
     }
 }

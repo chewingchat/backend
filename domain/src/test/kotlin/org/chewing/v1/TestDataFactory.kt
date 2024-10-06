@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1
 
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.*
@@ -21,8 +21,24 @@ object TestDataFactory {
         return PushToken.of("pushTokenId", "appToken", PushToken.Provider.FCM, "deviceId")
     }
 
-    fun createEmailAddress(): String {
-        return "test@example.com"
+    fun createEmailAddress(): EmailAddress {
+        return EmailAddress.of("test@exampl.com")
+    }
+
+    fun createEmail(verificationCode: String): Email {
+        return Email.of("testEmailId", "test@exampl.com", verificationCode, LocalDateTime.now().plusMinutes(1))
+    }
+
+    fun createExpiredEmail(verificationCode: String): Email {
+        return Email.of("testEmailId", "test@example.com", verificationCode, LocalDateTime.now().minusMinutes(1))
+    }
+
+    fun createPhone(verificationCode: String): Phone {
+        return Phone.of("testPhoneId", "82", "1234567890", verificationCode, LocalDateTime.now().plusMinutes(1))
+    }
+
+    fun createRefreshToken(): RefreshToken {
+        return RefreshToken.of("refreshToken", LocalDateTime.now())
     }
 
     fun createVerificationCode(): String {
@@ -51,14 +67,10 @@ object TestDataFactory {
             "testFirstName",
             "testLastName",
             "2000-00-00",
-            Media.of(FileCategory.PROFILE,"www.example.com", 0, MediaType.IMAGE_PNG),
-            Media.of(FileCategory.BACKGROUND,"www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_PNG),
+            Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_PNG),
             AccessStatus.ACCESS
         )
-    }
-
-    fun createEmailCredential(): Credential {
-        return EmailAddress.of("test@example.com")
     }
 
     fun createPhoneNumberCredential(): Credential {

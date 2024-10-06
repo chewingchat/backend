@@ -59,7 +59,7 @@ class UserRepositoryTest2 {
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
-        val result = userRepositoryImpl.updateMedia(user, media)
+        val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
     }
 
@@ -70,7 +70,7 @@ class UserRepositoryTest2 {
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
-        val result = userRepositoryImpl.updateMedia(user, media)
+        val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
     }
 
@@ -81,7 +81,7 @@ class UserRepositoryTest2 {
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
-        val result = userRepositoryImpl.updateMedia(user, media)
+        val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
     }
 

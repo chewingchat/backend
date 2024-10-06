@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createJwtToken
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.implementation.facade.AccountFacade
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.service.AuthService
@@ -13,7 +14,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
@@ -36,6 +36,9 @@ class AuthControllerTest(
     @MockBean
     private lateinit var authService: AuthService
 
+    @MockBean
+    private lateinit var accountFacade: AccountFacade
+
     private fun performCommonSuccessResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
@@ -56,7 +59,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).makeCredential(any())
+        verify(authService).createCredential(any())
     }
 
     @Test
@@ -71,7 +74,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).makeCredential(any())
+        verify(authService).createCredential(any())
     }
 
     @Test
@@ -89,7 +92,7 @@ class AuthControllerTest(
             "deviceId" to "testDeviceId",
             "provider" to "apns"
         )
-        whenever(authService.login(any(), any(), any(), any()))
+        whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/phone/create/verify")
@@ -104,7 +107,7 @@ class AuthControllerTest(
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.access").value(AccessStatus.ACCESS.toString().lowercase())
             )
-        verify(authService).login(any(), any(), any(), any())
+        verify(accountFacade).loginAndCreateUser(any(), any(), any(), any())
     }
 
     @Test
@@ -120,7 +123,7 @@ class AuthControllerTest(
             "deviceId" to "testDeviceId",
             "provider" to "FCM"
         )
-        whenever(authService.login(any(), any(), any(), any()))
+        whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/email/create/verify")
@@ -134,7 +137,7 @@ class AuthControllerTest(
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.access").value(AccessStatus.ACCESS.toString().lowercase())
             )
-        verify(authService).login(any(), any(), any(), any())
+        verify(accountFacade).loginAndCreateUser(any(), any(), any(), any())
     }
 
     @Test
@@ -151,7 +154,6 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).makeUnusedCredential(any(), any())
     }
 
     @Test
@@ -167,7 +169,6 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).makeUnusedCredential(any(), any())
     }
 
     @Test
@@ -184,7 +185,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).changeCredential(any(), any(), any())
+        verify(accountFacade).changeCredential(any(), any(), any())
     }
 
     @Test
@@ -202,7 +203,7 @@ class AuthControllerTest(
                 .content(objectMapper.writeValueAsString(requestBody))
         )
         performCommonSuccessResponse(result)
-        verify(authService).changeCredential(any(), any(), any())
+        verify(accountFacade).changeCredential(any(), any(), any())
     }
 
     @Test

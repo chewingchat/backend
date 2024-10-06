@@ -62,16 +62,29 @@ internal class UserRepositoryImpl(
             }.orElse(null)
     }
 
-    override fun updateMedia(user: User, media: Media) : String? {
-        return userJpaRepository.findById(user.userId).map {
+    override fun updateMedia(userId: String, media: Media): Media? {
+        return userJpaRepository.findById(userId).map { user ->
+            // 수정 전 기존 미디어 정보를 반환
+            val previousMedia = when (media.category) {
+                FileCategory.PROFILE -> user.toUser().image // 기존 프로필 이미지
+                FileCategory.BACKGROUND -> user.toUser().backgroundImage // 기존 배경 이미지
+                FileCategory.TTS -> user.toTTS() // 기존 TTS 정보
+                else -> null
+            }
+
+            // 새로운 미디어 정보 업데이트
             when (media.category) {
-                FileCategory.PROFILE -> it.updateUserPictureUrl(media)
-                FileCategory.BACKGROUND -> it.updateBackgroundPictureUrl(media)
-                FileCategory.TTS -> it.updateTTS(media)
+                FileCategory.PROFILE -> user.updateUserPictureUrl(media)
+                FileCategory.BACKGROUND -> user.updateBackgroundPictureUrl(media)
+                FileCategory.TTS -> user.updateTTS(media)
                 else -> {}
             }
-            userJpaRepository.save(it)
-            user.userId
+
+            // 사용자 정보 저장
+            userJpaRepository.save(user)
+
+            // 수정 전 정보를 반환
+            previousMedia
         }.orElse(null)
     }
 

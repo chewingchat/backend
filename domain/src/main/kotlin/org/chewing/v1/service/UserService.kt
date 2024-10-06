@@ -1,10 +1,9 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.feed.FeedProcessor
-import org.chewing.v1.implementation.feed.FeedReader
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
-import org.chewing.v1.model.feed.FeedStatus
+import org.chewing.v1.model.auth.PushToken
+import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.user.*
@@ -14,26 +13,34 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userReader: UserReader,
     private val fileProcessor: FileProcessor,
-    private val userProcessor: UserProcessor,
     private val userUpdater: UserUpdater,
-    private val feedReader: FeedReader,
     private val userValidator: UserValidator,
     private val userRemover: UserRemover,
     private val userAppender: UserAppender,
-    private val feedProcessor: FeedProcessor
 ) {
     fun getUserProfile(userId: String): UserProfile {
         return userReader.readProfile(userId)
+    }
+
+    fun createUser(
+        contact: Contact,
+        appToken: String,
+        device: PushToken.Device,
+    ): User {
+        val user = userAppender.appendIfNotExist(contact)
+        userRemover.removePushToken(device)
+        userAppender.appendUserPushToken(user, appToken, device)
+        return user
     }
 
     fun makeAccess(userId: String, userContent: UserContent) {
         userUpdater.updateAccess(userId, userContent)
     }
 
-    fun updateImage(file: FileData, userId: String, category: FileCategory) {
+    fun updateFile(file: FileData, userId: String, category: FileCategory) {
         val media = fileProcessor.processNewFile(userId, file, category)
-        val preMedia = userProcessor.processChangeUrl(userId, media, category)
-        fileProcessor.processOldFile(preMedia)
+        val oldMedia = userUpdater.updateFileUrl(userId, media)
+        fileProcessor.processOldFile(oldMedia)
     }
 
 
@@ -53,15 +60,15 @@ class UserService(
         userUpdater.updateBirth(userId, birth)
     }
 
+    fun updateUserContact(userId: String, contact: Contact) {
+        userUpdater.updateContact(userId, contact)
+    }
+
     fun deleteUser(userId: String) {
         val user = userReader.read(userId)
-        userProcessor.processRemoveUser(userId)
-        val feedIds = feedReader.readsOwnedInfo(userId, FeedStatus.ALL).map { it.feedId }
-        val oldFiles = feedProcessor.processFeedRemoves(feedIds)
-        val allFiles = sequenceOf(oldFiles, listOfNotNull(user.image, user.backgroundImage))
-            .flatMap { it.asSequence() }
-            .toList()
-        fileProcessor.processOldFiles(allFiles)
+        userRemover.remove(userId)
+        userRemover.removeUserStatuses(userId)
+        fileProcessor.processOldFiles(listOf(user.image, user.backgroundImage))
     }
 
     fun selectUserStatus(userId: String, statusId: String) {
@@ -76,17 +83,11 @@ class UserService(
         userRemover.removeStatuses(statusesId)
     }
 
-    fun addUserStatus(userId: String, message: String, emoji: String) {
+    fun createUserStatus(userId: String, message: String, emoji: String) {
         userAppender.appendStatus(userId, message, emoji)
     }
 
     fun getUserStatuses(userId: String): List<UserStatus> {
         return userReader.readsUserStatus(userId)
-    }
-
-    fun changeTTS(userId: String, fileData: FileData, category: FileCategory) {
-        val media = fileProcessor.processNewFile(userId, fileData, category)
-        val preMedia = userProcessor.processChangeUrl(userId, media, category)
-        fileProcessor.processOldFile(preMedia)
     }
 }

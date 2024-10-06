@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
@@ -22,16 +22,10 @@ class AuthAppender(
     }
 
 
-    fun appendCredential(credential: Credential) {
-        when(credential) {
+    fun makeCredential(credential: Credential): String {
+        return when(credential) {
             is EmailAddress -> emailRepository.appendIfNotExists(credential)
             is PhoneNumber -> phoneRepository.appendIfNotExists(credential)
-        }
-    }
-    fun generateVerificationCode(credential: Credential): String {
-        return when(credential) {
-            is EmailAddress -> emailRepository.updateVerificationCode(credential)
-            is PhoneNumber -> phoneRepository.updateVerificationCode(credential)
         }
     }
 }
