@@ -8,5 +8,5 @@ interface LoggedInRepository {
     fun append(refreshToken: RefreshToken, userId: String)
 
     fun update(refreshToken: RefreshToken, preRefreshToken: RefreshToken)
-    fun read(refreshToken: String): RefreshToken?
+    fun read(refreshToken: String,userId: String): RefreshToken?
 }

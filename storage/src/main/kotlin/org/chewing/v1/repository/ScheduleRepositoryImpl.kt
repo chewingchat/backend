@@ -20,7 +20,7 @@ internal class ScheduleRepositoryImpl(
         scheduleJpaRepository.deleteById(scheduleId)
     }
 
-    override fun removeAll(userId: String) {
+    override fun removeUsers(userId: String) {
         scheduleJpaRepository.deleteAllByUserId(userId)
     }
 

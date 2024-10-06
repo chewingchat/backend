@@ -78,26 +78,4 @@ class PhoneRepositoryTest : DbContextTest() {
         assert(result!!.number == phoneNumber.number)
         assert(result.countryCode == phoneNumber.countryCode)
     }
-
-    @Test
-    fun `전화번호를 인증 코드로 갱신한다`() {
-        val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-        val phone = testDataGenerator.phoneEntityData(phoneNumber)
-
-        val result = phoneRepositoryImpl.updateVerificationCode(phoneNumber)
-        assert(result.isNotEmpty())
-        assert(result != phone.validationCode.code)
-    }
-
-    @Test
-    fun `잘못된 접근 - 전화번호를 인증 코드로 갱신할 때 전화번호가 없으면 예외가 발생한다`() {
-        val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-
-        val exception = assertThrows<NotFoundException> {
-            phoneRepositoryImpl.updateVerificationCode(phoneNumber)
-        }
-        assert(exception.errorCode == ErrorCode.PHONE_NUMBER_NOT_FOUND)
-    }
-
-
 }

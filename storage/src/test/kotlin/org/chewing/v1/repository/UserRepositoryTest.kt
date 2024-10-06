@@ -103,7 +103,7 @@ class UserRepositoryTest : DbContextTest() {
         val user = testDataGenerator.userEntityEmailData(email)
         val media = MediaProvider.buildProfileContent()
 
-        userRepositoryImpl.updateMedia(user, media)
+        userRepositoryImpl.updateMedia(user.userId, media)
         val result = userJpaRepository.findById(user.userId).get().toUser()
 
         assert(result.image.type == media.type)
@@ -115,7 +115,7 @@ class UserRepositoryTest : DbContextTest() {
         val user = testDataGenerator.userEntityEmailData(email)
         val media = MediaProvider.buildBackgroundContent()
 
-        userRepositoryImpl.updateMedia(user, media)
+        userRepositoryImpl.updateMedia(user.userId, media)
         val result = userJpaRepository.findById(user.userId).get().toUser()
 
         assert(result.backgroundImage.type == media.type)
@@ -127,7 +127,7 @@ class UserRepositoryTest : DbContextTest() {
         val user = testDataGenerator.userEntityEmailData(email)
         val media = MediaProvider.buildTTSContent()
 
-        userRepositoryImpl.updateMedia(user, media)
+        userRepositoryImpl.updateMedia(user.userId, media)
         val result = userJpaRepository.findById(user.userId).get().toTTS()
         assert(result.url == media.url)
 

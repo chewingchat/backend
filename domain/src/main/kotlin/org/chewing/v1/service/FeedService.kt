@@ -55,6 +55,11 @@ class FeedService(
         fileProcessor.processOldFiles(oldMedias)
     }
 
+    fun deleteUsers(userId: String){
+        val feedIds = feedReader.readsOwnedInfo(userId, FeedStatus.ALL).map { it.feedId }
+        val oldFiles = feedProcessor.processFeedRemoves(feedIds)
+        fileProcessor.processOldFiles(oldFiles)
+    }
 
     fun hides(userId: String, feedIds: List<String>, target: FeedTarget) {
         feedValidator.isFeedsOwner(feedIds, userId)

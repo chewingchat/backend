@@ -22,7 +22,7 @@ class UserRemover(
         pushNotificationRepository.remove(device)
     }
     @Transactional
-    fun removeAllStatus(userId: String){
+    fun removeUserStatuses(userId: String){
         statusRepository.removeAllByUserId(userId)
     }
 

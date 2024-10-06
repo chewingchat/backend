@@ -24,8 +24,8 @@ class UserUpdater(
     /**
      * 주어진 사용자 정보를 업데이트합니다.
      */
-    fun updateFileUrl(user: User, media: Media) {
-        userRepository.updateMedia(user, media) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+    fun updateFileUrl(userId: String, media: Media):Media {
+        return userRepository.updateMedia(userId, media) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional

@@ -11,12 +11,20 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class PhoneRepositoryImpl(
     private val phoneJpaRepository: PhoneJpaRepository
-):PhoneRepository {
-    override fun appendIfNotExists(phoneNumber: PhoneNumber){
-        phoneJpaRepository.findByNumberAndCountryCode(
+) : PhoneRepository {
+    override fun appendIfNotExists(phoneNumber: PhoneNumber): String {
+        return phoneJpaRepository.findByNumberAndCountryCode(
             phoneNumber.number,
             phoneNumber.countryCode
-        ).orElseGet { phoneJpaRepository.save(PhoneJpaEntity.generate(phoneNumber)) }
+        ).map {
+            it.updateVerificationCode()
+            phoneJpaRepository.save(it)
+            it.getVerifiedNumber()
+        }.orElseGet {
+            val newPhoneEntity = PhoneJpaEntity.generate(phoneNumber)
+            phoneJpaRepository.save(newPhoneEntity)
+            newPhoneEntity.getVerifiedNumber()
+        }
     }
 
     override fun read(phoneNumber: PhoneNumber): Phone? {
@@ -24,15 +32,6 @@ internal class PhoneRepositoryImpl(
             phoneNumber.number,
             phoneNumber.countryCode
         ).map { it.toPhone() }.orElse(null)
-    }
-
-    override fun updateVerificationCode(phoneNumber: PhoneNumber): String {
-        val phoneEntity =
-            phoneJpaRepository.findByNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
-                .orElseThrow { NotFoundException(ErrorCode.PHONE_NUMBER_NOT_FOUND) }
-        phoneEntity.updateVerificationCode()
-        phoneJpaRepository.save(phoneEntity)
-        return phoneEntity.getVerifiedNumber()
     }
 
     override fun readById(phoneNumberId: String): Phone? {

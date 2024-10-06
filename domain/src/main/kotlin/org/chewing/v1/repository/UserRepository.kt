@@ -14,7 +14,7 @@ interface UserRepository {
     fun reads(userIds: List<String>): List<User>
     fun readByContact(contact: Contact): User?
     fun remove(userId: String): String?
-    fun updateMedia(user: User, media: Media): String?
+    fun updateMedia(userId: String, media: Media): Media?
     fun updateName(userId: String, userName: UserName): String?
     fun updateContact(userId: String, contact: Contact): String?
     fun updateAccess(userId: String, userContent: UserContent): String?

@@ -1,8 +1,6 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.error.ConflictException
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.error.*
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
@@ -25,15 +23,15 @@ class AuthReader(
     fun readContact(targetContact: Credential): Contact {
         return when (targetContact) {
             is EmailAddress -> emailRepository.read(targetContact)
-                ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
 
             is PhoneNumber -> phoneRepository.read(targetContact)
-                ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
+                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
         }
     }
 
-    fun readRefreshToken(refreshToken: String): RefreshToken {
-        return loggedInRepository.read(refreshToken) ?: throw ConflictException(ErrorCode.INVALID_TOKEN)
+    fun readRefreshToken(refreshToken: String, userId: String): RefreshToken {
+        return loggedInRepository.read(refreshToken, userId) ?: throw AuthorizationException(ErrorCode.INVALID_TOKEN)
     }
 
     fun readEmailByEmailId(emailId: String): Email? {

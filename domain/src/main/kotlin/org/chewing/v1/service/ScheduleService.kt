@@ -23,6 +23,10 @@ class ScheduleService(
         scheduleRemover.remove(scheduleId)
     }
 
+    fun deleteUsers(userId: String) {
+        scheduleRemover.removeUsers(userId)
+    }
+
     fun fetches(userId: String, type: ScheduleType): List<Schedule> {
         return scheduleReader.reads(userId, type)
     }
