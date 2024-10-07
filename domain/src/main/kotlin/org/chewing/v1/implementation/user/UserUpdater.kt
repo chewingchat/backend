@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class UserUpdater(
     private val userRepository: UserRepository,
-    private val statusRepository: UserStatusRepository
 ) {
     /**
      * 주어진 사용자 정보를 업데이트합니다.
@@ -46,16 +45,5 @@ class UserUpdater(
     @Transactional
     fun updateBirth(userId: String, birth: String) {
         userRepository.updateBirth(userId, birth) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-    }
-
-    @Transactional
-    fun updateSelectedStatusTrue(userId: String, statusId: String) {
-        statusRepository.updateSelectedStatusFalse(userId)
-        statusRepository.updateSelectedStatusTrue(userId, statusId)
-    }
-
-    @Transactional
-    fun updateDeselectedStatusFalse(userId: String) {
-        statusRepository.updateSelectedStatusFalse(userId)
     }
 }

@@ -5,7 +5,7 @@ import org.chewing.v1.implementation.comment.CommentLocker
 import org.chewing.v1.implementation.comment.CommentReader
 import org.chewing.v1.implementation.comment.CommentValidator
 import org.chewing.v1.implementation.feed.FeedValidator
-import org.chewing.v1.implementation.friend.FriendReader
+import org.chewing.v1.implementation.friendship.FriendShipReader
 import org.chewing.v1.implementation.notification.NotificationProcessor
 import org.chewing.v1.implementation.user.UserReader
 import org.chewing.v1.model.comment.Comment
@@ -20,7 +20,7 @@ class CommentService(
     private val feedValidator: FeedValidator,
     private val commentValidator: CommentValidator,
     private val userReader: UserReader,
-    private val friendReader: FriendReader,
+    private val friendShipReader: FriendShipReader,
     private val commentEnricher: CommentEnricher,
     private val notificationProcessor: NotificationProcessor
 ) {
@@ -43,7 +43,7 @@ class CommentService(
     fun fetchComment(userId: String, feedId: String): List<Comment> {
         feedValidator.isOwned(feedId, userId)
         val comments = commentReader.reads(feedId)
-        val friends = friendReader.readsAccessIdIn(comments.map { it.userId }, userId)
+        val friends = friendShipReader.readsAccessIdIn(comments.map { it.userId }, userId)
         val users = userReader.reads(friends.map { it.friendId })
         return commentEnricher.enrich(comments, friends, users)
     }

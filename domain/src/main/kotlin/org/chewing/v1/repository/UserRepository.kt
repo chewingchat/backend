@@ -5,15 +5,16 @@ import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.user.UserAccount
 import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepository {
     fun read(userId: String): User?
-    fun readContactId(userId: String): Pair<String?, String?>
+    fun readAccount(userId: String): UserAccount?
     fun reads(userIds: List<String>): List<User>
     fun readByContact(contact: Contact): User?
-    fun remove(userId: String): String?
+    fun remove(userId: String): User?
     fun updateMedia(userId: String, media: Media): Media?
     fun updateName(userId: String, userName: UserName): String?
     fun updateContact(userId: String, contact: Contact): String?

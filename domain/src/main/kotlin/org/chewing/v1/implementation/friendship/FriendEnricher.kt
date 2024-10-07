@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.friend
+package org.chewing.v1.implementation.friendship
 
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserStatus

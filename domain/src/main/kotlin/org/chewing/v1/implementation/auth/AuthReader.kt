@@ -1,12 +1,11 @@
 package org.chewing.v1.implementation.auth
 
 import org.chewing.v1.error.*
+import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.contact.Email
-import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.EmailRepository
 import org.chewing.v1.repository.LoggedInRepository
@@ -34,11 +33,10 @@ class AuthReader(
         return loggedInRepository.read(refreshToken, userId) ?: throw AuthorizationException(ErrorCode.INVALID_TOKEN)
     }
 
-    fun readEmailByEmailId(emailId: String): Email? {
-        return emailRepository.readById(emailId)
-    }
-
-    fun readPhoneByPhoneNumberId(phoneNumberId: String): Phone? {
-        return phoneRepository.readById(phoneNumberId)
+    fun readContactById(id: String, contactType: ContactType): Contact? {
+        return when (contactType) {
+            ContactType.EMAIL -> emailRepository.readById(id)
+            ContactType.PHONE -> phoneRepository.readById(id)
+        }
     }
 }

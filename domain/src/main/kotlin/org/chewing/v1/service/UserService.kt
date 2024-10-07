@@ -4,6 +4,7 @@ import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.user.*
@@ -18,8 +19,16 @@ class UserService(
     private val userRemover: UserRemover,
     private val userAppender: UserAppender,
 ) {
-    fun getUserProfile(userId: String): UserProfile {
-        return userReader.readProfile(userId)
+    fun getUserAccount(userId: String): UserAccount {
+        return userReader.readAccount(userId)
+    }
+
+    fun getUsers(userIds: List<String>): List<User> {
+        return userReader.reads(userIds)
+    }
+
+    fun getUserByContact(contact: Contact): User {
+        return userReader.readByContact(contact)
     }
 
     fun createUser(
@@ -45,11 +54,10 @@ class UserService(
 
 
     //사용자의 통합된 정보를 가져옴
-    fun getFulledAccessUser(userId: String): Pair<User, UserStatus> {
+    fun getAccessUser(userId: String): User {
         val user = userReader.read(userId)
         userValidator.isUserAccess(user)
-        val userStatus = userReader.readSelectedStatus(userId)
-        return Pair(user, userStatus)
+        return user
     }
 
     fun updateName(userId: String, userName: UserName) {
@@ -60,34 +68,21 @@ class UserService(
         userUpdater.updateBirth(userId, birth)
     }
 
+    fun createSearchKeyword(userId: String, keyword: String) {
+        userAppender.appendSearchKeyword(userId, keyword)
+    }
+
+    fun getSearchKeywords(userId: String): List<UserSearch> {
+        return userReader.readSearched(userId)
+    }
+
+
     fun updateUserContact(userId: String, contact: Contact) {
         userUpdater.updateContact(userId, contact)
     }
 
     fun deleteUser(userId: String) {
-        val user = userReader.read(userId)
-        userRemover.remove(userId)
-        userRemover.removeUserStatuses(userId)
-        fileProcessor.processOldFiles(listOf(user.image, user.backgroundImage))
-    }
-
-    fun selectUserStatus(userId: String, statusId: String) {
-        userUpdater.updateSelectedStatusTrue(userId, statusId)
-    }
-
-    fun deselectUserStatus(userId: String) {
-        userUpdater.updateDeselectedStatusFalse(userId)
-    }
-
-    fun deleteUserStatuses(statusesId: List<String>) {
-        userRemover.removeStatuses(statusesId)
-    }
-
-    fun createUserStatus(userId: String, message: String, emoji: String) {
-        userAppender.appendStatus(userId, message, emoji)
-    }
-
-    fun getUserStatuses(userId: String): List<UserStatus> {
-        return userReader.readsUserStatus(userId)
+        val removedUser = userRemover.remove(userId)
+        fileProcessor.processOldFiles(listOf(removedUser.image, removedUser.backgroundImage))
     }
 }

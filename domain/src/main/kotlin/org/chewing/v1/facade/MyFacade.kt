@@ -1,23 +1,23 @@
-package org.chewing.v1.implementation.facade
+package org.chewing.v1.facade
 
 import org.chewing.v1.implementation.my.MyAggregator
 import org.chewing.v1.model.comment.UserCommentedInfo
-import org.chewing.v1.service.CommentService
-import org.chewing.v1.service.FeedService
-import org.chewing.v1.service.FriendService
+import org.chewing.v1.service.*
 import org.springframework.stereotype.Service
 
 @Service
 class MyFacade(
     private val commentService: CommentService,
     private val feedService: FeedService,
-    private val friendService: FriendService,
-    private val myAggregator: MyAggregator
+    private val friendShipService: FriendShipService,
+    private val myAggregator: MyAggregator,
+    private val userService: UserService
 ) {
     fun getFeedUserCommented(userId: String): List<UserCommentedInfo> {
         val comments = commentService.getUserCommented(userId)
         val feeds = feedService.getFeeds(comments.map { it.feedId })
-        val friends = friendService.getFriends(feeds.map { it.feed.userId }, userId)
-        return myAggregator.aggregateUserCommented(feeds, friends, comments)
+        val friendShips = friendShipService.getAccessFriendShipsIn(feeds.map { it.feed.userId }, userId)
+        val users = userService.getUsers(friendShips.map { it.friendId })
+        return myAggregator.aggregateUserCommented(friendShips, comments, users, feeds)
     }
 }

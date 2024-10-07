@@ -212,9 +212,7 @@ class TestDataGenerator(
 
     fun friendShipEntityData(userId: String, friendId: String, access: AccessStatus) {
         val friendName = UserProvider.buildFriendName()
-        val user = UserProvider.buildNormal(userId)
-        val targetUser = UserProvider.buildNormal(friendId)
-        val entity = FriendShipJpaEntity.generate(user, friendName, targetUser)
+        val entity = FriendShipJpaEntity.generate(userId, friendId, friendName)
         when(access) {
             AccessStatus.DELETE -> entity.updateDelete()
             AccessStatus.BLOCK -> entity.updateBlock()

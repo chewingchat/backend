@@ -1,18 +1,17 @@
-package org.chewing.v1.implementation.friend
+package org.chewing.v1.implementation.friendship
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.repository.FriendShipRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.client.HttpClientErrorException.NotFound
 
 @Component
-class FriendRemover(
+class FriendShipRemover(
     private val friendShipRepository: FriendShipRepository
 ) {
     @Transactional
-    fun removeFriend(userId: String, friendId: String) {
+    fun removeFriendShip(userId: String, friendId: String) {
         friendShipRepository.remove(userId, friendId) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
         friendShipRepository.remove(friendId, userId) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }

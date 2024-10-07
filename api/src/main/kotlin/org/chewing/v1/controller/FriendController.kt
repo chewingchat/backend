@@ -1,9 +1,10 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.request.*
+import org.chewing.v1.facade.FriendFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.FriendService
+import org.chewing.v1.service.FriendShipService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/friend")
 class FriendController(
-    private val friendService: FriendService
+    private val friendFacade: FriendFacade,
+    private val friendShipService: FriendShipService
 ) {
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")
@@ -19,7 +21,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(userId, request.toUserName(), request.toEmail())
+        friendFacade.addFriend(userId, request.toUserName(), request.toEmail())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -29,7 +31,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        friendService.addFriend(userId, request.toUserName(), request.toPhoneNumber())
+        friendFacade.addFriend(userId, request.toUserName(), request.toPhoneNumber())
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
@@ -40,7 +42,7 @@ class FriendController(
         @RequestBody request: FriendRequest.UpdateFavorite
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = request
-        friendService.changeFriendFavorite(userId, friendId, favorite)
+        friendShipService.changeFriendFavorite(userId, friendId, favorite)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
@@ -50,7 +52,7 @@ class FriendController(
         @RequestBody request: FriendRequest.Delete
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
-        friendService.removeFriend(userId, friendId)
+        friendShipService.removeFriendShip(userId, friendId)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
@@ -61,7 +63,7 @@ class FriendController(
         @RequestBody request: FriendRequest.Block
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
-        friendService.blockFriend(userId, friendId)
+        friendShipService.blockFriendShip(userId, friendId)
         //성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
@@ -71,7 +73,7 @@ class FriendController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendRequest.UpdateName
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        friendService.changeFriendName(userId, request.toFriendId(), request.toFriendName())
+        friendShipService.changeFriendName(userId, request.toFriendId(), request.toFriendName())
         //생성 완료 응답 201 반환
         return ResponseHelper.successOnly()
     }

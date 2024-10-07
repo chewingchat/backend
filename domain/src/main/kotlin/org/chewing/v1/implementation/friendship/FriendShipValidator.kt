@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.friend
+package org.chewing.v1.implementation.friendship
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -8,7 +8,7 @@ import org.chewing.v1.repository.FriendShipRepository
 import org.springframework.stereotype.Component
 
 @Component
-class FriendValidator(
+class FriendShipValidator(
     private val friendShipRepository: FriendShipRepository
 ) {
     fun validateAddAllowed(userId: String, friendId: String) {

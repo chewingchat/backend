@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository
 internal interface FriendShipJpaRepository : JpaRepository<FriendShipJpaEntity, FriendShipId> {
 
     fun findAllByIdUserIdAndType(userId: String, type: AccessStatus): List<FriendShipJpaEntity>
+    fun findAllByIdUserIdAndTypeOrderByFirstNameAscLastNameAsc(userId: String, type: AccessStatus): List<FriendShipJpaEntity>
+    fun findAllByIdUserIdAndTypeOrderByFavoriteAscFirstNameAscLastNameAsc(userId: String, type: AccessStatus): List<FriendShipJpaEntity>
     fun findAllByIdInAndType(friendShipIds: List<FriendShipId>, type: AccessStatus): List<FriendShipJpaEntity>
 }

@@ -25,12 +25,12 @@ class UserSearchRepositoryTest : DbContextTest() {
         userSearchRepositoryImpl.appendHistory(userId, keyword)
 
         // then
-        val searchHistory = userSearchJpaRepository.findAllByUserId(userId)
+        val searchHistory = userSearchJpaRepository.findAllByUserIdOrderByCreatedAt(userId)
         assert(searchHistory.size == 1)
     }
 
     @Test
-    fun `검색 히스토리 조회`() {
+    fun `검색 히스토리 조회 A`() {
         // given
         val userId = "userId"
         val keyword = "keyword"

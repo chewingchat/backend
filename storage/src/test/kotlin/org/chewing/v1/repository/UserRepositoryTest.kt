@@ -154,9 +154,9 @@ class UserRepositoryTest : DbContextTest() {
         val newEmail = EmailProvider.buildNew()
 
         userRepositoryImpl.updateContact(user.userId, newEmail)
-        val result = userJpaRepository.findById(user.userId).get().getEmailId()
+        val result = userJpaRepository.findById(user.userId).get().toUserAccount()
 
-        assert(result != oldEmail.emailId)
+        assert(result.emailId != oldEmail.emailId)
     }
 
     @Test
@@ -211,25 +211,15 @@ class UserRepositoryTest : DbContextTest() {
     }
 
     @Test
-    fun `연락 아이디 읽기`(){
+    fun `유저 게정 읽기 읽기`(){
         val email = EmailProvider.buildNormal()
-        val phone = PhoneProvider.buildNormal()
         val user = testDataGenerator.userEntityEmailData(email)
 
+        val result = userRepositoryImpl.readAccount(user.userId)
 
-
-        userJpaRepository.findById(user.userId).ifPresent {
-            it.updateContact(phone)
-            userJpaRepository.save(it)
-        }
-
-        val entity = userJpaRepository.findById(user.userId)
-
-        val (emailId, phoneId) = userRepositoryImpl.readContactId(user.userId)
-
-
-        assert(emailId == entity.get().getEmailId())
-        assert(phoneId == entity.get().getPhoneNumberId())
+        assert(result != null)
+        assert(result!!.user.userId == user.userId)
+        assert(result.emailId == email.emailId)
     }
 
     @Test

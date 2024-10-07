@@ -1,12 +1,11 @@
-package org.chewing.v1.implementation.facade
+package org.chewing.v1.facade
 
+import org.chewing.v1.model.auth.Account
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.auth.PushToken
-import org.chewing.v1.service.AuthService
-import org.chewing.v1.service.FeedService
-import org.chewing.v1.service.ScheduleService
-import org.chewing.v1.service.UserService
+import org.chewing.v1.model.contact.ContactType
+import org.chewing.v1.service.*
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,6 +13,7 @@ class AccountFacade(
     private val authService: AuthService,
     private val userService: UserService,
     private val feedService: FeedService,
+    private val userStatusService: UserStatusService,
     private val scheduleService: ScheduleService
 ) {
     fun loginAndCreateUser(
@@ -30,13 +30,29 @@ class AccountFacade(
     fun changeCredential(
         userId: String, credential: Credential, verificationCode: String
     ) {
-        val contact = authService.verify(credential,verificationCode)
-        userService.updateUserContact(userId,contact)
+        val contact = authService.verify(credential, verificationCode)
+        userService.updateUserContact(userId, contact)
     }
 
     fun deleteAccount(userId: String) {
         userService.deleteUser(userId)
+        userStatusService.deleteAllUserStatuses(userId)
         feedService.deleteUsers(userId)
         scheduleService.deleteUsers(userId)
     }
+
+    fun getAccount(userId: String): Account {
+        val userAccount = userService.getUserAccount(userId)
+
+        val email = userAccount.emailId?.let {
+            authService.getContactById(it, ContactType.EMAIL)
+        }
+
+        val phone = userAccount.phoneId?.let {
+            authService.getContactById(it, ContactType.PHONE)
+        }
+
+        return Account.of(userAccount, email, phone)
+    }
+
 }

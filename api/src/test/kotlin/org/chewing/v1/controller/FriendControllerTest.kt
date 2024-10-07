@@ -2,7 +2,8 @@ package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.config.TestSecurityConfig
-import org.chewing.v1.service.FriendService
+import org.chewing.v1.facade.FriendFacade
+import org.chewing.v1.service.FriendShipService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +27,9 @@ class FriendControllerTest(
     private val objectMapper: ObjectMapper,
 ) {
     @MockBean
-    private lateinit var friendService: FriendService
+    private lateinit var friendFacade: FriendFacade
+    @MockBean
+    private lateinit var friendShipService: FriendShipService
 
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isCreated)
