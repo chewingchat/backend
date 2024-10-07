@@ -7,6 +7,8 @@ import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.model.user.User
 import java.time.format.DateTimeFormatter
 
 data class MyCommentResponse(
@@ -19,11 +21,12 @@ data class MyCommentResponse(
 
             return MyCommentResponse(
                 feedMap.map { (_, commentsPerFeed) ->
-                    val firstEntry = commentsPerFeed.first()
-                    val feed = firstEntry.feed
-                    val friend = firstEntry.friend
+                    val feed = commentsPerFeed.first().feed
+                    val friendShip = commentsPerFeed.first().friendShip
+                    val user = commentsPerFeed.first().user
                     val comments = commentsPerFeed.map { it.comment }
-                    MyCommentFeedResponse.of(feed, friend, comments)
+
+                    MyCommentFeedResponse.of(feed, friendShip, user, comments)
                 }
             )
         }
@@ -37,16 +40,17 @@ data class MyCommentResponse(
         companion object {
             fun of(
                 feed: Feed,
-                friend: Friend,
+                friendShip: FriendShip,
+                user: User,
                 comments: List<CommentInfo>
             ): MyCommentFeedResponse {
                 return MyCommentFeedResponse(
                     FriendInfoResponse.of(
-                        friendId = friend.user.userId,
-                        userName = friend.name,
-                        imageUrl = friend.user.image.url,
-                        imageType = friend.user.image.type.toString().lowercase(),
-                        access = friend.user.status
+                        friendId = friendShip.friendId,
+                        userName = friendShip.friendName,
+                        imageUrl = user.image.url,
+                        imageType = user.image.type.toString().lowercase(),
+                        access = user.status
                     ),
                     MainFeedResponse.of(feed),
                     comments.map { CommentResponse.of(it) }

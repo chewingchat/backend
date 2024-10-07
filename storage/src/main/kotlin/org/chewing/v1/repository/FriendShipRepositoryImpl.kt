@@ -7,14 +7,20 @@ import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.model.friend.FriendSortCriteria
 import org.springframework.stereotype.Repository
 
 @Repository
 internal class FriendShipRepositoryImpl(
     private val friendShipJpaRepository: FriendShipJpaRepository
 ) : FriendShipRepository {
-    override fun readsOwned(userId: String, accessStatus: AccessStatus): List<FriendShip> {
-        return friendShipJpaRepository.findAllByIdUserIdAndType(userId, accessStatus).map { it.toFriendShip() }
+    override fun readsOwned(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip> {
+        return when (sort) {
+            FriendSortCriteria.NAME -> friendShipJpaRepository
+                .findAllByIdUserIdAndTypeOrderByFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
+            FriendSortCriteria.FAVORITE -> friendShipJpaRepository
+                .findAllByIdUserIdAndTypeOrderByFavoriteAscFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
+        }
     }
 
     override fun reads(
@@ -26,8 +32,8 @@ internal class FriendShipRepositoryImpl(
             .map { it.toFriendShip() }
     }
 
-    override fun append(user: User, friendName: UserName, targetUser: User) {
-        friendShipJpaRepository.save(FriendShipJpaEntity.generate(user, friendName, targetUser))
+    override fun append(userId: String, targetUserId: String, targetUserName: UserName) {
+        friendShipJpaRepository.save(FriendShipJpaEntity.generate(userId, targetUserId, targetUserName))
     }
 
     override fun remove(userId: String, friendId: String): String? {

@@ -3,7 +3,6 @@ package org.chewing.v1.jpaentity.friend
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendShip
 import org.hibernate.annotations.DynamicInsert
@@ -16,18 +15,18 @@ internal class FriendShipJpaEntity(
     @EmbeddedId
     private val id: FriendShipId,
     private var favorite: Boolean,
-    private var friendFirstName: String,
-    private var friendLastName: String,
+    private var firstName: String,
+    private var lastName: String,
     @Enumerated(EnumType.STRING)
     private var type: AccessStatus
 ) : BaseEntity() {
     companion object {
-        fun generate(user: User, friendName: UserName, targetUser: User): FriendShipJpaEntity {
+        fun generate(userId: String, targetUserId: String, targetUserName: UserName): FriendShipJpaEntity {
             return FriendShipJpaEntity(
-                id = FriendShipId(user.userId, targetUser.userId),
+                id = FriendShipId(userId, targetUserId),
                 favorite = false,
-                friendFirstName = friendName.firstName(),
-                friendLastName = friendName.lastName(),
+                firstName = targetUserName.firstName(),
+                lastName = targetUserName.lastName(),
                 type = AccessStatus.ACCESS
             )
         }
@@ -38,14 +37,14 @@ internal class FriendShipJpaEntity(
     }
 
     fun updateName(friendName: UserName) {
-        this.friendFirstName = friendName.firstName()
-        this.friendLastName = friendName.lastName()
+        this.firstName = friendName.firstName()
+        this.lastName = friendName.lastName()
     }
 
     fun toFriendShip(): FriendShip {
         return FriendShip.of(
             friendId = id.friendId,
-            friendName = UserName.of(friendFirstName, friendLastName),
+            friendName = UserName.of(firstName, lastName),
             isFavorite = favorite,
             type = type
         )

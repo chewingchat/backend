@@ -15,7 +15,7 @@ internal class UserSearchRepositoryImpl(
     }
 
     override fun readSearchHistory(userId: String): List<UserSearch> {
-        return userSearchJpaRepository.findAllByUserId(userId).map {
+        return userSearchJpaRepository.findAllByUserIdOrderByCreatedAt(userId).map {
             it.toFriendSearch()
         }
     }

@@ -1,7 +1,5 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jparepository.UserJpaRepository
 import org.chewing.v1.model.user.User
@@ -12,6 +10,7 @@ import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.user.UserAccount
 
 import org.springframework.stereotype.Repository
 
@@ -24,9 +23,11 @@ internal class UserRepositoryImpl(
         return userEntity.map { it.toUser() }.orElse(null)
     }
 
-    override fun readContactId(userId: String): Pair<String?, String?> {
+    override fun readAccount(userId: String): UserAccount? {
         val userEntity = userJpaRepository.findById(userId)
-        return userEntity.map { it.getEmailId() to it.getPhoneNumberId() }.orElse(null to null)
+        return userEntity.map {
+            it.toUserAccount()
+        }.orElse(null)
     }
 
     override fun reads(userIds: List<String>): List<User> {
@@ -53,12 +54,12 @@ internal class UserRepositoryImpl(
         }
     }
 
-    override fun remove(userId: String): String? {
+    override fun remove(userId: String): User? {
         return userJpaRepository.findById(userId)
             .map { entity ->
                 entity.updateDelete()
                 userJpaRepository.save(entity)
-                userId
+                entity.toUser()
             }.orElse(null)
     }
 

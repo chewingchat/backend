@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 internal interface UserSearchJpaRepository : JpaRepository<UserSearchJpaEntity, String> {
-    fun findAllByUserId(userId: String): List<UserSearchJpaEntity>
+    fun findAllByUserIdOrderByCreatedAt(userId: String): List<UserSearchJpaEntity>
 }

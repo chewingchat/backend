@@ -1,8 +1,11 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.implementation.auth.*
-import org.chewing.v1.model.auth.*
+import org.chewing.v1.model.auth.Credential
+import org.chewing.v1.model.auth.JwtToken
+import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.user.User
 
 import org.springframework.stereotype.Service
@@ -51,5 +54,12 @@ class AuthService(
         authValidator.validateContactIsUsed(credential, userId)
         val verificationCode = authAppender.makeCredential(credential)
         authSender.sendVerificationCode(credential, verificationCode)
+    }
+
+    fun getContactById(id: String, contactType: ContactType): Contact? {
+        return authReader.readContactById(id, contactType)
+    }
+    fun getContact(credential: Credential): Contact {
+        return authReader.readContact(credential)
     }
 }

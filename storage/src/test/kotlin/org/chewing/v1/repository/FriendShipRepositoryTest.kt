@@ -4,6 +4,7 @@ import org.chewing.v1.config.DbContextTest
 import org.chewing.v1.jpaentity.friend.FriendShipId
 import org.chewing.v1.jparepository.FriendShipJpaRepository
 import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.friend.FriendSortCriteria
 import org.chewing.v1.repository.support.TestDataGenerator
 import org.chewing.v1.repository.support.UserProvider
 import org.junit.jupiter.api.Test
@@ -24,13 +25,10 @@ class FriendShipRepositoryTest : DbContextTest() {
     fun `친구 관계를 저장한다 상대 친구를 내가 원하는 이름으로 저장한다`() {
         val userId = "userId"
         val friendId = "friendId"
-        // given
-        val user = UserProvider.buildNormal(userId)
         val friendName = UserProvider.buildFriendName()
-        val targetUser = UserProvider.buildFriend(friendId)
 
         // when
-        friendShipRepositoryImpl.append(user, friendName, targetUser)
+        friendShipRepositoryImpl.append(userId, friendId, friendName)
 
         // then
         val friendShipTarget = friendShipJpaRepository.findById(FriendShipId(userId, friendId)).get().toFriendShip()
@@ -129,7 +127,7 @@ class FriendShipRepositoryTest : DbContextTest() {
         testDataGenerator.friendShipEntityData(userId, friendId2, AccessStatus.BLOCK)
 
 
-        val friendShips = friendShipRepositoryImpl.readsOwned(userId, AccessStatus.ACCESS)
+        val friendShips = friendShipRepositoryImpl.readsOwned(userId, AccessStatus.ACCESS, FriendSortCriteria.NAME)
 
         assert(friendShips.isNotEmpty())
         assert(friendShips.size == 1)

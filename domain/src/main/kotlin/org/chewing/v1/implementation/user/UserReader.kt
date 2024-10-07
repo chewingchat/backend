@@ -7,7 +7,7 @@ import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.user.UserProfile
+import org.chewing.v1.model.user.UserAccount
 import org.chewing.v1.model.user.UserStatus
 import org.chewing.v1.repository.PushNotificationRepository
 import org.chewing.v1.repository.UserRepository
@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component
 @Component
 class UserReader(
     private val userRepository: UserRepository,
-    private val userStatusRepository: UserStatusRepository,
-    private val authReader: AuthReader,
     private val pushNotificationRepository: PushNotificationRepository,
     private val userSearchRepository: UserSearchRepository
 ) {
@@ -37,12 +35,8 @@ class UserReader(
         return userRepository.read(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
-    fun readProfile(userId: String): UserProfile {
-        val user = userRepository.read(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
-        val (emailId, phoneNumberId) = userRepository.readContactId(userId)
-        val email = emailId?.let { authReader.readEmailByEmailId(it) }
-        val phoneNumber = phoneNumberId?.let { authReader.readPhoneByPhoneNumberId(it) }
-        return UserProfile.of(user, email, phoneNumber)
+    fun readAccount(userId: String): UserAccount {
+       return userRepository.readAccount(userId) ?: throw NotFoundException(ErrorCode.USER_NOT_FOUND)
     }
 
     fun readByContact(contact: Contact): User {
@@ -56,18 +50,6 @@ class UserReader(
     //유저의 최근 친구 검색 목록을 읽어옴
     fun readSearched(userId: String): List<UserSearch> {
         return userSearchRepository.readSearchHistory(userId)
-    }
-
-    fun readSelectedStatuses(userIds: List<String>): List<UserStatus> {
-        return userStatusRepository.readSelectedUsersStatus(userIds)
-    }
-
-    fun readSelectedStatus(userId: String): UserStatus {
-        return userStatusRepository.readSelectedUserStatus(userId)
-    }
-
-    fun readsUserStatus(userId: String): List<UserStatus> {
-        return userStatusRepository.readsUserStatus(userId)
     }
 
     fun readsPushToken(userId: String): List<PushToken> {

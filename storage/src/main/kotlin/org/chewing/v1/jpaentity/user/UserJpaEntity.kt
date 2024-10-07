@@ -11,6 +11,7 @@ import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.user.UserAccount
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -138,11 +139,11 @@ internal class UserJpaEntity(
         return Media.of(FileCategory.TTS, this.ttsUrl ?: "", 0, this.ttsType)
     }
 
-    fun getEmailId(): String? {
-        return this.emailId
-    }
-
-    fun getPhoneNumberId(): String? {
-        return this.phoneNumberId
+    fun toUserAccount(): UserAccount {
+        return UserAccount.of(
+            this.toUser(),
+            this.emailId,
+            this.phoneNumberId
+        )
     }
 }

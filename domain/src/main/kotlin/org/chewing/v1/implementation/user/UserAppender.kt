@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 @Component
 class UserAppender(
     private val userRepository: UserRepository,
-    private val userStatusRepository: UserStatusRepository,
     private val pushNotificationRepository: PushNotificationRepository,
     private val userSearchRepository: UserSearchRepository
 ) {
@@ -25,11 +24,7 @@ class UserAppender(
         return userRepository.append(contact)
     }
 
-    fun appendSearched(userId: String, keyword: String) {
+    fun appendSearchKeyword(userId: String, keyword: String) {
         return userSearchRepository.appendHistory(userId, keyword)
-    }
-
-    fun appendStatus(userId: String, statusMessage: String, emoji: String) {
-        userStatusRepository.append(userId, statusMessage, emoji)
     }
 }
