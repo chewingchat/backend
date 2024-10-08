@@ -1,7 +1,6 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.friend.FriendSortCriteria
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface FriendShipRepository {
 
-    fun readsOwned(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip>
+    fun readsAccess(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip>
     fun reads(friendIds: List<String>, userId: String, accessStatus: AccessStatus): List<FriendShip>
     fun append(userId: String, targetUserId: String, targetUserName: UserName)
 

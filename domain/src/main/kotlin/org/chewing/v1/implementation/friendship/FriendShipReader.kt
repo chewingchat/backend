@@ -11,7 +11,7 @@ class FriendShipReader(
     private val friendShipRepository: FriendShipRepository,
 ) {
     fun readsAccess(userId: String, sort: FriendSortCriteria): List<FriendShip> {
-        return friendShipRepository.readsOwned(userId, AccessStatus.ACCESS, sort)
+        return friendShipRepository.readsAccess(userId, AccessStatus.ACCESS, sort)
     }
 
     fun readsAccessIdIn(friendIds: List<String>, userId: String): List<FriendShip> {

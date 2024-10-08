@@ -22,16 +22,4 @@ class FriendShipUpdater(
     fun updateName(userId: String, friendId: String, friendName: UserName) {
         friendShipRepository.updateName(userId, friendId, friendName) ?: throw NotFoundException(ErrorCode.FRIEND_NOT_FOUND)
     }
-
-    fun updateToUser(user: User, friend: FriendShip): User {
-        return User.of(
-            userId = user.userId,
-            firstName = friend.friendName.firstName,
-            lastName = friend.friendName.lastName,
-            image = user.image,
-            backgroundImage = user.backgroundImage,
-            birth = user.birth,
-            status = user.status
-        )
-    }
 }

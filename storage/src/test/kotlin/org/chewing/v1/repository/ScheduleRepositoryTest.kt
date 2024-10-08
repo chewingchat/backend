@@ -25,8 +25,7 @@ class ScheduleRepositoryTest : DbContextTest() {
         val userId = "userId"
         val content = ScheduleProvider.buildContent()
         val time = ScheduleProvider.buildTime()
-        val user = UserProvider.buildNormal(userId)
-        scheduleRepositoryImpl.append(time, content, user)
+        scheduleRepositoryImpl.append(time, content, userId)
     }
 
     @Test
@@ -34,8 +33,7 @@ class ScheduleRepositoryTest : DbContextTest() {
         val userId = "userId2"
         val content = ScheduleProvider.buildContent()
         val time = ScheduleProvider.buildTime()
-        val user = UserProvider.buildNormal(userId)
-        val schedule = testDataGenerator.scheduleEntityData(content, time, user)
+      val schedule = testDataGenerator.scheduleEntityData(content, time, userId)
         scheduleRepositoryImpl.remove(schedule.id)
         assert(scheduleJpaRepository.findById(schedule.id).isEmpty)
     }
@@ -45,9 +43,8 @@ class ScheduleRepositoryTest : DbContextTest() {
         val userId = "userId3"
         val content = ScheduleProvider.buildContent()
         val time = ScheduleProvider.buildTime()
-        val user = UserProvider.buildNormal(userId)
-        val schedule = testDataGenerator.scheduleEntityData(content, time, user)
-        scheduleRepositoryImpl.removeUsers(user.userId)
+        val schedule = testDataGenerator.scheduleEntityData(content, time, userId)
+        scheduleRepositoryImpl.removeUsers(userId)
         assert(scheduleJpaRepository.findById(schedule.id).isEmpty)
     }
 
@@ -57,10 +54,9 @@ class ScheduleRepositoryTest : DbContextTest() {
         val content = ScheduleProvider.buildContent()
         val firstTime = ScheduleProvider.build1000YearFirstTime()
         val secondTime = ScheduleProvider.build1000YearSecondTime()
-        val user = UserProvider.buildNormal(userId)
-        val schedule2 = testDataGenerator.scheduleEntityData(content, secondTime, user)
-        val schedule = testDataGenerator.scheduleEntityData(content, firstTime, user)
-        val schedules = scheduleRepositoryImpl.read(user.userId, ScheduleType.of(1000, 1))
+        val schedule2 = testDataGenerator.scheduleEntityData(content, secondTime, userId)
+        val schedule = testDataGenerator.scheduleEntityData(content, firstTime, userId)
+        val schedules = scheduleRepositoryImpl.read(userId, ScheduleType.of(1000, 1))
         assert(schedules.size == 2)
         assert(schedule.time.startAt == schedules[0].time.startAt)
         assert(schedule2.time.startAt == schedules[1].time.startAt)
@@ -72,10 +68,9 @@ class ScheduleRepositoryTest : DbContextTest() {
         val content = ScheduleProvider.buildContent()
         val firstTime = ScheduleProvider.build1000YearFirstTime()
         val secondTime = ScheduleProvider.build1000YearSecondTime()
-        val user = UserProvider.buildNormal(userId)
-        testDataGenerator.scheduleEntityData(content, secondTime, user)
-        testDataGenerator.scheduleEntityData(content, firstTime, user)
-        val schedules = scheduleRepositoryImpl.read(user.userId, ScheduleType.of(1001, 1))
+        testDataGenerator.scheduleEntityData(content, secondTime, userId)
+        testDataGenerator.scheduleEntityData(content, firstTime, userId)
+        val schedules = scheduleRepositoryImpl.read(userId, ScheduleType.of(1001, 1))
         assert(schedules.isEmpty())
     }
 }

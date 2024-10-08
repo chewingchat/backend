@@ -28,7 +28,7 @@ internal class ScheduleJpaEntity(
         fun generate(
             scheduleContent: ScheduleContent,
             scheduleTime: ScheduleTime,
-            writer: User
+            userId: String
         ): ScheduleJpaEntity {
             return ScheduleJpaEntity(
                 name = scheduleContent.title,
@@ -36,7 +36,7 @@ internal class ScheduleJpaEntity(
                 startAt = scheduleTime.startAt,
                 endAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
-                userId = writer.userId,
+                userId = userId,
                 location = scheduleContent.location
             )
         }

@@ -127,7 +127,7 @@ class FriendShipRepositoryTest : DbContextTest() {
         testDataGenerator.friendShipEntityData(userId, friendId2, AccessStatus.BLOCK)
 
 
-        val friendShips = friendShipRepositoryImpl.readsOwned(userId, AccessStatus.ACCESS, FriendSortCriteria.NAME)
+        val friendShips = friendShipRepositoryImpl.readsAccess(userId, AccessStatus.ACCESS, FriendSortCriteria.NAME)
 
         assert(friendShips.isNotEmpty())
         assert(friendShips.size == 1)

@@ -12,8 +12,8 @@ import java.time.temporal.TemporalAdjusters
 internal class ScheduleRepositoryImpl(
     private val scheduleJpaRepository: ScheduleJpaRepository
 ) : ScheduleRepository {
-    override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User) {
-        scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, writer))
+    override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, userId: String) {
+        scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, userId))
     }
 
     override fun remove(scheduleId: String) {

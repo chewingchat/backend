@@ -4,10 +4,14 @@ import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.*
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.schedule.Schedule
+import org.chewing.v1.model.schedule.ScheduleContent
+import org.chewing.v1.model.schedule.ScheduleTime
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.*
 import java.io.ByteArrayInputStream
@@ -117,23 +121,27 @@ object TestDataFactory {
         )
     }
 
-    fun createPhoneNumberCredential(): Credential {
-        return PhoneNumber.of("82", "1234567890")
+    fun createScheduledTime(): ScheduleTime {
+        return ScheduleTime.of(LocalDateTime.now(), LocalDateTime.now().plusHours(1), LocalDateTime.now())
     }
 
-    fun createValidEmailContact(): Email {
-        return Email.of("testEmailId", "test@Example.com", "testCode", LocalDateTime.now().plusMinutes(1))
+    fun createScheduleContent(): ScheduleContent {
+        return ScheduleContent.of("testTitle", "memo", "location")
     }
 
-    fun createValidPhoneContact(): Phone {
-        return Phone.of("testPhoneId", "82", "1234567890", "testCode", LocalDateTime.now().plusMinutes(1))
+    fun createSchedule(): Schedule {
+        return Schedule.of(
+            "scheduleId",
+            "title",
+            "memo",
+            LocalDateTime.now(),
+            LocalDateTime.now().plusHours(1),
+            LocalDateTime.now(),
+            "location"
+        )
     }
 
-    fun createExpiredEmailContact(): Email {
-        return Email.of("testEmailId", "test@Example.com", "testCode", LocalDateTime.now().minusMinutes(1))
-    }
-
-    fun createExpiredPhoneContact(): Phone {
-        return Phone.of("testPhoneId", "82", "1234567890", "testCode", LocalDateTime.now().minusMinutes(1))
+    fun createFriendShip(accessStatus: AccessStatus): FriendShip {
+        return FriendShip.of("friendId", createUserName(), true, accessStatus)
     }
 }
