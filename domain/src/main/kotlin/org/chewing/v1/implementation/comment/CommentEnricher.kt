@@ -1,5 +1,6 @@
 package org.chewing.v1.implementation.comment
 
+import org.chewing.v1.implementation.friend.FriendEnricher
 import org.chewing.v1.implementation.friendship.FriendShipUpdater
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.comment.Comment
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CommentEnricher(
-    private val friendShipUpdater: FriendShipUpdater
+    private val friendEnricher: FriendEnricher
 ) {
     fun enrich(commentsInfo: List<CommentInfo>, friendsInfo: List<FriendShip>, users: List<User>): List<Comment> {
         // 친구 정보와 사용자 정보를 사전 형태로 변환
@@ -20,7 +21,7 @@ class CommentEnricher(
             // 댓글 작성자의 친구 정보를 찾고, 사용자 정보를 업데이트
             val user = friendsMap[comment.userId]?.let { friend ->
                 usersMap[friend.friendId]?.let { user ->
-                    friendShipUpdater.updateToUser(user, friend)
+                    friendEnricher.updateToUser(user, friend)
                 }
             }
 

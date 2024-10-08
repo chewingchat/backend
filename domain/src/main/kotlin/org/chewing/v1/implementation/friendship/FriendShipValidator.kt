@@ -11,14 +11,6 @@ import org.springframework.stereotype.Component
 class FriendShipValidator(
     private val friendShipRepository: FriendShipRepository
 ) {
-    fun validateAddAllowed(userId: String, friendId: String) {
-        validateMyself(userId, friendId)
-        friendShipRepository.read(userId, friendId)?.let {
-            validateBlock(it)
-            validateBlocked(it)
-        }
-    }
-
     private fun validateBlock(friendShip: FriendShip) {
         if (friendShip.type == AccessStatus.BLOCK) {
             throw ConflictException(ErrorCode.FRIEND_BLOCK)
@@ -31,24 +23,28 @@ class FriendShipValidator(
         }
     }
 
-    private fun validateAccess(friendShip: FriendShip) {
-        if (friendShip.type != AccessStatus.ACCESS) {
-            throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
-        }
-    }
-
     private fun validateMyself(userId: String, friendId: String) {
         if (userId == friendId) {
             throw ConflictException(ErrorCode.FRIEND_MYSELF)
         }
     }
 
-    fun validateFriendShipAllowed(userId: String, friendId: String) {
+    fun validateCreationAllowed(userId: String, friendId: String) {
         validateMyself(userId, friendId)
         friendShipRepository.read(userId, friendId)?.let {
             validateBlock(it)
             validateBlocked(it)
-            validateAccess(it)
+            throw ConflictException(ErrorCode.FRIEND_ALREADY_CREATED)
         }
+    }
+
+    fun validateInteractionAllowed(userId: String, friendId: String) {
+        validateMyself(userId, friendId)
+        friendShipRepository.read(userId, friendId)?.let {
+            validateBlock(it)
+            validateBlocked(it)
+            return
+        }
+        throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
     }
 }

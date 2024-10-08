@@ -25,7 +25,7 @@ class FriendShipService(
 
 
     fun creatFriendShip(userId: String, userName: UserName, friendId: String, friendName: UserName) {
-        friendShipValidator.validateFriendShipAllowed(userId, friendId)
+        friendShipValidator.validateCreationAllowed(userId, friendId)
         friendShipAppender.appendFriend(userId, userName, friendId, friendName)
     }
 
@@ -39,14 +39,14 @@ class FriendShipService(
 
     fun changeFriendFavorite(userId: String, friendId: String, favorite: Boolean) {
         // 친구인지 확인
-        friendShipValidator.validateFriendShipAllowed(userId, friendId)
+        friendShipValidator.validateInteractionAllowed(userId, friendId)
         // 친구 즐겨찾기 변경
         friendShipUpdater.updateFavorite(userId, friendId, favorite)
     }
 
     fun changeFriendName(userId: String, friendId: String, friendName: UserName) {
         // 친구인지 확인
-        friendShipValidator.validateFriendShipAllowed(userId, friendId)
+        friendShipValidator.validateInteractionAllowed(userId, friendId)
         // 친구 이름 변경
         friendShipUpdater.updateName(userId, friendId, friendName)
     }

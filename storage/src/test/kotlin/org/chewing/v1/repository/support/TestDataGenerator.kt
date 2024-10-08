@@ -108,8 +108,8 @@ class TestDataGenerator(
         }
     }
 
-    fun scheduleEntityData(content: ScheduleContent, time: ScheduleTime, user: User): Schedule {
-        val scheduleEntity = ScheduleJpaEntity.generate(content, time, user)
+    fun scheduleEntityData(content: ScheduleContent, time: ScheduleTime, userId: String): Schedule {
+        val scheduleEntity = ScheduleJpaEntity.generate(content, time, userId)
         scheduleJpaRepository.save(scheduleEntity)
         return scheduleEntity.toSchedule()
     }

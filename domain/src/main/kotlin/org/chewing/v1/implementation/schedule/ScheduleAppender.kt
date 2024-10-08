@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class ScheduleAppender(
     val scheduleRepository: ScheduleRepository
 ) {
-    fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, writer: User) {
-        scheduleRepository.append(scheduleTime, scheduleContent, writer)
+    fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, userId: String) {
+        scheduleRepository.append(scheduleTime, scheduleContent, userId)
     }
 }

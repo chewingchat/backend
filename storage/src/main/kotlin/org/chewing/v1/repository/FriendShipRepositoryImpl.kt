@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
 internal class FriendShipRepositoryImpl(
     private val friendShipJpaRepository: FriendShipJpaRepository
 ) : FriendShipRepository {
-    override fun readsOwned(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip> {
+    override fun readsAccess(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip> {
         return when (sort) {
             FriendSortCriteria.NAME -> friendShipJpaRepository
                 .findAllByIdUserIdAndTypeOrderByFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }

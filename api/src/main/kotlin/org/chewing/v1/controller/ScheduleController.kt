@@ -9,8 +9,6 @@ import org.chewing.v1.service.ScheduleService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.Month
-import java.time.Year
 
 @RestController
 @RequestMapping("/api/schedule")
@@ -43,7 +41,7 @@ class ScheduleController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: ScheduleRequest.Add
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        scheduleService.make(userId, request.toScheduleTime(), request.toScheduleContent())
+        scheduleService.create(userId, request.toScheduleTime(), request.toScheduleContent())
         return ResponseHelper.successOnly()
     }
 }
