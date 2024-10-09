@@ -4,6 +4,7 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.implementation.friend.friendship.*
 import org.chewing.v1.implementation.friendship.*
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria

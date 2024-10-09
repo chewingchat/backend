@@ -1,9 +1,9 @@
 package org.chewing.v1.service
 
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.implementation.schedule.ScheduleAppender
-import org.chewing.v1.implementation.schedule.ScheduleReader
-import org.chewing.v1.implementation.schedule.ScheduleRemover
+import org.chewing.v1.implementation.user.schedule.ScheduleAppender
+import org.chewing.v1.implementation.user.schedule.ScheduleReader
+import org.chewing.v1.implementation.user.schedule.ScheduleRemover
 import org.chewing.v1.model.schedule.ScheduleType
 import org.chewing.v1.repository.ScheduleRepository
 import org.junit.jupiter.api.Test

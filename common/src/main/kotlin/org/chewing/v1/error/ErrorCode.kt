@@ -44,9 +44,13 @@ enum class ErrorCode(
     FEED_ALREADY_UNLIKED("FEED_3", "이미 공감을 취소한 피드입니다."),
     FEED_IS_NOT_OWNED("FEED_4", "피드 작성자가 아닙니다."),
     FEED_IS_OWNED("FEED_5", "피드 작성자입니다."),
+    FEED_LIKED_FAILED("FEED_6", "피드 공감을 실패하였습니다."),
+    FEED_UNLIKED_FAILED("FEED_7", "피드 공감 취소를 실패하였습니다."),
 
-    COMMENT_IS_NOT_OWNED("COMMENT_1", "댓글 작성자가 아닙니다."),
-    COMMENT_NOT_FOUND("COMMENT_2", "댓글을 찾을 수 없음."),
+    FEED_COMMENT_IS_NOT_OWNED("COMMENT_1", "댓글 작성자가 아닙니다."),
+    FEED_COMMENT_NOT_FOUND("COMMENT_2", "댓글을 찾을 수 없음."),
+    FEED_COMMENT_FAILED("COMMENT_3", "댓글 작성을 실패하였습니다."),
+    FEED_UNCOMMENT_FAILED("COMMENT_4", "댓글 삭제를 실패하였습니다."),
 
     EMOTICON_NOT_FOUND("EMOTICON_1", "이모티콘을 찾을 수 없음."),
 

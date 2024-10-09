@@ -1,9 +1,9 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.user.UserStatusAppender
-import org.chewing.v1.implementation.user.UserStatusReader
-import org.chewing.v1.implementation.user.UserStatusRemover
-import org.chewing.v1.implementation.user.UserStatusUpdater
+import org.chewing.v1.implementation.user.status.UserStatusAppender
+import org.chewing.v1.implementation.user.status.UserStatusReader
+import org.chewing.v1.implementation.user.status.UserStatusRemover
+import org.chewing.v1.implementation.user.status.UserStatusUpdater
 import org.chewing.v1.model.user.UserStatus
 import org.springframework.stereotype.Service
 

@@ -2,6 +2,7 @@ package org.chewing.v1
 
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.auth.*
+import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.friend.FriendShip
@@ -143,5 +144,9 @@ object TestDataFactory {
 
     fun createFriendShip(accessStatus: AccessStatus): FriendShip {
         return FriendShip.of("friendId", createUserName(), true, accessStatus)
+    }
+
+    fun createCommentInfo(userId: String, commentId: String, feedId: String): CommentInfo {
+        return CommentInfo.of(commentId, "comment", LocalDateTime.now(), userId, feedId)
     }
 }
