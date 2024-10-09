@@ -6,6 +6,7 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
+import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.repository.PushNotificationRepository
 import org.chewing.v1.repository.UserRepository

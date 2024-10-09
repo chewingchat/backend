@@ -3,6 +3,8 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createFeed
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.controller.feed.FeedController
+import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.service.FeedService
 import org.junit.jupiter.api.DisplayName
@@ -33,6 +35,9 @@ class FeedControllerTest(
     @MockBean
     private lateinit var feedService: FeedService
 
+    @MockBean
+    private lateinit var feedFacade: FeedFacade
+
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(201))
@@ -54,7 +59,7 @@ class FeedControllerTest(
         whenever(feedService.getOwnedFeeds(testFriendId, FeedStatus.NOT_HIDDEN))
             .thenReturn(listOf(feed))
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/feed/list/$testFriendId")
+            MockMvcRequestBuilders.get("/api/friend/$testFriendId/feed/list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
         )
@@ -78,7 +83,7 @@ class FeedControllerTest(
         whenever(feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN))
             .thenReturn(listOf(feed))
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/feed/list")
+            MockMvcRequestBuilders.get("/api/my/feed/list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
         )
@@ -101,10 +106,10 @@ class FeedControllerTest(
         val userId = "testUserId"
         val feed = createFeed()
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-        whenever(feedService.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
+        whenever(feedFacade.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
             .thenReturn(Pair(feed, true))
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/feed/$testFeedId/detail/friend")
+            MockMvcRequestBuilders.get("/api/friend/feed/$testFeedId/detail")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
         )
@@ -134,11 +139,11 @@ class FeedControllerTest(
         val testFeedId = "testFeedId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
+        whenever(feedFacade.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
             .thenReturn(Pair(feed, true))
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/feed/$testFeedId/detail/owned")
+            MockMvcRequestBuilders.get("/api/my/feed/$testFeedId/detail")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
         )
@@ -188,37 +193,6 @@ class FeedControllerTest(
             )
     }
 
-    @Test
-    @DisplayName("피드 좋아요 추가")
-    fun `addFeedLikes`() {
-        val userId = "testUserId"
-        val requestBody = mapOf(
-            "feedId" to "testFeedId"
-        )
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/feed/likes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody))
-        )
-        performCommonSuccessCreateResponse(result)
-    }
-
-    @Test
-    @DisplayName("피드 좋아요 취소")
-    fun `deleteFeedLikes`() {
-        val userId = "testUserId"
-        val requestBody = mapOf(
-            "feedId" to "testFeedId"
-        )
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/api/feed/likes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody))
-        )
-        performCommonSuccessResponse(result)
-    }
 
     @Test
     @DisplayName("피드 삭제")

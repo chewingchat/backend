@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class MyFacade(
-    private val commentService: CommentService,
+    private val feedCommentService: FeedCommentService,
     private val feedService: FeedService,
     private val friendShipService: FriendShipService,
     private val myAggregator: MyAggregator,
     private val userService: UserService
 ) {
     fun getFeedUserCommented(userId: String): List<UserCommentedInfo> {
-        val comments = commentService.getUserCommented(userId)
+        val comments = feedCommentService.getOwnedComment(userId)
         val feeds = feedService.getFeeds(comments.map { it.feedId })
         val friendShips = friendShipService.getAccessFriendShipsIn(feeds.map { it.feed.userId }, userId)
         val users = userService.getUsers(friendShips.map { it.friendId })

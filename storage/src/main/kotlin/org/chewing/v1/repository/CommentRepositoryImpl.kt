@@ -24,8 +24,11 @@ internal class CommentRepositoryImpl(
         }
     }
 
-    override fun remove(commentId: String) {
-        commentJpaRepository.deleteById(commentId)
+    override fun remove(commentId: String): String? {
+        return commentJpaRepository.findById(commentId).map {
+            commentJpaRepository.deleteById(commentId)
+            it.toCommentInfo().feedId
+        }.orElse(null)
     }
 
     override fun removes(feedIds: List<String>) {
@@ -36,7 +39,7 @@ internal class CommentRepositoryImpl(
         commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
     }
 
-    override fun readsCommented(userId: String): List<CommentInfo> {
+    override fun readsOwned(userId: String): List<CommentInfo> {
         return commentJpaRepository.findAllByUserId(userId).map {
             it.toCommentInfo()
         }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service
 class AccountFacade(
     private val authService: AuthService,
     private val userService: UserService,
-    private val feedService: FeedService,
     private val userStatusService: UserStatusService,
     private val scheduleService: ScheduleService
 ) {
@@ -37,7 +36,6 @@ class AccountFacade(
     fun deleteAccount(userId: String) {
         userService.deleteUser(userId)
         userStatusService.deleteAllUserStatuses(userId)
-        feedService.deleteUsers(userId)
         scheduleService.deleteUsers(userId)
     }
 

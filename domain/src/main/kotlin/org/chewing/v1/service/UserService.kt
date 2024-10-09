@@ -2,6 +2,7 @@ package org.chewing.v1.service
 
 import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.implementation.user.*
+import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.friend.UserSearch

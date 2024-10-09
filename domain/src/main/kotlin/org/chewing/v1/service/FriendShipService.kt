@@ -1,5 +1,6 @@
 package org.chewing.v1.service
 
+import org.chewing.v1.implementation.friend.friendship.*
 import org.chewing.v1.implementation.friendship.*
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.friend.FriendSortCriteria

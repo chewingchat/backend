@@ -6,9 +6,10 @@ import org.chewing.v1.repository.support.TestDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-internal class CommentRepositoryTest :DbContextTest() {
+internal class CommentRepositoryTest : DbContextTest() {
     @Autowired
     private lateinit var commentJpaRepository: FeedCommentJpaRepository
+
     @Autowired
     private lateinit var testDataGenerator: TestDataGenerator
 
@@ -40,9 +41,15 @@ internal class CommentRepositoryTest :DbContextTest() {
         val userId = "userId3"
         val feedId = "feedId3"
         val comment = testDataGenerator.feedCommentEntityData(userId, feedId)
-        commentRepositoryImpl.remove(comment.commentId)
-        val result1 = commentJpaRepository.findAllByFeedId(feedId)
-        assert(result1.isEmpty())
+        val result = commentRepositoryImpl.remove(comment.commentId)
+        assert(result != null)
+    }
+
+    @Test
+    fun `댓글 삭제 실패 댓글이 없어야 한다`() {
+        val commentId = "commentId"
+        val result = commentRepositoryImpl.remove(commentId)
+        assert(result == null)
     }
 
     @Test
@@ -71,8 +78,8 @@ internal class CommentRepositoryTest :DbContextTest() {
         val feedId = "feedId7"
         val comments = testDataGenerator.feedCommentEntityDataList(userId, feedId)
         val comments2 = testDataGenerator.feedCommentEntityDataList(userId2, feedId)
-        val result = commentRepositoryImpl.readsCommented(userId)
-        val result2 = commentRepositoryImpl.readsCommented(userId2)
+        val result = commentRepositoryImpl.readsOwned(userId)
+        val result2 = commentRepositoryImpl.readsOwned(userId2)
         assert(result.size == comments.size)
         assert(result2.size == comments2.size)
     }

@@ -2,6 +2,7 @@ package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.controller.friend.FriendController
 import org.chewing.v1.facade.FriendFacade
 import org.chewing.v1.service.FriendShipService
 import org.junit.jupiter.api.DisplayName
