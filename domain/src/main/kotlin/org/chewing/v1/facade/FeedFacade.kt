@@ -1,9 +1,8 @@
 package org.chewing.v1.facade
 
-import org.chewing.v1.implementation.feed.comment.FeedAggregator
+import org.chewing.v1.implementation.feed.feed.FeedAggregator
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.service.*
 import org.springframework.stereotype.Component
 
@@ -22,8 +21,8 @@ class FeedFacade(
         feedLikeService.unlikes(feedIds)
     }
 
-    fun getOwnedFeed(userId: String, feedId: String, type: FeedStatus): Pair<Feed, Boolean> {
-        val feed = feedService.getOwnedFeed(feedId, type)
+    fun getOwnedFeed(userId: String, feedId: String): Pair<Feed, Boolean> {
+        val feed = feedService.getFeed(feedId)
         val isLiked = feedLikeService.checkLike(feedId, userId)
         return Pair(feed, isLiked)
     }

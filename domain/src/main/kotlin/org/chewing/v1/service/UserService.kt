@@ -1,7 +1,6 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.media.FileProcessor
-import org.chewing.v1.implementation.user.*
+import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.Contact
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(
     private val userReader: UserReader,
-    private val fileProcessor: FileProcessor,
+    private val fileHandler: FileHandler,
     private val userUpdater: UserUpdater,
     private val userValidator: UserValidator,
     private val userRemover: UserRemover,
@@ -48,9 +47,9 @@ class UserService(
     }
 
     fun updateFile(file: FileData, userId: String, category: FileCategory) {
-        val media = fileProcessor.processNewFile(userId, file, category)
+        val media = fileHandler.handleNewFile(userId, file, category)
         val oldMedia = userUpdater.updateFileUrl(userId, media)
-        fileProcessor.processOldFile(oldMedia)
+        fileHandler.handleOldFile(oldMedia)
     }
 
 
@@ -84,6 +83,6 @@ class UserService(
 
     fun deleteUser(userId: String) {
         val removedUser = userRemover.remove(userId)
-        fileProcessor.processOldFiles(listOf(removedUser.image, removedUser.backgroundImage))
+        fileHandler.handleOldFiles(listOf(removedUser.image, removedUser.backgroundImage))
     }
 }

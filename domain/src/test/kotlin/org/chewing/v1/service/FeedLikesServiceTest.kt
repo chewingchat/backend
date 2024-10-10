@@ -22,10 +22,10 @@ class FeedLikesServiceTest {
     private val feedLikeAppender = FeedLikeAppender(feedLikesRepository)
     private val feedLikeChecker = FeedLikeChecker(feedLikesRepository)
     private val feedLikeRemover = FeedLikeRemover(feedLikesRepository)
-    private val feedLikeHandler = FeedLikeHandler(feedLikeAppender, feedLikeRemover, feedUpdater)
-    private val feedLikeLocker = FeedLikeLocker(feedLikeHandler)
+    private val feedLikeProcessor = FeedLikeProcessor(feedLikeAppender, feedLikeRemover, feedUpdater)
+    private val feedLikeHandler = FeedLikeHandler(feedLikeProcessor)
     private val feedLikeValidator = FeedLikeValidator(feedLikesRepository)
-    private val feedLikeService = FeedLikesService(feedLikeValidator, feedLikeLocker, feedLikeRemover, feedLikeChecker)
+    private val feedLikeService = FeedLikesService(feedLikeValidator, feedLikeHandler, feedLikeRemover, feedLikeChecker)
 
 
     @Test

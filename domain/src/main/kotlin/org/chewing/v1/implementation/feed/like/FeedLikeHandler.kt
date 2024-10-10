@@ -1,26 +1,49 @@
 package org.chewing.v1.implementation.feed.like
 
-import org.chewing.v1.implementation.feed.feed.FeedUpdater
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.feed.FeedTarget
+import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class FeedLikeHandler(
-    private val feedLikeAppender: FeedLikeAppender,
-    private val feedLikeRemover: FeedLikeRemover,
-    private val feedUpdater: FeedUpdater
+    private val feedLikeProcessor: FeedLikeProcessor
 ) {
 
-    @Transactional
-    fun handleFeedLikes(feedId: String, userId: String, target: FeedTarget) {
-        feedLikeAppender.appendLikes(feedId, userId)
-        feedUpdater.update(feedId, target)
+    fun handleFeedLikes(feedId: String, userId: String, updateType: FeedTarget) {
+        var retryCount = 0
+        val maxRetry = 5
+        var delayTime = 100L
+        while (retryCount < maxRetry) {
+            try {
+                feedLikeProcessor.processFeedLikes(feedId, userId, updateType)
+                return
+            } catch (ex: OptimisticLockingFailureException) {
+                // 예외 처리: 버전 충돌 시 재시도
+                retryCount++
+                Thread.sleep(delayTime)
+                delayTime *= 2
+            }
+        }
+        throw ConflictException(ErrorCode.FEED_LIKED_FAILED)
     }
 
-    @Transactional
-    fun handleFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
-        feedLikeRemover.removeLikes(feedId, userId)
-        feedUpdater.update(feedId, target)
+    fun handleFeedUnLikes(feedId: String, userId: String, updateType: FeedTarget) {
+        var retryCount = 0
+        val maxRetry = 5
+        var delayTime = 100L
+        while (retryCount < maxRetry) {
+            try {
+                feedLikeProcessor.processFeedUnLikes(feedId, userId, updateType)
+                return
+            } catch (ex: OptimisticLockingFailureException) {
+                // 예외 처리: 버전 충돌 시 재시도
+                retryCount++
+                Thread.sleep(delayTime)
+                delayTime *= 2
+            }
+        }
+        throw ConflictException(ErrorCode.FEED_UNLIKED_FAILED)
     }
 }

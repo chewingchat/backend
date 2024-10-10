@@ -14,13 +14,13 @@ internal class UserStatusRepositoryImpl(
         userStatusJpaRepository.deleteAllByStatusIdIn(statusesId)
     }
 
-    override fun readSelectedUserStatus(userId: String): UserStatus {
+    override fun readSelected(userId: String): UserStatus {
         return userStatusJpaRepository.findBySelectedTrueAndUserId(userId).map {
             it.toUserStatus()
         }.orElse(UserStatus.default(userId))
     }
 
-    override fun readSelectedUsersStatus(userIds: List<String>): List<UserStatus> {
+    override fun readSelectedUsers(userIds: List<String>): List<UserStatus> {
         return userStatusJpaRepository.findAllBySelectedTrueAndUserIdIn(userIds).map { it.toUserStatus() }
     }
 
@@ -44,7 +44,7 @@ internal class UserStatusRepositoryImpl(
     override fun append(userId: String, statusMessage: String, emoji: String) {
         userStatusJpaRepository.save(UserStatusJpaEntity.generate(userId, statusMessage, emoji))
     }
-    override fun readsUserStatus(userId: String): List<UserStatus> {
+    override fun reads(userId: String): List<UserStatus> {
         return userStatusJpaRepository.findAllByUserId(userId).map { it.toUserStatus() }
     }
 

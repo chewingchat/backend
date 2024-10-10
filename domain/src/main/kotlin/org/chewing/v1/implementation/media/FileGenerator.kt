@@ -13,7 +13,6 @@ class FileGenerator {
     ): List<Pair<FileData, Media>> {
         return files.map { file ->
             Pair(file, Media.upload(category, userId, file.name, file.contentType))
-
         }
     }
 

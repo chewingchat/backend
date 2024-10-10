@@ -67,12 +67,75 @@ class UserStatusServiceTest {
     fun `유저의 모든 상태를 가져온다`(){
         val userId = "userId"
         val userStatus = TestDataFactory.createUserStatus()
-        whenever(userStatusRepository.readsUserStatus(userId)).thenReturn(listOf(userStatus))
+        whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
 
         val result = assertDoesNotThrow {
             userStatusService.getUserStatuses(userId)
         }
 
         assert(result.size == 1)
+    }
+
+    @Test
+    fun `유저들의 선택한 상태들을 가져온다`(){
+        val userIds = listOf("userId")
+        val userStatus = TestDataFactory.createUserStatus()
+        whenever(userStatusRepository.readSelectedUsers(userIds)).thenReturn(listOf(userStatus))
+
+        val result = assertDoesNotThrow {
+            userStatusService.getSelectedStatuses(userIds)
+        }
+
+        assert(result.size == 1)
+    }
+
+    @Test
+    fun `유저의 모든 상태 목록을 삭제한다`(){
+        val userId = "userId"
+        val userStatus = TestDataFactory.createUserStatus()
+        whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
+
+        assertDoesNotThrow {
+            userStatusService.deleteAllUserStatuses(userId)
+        }
+    }
+
+    @Test
+    fun `유저의 상태들을 삭제한다`(){
+        val statusesId = listOf("statusId")
+        assertDoesNotThrow {
+            userStatusService.deleteUserStatuses(statusesId)
+        }
+    }
+
+    @Test
+    fun `선택한 상태를 가져온다 - 선택 없음이 아님`(){
+        val userId = "userId"
+        val userStatus = TestDataFactory.createUserStatus()
+        whenever(userStatusRepository.readSelected(userId)).thenReturn(userStatus)
+
+        val result = assertDoesNotThrow {
+            userStatusService.getSelectedStatus(userId)
+        }
+
+        assert(result == userStatus)
+    }
+
+    @Test
+    fun `선택한 상태를 가져온다 - 선택 없음`(){
+        val userId = "userId"
+        val userStatus = TestDataFactory.createDefaultUserStatus()
+        whenever(userStatusRepository.readSelected(userId)).thenReturn(userStatus)
+
+        val result = assertDoesNotThrow {
+            userStatusService.getSelectedStatus(userId)
+        }
+
+        assert(result.statusId == "none")
+        assert(result.userId == userId)
+        assert(result.message == "none")
+        assert(result.emoji == "none")
+        assert(result.isSelected)
+
     }
 }

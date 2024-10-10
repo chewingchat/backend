@@ -1,21 +1,20 @@
 package org.chewing.v1.implementation.feed.feed
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.util.IoScope
+import org.chewing.v1.util.AsyncJobExecutor
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
 
 @Component
-class FeedLocker(
+class FeedHandler(
     private val feedUpdater: FeedUpdater,
-    @IoScope private val ioScope: CoroutineScope
+    private val asyncJobExecutor: AsyncJobExecutor
 ) {
 
     fun lockFeedHide(feedId: String, updateType: FeedTarget) {
         var retryCount = 0
-        val maxRetry = 10
+        val maxRetry = 5
+        var delayTime = 100L
         while (retryCount < maxRetry) {
             try {
                 feedUpdater.update(feedId, updateType)
@@ -23,16 +22,15 @@ class FeedLocker(
             } catch (ex: OptimisticLockingFailureException) {
                 // 예외 처리: 버전 충돌 시 재시도
                 retryCount++
-                Thread.sleep(1000)
+                Thread.sleep(delayTime)
+                delayTime *= 2
             }
         }
     }
 
     fun lockFeedHides(feedIds: List<String>, updateType: FeedTarget) {
-        feedIds.forEach { feedId ->
-            ioScope.launch {
-                lockFeedHide(feedId, updateType)
-            }
+        asyncJobExecutor.executeAsyncJobs(feedIds) { feedId ->
+            lockFeedHide(feedId, updateType)
         }
     }
 }

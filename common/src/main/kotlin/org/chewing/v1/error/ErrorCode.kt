@@ -29,6 +29,7 @@ enum class ErrorCode(
     FILE_CONVERT_FAILED("FILE_3", "파일 변환에 실패하였습니다."),
     FILE_NAME_COULD_NOT_EMPTY("FILE_4", "파일 이름이 없습니다"),
     NOT_SUPPORT_FILE_TYPE("FILE_5", "지원하지 않는 형식의 파일입니다."),
+    FILE_NAME_INCORRECT("FILE_6", "파일 이름이 잘못되었습니다."),
 
     USER_NOT_FOUND("USER_1", "회원을 찾을 수 없음."),
     USER_NOT_ACCESS("USER_2", "사용자가 활성화되지 않았습니다."),

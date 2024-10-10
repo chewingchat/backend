@@ -23,8 +23,8 @@ class UserStatusService(
         return userStatusReader.readsSelected(userIds)
     }
 
-    fun getUserStatus(userId: String): UserStatus {
-        return userStatusReader.read(userId)
+    fun getSelectedStatus(userId: String): UserStatus {
+        return userStatusReader.readSelected(userId)
     }
 
     fun selectUserStatus(userId: String, statusId: String) {

@@ -19,7 +19,7 @@ internal class UserSearchJpaEntity(
     fun toFriendSearch(): UserSearch {
         return UserSearch.of(
             keyword = searchText,
-            searchTime = createdAt.toLocalDate()
+            searchTime = createdAt
         )
     }
 

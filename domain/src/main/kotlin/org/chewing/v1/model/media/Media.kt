@@ -14,7 +14,7 @@ class Media private constructor(
 
         fun upload(category: FileCategory, userId: String, fileName: String, type: MediaType): Media {
             val randomId = UUID.randomUUID().toString()
-            val path = "$DEFAULT_IMAGE_URL/{${category.name}/$userId/$randomId/$fileName"
+            val path = "$DEFAULT_IMAGE_URL/${category.name}/$userId/$randomId/$fileName"
             return Media(category, path, type, fileName.split(".")[0].toInt())
         }
 

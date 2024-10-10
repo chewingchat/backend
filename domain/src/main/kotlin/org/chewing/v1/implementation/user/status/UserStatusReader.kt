@@ -10,14 +10,14 @@ class UserStatusReader(
 ) {
 
     fun readsSelected(userIds: List<String>): List<UserStatus> {
-        return userStatusRepository.readSelectedUsersStatus(userIds)
+        return userStatusRepository.readSelectedUsers(userIds)
     }
 
-    fun read(userId: String): UserStatus {
-        return userStatusRepository.readSelectedUserStatus(userId)
+    fun readSelected(userId: String): UserStatus {
+        return userStatusRepository.readSelected(userId)
     }
 
     fun reads(userId: String): List<UserStatus> {
-        return userStatusRepository.readsUserStatus(userId)
+        return userStatusRepository.reads(userId)
     }
 }

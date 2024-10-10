@@ -1,28 +1,54 @@
 package org.chewing.v1.implementation.feed.comment
 
-import org.chewing.v1.implementation.feed.feed.FeedUpdater
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.feed.FeedTarget
+import org.chewing.v1.util.AsyncJobExecutor
+import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class CommentHandler(
-    private val commentRemover: CommentRemover,
-    private val commentAppender: CommentAppender,
-    private val feedUpdater: FeedUpdater,
+    private val commentProcessor: CommentProcessor,
+    private val asyncJobExecutor: AsyncJobExecutor
 ) {
-
-    @Transactional
-    fun handleComment(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
-        feedUpdater.update(feedId, updateType)
-        commentAppender.appendComment(userId, comment, feedId)
+    fun handleComment(userId: String, feedId: String, comment: String, target: FeedTarget) {
+        var retryCount = 0
+        val maxRetry = 5
+        var delayTime = 100L
+        while (retryCount < maxRetry) {
+            try {
+                commentProcessor.processComment(userId, feedId, comment, target)
+                return
+            } catch (ex: OptimisticLockingFailureException) {
+                // 예외 처리: 버전 충돌 시 재시도
+                retryCount++
+                Thread.sleep(delayTime)
+                delayTime *= 2
+            }
+        }
+        throw ConflictException(ErrorCode.FEED_COMMENT_FAILED)
     }
 
-    //존재 하는 댓글에 대해서만 업데이트 진행
-    @Transactional
-    fun handleUnComment(commentId: String, updateType: FeedTarget) {
-        commentRemover.remove(commentId)?.let {
-            feedUpdater.update(it, updateType)
+    fun handleUnComment(commentId: String, target: FeedTarget) {
+        var retryCount = 0
+        val maxRetry = 5
+        var delayTime = 100L
+        while (retryCount < maxRetry) {
+            try {
+                commentProcessor.processUnComment(commentId, target)
+                return
+            } catch (ex: OptimisticLockingFailureException) {
+                retryCount++
+                Thread.sleep(delayTime)
+                delayTime *= 2
+            }
+        }
+    }
+
+    fun handleUnComments(commentIds: List<String>, target: FeedTarget) {
+        asyncJobExecutor.executeAsyncJobs(commentIds) { commentId ->
+            handleUnComment(commentId, target)
         }
     }
 }

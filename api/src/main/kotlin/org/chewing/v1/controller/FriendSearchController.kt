@@ -3,7 +3,6 @@ package org.chewing.v1.controller
 import org.chewing.v1.dto.request.FriendSearchRequest
 import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
 import org.chewing.v1.dto.response.search.FriendSearchResultResponse
-import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.facade.SearchFacade
 import org.chewing.v1.service.UserService

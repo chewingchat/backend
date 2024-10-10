@@ -4,14 +4,12 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.implementation.media.FileProcessor
-import org.chewing.v1.implementation.user.*
+import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.repository.PushNotificationRepository
 import org.chewing.v1.repository.UserRepository
 import org.chewing.v1.repository.UserSearchRepository
-import org.chewing.v1.repository.UserStatusRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -22,7 +20,7 @@ class UserServiceTest {
     private val userRepository: UserRepository = mock()
     private val pushNotificationRepository: PushNotificationRepository = mock()
     private val userSearchRepository: UserSearchRepository = mock()
-    private val fileProcessor: FileProcessor = mock()
+    private val fileHandler: FileHandler = mock()
 
     private val userReader =
         UserReader(userRepository, pushNotificationRepository, userSearchRepository)
@@ -33,7 +31,7 @@ class UserServiceTest {
     private val userValidator = UserValidator()
 
     private val userService =
-        UserService(userReader, fileProcessor, userUpdater, userValidator, userRemover, userAppender)
+        UserService(userReader, fileHandler, userUpdater, userValidator, userRemover, userAppender)
 
 
     @Test
@@ -247,9 +245,9 @@ class UserServiceTest {
     fun `유저의 파일을 카테고리에 따라 없데이트 해야함`() {
         val userId = "userId"
         val fileData = TestDataFactory.createFileData()
-        val media = TestDataFactory.createMedia()
+        val media = TestDataFactory.createProfileMedia()
         whenever(userRepository.updateMedia(userId, media)).thenReturn(media)
-        whenever(fileProcessor.processNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
+        whenever(fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
 
         assertDoesNotThrow {
             userService.updateFile(fileData, userId, FileCategory.PROFILE)
@@ -260,9 +258,9 @@ class UserServiceTest {
     fun `유저의 파일을 카테고리에 따라 업데이트 할때 유저가 존재하지 않음`(){
         val userId = "userId"
         val fileData = TestDataFactory.createFileData()
-        val media = TestDataFactory.createMedia()
+        val media = TestDataFactory.createProfileMedia()
         whenever(userRepository.updateMedia(userId, media)).thenReturn(null)
-        whenever(fileProcessor.processNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
+        whenever(fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
 
         val result = assertThrows<NotFoundException> {
             userService.updateFile(fileData, userId, FileCategory.PROFILE)
@@ -293,4 +291,65 @@ class UserServiceTest {
 
         assert(result.errorCode == ErrorCode.USER_NOT_FOUND)
     }
+    @Test
+    fun `유저 아이디들로 해당 유저가 포합된 유저들을 가져온다`(){
+        val userIds = listOf("userId")
+        val users = listOf(TestDataFactory.createUser())
+        whenever(userRepository.reads(userIds)).thenReturn(users)
+
+        val result = assertDoesNotThrow {
+            userService.getUsers(userIds)
+        }
+
+        assert(result == users)
+    }
+
+    @Test
+    fun `유저의 연락처로 유저를 가져온다`(){
+        val contact = TestDataFactory.createPhone("1234")
+        val user = TestDataFactory.createUser()
+        whenever(userRepository.readByContact(contact)).thenReturn(user)
+
+        val result = assertDoesNotThrow {
+            userService.getUserByContact(contact)
+        }
+
+        assert(result == user)
+    }
+
+    @Test
+    fun `유저의 연락처로 유저를 가져올때 유저가 없음`(){
+        val contact = TestDataFactory.createPhone("1234")
+        whenever(userRepository.readByContact(contact)).thenReturn(null)
+
+        val result = assertThrows<NotFoundException> {
+            userService.getUserByContact(contact)
+        }
+
+        assert(result.errorCode == ErrorCode.USER_NOT_FOUND)
+    }
+
+    @Test
+    fun `유저의 검색 키워드를 추가한다`(){
+        val userId = "userId"
+        val keyword = "keyword"
+        assertDoesNotThrow {
+            userService.createSearchKeyword(userId, keyword)
+        }
+    }
+
+    @Test
+    fun `유저의 검색 키워드를 가져온다`(){
+        val userId = "userId"
+        val userSearch = TestDataFactory.createUserSearch(userId)
+        whenever(userSearchRepository.readSearchHistory(userId)).thenReturn(listOf(userSearch))
+
+        val result = assertDoesNotThrow {
+            userService.getSearchKeywords(userId)
+        }
+
+        assert(result.size == 1)
+    }
+
+
 }
