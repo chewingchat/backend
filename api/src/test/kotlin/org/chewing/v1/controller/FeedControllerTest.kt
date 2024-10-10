@@ -106,7 +106,7 @@ class FeedControllerTest(
         val userId = "testUserId"
         val feed = createFeed()
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-        whenever(feedFacade.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
+        whenever(feedFacade.getOwnedFeed(userId, testFeedId))
             .thenReturn(Pair(feed, true))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/friend/feed/$testFeedId/detail")
@@ -139,7 +139,7 @@ class FeedControllerTest(
         val testFeedId = "testFeedId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedFacade.getOwnedFeed(userId, testFeedId, FeedStatus.NOT_HIDDEN))
+        whenever(feedFacade.getOwnedFeed(userId, testFeedId))
             .thenReturn(Pair(feed, true))
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
         mockMvc.perform(

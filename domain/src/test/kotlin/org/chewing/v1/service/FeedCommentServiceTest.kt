@@ -2,7 +2,6 @@ package org.chewing.v1.service
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -11,6 +10,7 @@ import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.implementation.notification.NotificationHandler
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.CommentRepository
+import org.chewing.v1.util.AsyncJobExecutor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -31,9 +31,10 @@ class FeedCommentServiceTest {
     private val commentValidator = CommentValidator(commentRepository)
     private val commentAppender = CommentAppender(commentRepository)
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    private val commentHandler = CommentHandler(commentRemover, commentAppender, feedUpdater)
-    private val commentLocker = CommentLocker(commentHandler, ioScope)
-    private val feedCommentService = FeedCommentService(commentReader, commentLocker, commentRemover, commentValidator, notificationHandler)
+    private val commentProcessor = CommentProcessor(commentRemover, commentAppender, feedUpdater)
+    private val asyncJobExecutor = AsyncJobExecutor(ioScope)
+    private val commentHandler = CommentHandler(commentProcessor, asyncJobExecutor)
+    private val feedCommentService = FeedCommentService(commentReader, commentHandler, commentRemover, commentValidator, notificationHandler)
 
 
     @Test

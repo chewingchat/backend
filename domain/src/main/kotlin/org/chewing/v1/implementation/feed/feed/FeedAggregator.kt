@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.feed.comment
+package org.chewing.v1.implementation.feed.feed
 
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.comment.Comment

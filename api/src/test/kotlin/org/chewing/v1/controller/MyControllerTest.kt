@@ -5,7 +5,6 @@ import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.facade.MainFacade
-import org.chewing.v1.model.SortCriteria
 import org.chewing.v1.model.friend.FriendSortCriteria
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

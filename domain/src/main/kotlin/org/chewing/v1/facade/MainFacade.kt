@@ -19,7 +19,7 @@ class MainFacade(
 ) {
     fun getMainPage(userId: String, sort: FriendSortCriteria): Triple<User, UserStatus, List<Friend>> {
         val user = userService.getAccessUser(userId)
-        val userStatus = userStatusService.getUserStatus(userId)
+        val userStatus = userStatusService.getSelectedStatus(userId)
         val friendShips = friendShipService.getAccessFriendShips(userId,sort)
         val friendIds = friendShips.map { it.friendId }
         val users = userService.getUsers(friendIds)

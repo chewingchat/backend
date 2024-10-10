@@ -23,7 +23,7 @@ class UserStatusRepositoryTest : DbContextTest() {
     fun `유저 아이디로 읽기`() {
         val userId = "userId"
         testDataGenerator.userStatusDataList(userId)
-        val result = userStatusRepositoryImpl.readsUserStatus(userId)
+        val result = userStatusRepositoryImpl.reads(userId)
         assert(result.isNotEmpty())
     }
 
@@ -41,7 +41,7 @@ class UserStatusRepositoryTest : DbContextTest() {
         val userId = "userId3"
         testDataGenerator.userStatusDataList(userId)
         val status = testDataGenerator.userSelectedStatusData(userId)
-        val result = userStatusRepositoryImpl.readSelectedUserStatus(userId)
+        val result = userStatusRepositoryImpl.readSelected(userId)
         assert(result.isSelected)
         assert(result.statusId == status.statusId)
         assert(result.statusId != "none")
@@ -96,7 +96,7 @@ class UserStatusRepositoryTest : DbContextTest() {
         testDataGenerator.userStatusDataList(userId2)
         testDataGenerator.userSelectedStatusData(userId)
         testDataGenerator.userSelectedStatusData(userId2)
-        val result = userStatusRepositoryImpl.readSelectedUsersStatus(listOf(userId, userId2))
+        val result = userStatusRepositoryImpl.readSelectedUsers(listOf(userId, userId2))
         assert(result.size == 2)
     }
 }

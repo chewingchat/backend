@@ -12,13 +12,11 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class FeedRemover(
     val feedRepository: FeedRepository,
-    val feedLikesRepository: FeedLikesRepository,
     val feedDetailRepository: FeedDetailRepository
 ) {
     @Transactional
     fun removes(feedIds: List<String>): List<Media> {
         feedRepository.removes(feedIds)
-        feedLikesRepository.unlikeAll(feedIds)
         return feedDetailRepository.removes(feedIds)
     }
 }

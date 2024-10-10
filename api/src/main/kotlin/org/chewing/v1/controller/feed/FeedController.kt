@@ -47,7 +47,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
-        val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId, FeedStatus.NOT_HIDDEN)
+        val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId)
         //성공 응답 200 반환
         return ResponseHelper.success(FriendFeedResponse.of(feed, isLiked))
     }
@@ -57,7 +57,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String,
     ): SuccessResponseEntity<OwnedFeedResponse> {
-        val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId, FeedStatus.NOT_HIDDEN)
+        val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId)
         //성공 응답 200 반환
         return ResponseHelper.success(OwnedFeedResponse.of(feed, isLiked))
     }

@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 class FeedUpdater(
     private val feedRepository: FeedRepository
 ) {
-    @Transactional
     fun update(feedId: String, target: FeedTarget) {
-        feedRepository.update(feedId, target) ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
+        feedRepository.update(feedId, target)
     }
 }
