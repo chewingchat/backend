@@ -1,0 +1,22 @@
+
+spring:
+  config:
+    activate:
+      on-profile: local
+jwt:
+  secret:
+    secret
+  access-expiration: 3600000
+  refresh-expiration: 86400000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+jwt:
+    secret:
+      mysecretkey12345asdfvasdfvhjaaaaaaaaaaaaaaaaaaaaaaaaaslfdjasdlkr231243123412
+    access-expiration: 3600000
+    refresh-expiration: 86400000

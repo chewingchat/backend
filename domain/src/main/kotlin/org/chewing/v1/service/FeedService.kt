@@ -1,8 +1,7 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.feed.*
-import org.chewing.v1.implementation.media.FileProcessor
-import org.chewing.v1.model.SortCriteria
+import org.chewing.v1.implementation.feed.feed.*
+import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.model.feed.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
@@ -11,65 +10,46 @@ import org.springframework.stereotype.Service
 @Service
 class FeedService(
     private val feedReader: FeedReader,
-    private val feedLocker: FeedLocker,
-    private val feedRemover: FeedRemover,
+    private val feedHandler: FeedHandler,
+    private val feedAppender: FeedAppender,
     private val feedValidator: FeedValidator,
-    private val fileProcessor: FileProcessor,
-    private val feedProcessor: FeedProcessor,
+    private val fileHandler: FileHandler,
     private val feedEnricher: FeedEnricher,
-    private val feedChecker: FeedChecker
+    private val feedRemover: FeedRemover
 ) {
     // 피드를 가져옴
-    fun getFeed(userId: String, feedId: String, type: FeedOwner): Pair<Feed, Boolean> {
-        val feed = feedReader.readFeed(feedId)
-        val feedDetails = feedReader.readFeedDetails(feedId)
-        val isLiked = feedChecker.checkLike(feedId, userId)
-        return Pair(Feed.of(feed, feedDetails), isLiked)
+    fun getFeed(feedId: String): Feed {
+        val feed = feedReader.readInfo(feedId)
+        val feedDetails = feedReader.readDetails(feedId)
+        return Feed.of(feed, feedDetails)
     }
 
     fun getFeeds(feedsId: List<String>): List<Feed> {
-        val feeds = feedReader.reads(feedsId)
-        val feedsDetails = feedReader.readsDetails(feedsId)
-        return feedEnricher.enrichFeeds(feeds, feedsDetails)
+        val feeds = feedReader.readsInfo(feedsId)
+        val feedsDetails = feedReader.readsMainDetails(feedsId)
+        return feedEnricher.enriches(feeds, feedsDetails)
     }
 
-    fun getFeeds(targetUserId: String, feedOwner: FeedOwner): List<Feed> {
-        val feeds = feedReader.readsByUserId(targetUserId, feedOwner)
-        val feedsDetail = feedReader.readsDetails(feeds.map { it.feedId })
-        val enrichedFeeds = feedEnricher.enrichFeeds(feeds, feedsDetail)
-        return FeedSortEngine.sort(enrichedFeeds, SortCriteria.DATE)
-    }
-
-    fun likes(userId: String, feedId: String, target: FeedTarget) {
-        feedValidator.isAlreadyLiked(feedId, userId)
-        feedLocker.lockFeedLikes(feedId, userId, target)
-    }
-
-    fun unlikes(userId: String, feedId: String, target: FeedTarget) {
-        feedValidator.isAlreadyUnliked(feedId, userId)
-        feedLocker.lockFeedUnLikes(feedId, userId, target)
+    fun getOwnedFeeds(targetUserId: String, feedStatus: FeedStatus): List<Feed> {
+        val feeds = feedReader.readsOwnedInfo(targetUserId, feedStatus)
+        val feedsDetail = feedReader.readsMainDetails(feeds.map { it.feedId })
+        return feedEnricher.enriches(feeds, feedsDetail)
     }
 
     fun removes(userId: String, feedIds: List<String>) {
         feedValidator.isFeedsOwner(feedIds, userId)
         val oldMedias = feedRemover.removes(feedIds)
-        fileProcessor.processOldFiles(oldMedias)
+        fileHandler.handleOldFiles(oldMedias)
     }
 
-
-
-    fun hides(userId: String, feedIds: List<String>, target: FeedTarget) {
+    fun changeHide(userId: String, feedIds: List<String>, target: FeedTarget) {
         feedValidator.isFeedsOwner(feedIds, userId)
-        feedLocker.lockFeedHides(feedIds, target)
+        feedHandler.lockFeedHides(feedIds, target)
     }
 
-    fun unHides(userId: String, feedIds: List<String>, target: FeedTarget) {
-        feedValidator.isFeedsOwner(feedIds, userId)
-        feedLocker.lockFeedUnHides(feedIds, target)
-    }
 
     fun make(userId: String, files: List<FileData>, topic: String, category: FileCategory) {
-        val medias = fileProcessor.processNewFiles(userId, files, category)
-        feedProcessor.processNewFeed(medias, userId, topic)
+        val medias = fileHandler.handleNewFiles(userId, files, category)
+        feedAppender.append(medias, userId, topic)
     }
 }

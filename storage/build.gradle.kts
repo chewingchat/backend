@@ -14,8 +14,9 @@ dependencies {
     compileOnly(project(":domain"))
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//    runtimeOnly("com.h2database:h2")
+    // 테스트용
     testImplementation("com.h2database:h2")
+    testImplementation(project(":domain"))
 }
 
 tasks {

@@ -14,15 +14,15 @@ internal class EmoticonPackJpaEntity(
     @Id
     private val emoticonPackId: String = UUID.randomUUID().toString(),
 
-    private val emoticonPackUrl: String,
+    private val packUrl: String,
 
-    private val emoticonPackName: String,
+    private val packName: String,
 ) : BaseEntity() {
     fun toEmoticonPack(emoticons: List<Emoticon>): EmoticonPack {
         return EmoticonPack.of(
             emoticonPackId,
-            emoticonPackName,
-            emoticonPackUrl,
+            packName,
+            packUrl,
             emoticons
         )
     }

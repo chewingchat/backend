@@ -1,15 +1,15 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.repository.AuthRepository
+import org.chewing.v1.repository.LoggedInRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 class AuthRemover(
-    private val authRepository: AuthRepository
+    private val loggedInRepository: LoggedInRepository
 ) {
     @Transactional
-    fun removeLoginInfo(authId: String) {
-        authRepository.removeLoginInfo(authId)
+    fun removeLoginInfo(refreshToken: String) {
+        loggedInRepository.remove(refreshToken)
     }
 }

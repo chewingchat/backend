@@ -4,8 +4,8 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.UnauthorizedException
 import org.chewing.v1.model.auth.JwtToken
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -72,20 +72,20 @@ class JwtTokenProviderTest {
             .signWith(secretKey, SignatureAlgorithm.HS512)
             .compact()
 
-        val exception = assertThrows<UnauthorizedException> {
+        val exception = assertThrows<AuthorizationException> {
             jwtTokenProvider.validateToken(token)
         }
 
-        assert(exception.code == ErrorCode.TOKEN_EXPIRED.code)
+        assert(exception.errorCode == ErrorCode.TOKEN_EXPIRED)
     }
 
     @Test
     @DisplayName("유효하지 않은 토큰에 대해 검증이 실패하는지 테스트")
     fun `test validateToken with invalid token`() {
-        val exception = assertThrows<UnauthorizedException> {
+        val exception = assertThrows<AuthorizationException> {
             jwtTokenProvider.validateToken("invalid.token")
         }
-        assert(exception.code == ErrorCode.INVALID_TOKEN.code)
+        assert(exception.errorCode == ErrorCode.INVALID_TOKEN)
     }
 
     @Test

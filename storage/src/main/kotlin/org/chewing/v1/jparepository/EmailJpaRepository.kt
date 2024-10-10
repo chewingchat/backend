@@ -7,7 +7,7 @@ import java.util.*
 
 @Repository
 internal interface EmailJpaRepository : JpaRepository<EmailJpaEntity, String> {
-    fun findByEmailAddress(emailAddress: String): Optional<EmailJpaEntity>
+    fun findByAddress(emailAddress: String): Optional<EmailJpaEntity>
 
     fun findByEmailId(emailId: String): Optional<EmailJpaEntity>
 }

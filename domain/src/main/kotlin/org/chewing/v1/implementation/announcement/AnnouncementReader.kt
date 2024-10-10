@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component
 class AnnouncementReader(
     private val announcementRepository: AnnouncementRepository
 ) {
-    fun readAnnouncements(): List<Announcement> {
-        return announcementRepository.readAnnouncements()
+    fun reads(): List<Announcement> {
+        return announcementRepository.reads()
     }
 
-    fun readAnnouncement(announcementId: String): Announcement {
-        return announcementRepository.readAnnouncement(announcementId)
+    fun read(announcementId: String): Announcement {
+        return announcementRepository.read(announcementId)
             ?: throw NotFoundException(ErrorCode.ANNOUNCEMENT_NOT_FOUND)
     }
 }

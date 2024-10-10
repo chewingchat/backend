@@ -1,22 +1,31 @@
 package org.chewing.v1.implementation.auth
 
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.auth.Credential
+import org.chewing.v1.model.auth.EmailAddress
+import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
-import org.chewing.v1.repository.AuthRepository
+import org.chewing.v1.repository.LoggedInRepository
+import org.chewing.v1.repository.EmailRepository
+import org.chewing.v1.repository.PhoneRepository
 import org.springframework.stereotype.Component
 
 @Component
 class AuthAppender(
-    private val authRepository: AuthRepository
+    private val loggedInRepository: LoggedInRepository,
+    private val emailRepository: EmailRepository,
+    private val phoneRepository: PhoneRepository
 ) {
-    fun appendLoggedIn(refreshToken: RefreshToken, loggedInId: String) {
-        authRepository.appendLoggedIn(refreshToken, loggedInId)
+    fun appendLoggedIn(newRefreshToken: RefreshToken, userId: String) {
+        loggedInRepository.append(newRefreshToken, userId)
     }
 
-    fun appendCredential(credential: Credential) {
-        authRepository.saveCredentialIfNotExists(credential)
-    }
-    fun generateVerificationCode(credential: Credential): String {
-        return authRepository.generateVerificationCode(credential)
+
+    fun makeCredential(credential: Credential): String {
+        return when(credential) {
+            is EmailAddress -> emailRepository.appendIfNotExists(credential)
+            is PhoneNumber -> phoneRepository.appendIfNotExists(credential)
+        }
     }
 }

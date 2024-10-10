@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository
 internal class AnnouncementRepositoryImpl(
     private val announcementJpaRepository: AnnouncementJpaRepository
 ) : AnnouncementRepository {
-    override fun readAnnouncements(): List<Announcement> {
+    override fun reads(): List<Announcement> {
         return announcementJpaRepository.findByOrderByCreatedAt().map {
             it.toAnnouncement()
         }
     }
 
-    override fun readAnnouncement(announcementId: String): Announcement? {
+    override fun read(announcementId: String): Announcement? {
         return announcementJpaRepository.findByAnnouncementId(announcementId)?.toAnnouncement()
     }
 }

@@ -19,15 +19,15 @@ internal class UserSearchJpaEntity(
     fun toFriendSearch(): UserSearch {
         return UserSearch.of(
             keyword = searchText,
-            searchTime = createdAt!!.toLocalDate()
+            searchTime = createdAt
         )
     }
 
     companion object {
-        fun fromFriendSearch(user: User, userSearch: UserSearch): UserSearchJpaEntity {
+        fun fromFriendSearch(userId: String, keyword: String): UserSearchJpaEntity {
             return UserSearchJpaEntity(
-                searchText = userSearch.keyword,
-                userId = user.userId
+                searchText = keyword,
+                userId = userId
             )
         }
     }

@@ -11,33 +11,37 @@ import org.springframework.stereotype.Repository
 internal class CommentRepositoryImpl(
     private val commentJpaRepository: FeedCommentJpaRepository
 ) : CommentRepository {
-    override fun isCommentsOwner(userId: String, commentIds: List<String>): Boolean {
-        return commentJpaRepository.existsAllByFeedCommentIdInAndUserId(commentIds, userId)
-    }
 
-    override fun readComment(feedId: String): List<CommentInfo> {
+    override fun reads(feedId: String): List<CommentInfo> {
         return commentJpaRepository.findAllByFeedId(feedId).map {
             it.toCommentInfo()
         }
     }
 
-    override fun removeComment(commentId: String) {
-        commentJpaRepository.deleteById(commentId)
-    }
-
-    override fun appendComment(user: User, comment: String, feedInfo: FeedInfo) {
-        commentJpaRepository.save(FeedCommentJpaEntity.generate(comment, user, feedInfo))
-    }
-
-    override fun readCommented(userId: String): List<CommentInfo> {
-        return commentJpaRepository.findAllByUserId(userId).map {
+    override fun readsIn(commentIds: List<String>): List<CommentInfo> {
+        return commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
             it.toCommentInfo()
         }
     }
 
-    override fun read(commentId: String): CommentInfo? {
+    override fun remove(commentId: String): String? {
         return commentJpaRepository.findById(commentId).map {
-            it.toCommentInfo()
+            commentJpaRepository.deleteById(commentId)
+            it.toCommentInfo().feedId
         }.orElse(null)
+    }
+
+    override fun removes(feedIds: List<String>) {
+        commentJpaRepository.deleteAllByFeedIdIn(feedIds)
+    }
+
+    override fun append(userId: String, feedId: String, comment: String) {
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
+    }
+
+    override fun readsOwned(userId: String): List<CommentInfo> {
+        return commentJpaRepository.findAllByUserId(userId).map {
+            it.toCommentInfo()
+        }
     }
 }

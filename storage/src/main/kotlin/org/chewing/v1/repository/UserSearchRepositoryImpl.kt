@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository
 internal class UserSearchRepositoryImpl(
     private val userSearchJpaRepository: UserSearchJpaRepository
 ):UserSearchRepository {
-    override fun appendSearchHistory(user: User, search: UserSearch) {
-        userSearchJpaRepository.save(UserSearchJpaEntity.fromFriendSearch(user, search))
+    override fun appendHistory(userId: String, keyword: String) {
+        userSearchJpaRepository.save(UserSearchJpaEntity.fromFriendSearch(userId, keyword))
     }
 
     override fun readSearchHistory(userId: String): List<UserSearch> {
-        return userSearchJpaRepository.findAllByUserId(userId).map {
+        return userSearchJpaRepository.findAllByUserIdOrderByCreatedAt(userId).map {
             it.toFriendSearch()
         }
     }

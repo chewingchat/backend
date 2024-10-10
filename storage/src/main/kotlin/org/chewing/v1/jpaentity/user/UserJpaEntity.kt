@@ -11,6 +11,7 @@ import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.user.UserAccount
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -31,9 +32,9 @@ internal class UserJpaEntity(
     @Enumerated(EnumType.STRING)
     private var backgroundPictureType: MediaType,
 
-    private var userFirstName: String,
+    private var firstName: String,
 
-    private var userLastName: String,
+    private var lastName: String,
 
     private var birth: String,
 
@@ -50,8 +51,8 @@ internal class UserJpaEntity(
     companion object {
         fun generateByEmail(email: Email): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
+                firstName = "",
+                lastName = "",
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
@@ -67,8 +68,8 @@ internal class UserJpaEntity(
 
         fun generateByPhone(phone: Phone): UserJpaEntity {
             return UserJpaEntity(
-                userFirstName = "",
-                userLastName = "",
+                firstName = "",
+                lastName = "",
                 birth = "",
                 pictureUrl = "",
                 backgroundPictureUrl = "",
@@ -86,8 +87,8 @@ internal class UserJpaEntity(
     fun toUser(): User {
         return User.of(
             this.userId,
-            this.userFirstName,
-            this.userLastName,
+            this.firstName,
+            this.lastName,
             this.birth,
             Media.of(FileCategory.PROFILE, this.pictureUrl, 0, this.pictureType),
             Media.of(FileCategory.BACKGROUND, this.backgroundPictureUrl, 0, this.backgroundPictureType),
@@ -97,15 +98,17 @@ internal class UserJpaEntity(
 
     fun updateUserPictureUrl(media: Media) {
         this.pictureUrl = media.url
+        this.pictureType = media.type
     }
 
     fun updateBackgroundPictureUrl(media: Media) {
         this.backgroundPictureUrl = media.url
+        this.backgroundPictureType = media.type
     }
 
     fun updateUserName(userName: UserName) {
-        this.userFirstName = userName.firstName
-        this.userLastName = userName.lastName
+        this.firstName = userName.firstName
+        this.lastName = userName.lastName
     }
 
     fun updateBirth(birth: String) {
@@ -136,11 +139,11 @@ internal class UserJpaEntity(
         return Media.of(FileCategory.TTS, this.ttsUrl ?: "", 0, this.ttsType)
     }
 
-    fun getEmailId(): String? {
-        return this.emailId
-    }
-
-    fun getPhoneNumberId(): String? {
-        return this.phoneNumberId
+    fun toUserAccount(): UserAccount {
+        return UserAccount.of(
+            this.toUser(),
+            this.emailId,
+            this.phoneNumberId
+        )
     }
 }

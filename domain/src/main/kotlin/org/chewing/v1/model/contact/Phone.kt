@@ -8,7 +8,7 @@ class Phone private constructor(
     val countryCode: String,
     val number: String,
     val validationCode: ValidationCode,
-) : Contact {
+) : Contact() {
     companion object {
         fun of(
             phoneId: String,
@@ -28,6 +28,4 @@ class Phone private constructor(
             )
         }
     }
-    override val type: ContactType
-        get() = ContactType.PHONE
 }

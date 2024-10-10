@@ -3,8 +3,6 @@ package org.chewing.v1.repository
 import org.chewing.v1.model.*
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.error.UnauthorizedException
-import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.model.chat.ChatFriend
 import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
@@ -19,8 +17,6 @@ import java.util.*
 
 @Repository
 class ChatRoomRepositoryImpl(
-    private val fileProcessor: FileProcessor, // FileProcessor 주입
-
 ) : ChatRoomRepository {
     private val chatRooms = mutableListOf<ChatRoom>()
     private val chatLogs = mutableMapOf<String, MutableList<ChatLog>>()

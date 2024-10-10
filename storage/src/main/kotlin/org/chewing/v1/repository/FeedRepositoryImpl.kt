@@ -1,86 +1,62 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jpaentity.feed.FeedDetailJpaEntity
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
-import org.chewing.v1.jpaentity.user.UserFeedId
-import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
-import org.chewing.v1.jparepository.FeedDetailJpaRepository
 import org.chewing.v1.jparepository.FeedJpaRepository
-import org.chewing.v1.jparepository.FeedLikesJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
-import org.chewing.v1.model.feed.FeedDetail
-import org.chewing.v1.model.feed.FeedOwner
+import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Repository
 
 @Repository
 internal class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
-    private val feedDetailJpaRepository: FeedDetailJpaRepository,
 ) : FeedRepository {
     override fun read(feedId: String): FeedInfo? {
         return feedJpaRepository.findById(feedId).map { it.toFeedInfo() }.orElse(null)
     }
 
     override fun reads(feedIds: List<String>): List<FeedInfo> {
-        return feedJpaRepository.findAllById(feedIds.map { it }).map { it.toFeedInfo() }
+        return feedJpaRepository.findAllByFeedIdInOrderByCreatedAtAsc(feedIds.map { it }).map { it.toFeedInfo() }
     }
 
-    override fun readsByUserId(userId: String, feedOwner: FeedOwner): List<FeedInfo> {
-        return when (feedOwner) {
-            FeedOwner.OWNED -> feedJpaRepository.findAllByUserId(userId).map { it.toFeedInfo() }
-            FeedOwner.FRIEND -> feedJpaRepository.findAllByUserIdAndHideFalse(userId).map { it.toFeedInfo() }
-            FeedOwner.HIDDEN -> feedJpaRepository.findAllByUserIdAndHideTrue(userId).map { it.toFeedInfo() }
+    override fun readsOwned(userId: String, feedStatus: FeedStatus): List<FeedInfo> {
+        return when (feedStatus) {
+            FeedStatus.HIDDEN -> feedJpaRepository.findAllByUserIdAndHideTrueOrderByCreatedAtAsc(userId)
+                .map { it.toFeedInfo() }
+
+            FeedStatus.NOT_HIDDEN -> feedJpaRepository.findAllByUserIdAndHideFalseOrderByCreatedAtAsc(userId)
+                .map { it.toFeedInfo() }
+
+            FeedStatus.ALL -> feedJpaRepository.findAllByUserIdOrderByCreatedAtAsc(userId).map { it.toFeedInfo() }
         }
     }
 
-    override fun readDetails(feedId: String): List<FeedDetail> {
-        return feedDetailJpaRepository.findAllByFeedId(feedId).map { it.toFeedDetail() }
-    }
-
-    override fun readsDetails(feedIds: List<String>): List<FeedDetail> {
-        val feedDetails = feedDetailJpaRepository.findAllByFeedIdIn(feedIds)
-        return feedDetails.map { it.toFeedDetail() }
-    }
-
-    override fun readsByOwner(feedIds: List<String>, userIds: List<String>): List<FeedInfo> {
-        return feedJpaRepository.findAllByFeedIdInAndUserIdIn(feedIds.map { it }, userIds.map { it })
-            .map { it.toFeedInfo() }
-    }
-
-    override fun isAllOwner(feedIds: List<String>, userId: String): Boolean {
-        return feedJpaRepository.existsAllByFeedIdInAndUserId(feedIds.map { it }, userId)
-    }
-
-
-    override fun update(feedId: String, target: FeedTarget) {
-        feedJpaRepository.findById(feedId).orElseThrow().let {
+    override fun update(feedId: String, target: FeedTarget): String? {
+        return feedJpaRepository.findById(feedId).map{
             when (target) {
-                FeedTarget.LIKES -> it.updateLikes()
-                FeedTarget.UNLIKES -> it.updateUnLikes()
-                FeedTarget.COMMENTS -> it.updateComments()
-                FeedTarget.UNCOMMENTS -> it.updateUnComments()
-                FeedTarget.HIDE -> it.updateHide()
-                FeedTarget.UNHIDE -> it.updateUnHide()
+                FeedTarget.LIKES -> it.likes()
+                FeedTarget.UNLIKES -> it.unLikes()
+                FeedTarget.COMMENTS -> it.comments()
+                FeedTarget.UNCOMMENTS -> it.unComments()
+                FeedTarget.HIDE -> it.hide()
+                FeedTarget.UNHIDE -> it.unHide()
             }
             feedJpaRepository.saveAndFlush(it)
-        }
+            feedId
+        }.orElse(null)
     }
 
     override fun removes(feedIds: List<String>) {
-        feedJpaRepository.deleteAllById(feedIds.map { it })
+        feedJpaRepository.deleteAllById(feedIds)
     }
 
-    override fun removesDetails(feedIds: List<String>): List<Media> {
-        val details = feedDetailJpaRepository.findAllByFeedIdIn(feedIds.map { it }).map { it.toFeedDetail() }
-        feedDetailJpaRepository.deleteAllById(feedIds.map { it })
-        return details.map { it.media }
+    override fun removesOwned(userId: String) {
+        feedJpaRepository.deleteAllByUserId(userId)
     }
 
-    override fun append(medias: List<Media>, userId: String, topic: String): String {
-        val feedId = feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
-        feedDetailJpaRepository.saveAll(FeedDetailJpaEntity.generate(medias, feedId)).map { it.toDetailId() }
-        return feedId
+    override fun append(userId: String, topic: String): String {
+        return feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
     }
 }

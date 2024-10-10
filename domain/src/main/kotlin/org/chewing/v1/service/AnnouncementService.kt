@@ -9,10 +9,10 @@ class AnnouncementService(
     private val announcementReader: AnnouncementReader
 ) {
     fun readAnnouncements(): List<Announcement> {
-        return announcementReader.readAnnouncements()
+        return announcementReader.reads()
     }
 
     fun readAnnouncement(announcementId: String): Announcement {
-        return announcementReader.readAnnouncement(announcementId)
+        return announcementReader.read(announcementId)
     }
 }

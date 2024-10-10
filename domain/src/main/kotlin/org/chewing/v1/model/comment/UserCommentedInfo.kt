@@ -2,17 +2,21 @@ package org.chewing.v1.model.comment
 
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.model.user.User
 
 class UserCommentedInfo private constructor(
     val comment: CommentInfo,
-    val friend: Friend,
+    val friendShip: FriendShip,
+    val user: User,
     val feed: Feed
-){
+) {
     companion object {
-        fun of(comment: CommentInfo, friend: Friend, feed: Feed): UserCommentedInfo {
+        fun of(comment: CommentInfo, friendShip: FriendShip, user: User, feed: Feed): UserCommentedInfo {
             return UserCommentedInfo(
                 comment = comment,
-                friend = friend,
+                friendShip = friendShip,
+                user = user,
                 feed = feed
             )
         }

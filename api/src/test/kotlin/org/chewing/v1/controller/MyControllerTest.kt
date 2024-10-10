@@ -4,8 +4,8 @@ import org.chewing.v1.TestDataFactory.createFriend
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.config.TestSecurityConfig
-import org.chewing.v1.implementation.facade.MainFacade
-import org.chewing.v1.model.SortCriteria
+import org.chewing.v1.facade.MainFacade
+import org.chewing.v1.model.friend.FriendSortCriteria
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -37,7 +37,7 @@ class MyControllerTest(
         val user = createUser()
         val friends = listOf(createFriend())
         val status = createUserStatus()
-        whenever(mainFacade.getMainPage("testUserId", SortCriteria.NAME)).thenReturn(Triple(user, status, friends))
+        whenever(mainFacade.getMainPage("testUserId", FriendSortCriteria.NAME)).thenReturn(Triple(user, status, friends))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/main")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,8 +1,8 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.dto.response.main.MainResponse
-import org.chewing.v1.implementation.facade.MainFacade
-import org.chewing.v1.model.SortCriteria
+import org.chewing.v1.facade.MainFacade
+import org.chewing.v1.model.friend.FriendSortCriteria
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,7 +15,7 @@ class MainController(
     @GetMapping("")
     fun getMainPage(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("sort") sort: SortCriteria
+        @RequestParam("sort") sort: FriendSortCriteria
     ): SuccessResponseEntity<MainResponse> {
         val (user, userStatus, friends) = mainFacade.getMainPage(userId, sort)
         //성공 응답 200 반환
