@@ -18,7 +18,7 @@ data class ChatMessageMongoEntity(
     val messageId: String,
     @Indexed  // 개별 인덱스 추가 가능
     val roomId: String,
-    val type: MessageType,
+    var type: MessageType,
     val senderId: String,
     val messageSendType: MessageSendType?,
     val parentMessageId: String?,
@@ -46,22 +46,24 @@ data class ChatMessageMongoEntity(
                 friends = chatMessage.friends
             )
         }
-
-        fun toChatMessage(entity: ChatMessageMongoEntity): ChatMessage {
-            return ChatMessage(
-                messageId = entity.messageId,
-                type = entity.type,
-                roomId = entity.roomId,
-                sender = entity.senderId,
-                messageSendType = entity.messageSendType,
-                parentMessageId = entity.parentMessageId,
-                parentMessagePage = entity.parentMessagePage,
-                parentSeqNumber = entity.parentSeqNumber,
-                timestamp = entity.sendTime,
-                friends = entity.friends,
-                seqNumber = entity.seqNumber,
-                page = entity.page
-            )
-        }
+    }
+    fun toChatMessage(): ChatMessage {
+        return ChatMessage(
+            messageId = this.messageId,
+            type = this.type,
+            roomId = this.roomId,
+            sender = this.senderId,
+            messageSendType = this.messageSendType,
+            parentMessageId = this.parentMessageId,
+            parentMessagePage = this.parentMessagePage,
+            parentSeqNumber = this.parentSeqNumber,
+            timestamp = this.sendTime,
+            friends = this.friends,
+            seqNumber = this.seqNumber,
+            page = this.page
+        )
+    }
+    fun delete(){
+        this.type = MessageType.DELETE
     }
 }

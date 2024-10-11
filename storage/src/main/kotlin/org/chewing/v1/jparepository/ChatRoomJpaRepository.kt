@@ -14,10 +14,14 @@ interface ChatRoomJpaRepository : JpaRepository<ChatRoomEntity, String> {
     // chatRoomId를 통해 채팅방 정보를 조회하는 메서드
     fun findByChatRoomId(chatRoomId: String): Optional<ChatRoomEntity>
 
-    @Query("""
-        SELECT c FROM ChatRoom c 
-        WHERE c.latestMessage LIKE %:keyword% 
-        OR EXISTS (SELECT f FROM c.chatFriends f WHERE f.friendFirstName LIKE %:keyword% OR f.friendLastName LIKE %:keyword%)
-    """)
-    fun searchByKeyword(@Param("keyword") keyword: String): List<ChatRoom>
+    /**
+     * 채팅방 검색이 피그마 상으로는 채팅방 참여자 검색인 거 같아서 제거 할게용
+     * */
+
+//    @Query("""
+//        SELECT c FROM ChatRoomEntity c
+//        WHERE c.latestMessage LIKE %:keyword%
+//        OR EXISTS (SELECT f FROM c.chatFriends f WHERE f.friendFirstName LIKE %:keyword% OR f.friendLastName LIKE %:keyword%)
+//    """)
+//    fun searchByKeyword(@Param("keyword") keyword: String): List<ChatRoom>
 }

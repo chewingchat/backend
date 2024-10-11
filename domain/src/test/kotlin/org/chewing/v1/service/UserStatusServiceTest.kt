@@ -66,7 +66,7 @@ class UserStatusServiceTest {
     @Test
     fun `유저의 모든 상태를 가져온다`(){
         val userId = "userId"
-        val userStatus = TestDataFactory.createUserStatus()
+        val userStatus = TestDataFactory.createUserStatus(userId)
         whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
 
         val result = assertDoesNotThrow {
@@ -78,8 +78,9 @@ class UserStatusServiceTest {
 
     @Test
     fun `유저들의 선택한 상태들을 가져온다`(){
-        val userIds = listOf("userId")
-        val userStatus = TestDataFactory.createUserStatus()
+        val userId = "userId"
+        val userIds = listOf(userId)
+        val userStatus = TestDataFactory.createUserStatus(userId)
         whenever(userStatusRepository.readSelectedUsers(userIds)).thenReturn(listOf(userStatus))
 
         val result = assertDoesNotThrow {
@@ -92,7 +93,7 @@ class UserStatusServiceTest {
     @Test
     fun `유저의 모든 상태 목록을 삭제한다`(){
         val userId = "userId"
-        val userStatus = TestDataFactory.createUserStatus()
+        val userStatus = TestDataFactory.createUserStatus(userId)
         whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
 
         assertDoesNotThrow {
@@ -111,7 +112,7 @@ class UserStatusServiceTest {
     @Test
     fun `선택한 상태를 가져온다 - 선택 없음이 아님`(){
         val userId = "userId"
-        val userStatus = TestDataFactory.createUserStatus()
+        val userStatus = TestDataFactory.createUserStatus(userId)
         whenever(userStatusRepository.readSelected(userId)).thenReturn(userStatus)
 
         val result = assertDoesNotThrow {

@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.chat
+package org.chewing.v1.implementation.chat.sequence
 
 import org.chewing.v1.repository.ChatMessageRepository
 import org.chewing.v1.repository.ChatSequenceRepository

@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response.chat
 
-import org.chewing.v1.model.chat.ChatFriend
+import org.chewing.v1.model.chat.ChatFriendInfo
 
 data class ChatFriendResponse(
     val friendId: Int,   // 친구 ID
@@ -10,12 +10,12 @@ data class ChatFriendResponse(
 ) {
     companion object {
         // ChatFriend를 ChatFriendResponse로 변환하는 함수
-        fun from(chatFriend: ChatFriend): ChatFriendResponse {
+        fun from(chatFriendInfo: ChatFriendInfo): ChatFriendResponse {
             return ChatFriendResponse(
-                friendId = chatFriend.friendId,
-                firstName = chatFriend.friendFirstName,
-                lastName = chatFriend.friendLastName,
-                imageUrl = chatFriend.imageUrl
+                friendId = chatFriendInfo.friendId,
+                firstName = chatFriendInfo.friendFirstName,
+                lastName = chatFriendInfo.friendLastName,
+                imageUrl = chatFriendInfo.imageUrl
             )
         }
     }
