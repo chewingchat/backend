@@ -17,7 +17,7 @@ class MainAggregator {
             val user = userMap[friendInfo.friendId]
             val status = statusMap[friendInfo.friendId]
             status?.let {
-                Friend.of(user!!, friendInfo.isFavorite, user.name, it, friendInfo.type)
+                Friend.of(user!!, friendInfo.isFavorite, friendInfo.friendName, it, friendInfo.type)
             }
         }
     }

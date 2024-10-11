@@ -1,6 +1,6 @@
 package org.chewing.v1.mongorepository
 
-import org.chewing.v1.model.chat.ChatFriend
+import org.chewing.v1.model.chat.ChatFriendInfo
 import org.chewing.v1.mongoentity.ChatMessageMongoEntity
 import org.chewing.v1.mongoentity.ChatSequenceMongoEntity
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository
 interface ChatSequenceMongoRepository : MongoRepository<ChatSequenceMongoEntity, String> {
     // 친구가 읽은 마지막 시퀀스 번호 계산
     @Query("{ 'roomId': ?0, 'friends.friendId': ?1 }")
-    fun calculateFriendReadSeqNumber(roomId: Int, chatFriends: List<ChatFriend>): Int {
+    fun calculateFriendReadSeqNumber(roomId: Int, chatFriendInfos: List<ChatFriendInfo>): Int {
         var highestSeqNumber = 0  // 가장 높은 seqNumber를 저장할 변수
 
-        for (friend in chatFriends) {
+        for (friend in chatFriendInfos) {
             // 각 친구가 마지막으로 읽은 메시지를 가져옴
             val lastReadMessage = findIdOrderBySeqNumberDesc(roomId, friend.friendId)
 

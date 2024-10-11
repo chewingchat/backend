@@ -40,8 +40,8 @@ object TestDataFactory {
         return Email.of("testEmailId", "test@example.com", verificationCode, LocalDateTime.now().minusMinutes(1))
     }
 
-    fun createUserAccount(): UserAccount {
-        return UserAccount.of(createUser(), "testFirstName", "testLastName")
+    fun createUserAccount(emailId: String?, phoneId: String?): UserAccount {
+        return UserAccount.of(createUser("userId"), emailId, phoneId)
     }
 
     fun createPhone(verificationCode: String): Phone {
@@ -52,8 +52,8 @@ object TestDataFactory {
         return UserContent.of("firstName", "lastName", "2000-00-00")
     }
 
-    fun createUserStatus(): UserStatus {
-        return UserStatus.of("statusId", "statusMessage", "emoji", "userId", true)
+    fun createUserStatus(userId: String): UserStatus {
+        return UserStatus.of("statusId", "statusMessage", "emoji", userId, true)
     }
 
     fun createDefaultUserStatus(): UserStatus {
@@ -94,9 +94,9 @@ object TestDataFactory {
         return JwtToken.of("accessToken", RefreshToken.of("refreshToken", LocalDateTime.now()))
     }
 
-    fun createUser(): User {
+    fun createUser(userId: String): User {
         return User.of(
-            "testUserId",
+            userId,
             "testFirstName",
             "testLastName",
             "2000-00-00",
@@ -138,8 +138,8 @@ object TestDataFactory {
         )
     }
 
-    fun createFriendShip(accessStatus: AccessStatus): FriendShip {
-        return FriendShip.of("friendId", createUserName(), true, accessStatus)
+    fun createFriendShip(friendId: String, accessStatus: AccessStatus): FriendShip {
+        return FriendShip.of(friendId, createUserName(), true, accessStatus)
     }
 
     fun createCommentInfo(userId: String, commentId: String, feedId: String): CommentInfo {
@@ -159,10 +159,14 @@ object TestDataFactory {
     }
 
     fun createAnnouncement(announcementId: String): Announcement {
-        return Announcement.of(announcementId, "title",  LocalDateTime.now(),"content")
+        return Announcement.of(announcementId, "title", LocalDateTime.now(), "content")
     }
 
     fun createUserSearch(userId: String): UserSearch {
         return UserSearch.of(userId, LocalDateTime.now())
+    }
+
+    fun createLoginInfo(user: User): LoginInfo {
+        return LoginInfo.of(createJwtToken(), user)
     }
 }

@@ -2,6 +2,12 @@ package org.chewing.v1.model.chat
 
 import org.chewing.v1.model.media.MediaType
 
+
+/**
+ * ChatLog SealedClass 이용해서 parrentMessage 상속 받듯이 분리 하는게 좋을 거 같아요
+ * null 만드는거 타입 유지 보수 -> 테스트 힘들어요 ㅠ
+ *
+ * */
 data class ChatLog(
     val type: String, // api 0.2 v로 인한 수정, 메세지 타입 의미(파일, 텍스트 등등)
     val messageType: List<MessageType>? = null, // api 0.2 v로 인한 수정(삭제, 나감 등 메시지 상태여부)

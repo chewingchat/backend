@@ -2,14 +2,10 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.model.chat.ChatFriend
 import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
-import org.chewing.v1.implementation.media.FileProcessor
 import org.chewing.v1.jparepository.ChatRoomJpaRepository
 import org.chewing.v1.model.chat.*
-import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.mongoentity.ChatMessageMongoEntity
 import org.chewing.v1.mongorepository.ChatMessageMongoRepository
@@ -21,69 +17,90 @@ import java.util.*
 
 
 @Repository
+/**
+ * 채팅방 관련한 메소드만 들어갈게용
+ * */
 class ChatRoomRepositoryImpl(
     private val chatMessageMongoRepository: ChatMessageMongoRepository, // MongoDB 레포지토리 이름 변경
     private val chatRoomJpaRepository: ChatRoomJpaRepository, // JPA 레포지토리
-    private val chatSequenceMongoRepository: ChatSequenceMongoRepository
 
 ) : ChatRoomRepository {
     private val chatRooms = mutableListOf<ChatRoom>()
     private val chatLogs = mutableMapOf<String, MutableList<ChatLog>>()
-    override fun getChatRooms(sort: String): List<ChatRoom> {
-
-
+    override fun readChatRooms(sort: String): List<ChatRoom> {
         val sortedChatRooms = when (sort) {
             "favorite" -> chatRooms.filter { it.favorite }
             "latest" -> chatRooms.sortedByDescending { it.latestMessageTime }
             "notRead" -> chatRooms.filter { it.totalUnReadMessage > 0 }
             else -> throw IllegalArgumentException("Invalid sort parameter")
         }
-
         if (sortedChatRooms.isEmpty()) throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
         return sortedChatRooms
     }
 
-    override fun searchChatRooms(keyword: String): List<ChatRoom> {
+//    override fun searchChatRooms(keyword: String): List<ChatRoom> {
         // 1. JPA를 통해 기본 채팅방 정보 검색
-        val chatRooms = chatRoomJpaRepository.searchByKeyword(keyword)
+//        val chatRooms = chatRoomJpaRepository.searchByKeyword(keyword)
 
-        if (chatRooms.isEmpty()) {
-            throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
-        }
+        /**
+         * 채팅 방이 없드면 그냥 없는 리스트 반환할게용
+         */
+//        if (chatRooms.isEmpty()) {
+//            throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
+//        }
 
+        /**
+         * 채팅관련 한 것은 채팅 Repository에서 할게용 !
+         * */
         // 2. MongoDB를 통해 각 채팅방의 추가 정보 검색 (예: 최신 메시지)
-        return chatRooms.map { chatRoom ->
-            val latestMessage = chatMessageMongoRepository.findLatestMessageByRoomId(chatRoom.chatRoomId)
-            val updatedChatRoom = chatRoom.copy(latestMessage = latestMessage?.messageId ?: chatRoom.latestMessage)
-            updatedChatRoom
-        }
-    }
+//        return chatRooms.map { chatRoom ->
+//            val latestMessage = chatMessageMongoRepository.findLatestMessageByRoomId(chatRoom.chatRoomId)
+//            val updatedChatRoom = chatRoom.copy(latestMessage = latestMessage?.messageId ?: chatRoom.latestMessage)
+//            updatedChatRoom
+//        }
+//
+//        return chatRooms
+//    }
 
+        /**
+         * 실제 채팅방이 지워지면 안되고 -> ChatFriendEntity에서 삭제 처리할게용
+         * 채팅방을 나가기 != 채팅방 삭제
+         * */
     override fun deleteChatRooms(chatRoomIds: List<String>) {
         chatRoomIds.forEach { chatRoomId ->
             val roomToDelete = chatRooms.find { it.chatRoomId == chatRoomId }
                 ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
-
             chatRooms.remove(roomToDelete)
         }
     }
 
-    override fun getChatRoomInfo(chatRoomId: String): ChatRoom {
+
+    override fun readChatRoom(chatRoomId: String): ChatRoomInfo {
         val chatRoomEntity = chatRoomJpaRepository.findByChatRoomId(chatRoomId)
             .orElseThrow { NotFoundException(ErrorCode.CHATROOM_NOT_FOUND) }
 
         // 최신 페이지와 친구가 읽은 시퀀스 번호 계산 (MongoDB를 사용)
-        val latestPage = chatMessageMongoRepository.calculateLatestPage(chatRoomId)
-        val readSeqNumber = chatSequenceMongoRepository.calculateFriendReadSeqNumber(chatRoomId.toInt(), chatRoomEntity.toChatRoom().chatFriends)
+        /**
+         * 이 것들은 모두 비즈니스 로직에 있어야 해용 -> repository는 오직 읽는 기능만 수행 해야 해요
+         * 계산 과 같은 것은 Serivce에서 Calculator 구현체를 만들어서 사용 혹은 Reader에서 읽는 와중에 계산
+         * */
+//        val latestPage = chatMessageMongoRepository.calculateLatestPage(chatRoomId)
+//        val readSeqNumber = chatSequenceMongoRepository.calculateFriendReadSeqNumber(chatRoomId.toInt(), chatRoomEntity.toChatRoomInfo().chatFriendInfos)
 
-        // MongoDB에서 가져온 데이터를 설정
-        chatRoomEntity.latestPage = latestPage
-        chatRoomEntity.readSeqNumber = readSeqNumber
+        /**
+         * SequenceRepository에서 읽을게용
+         * */
+//        // MongoDB에서 가져온 데이터를 설정
+//        chatRoomEntity.latestPage = latestPage
+//        chatRoomEntity.readSeqNumber = readSeqNumber
 
         // ChatRoomEntity를 ChatRoom으로 변환 후 반환
-        return chatRoomEntity.toChatRoom()
+        return chatRoomEntity.toChatRoomInfo()
     }
 
+    /**
+     * 연결 시켜 주시고 -> sealedClass로 만들어 봐주세용
+     * */
     override fun getChatLogs(chatRoomId: String, page: Int): List<ChatLog> {
         val logs = chatLogs[chatRoomId]?.filter { it.page == page }
             ?: throw NotFoundException(ErrorCode.CHATLOG_NOT_FOUND)
@@ -104,22 +121,19 @@ class ChatRoomRepositoryImpl(
     }
 
     // 채팅방에 파일 업로드
-    override fun uploadChatRoomFiles(chatRoomId: String, fileDathList: List<FileData>) {
-        try {
-
-
-            // 파일 데이터들을 미디어로 변환하고 업로드합니다.
-            val uploadedMedia: List<Media> = fileProcessor.processNewFiles("userId", fileDathList, FileCategory.EMOTICON)
-
-            // 업로드된 미디어를 채팅방에 연결하는 로직
-            saveUploadedMedia(chatRoomId, uploadedMedia)
-
-        } catch (e: IOException) {
-            throw IllegalArgumentException("파일 업로드에 실패했습니다: ${e.message}")
-        }
-    }
+//    override fun uploadChatRoomFiles(chatRoomId: String, uploadedMedia: List<Media>) {
+//        try {
+//            // 업로드된 미디어를 채팅방에 연결하는 로직
+//            saveUploadedMedia(chatRoomId, uploadedMedia)
+//        } catch (e: IOException) {
+//            throw IllegalArgumentException("파일 업로드에 실패했습니다: ${e.message}")
+//        }
+//    }
 
     // 업로드된 미디어를 저장하는 메서드
+    /**
+     * ChatMessageRepository로 이동시켜주세용
+     * */
     override fun saveUploadedMedia(chatRoomId: String, mediaList: List<Media>) {
         mediaList.forEach { media ->
             // media 객체에서 MediaType을 추출하여 MessageSendType 객체 생성
@@ -147,22 +161,25 @@ class ChatRoomRepositoryImpl(
         }
     }
 
-    override fun findByChatRoomId(roomId: String): ChatRoom? {
-        return chatRooms.find { it.chatRoomId == roomId }
+    /**
+     * 채팅 방 찾는 로직
+     * */
+    override fun findByChatRoomId(roomId: String): ChatRoomInfo {
+        return chatRoomJpaRepository.findByChatRoomId(roomId).orElse(null).toChatRoomInfo()
     }
 
+    /**
+     * 연결 시켜주세용
+     * */
     override fun save(chatRoom: ChatRoom) {
         chatRooms.add(chatRoom)
     }
 
-
+    /**
+     * chatMessage Repository로 이동시켜주세용
+     * */
     private fun findParentMessage(parentMessageId: String): ChatLog? {
         // 모든 채팅 로그에서 부모 메시지 ID로 검색
         return chatLogs.values.flatten().find { it.messageId == parentMessageId }
     }
-
-
-
-
-
 }

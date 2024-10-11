@@ -1,8 +1,6 @@
 package org.chewing.v1.mongorepository
 
-import org.chewing.v1.model.chat.ChatFriend
 import org.chewing.v1.mongoentity.ChatMessageMongoEntity
-import org.chewing.v1.mongoentity.ChatSequenceMongoEntity
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository

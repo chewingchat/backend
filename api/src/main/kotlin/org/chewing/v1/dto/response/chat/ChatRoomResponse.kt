@@ -21,7 +21,7 @@ data class ChatRoomResponse(
                 latestMessage = chatRoom.latestMessage,
                 latestMessageTime = chatRoom.latestMessageTime,
                 totalUnReadMessage = chatRoom.totalUnReadMessage,
-                chatFriends = chatRoom.chatFriends.map { ChatFriendResponse.from(it) }
+                chatFriends = chatRoom.chatFriendInfos.map { ChatFriendResponse.from(it) }
             )
         }
     }

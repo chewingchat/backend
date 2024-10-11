@@ -5,7 +5,6 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.friend.friendship.*
-import org.chewing.v1.implementation.friendship.*
 import org.chewing.v1.model.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria
 import org.chewing.v1.repository.FriendShipRepository
@@ -34,8 +33,9 @@ class FriendShipServiceTest {
     @Test
     fun `접근 가능한 친구 조회`() {
         val userId = "userId"
+        val friendId = "friendId"
         val sort = FriendSortCriteria.NAME
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.readsAccess(userId, AccessStatus.ACCESS, sort)).thenReturn(listOf(friendShip))
 
@@ -48,8 +48,9 @@ class FriendShipServiceTest {
     @Test
     fun `유저의 접근 가능한 친구 관계 정보를 친구 아이디를 통해 조회한다`(){
         val userId = "userId"
-        val friendIds = listOf("friendId")
-        val friendShips = listOf(TestDataFactory.createFriendShip(AccessStatus.ACCESS))
+        val friendId = "friendId"
+        val friendIds = listOf(friendId)
+        val friendShips = listOf(TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS))
 
         whenever(friendShipRepository.reads(friendIds, userId, AccessStatus.ACCESS)).thenReturn(friendShips)
 
@@ -80,7 +81,7 @@ class FriendShipServiceTest {
         val userName = TestDataFactory.createUserName()
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCK)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCK)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -97,7 +98,7 @@ class FriendShipServiceTest {
         val userName = TestDataFactory.createUserName()
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCKED)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCKED)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -114,7 +115,7 @@ class FriendShipServiceTest {
         val userName = TestDataFactory.createUserName()
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -157,7 +158,7 @@ class FriendShipServiceTest {
     fun `친구 삭제 실패 - 친구 관계가 존재하지 않음`(){
         val userId = "userId"
         val friendId = "friendId"
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.remove(userId, friendId)).thenReturn(null)
@@ -174,7 +175,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
 
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -208,7 +209,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
 
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -226,7 +227,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
 
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -245,7 +246,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val favorite = true
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
@@ -260,7 +261,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val favorite = true
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCK)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCK)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
@@ -277,7 +278,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val favorite = true
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCKED)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCKED)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
@@ -294,7 +295,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val favorite = true
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 
@@ -310,7 +311,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
@@ -325,7 +326,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCK)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCK)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
@@ -342,7 +343,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.BLOCKED)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.BLOCKED)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
         whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
@@ -359,7 +360,7 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
-        val friendShip = TestDataFactory.createFriendShip(AccessStatus.ACCESS)
+        val friendShip = TestDataFactory.createFriendShip(friendId,AccessStatus.ACCESS)
 
         whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
 

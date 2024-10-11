@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation.chat
+package org.chewing.v1.implementation.chat.message
 
 import org.chewing.v1.external.ExternalChatClient
 import org.chewing.v1.model.chat.ChatMessage

@@ -162,7 +162,8 @@ class AuthServiceTest {
 
     @Test
     fun `로그인 정보 생성`() {
-        val user = TestDataFactory.createUser()
+        val userId = "1234"
+        val user = TestDataFactory.createUser(userId)
         val result = authService.createLoginInfo(user)
 
         assert(result.loginType == user.status)
