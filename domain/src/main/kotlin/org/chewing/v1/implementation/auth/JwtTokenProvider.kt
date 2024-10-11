@@ -82,7 +82,7 @@ class JwtTokenProvider(
         return claims.subject
     }
 
-    // 토큰에서 클레임 추출
+    // 토큰에서 클레임(사용자 관련 정보(예: 사용자 ID, 권한 등)) 추출
     private fun getClaimsFromToken(token: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(secretKey)
@@ -90,7 +90,7 @@ class JwtTokenProvider(
             .parseClaimsJws(token)
             .body
     }
-
+    // token 글자 깔끔히 정리
     fun cleanedToken(token: String): String {
         return token.removePrefix("Bearer ").trim()
     }

@@ -6,9 +6,13 @@ enum class MediaType(val type: String) {
     IMAGE_JPEG("image/jpeg"),
     IMAGE_JPG("image/jpg"),
     IMAGE_PNG("image/png"),
+
     VIDEO_BASIC("video/mp4"),
     AUDIO_MP3("audio/mp3"),
     VIDEO_MP4("video/mp4");
+
+
+    // pdf 추가
 
     override fun toString(): String {
         return type

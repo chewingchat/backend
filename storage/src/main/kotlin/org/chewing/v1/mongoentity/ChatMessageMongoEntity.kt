@@ -1,61 +1,66 @@
 package org.chewing.v1.mongoentity
 
 import org.chewing.v1.model.chat.ChatMessage
+import org.chewing.v1.model.chat.MessageSendType
 import org.chewing.v1.model.chat.MessageType
-import java.time.LocalDateTime
+import org.springframework.data.mongodb.core.index.CompoundIndex
+import org.springframework.data.mongodb.core.index.CompoundIndexes
+import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDateTime
 
-@Document
+@Document(collection = "chat_messages")
+// 복합 인덱스 설정
+@CompoundIndexes(
+    CompoundIndex(name = "roomId_page_idx", def = "{'roomId': 1, 'page': 1}")
+)
 data class ChatMessageMongoEntity(
-    val id: String,
-    val page: Int,
-    val type: MessageType,
+    val messageId: String,
+    @Indexed  // 개별 인덱스 추가 가능
     val roomId: String,
-    val sender: String,
-    val message: String,
-    val timestamp: LocalDateTime,
-    val friends: List<ChatMessage.FriendSeqInfo>? = null, // friends 필드 추가
-
-    val messageType: String?,  // 파일 메시지 타입 추가
-    val messageId: String?,    // 메시지 삭제 및 식별을 위한 messageId 추가
-    val parentMessageId: String?,  // 대댓글 기능을 위한 부모 메시지 ID
-    val parentMessagePage: Int?,   // 부모 메시지 페이지 번호
-    val parentMessageSeqNumber: Int?, // 부모 메시지 시퀀스 번호
+    val type: MessageType,
+    val senderId: String,
+    val messageSendType: MessageSendType?,
+    val parentMessageId: String?,
+    val parentMessagePage: Int?,
+    val parentSeqNumber: Int?,
+    val seqNumber: Int?,
+    val page: Int,
+    val sendTime: LocalDateTime,
+    val friends: List<ChatMessage.FriendSeqInfo>?
 ) {
-    fun toChatMessage(): ChatMessage {
-        return ChatMessage(
-            chatId = ChatMessage.ChatId(id),
-            type = this.type,
-            roomId = this.roomId,
-            sender = this.sender,
-            text = this.message,
-            timestamp = this.timestamp,
-            friends = this.friends, // friends 필드 처리 추가
-            messageId = this.messageId,
-            messageType = this.messageType,
-            parentMessageId = this.parentMessageId,
-            parentMessagePage = this.parentMessagePage,
-            parentMessageSeqNumber = this.parentMessageSeqNumber
-
-        )
-    }
-
     companion object {
-        fun toEntity(chatMessage: ChatMessage, page: Int): ChatMessageMongoEntity {
+        fun fromChatMessage(chatMessage: ChatMessage, page: Int): ChatMessageMongoEntity {
             return ChatMessageMongoEntity(
-                chatMessage.chatId!!.id,
-                page,
-                chatMessage.type,
-                chatMessage.roomId!!,
-                chatMessage.sender,
-                chatMessage.text!!,
-                chatMessage.timestamp!!,
-                chatMessage.friends, // friends 필드 추가
-                chatMessage.messageId,
-                chatMessage.messageType,
-                chatMessage.parentMessageId,
-                chatMessage.parentMessagePage,
-                chatMessage.parentMessageSeqNumber
+                messageId = chatMessage.messageId,
+                roomId = chatMessage.roomId ?: "",
+                type = chatMessage.type,
+                senderId = chatMessage.sender,
+                messageSendType = chatMessage.messageSendType,
+                parentMessageId = chatMessage.parentMessageId,
+                parentMessagePage = chatMessage.parentMessagePage,
+                parentSeqNumber = chatMessage.parentSeqNumber,
+                seqNumber = chatMessage.seqNumber,
+                page = chatMessage.page,
+                sendTime = chatMessage.timestamp ?: LocalDateTime.now(),
+                friends = chatMessage.friends
+            )
+        }
+
+        fun toChatMessage(entity: ChatMessageMongoEntity): ChatMessage {
+            return ChatMessage(
+                messageId = entity.messageId,
+                type = entity.type,
+                roomId = entity.roomId,
+                sender = entity.senderId,
+                messageSendType = entity.messageSendType,
+                parentMessageId = entity.parentMessageId,
+                parentMessagePage = entity.parentMessagePage,
+                parentSeqNumber = entity.parentSeqNumber,
+                timestamp = entity.sendTime,
+                friends = entity.friends,
+                seqNumber = entity.seqNumber,
+                page = entity.page
             )
         }
     }
