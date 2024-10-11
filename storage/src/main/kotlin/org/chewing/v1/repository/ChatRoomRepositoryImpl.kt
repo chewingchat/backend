@@ -1,15 +1,20 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.*
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.chat.ChatFriend
 import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
+import org.chewing.v1.implementation.media.FileProcessor
+import org.chewing.v1.jparepository.ChatRoomJpaRepository
+import org.chewing.v1.model.chat.*
+import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.mongoentity.ChatMessageMongoEntity
+import org.chewing.v1.mongorepository.ChatMessageMongoRepository
+import org.chewing.v1.mongorepository.ChatSequenceMongoRepository
 import org.springframework.stereotype.Repository
-import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
 import java.util.*
@@ -17,14 +22,18 @@ import java.util.*
 
 @Repository
 class ChatRoomRepositoryImpl(
+    private val chatMessageMongoRepository: ChatMessageMongoRepository, // MongoDB 레포지토리 이름 변경
+    private val chatRoomJpaRepository: ChatRoomJpaRepository, // JPA 레포지토리
+    private val chatSequenceMongoRepository: ChatSequenceMongoRepository
+
 ) : ChatRoomRepository {
     private val chatRooms = mutableListOf<ChatRoom>()
     private val chatLogs = mutableMapOf<String, MutableList<ChatLog>>()
-    override fun getChatRooms(userId: String, sort: String): List<ChatRoom> {
+    override fun getChatRooms(sort: String): List<ChatRoom> {
 
 
         val sortedChatRooms = when (sort) {
-            "favorite" -> chatRooms.filter { it.isFavorite }
+            "favorite" -> chatRooms.filter { it.favorite }
             "latest" -> chatRooms.sortedByDescending { it.latestMessageTime }
             "notRead" -> chatRooms.filter { it.totalUnReadMessage > 0 }
             else -> throw IllegalArgumentException("Invalid sort parameter")
@@ -34,22 +43,23 @@ class ChatRoomRepositoryImpl(
         return sortedChatRooms
     }
 
-    override fun searchChatRooms(userId: String, keyword: String): List<ChatRoom> {
+    override fun searchChatRooms(keyword: String): List<ChatRoom> {
+        // 1. JPA를 통해 기본 채팅방 정보 검색
+        val chatRooms = chatRoomJpaRepository.searchByKeyword(keyword)
 
-        // 각 채팅방의 최신 메시지, 친구 기준으로 검색
-        // JPA로 넘기는게 좋겠죠? 어차피 3번 나눠야하니...
-        val filteredRooms = chatRooms.filter { chatRoom ->
-            chatRoom.latestMessage.contains(keyword) ||
-                    chatRoom.chatFriends.any { friend ->
-                        "${friend.friendFirstName} ${friend.friendLastName}".contains(keyword)
-                    }
+        if (chatRooms.isEmpty()) {
+            throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
         }
 
-        if (filteredRooms.isEmpty()) throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
-        return filteredRooms
+        // 2. MongoDB를 통해 각 채팅방의 추가 정보 검색 (예: 최신 메시지)
+        return chatRooms.map { chatRoom ->
+            val latestMessage = chatMessageMongoRepository.findLatestMessageByRoomId(chatRoom.chatRoomId)
+            val updatedChatRoom = chatRoom.copy(latestMessage = latestMessage?.messageId ?: chatRoom.latestMessage)
+            updatedChatRoom
+        }
     }
 
-    override fun deleteChatRooms(userId: String, chatRoomIds: List<String>) {
+    override fun deleteChatRooms(chatRoomIds: List<String>) {
         chatRoomIds.forEach { chatRoomId ->
             val roomToDelete = chatRooms.find { it.chatRoomId == chatRoomId }
                 ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
@@ -58,21 +68,23 @@ class ChatRoomRepositoryImpl(
         }
     }
 
-    override fun getChatRoomInfo(userId: String, chatRoomId: String): ChatRoom {
+    override fun getChatRoomInfo(chatRoomId: String): ChatRoom {
+        val chatRoomEntity = chatRoomJpaRepository.findByChatRoomId(chatRoomId)
+            .orElseThrow { NotFoundException(ErrorCode.CHATROOM_NOT_FOUND) }
 
-        val chatRoom = chatRooms.find { it.chatRoomId == chatRoomId }
-            ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
-        // 최신 페이지와 친구가 읽은 시퀀스 번호 계산
-        val latestPage = (chatLogs[chatRoomId]?.size ?: 0) / 20
-        val friendReadSeqNumber = calculateFriendReadSeqNumber(chatRoom.chatFriends, chatRoomId)
+        // 최신 페이지와 친구가 읽은 시퀀스 번호 계산 (MongoDB를 사용)
+        val latestPage = chatMessageMongoRepository.calculateLatestPage(chatRoomId)
+        val readSeqNumber = chatSequenceMongoRepository.calculateFriendReadSeqNumber(chatRoomId.toInt(), chatRoomEntity.toChatRoom().chatFriends)
 
-        return chatRoom.copy(
-            latestPage = latestPage,
-            friendReadSeqNumber = friendReadSeqNumber
-        )
+        // MongoDB에서 가져온 데이터를 설정
+        chatRoomEntity.latestPage = latestPage
+        chatRoomEntity.readSeqNumber = readSeqNumber
+
+        // ChatRoomEntity를 ChatRoom으로 변환 후 반환
+        return chatRoomEntity.toChatRoom()
     }
 
-    override fun getChatLogs(userId: String, chatRoomId: String, page: Int): List<ChatLog> {
+    override fun getChatLogs(chatRoomId: String, page: Int): List<ChatLog> {
         val logs = chatLogs[chatRoomId]?.filter { it.page == page }
             ?: throw NotFoundException(ErrorCode.CHATLOG_NOT_FOUND)
 
@@ -83,7 +95,7 @@ class ChatRoomRepositoryImpl(
                 log.copy(
                     parentMessage = parentMessage?.message,
                     parentMessagePage = parentMessage?.page,
-                    parentMessageSeqNumber = parentMessage?.messageSeqNumber
+                    seqNumber = parentMessage?.seqNumber
                 )
             } else {
                 log
@@ -91,57 +103,66 @@ class ChatRoomRepositoryImpl(
         }
     }
 
-    override fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>) {
-        TODO("Not yet implemented")
-    }
-
-//    override fun uploadChatRoomFiles(userId: String, chatRoomId: String, files: List<MultipartFile>) {
-//        try {
-//            // MultipartFile을 File로 변환
-//            val convertedFiles: List<File> = FileUtil.convertMultipartFilesToFiles(files)
-//
-//            // 변환된 파일들을 처리하여 미디어로 업로드
-//            val uploadedMedia: List<Media> = fileProcessor.processNewFiles(userId, convertedFiles)
-//
-//            // 업로드된 미디어를 채팅방에 연결하는 로직
-//            saveUploadedMedia(chatRoomId, uploadedMedia)
-//
-//        } catch (e: IOException) {
-//            throw IllegalArgumentException("파일 변환에 실패했습니다: ${e.message}")
-//        }
-//    }
+    // 채팅방에 파일 업로드
+    override fun uploadChatRoomFiles(chatRoomId: String, fileDathList: List<FileData>) {
+        try {
 
 
-    override fun saveUploadedMedia(chatRoomId: String, mediaList: List<Media>) {
-        // 채팅방을 조회하여 존재하는지 확인
-        val chatRoom = chatRooms.find { it.chatRoomId == chatRoomId }
-            ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
+            // 파일 데이터들을 미디어로 변환하고 업로드합니다.
+            val uploadedMedia: List<Media> = fileProcessor.processNewFiles("userId", fileDathList, FileCategory.EMOTICON)
 
-        // 채팅방의 기존 미디어 또는 로그에 업로드된 미디어를 추가
-        mediaList.forEach { media ->
-            val newChatLog = ChatLog(
-                type = media.type.name,  // 미디어 타입 (예: IMAGE, VIDEO)
-                messageId = UUID.randomUUID().toString(),  // 고유 메시지 ID
-                senderId = "system",  // 파일 업로드는 시스템 또는 특정 사용자로 처리
-                message = media.url,  // 업로드된 파일의 URL
-                messageSendTime = LocalDateTime.now().toString(),  // 메시지 전송 시간
-                messageSeqNumber = chatLogs[chatRoomId]?.size ?: 0,  // 메시지 시퀀스 넘버
-                page = (chatLogs[chatRoomId]?.size ?: 0) / 20  // 페이지 번호 (예: 20개당 1페이지)
-            )
+            // 업로드된 미디어를 채팅방에 연결하는 로직
+            saveUploadedMedia(chatRoomId, uploadedMedia)
 
-            // 채팅방의 채팅 로그에 새로운 로그 추가
-            chatLogs.computeIfAbsent(chatRoomId) { mutableListOf() }.add(newChatLog)
+        } catch (e: IOException) {
+            throw IllegalArgumentException("파일 업로드에 실패했습니다: ${e.message}")
         }
     }
 
-    private fun calculateFriendReadSeqNumber(friends: List<ChatFriend>, chatRoomId: String): Int {
-        // 친구들이 읽은 마지막 메시지를 찾는 로직
-        return chatLogs[chatRoomId]?.lastOrNull()?.messageSeqNumber ?: 0
+    // 업로드된 미디어를 저장하는 메서드
+    override fun saveUploadedMedia(chatRoomId: String, mediaList: List<Media>) {
+        mediaList.forEach { media ->
+            // media 객체에서 MediaType을 추출하여 MessageSendType 객체 생성
+            val messageSendType = MessageSendType(
+                mediaType = media.type,  // Media 객체의 type 필드 사용
+                text = media.url  // 파일 URL을 메시지 텍스트로 저장
+            )
+
+            val newChatLog = ChatMessage(
+                messageId = UUID.randomUUID().toString(),  // 고유한 메시지 ID 생성
+                messageSendType = messageSendType,  // 생성한 MessageSendType 객체 사용
+                parentMessageId = null,  // 부모 메시지가 없는 경우 null
+                parentMessagePage = null,  // 부모 메시지 페이지가 없는 경우 null
+                parentSeqNumber = null,  // 부모 메시지 시퀀스 번호가 없는 경우 null
+                type = MessageType.FILE,
+                roomId = chatRoomId,
+                sender = "system",
+                timestamp = LocalDateTime.now(),
+                seqNumber = chatMessageMongoRepository.countByRoomId(chatRoomId).toInt(),
+                page = chatMessageMongoRepository.calculateLatestPage(chatRoomId)
+            )
+
+            // MongoDB에 저장
+            chatMessageMongoRepository.save(ChatMessageMongoEntity.fromChatMessage(newChatLog, newChatLog.page!!))
+        }
     }
+
+    override fun findByChatRoomId(roomId: String): ChatRoom? {
+        return chatRooms.find { it.chatRoomId == roomId }
+    }
+
+    override fun save(chatRoom: ChatRoom) {
+        chatRooms.add(chatRoom)
+    }
+
 
     private fun findParentMessage(parentMessageId: String): ChatLog? {
         // 모든 채팅 로그에서 부모 메시지 ID로 검색
         return chatLogs.values.flatten().find { it.messageId == parentMessageId }
     }
+
+
+
+
 
 }

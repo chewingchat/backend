@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class ChatSequenceMongoEntity(
-    @Id val roomId: String,
-    var seq: Long
+    @Id
+    val id: String? = null,
+    val roomId: String,
+    val userId: String,
+    var seqNumber: Long
 )

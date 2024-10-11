@@ -13,3 +13,4 @@ class LoginInfo private constructor(
         }
     }
 }
+// 로그인 정보역시 jwt토큰과 user에서 받아옴

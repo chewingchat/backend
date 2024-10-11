@@ -1,16 +1,23 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.request.chat.DeleteChatRoomRequest
+import org.chewing.v1.dto.request.chat.*
+import org.chewing.v1.dto.response.chat.ChatRoomResponse
 import org.chewing.v1.model.*
 import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
+import org.chewing.v1.model.media.FileData
+import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.ChatRoomService
+import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
 
 @RestController
 @RequestMapping("/api/chatRooms")
@@ -19,64 +26,80 @@ class ChatRoomController(
 ) {
 
     // 채팅방 목록 가져오기
-    @GetMapping
+    @PostMapping("/list")
     fun getChatRooms(
-        @RequestAttribute("userId") userId: String,
-        @RequestParam("sort") sort: String
-    ): ResponseEntity<HttpResponse<List<ChatRoom>>> {
-        val chatRooms = chatRoomService.getChatRooms(userId, sort)
-        return ResponseHelper.success(chatRooms)
+        @RequestBody request: ChatRoomRequest
+    ): ResponseEntity<HttpResponse<List<ChatRoomResponse>>> {
+        val chatRooms = chatRoomService.getChatRooms(request.sort)
+        return ResponseHelper.success(chatRooms.map { ChatRoomResponse.from(it) })
     }
 
     // 채팅방 검색
-    @GetMapping("/search")
+    @PostMapping("/search")
     fun searchChatRooms(
-        @RequestAttribute("userId") userId: String,
-        @RequestParam("keyword") keyword: String
-    ): ResponseEntity<HttpResponse<List<ChatRoom>>> {
-        val chatRooms = chatRoomService.searchChatRooms(userId, keyword)
-        return ResponseHelper.success(chatRooms)
+        @RequestBody request: ChatRoomSearchRequest
+    ): ResponseEntity<HttpResponse<List<ChatRoomResponse>>> {
+        val chatRooms = chatRoomService.searchChatRooms(request.keyword)
+        return ResponseHelper.success(chatRooms.map { ChatRoomResponse.from(it) })
     }
 
     // 채팅방 삭제
-    @DeleteMapping
+    @PostMapping("/delete")
     fun deleteChatRooms(
-        @RequestAttribute("userId") userId: String,
-        @RequestBody request: DeleteChatRoomRequest
+        @RequestBody request: ChatRoomDeleteRequest
     ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        chatRoomService.deleteChatRooms(userId, request.chatRoomIds)
+        chatRoomService.deleteChatRooms(request.chatRoomIds)
         return ResponseHelper.successOnly()
     }
+
 
     // 채팅방 접속 후 정보 가져오기
     @GetMapping("/{chatRoomId}")
     fun getChatRoomInfo(
-        @RequestAttribute("userId") userId: String,
         @PathVariable chatRoomId: String
-    ): ResponseEntity<HttpResponse<ChatRoom>> {
-        val chatRoom = chatRoomService.getChatRoomInfo(userId, chatRoomId)
-        return ResponseHelper.success(chatRoom)
+    ): ResponseEntity<HttpResponse<ChatRoomResponse>> {
+        val chatRoom = chatRoomService.getChatRoomInfo(chatRoomId)
+        return ResponseHelper.success(ChatRoomResponse.from(chatRoom))
     }
 
-    // 채팅 로그 가져오기
-    @GetMapping("/{chatRoomId}/log/{page}")
+
+    // 채팅방 로그 가져오기
+    @PostMapping("/log")
     fun getChatLogs(
-        @RequestAttribute("userId") userId: String,
-        @PathVariable chatRoomId: String,
-        @PathVariable page: Int
+        @RequestBody request: ChatLogRequest
     ): ResponseEntity<HttpResponse<List<ChatLog>>> {
-        val chatLogs = chatRoomService.getChatLogs(userId, chatRoomId, page)
+        val chatLogs = chatRoomService.getChatLogs(request.chatRoomId, request.page)
         return ResponseHelper.success(chatLogs)
     }
 
-    // 채팅방 파일 업로드
-    @PostMapping("/{chatRoomId}/file")
-    fun uploadChatRoomFiles(
-        @RequestAttribute("userId") userId: String,
-        @PathVariable chatRoomId: String,
-        @RequestParam("files") files: List<MultipartFile>
+    // 파일 업로드
+    @PostMapping("/file/upload")
+    fun uploadFiles(
+        @RequestBody request: FileUploadRequest
     ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
-        chatRoomService.uploadChatRoomFiles(userId, chatRoomId, files)
+        val fileDataList = request.files.map { filePath ->
+            // 파일 경로를 FileData로 직접 변환
+            convertToFileData(filePath)
+        }
+
+        // 변환된 FileData 리스트를 서비스로 넘김
+        chatRoomService.uploadChatRoomFiles(request.chatRoomId, fileDataList)
+
         return ResponseHelper.successOnly()
     }
+
+    // 파일 경로에서 FileData로 변환하는 함수
+    private fun convertToFileData(filePath: String): FileData {
+        try {
+            val file = File(filePath)
+            val inputStream = FileInputStream(file)
+            val contentType = "application/octet-stream" // 필요시 적절한 MIME 타입으로 변경 가능
+
+            return FileData.of(inputStream, MediaType.fromType(contentType)!!, file.name, file.length())
+        } catch (e: IOException) {
+            throw IllegalArgumentException("파일 경로에서 FileData로 변환하는데 실패했습니다: ${e.message}")
+        }
+    }
+
+
 }

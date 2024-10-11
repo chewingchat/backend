@@ -21,3 +21,6 @@ class VerificationRequest {
         }
     }
 }
+
+// val: 값변경 불가
+// 인자만 받고 DB관련인 model에서 로직 처리

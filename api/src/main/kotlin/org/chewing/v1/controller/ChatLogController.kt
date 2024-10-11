@@ -1,6 +1,6 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.ChatLogDto
+import org.chewing.v1.dto.response.chat.ChatLogDto
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.service.ChatService
 import org.springframework.web.bind.annotation.GetMapping
