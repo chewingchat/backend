@@ -1,32 +1,41 @@
-//package org.chewing.v1.service
-//
-//import org.chewing.v1.implementation.chat.*
-//import org.chewing.v1.implementation.media.FileHandler
-//import org.chewing.v1.model.chat.ChatLog
-//import org.chewing.v1.model.chat.ChatMessage
-//import org.chewing.v1.model.chat.MessageType
-//import org.chewing.v1.model.chat.MessageSendType
-//import org.chewing.v1.model.media.FileCategory
-//import org.chewing.v1.model.media.FileData
-//import org.chewing.v1.repository.ChatRoomRepository
-//import org.springframework.stereotype.Service
-//import java.time.LocalDateTime
-//
-//
-//@Service
-//class ChatService(
+package org.chewing.v1.service
+
+import org.chewing.v1.implementation.chat.*
+import org.chewing.v1.implementation.chat.log.ChatLogAppender
+import org.chewing.v1.implementation.chat.log.ChatLogReader
+import org.chewing.v1.implementation.chat.message.ChatSender
+import org.chewing.v1.implementation.chat.sequence.ChatHelper
+import org.chewing.v1.implementation.chat.sequence.ChatSequenceReader
+import org.chewing.v1.implementation.media.FileHandler
+import org.chewing.v1.model.chat.*
+import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.model.media.FileData
+import org.chewing.v1.repository.ChatRoomRepository
+import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
+
+@Service
+class ChatService(
 //    private val chatLogAppender: ChatLogAppender,
-//    private val chatLogReader: ChatLogReader,
+    private val chatLogReader: ChatLogReader,
 //    private val chatSequenceUpdater: ChatSequenceUpdater,
-//    private val chatSender: ChatSender,
-//    private val chatSequenceReader: ChatSequenceReader,
+    private val chatSender: ChatSender,
+    private val chatSequenceReader: ChatSequenceReader,
+    private val fileHandler: FileHandler,
+    private val chatHelper: ChatHelper,
+    private val chatLogAppender: ChatLogAppender,
 //    private val chatRoomService: ChatRoomService,
 //    private val chatRoomRepository: ChatRoomRepository,
 //    private val fileHandler: FileHandler
-//
-//) {
-//
-//
+) {
+    fun uploadFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String) {
+        val medias = fileHandler.handleNewFiles(userId, fileDataList, FileCategory.CHATROOM)
+        val chatRoomNumber = chatHelper.findNextNumber(chatRoomId)
+        val chatLog = chatLogAppender.appendFileLog(medias, chatRoomId, userId, chatRoomNumber)
+    }
+
+
 //    fun saveAndSendChat(chatMessage: ChatMessage) {
 //        val seq = chatSequenceUpdater.updateSequenceIncrement(chatMessage.roomId!!)
 //        val page = calculatePage(seq)
@@ -62,12 +71,12 @@
 //        )
 //
 //        // 4. 메시지를 기록하고 전송
-//        chatLogAppender.appendChatMessage(enterMessage, calculatePage(seq))
-//        chatSender.sendChat(enterMessage)
-//
-//        // 5. 읽음 처리 및 채팅 시퀀스 MongoDB에 저장
-//        chatSequenceReader.saveChatSequence(roomId, userId, seq)
-//    }
+////        chatLogAppender.appendChatMessage(enterMessage, calculatePage(seq))
+////        chatSender.sendChat(enterMessage)
+////
+////        // 5. 읽음 처리 및 채팅 시퀀스 MongoDB에 저장
+////        chatSequenceReader.saveChatSequence(roomId, userId, seq)
+////    }
 //
 //    // 채팅방 친구 목록과 읽은 시퀀스 번호를 조회하는 메서드 (DB 연동으로 수정)
 //    fun getFriendsWithSeqNumber(roomId: String): List<ChatMessage.FriendSeqInfo> {
@@ -78,7 +87,7 @@
 //            ChatMessage.FriendSeqInfo(friend.friendId, lastSeqNumber)
 //        }
 //    }
-//
+
 //    fun deleteChatMessage(roomId: String, messageId: String) {
 //        chatLogAppender.deleteMessage(roomId, messageId)
 //        val deleteMessage = ChatMessage.withoutId(
@@ -97,7 +106,7 @@
 //        )
 //        chatSender.sendChat(deleteMessage)
 //    }
-//
+
 //    fun sendFileMessage(chatRoomId: String, fileDataList: List<FileData>) {
 //        // 파일을 처리하여 Media로 변환
 //        val mediaList = fileHandler.handleNewFiles(chatRoomId, fileDataList, FileCategory.FEED)
@@ -122,7 +131,7 @@
 //            chatSender.sendChat(message)
 //        }
 //    }
-//
+
 //    fun sendReplyMessage(chatMessage: ChatMessage) {
 //        val seq = chatSequenceUpdater.updateSequenceIncrement(chatMessage.roomId!!)
 //        val page = calculatePage(seq)
@@ -155,16 +164,7 @@
 //        chatSender.sendChat(leaveMessage)
 //        chatRoomRepository.deleteChatRooms(listOf(roomId))
 //    }
-//
-//    fun getChatLog(roomId: String, page: Int): ChatLog {
-//        return chatLogReader.readChatLog(roomId, page)
-//    }
-//
-//    fun getChatLogLatest(roomId: String): ChatLog {
-//        val seq = chatSequenceUpdater.updateSequenceIncrement(roomId)
-//        return chatLogReader.readChatLog(roomId, calculatePage(seq))
-//    }
-//
+
 //
 //    // 채팅방 입장 처리 (읽음 처리용)
 //    fun processEnterMessage(message: ChatMessage) {
@@ -270,4 +270,4 @@
 //    companion object {
 //        const val PAGE_SIZE = 50
 //    }
-//}
+}

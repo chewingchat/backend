@@ -8,6 +8,9 @@ data class ChatSequenceMongoEntity(
     @Id
     val id: String? = null,
     val roomId: String,
-    val userId: String,
-    var seqNumber: Long
-)
+    var seqNumber: Int
+) {
+    fun incrementSeqNumber() {
+        this.seqNumber += 1
+    }
+}

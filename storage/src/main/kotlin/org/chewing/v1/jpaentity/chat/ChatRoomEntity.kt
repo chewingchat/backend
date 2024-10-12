@@ -1,25 +1,23 @@
+package org.chewing.v1.jpaentity.chat
+
 import jakarta.persistence.*
 
-import org.chewing.v1.model.chat.ChatRoomInfo
+import org.chewing.v1.model.chat.room.ChatRoomInfo
+import java.time.LocalDateTime
+import java.util.*
 
 @Entity
-@Table(name = "chat_rooms", schema = "chewing")
-data class ChatRoomEntity(
+@Table(name = "chatrooms", schema = "chewing")
+internal class ChatRoomEntity(
     @Id
-    @Column(name = "chat_room_id")
-    val chatRoomId: String,
+    private val chatRoomId: String = UUID.randomUUID().toString(),
 //  chatFriendEntity로 이동 할게요 -> chatRoomEntity에는 모든 사용자가 봤을때 같은 내용이 들어가 있어야 해요
 //    @Column(name = "favorite", nullable = false)
 //    val favorite: Boolean,
 
-    @Column(name = "group_chat_room", nullable = false)
-    val groupChatRoom: Boolean,
-    //chatSequence 에서 가져와야 할거 같아요 -> mysql에서 하면 동기화 문제 생길 것 같아요
-//    @Column(name = "latest_message", nullable = false)
-//    val latestMessage: String,
-//
-//    @Column(name = "latest_message_time", nullable = false)
-//    val latestMessageTime: String,
+    private val groupChatRoom: Boolean,
+    private val latestMessage: String,
+    private val latestMessageTime: LocalDateTime,
 
 //  이거 chatSequence에서 번호 가져오고 chatFriendEntity에서 unread 가져와서 뺄셈 하면 될거 같아요
 //    @Column(name = "total_unread_message", nullable = false)
@@ -33,11 +31,27 @@ data class ChatRoomEntity(
 //  @Transient
 //  var readSeqNumber: Int? = null
 ) {
+    companion object {
+        fun generate(groupChatRoom: Boolean): ChatRoomEntity {
+            return ChatRoomEntity(
+                groupChatRoom = groupChatRoom,
+                latestMessage = "",
+                latestMessageTime = LocalDateTime.now()
+            )
+        }
+    }
+
     // ChatRoomEntity -> ChatRoom 변환 메서드
     fun toChatRoomInfo(): ChatRoomInfo {
         return ChatRoomInfo.of(
             chatRoomId = this.chatRoomId,
-            isGroupChatRoom = this.groupChatRoom
+            isGroup = this.groupChatRoom,
+            latestMessage = this.latestMessage,
+            latestMessageTime = this.latestMessageTime
         )
+    }
+
+    fun toChatRoomId(): String {
+        return this.chatRoomId
     }
 }

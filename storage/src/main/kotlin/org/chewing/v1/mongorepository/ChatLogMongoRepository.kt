@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ChatMessageMongoRepository : MongoRepository<ChatMessageMongoEntity, String> {
+internal interface ChatLogMongoRepository : MongoRepository<ChatMessageMongoEntity, String> {
 
     // 메시지 최신 페이지 계산
     @Query("{ 'roomId': ?0 }")

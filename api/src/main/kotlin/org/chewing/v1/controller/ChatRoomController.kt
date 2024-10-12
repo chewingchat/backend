@@ -1,4 +1,9 @@
-//package org.chewing.v1.controller
+package org.chewing.v1.controller
+
+import org.chewing.v1.service.ChatRoomService
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
 //
 //import org.chewing.v1.dto.request.chat.*
 //import org.chewing.v1.dto.response.chat.ChatRoomResponse
@@ -15,11 +20,11 @@
 //import java.io.FileInputStream
 //import java.io.IOException
 //
-//@RestController
-//@RequestMapping("/api/chatRooms")
-//class ChatRoomController(
-//    private val chatRoomService: ChatRoomService,
-//) {
+@RestController
+@RequestMapping("/api/chatRooms")
+class ChatRoomController(
+    private val chatRoomService: ChatRoomService,
+) {
 //
 //    // 채팅방 목록 가져오기
 //    @PostMapping("/list")
@@ -98,4 +103,4 @@
 //    }
 //
 //
-//}
+}

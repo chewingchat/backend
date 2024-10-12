@@ -14,7 +14,6 @@ data class ChatMessage(
     val parentMessagePage: Int?,
     val parentSeqNumber: Int?,
     val timestamp: LocalDateTime?,
-    var friends: List<FriendSeqInfo>? = null,
     val seqNumber: Int? = null,
     val page: Int
 ) {
@@ -28,7 +27,6 @@ data class ChatMessage(
             parentMessagePage: Int?,
             parentMessageSeqNumber: Int?,
             timestamp: LocalDateTime,
-            friends: List<FriendSeqInfo>?,
             page: Int
         ): ChatMessage {
             return ChatMessage(
@@ -41,7 +39,6 @@ data class ChatMessage(
                 parentMessagePage = parentMessagePage,
                 parentSeqNumber = parentMessageSeqNumber,
                 timestamp = timestamp,
-                friends = friends,
                 seqNumber = null,
                 page = page
             )
@@ -55,7 +52,6 @@ data class ChatMessage(
             parentMessageId: String?,
             parentMessagePage: Int?,
             parentMessageSeqNumber: Int?,
-            friends: List<FriendSeqInfo>?,
             page: Int
         ): ChatMessage {
             return ChatMessage(
@@ -68,7 +64,6 @@ data class ChatMessage(
                 parentMessagePage = parentMessagePage,
                 parentSeqNumber = parentMessageSeqNumber,
                 timestamp = null,
-                friends = friends,
                 seqNumber = null,
                 page = page
             )
