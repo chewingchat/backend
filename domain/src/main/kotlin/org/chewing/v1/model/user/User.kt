@@ -1,6 +1,7 @@
 package org.chewing.v1.model.user
 
 import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.media.Media
 
 
@@ -31,5 +32,18 @@ class User private constructor(
                 status = status
             )
         }
+    }
+
+    fun updateName(
+        name: UserName
+    ): User {
+        return User(
+            userId = userId,
+            birth = birth,
+            image = image,
+            backgroundImage = backgroundImage,
+            name = name,
+            status = status
+        )
     }
 }

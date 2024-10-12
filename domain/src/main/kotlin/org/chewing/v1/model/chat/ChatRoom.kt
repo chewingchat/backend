@@ -1,14 +1,40 @@
 package org.chewing.v1.model.chat
 
+import org.chewing.v1.model.chat.room.ChatRoomInfo
+import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.model.user.User
+import java.time.LocalDateTime
+
 
 data class ChatRoom(
     val chatRoomId: String,
-    val favorite: Boolean, // api 명세서 0.2v로 인한 수정
-    val groupChatRoom: Boolean, // api 명세서 0.2v로 인한 수정
+    val favorite: Boolean,
+    val groupChatRoom: Boolean,
     val latestMessage: String,
-    val latestMessageTime: String,
+    val latestMessageTime: LocalDateTime,
     val totalUnReadMessage: Int,
-    val chatFriendInfos: List<ChatFriendInfo>, // 수정된 부분
-    val latestPage: Int,  // 새로 추가된 필드: 마지막 페이지 번호
-    val readSeqNumber: Int,  // // api 명세서 0.2v로 인한 수정
-)
+    val latestPage: Int,
+    val chatRoomMemberInfos: List<ChatRoomMemberInfo>,
+) {
+    companion object {
+        fun of(
+            chatRoomInfo: ChatRoomInfo,
+            userChatRoom: ChatRoomMemberInfo,
+            chatRoomMembers: List<ChatRoomMemberInfo>,
+            totalUnReadMessage: Int,
+            latestPage: Int,
+        ): ChatRoom {
+            return ChatRoom(
+                chatRoomId = chatRoomInfo.chatRoomId,
+                favorite = userChatRoom.favorite,
+                groupChatRoom = chatRoomInfo.isGroup,
+                latestMessage = chatRoomInfo.latestMessage,
+                latestMessageTime = chatRoomInfo.latestMessageTime,
+                totalUnReadMessage = totalUnReadMessage,
+                latestPage = latestPage,
+                chatRoomMemberInfos = chatRoomMembers
+            )
+        }
+
+    }
+}

@@ -1,36 +1,41 @@
 package org.chewing.v1.repository
 
+import org.chewing.v1.model.chat.room.ChatRoomSequenceNumber
 import org.chewing.v1.mongoentity.ChatSequenceMongoEntity
-import org.chewing.v1.mongorepository.ChatMessageMongoRepository
-import org.chewing.v1.mongorepository.ChatSequenceMongoRepository
-import org.springframework.data.jpa.repository.Query
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-class ChatSequenceRepositoryImpl(
+internal class ChatSequenceRepositoryImpl(
     private val mongoTemplate: MongoTemplate,
-    private val chatSequenceMongoRepository: ChatSequenceMongoRepository
 ) : ChatSequenceRepository {
 
-    override fun readCurrentSequence(roomId: String): Long {
+    override fun readCurrent(roomId: String): ChatRoomSequenceNumber {
         val sequenceEntity = mongoTemplate.findById(roomId, ChatSequenceMongoEntity::class.java)
-        return sequenceEntity?.seqNumber ?: 0
+        return sequenceEntity?.seqNumber?.let { ChatRoomSequenceNumber.of(it, roomId) }
+            ?: ChatRoomSequenceNumber.of(0, roomId)
     }
 
-    override fun updateSequenceIncrement(roomId: String): Long {
+    override fun updateSequenceIncrement(roomId: String): ChatRoomSequenceNumber {
         val sequenceEntity = mongoTemplate.findById(roomId, ChatSequenceMongoEntity::class.java)
-        sequenceEntity?.let {
-            it.seqNumber += 1
-            mongoTemplate.save(it)
-            return it.seqNumber
+        return if (sequenceEntity != null) {
+            sequenceEntity.incrementSeqNumber()
+            mongoTemplate.save(sequenceEntity)
+            ChatRoomSequenceNumber.of(sequenceEntity.seqNumber, roomId)
+        } else {
+            val newEntity = ChatSequenceMongoEntity(roomId = roomId, seqNumber = 1)
+            mongoTemplate.save(newEntity)
+            ChatRoomSequenceNumber.of(1, roomId)
         }
-        return 1
-    }
-    // MongoDB에 채팅방 시퀀스 저장
-    override fun saveSequence(roomId: String, userId: String, seqNumber: Long) {
-        val sequenceEntity = ChatSequenceMongoEntity(roomId = roomId, userId = userId, seqNumber = seqNumber)
-        chatSequenceMongoRepository.save(sequenceEntity)
     }
 
+    override fun readSeqNumbers(roomIds: List<String>): List<ChatRoomSequenceNumber> {
+        val query = Query(Criteria.where("roomId").`in`(roomIds))
+
+        val entities = mongoTemplate.find(query, ChatSequenceMongoEntity::class.java)
+
+        return entities.map { ChatRoomSequenceNumber.of(it.seqNumber, it.roomId) }
+    }
 }
