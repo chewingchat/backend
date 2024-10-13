@@ -1,16 +1,16 @@
 package org.chewing.v1.dto.response.chat
 
-import org.chewing.v1.model.chat.log.ChatLog1
+import org.chewing.v1.model.chat.message.ChatMessage
 
 data class ChatLogResponse(
-    val roomId: String,
+    val chatRoomId: String,
     val currentPage: Int,
     val chatMessages: List<ChatLogMessageResponse>
 ) {
     companion object {
-        fun from(list: List<ChatLog1>): ChatLogResponse {
+        fun from(list: List<ChatMessage>): ChatLogResponse {
             return ChatLogResponse(
-                roomId = list.first().roomId,
+                chatRoomId = list.first().chatRoomId,
                 currentPage = list.first().page,
                 chatMessages = list.map { ChatLogMessageResponse.from(it) }
             )

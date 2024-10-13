@@ -1,7 +1,7 @@
 package org.chewing.v1.model.chat
 
 enum class MessageType {
-    REPLY, DELETE, LEAVE, ENTER, CHAT, FILE, IN, OUT, INVITE
+    REPLY, DELETE, LEAVE, READ, CHAT, FILE, INVITE
 }
 // 답글 채팅(REPLY)
 // 삭제된 채팅(DELETE)

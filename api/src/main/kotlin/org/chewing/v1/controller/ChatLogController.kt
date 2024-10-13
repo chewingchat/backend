@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController
 class ChatLogController(private val chatLogService: ChatLogService) {
 
     @GetMapping
-    fun getChatLog(@RequestParam roomId: String, @RequestParam page: Int): HttpResponse<ChatLogResponse> {
-        val chatLog = chatLogService.getChatLog(roomId, page)
+    fun getChatLog(@RequestParam chatRoomId: String, @RequestParam page: Int): HttpResponse<ChatLogResponse> {
+        val chatLog = chatLogService.getChatLog(chatRoomId, page)
         return HttpResponse.success(ChatLogResponse.from(chatLog))
     }
 
     @GetMapping("/latest")
-    fun getChatLogLatest(@RequestParam roomId: String): HttpResponse<ChatLogResponse> {
-        val chatLog = chatLogService.getChatLogLatest(roomId)
+    fun getChatLogLatest(@RequestParam chatRoomId: String): HttpResponse<ChatLogResponse> {
+        val chatLog = chatLogService.getChatLogLatest(chatRoomId)
         return HttpResponse.success(ChatLogResponse.from(chatLog))
     }
 }

@@ -1,36 +1,54 @@
 package org.chewing.v1.mongoentity
 
 import org.chewing.v1.model.chat.MessageType
-import org.chewing.v1.model.chat.log.ChatInviteLog
-import org.chewing.v1.model.chat.log.ChatLog1
+import org.chewing.v1.model.chat.message.ChatInviteMessage
+import org.chewing.v1.model.chat.message.ChatMessage
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document(collection = "chat_messages")
 internal class ChatInviteMongoEntity(
-    roomId: String,
+    messageId: String,
+    chatRoomId: String,
     senderId: String,
     seqNumber: Int,
     page: Int,
     sendTime: LocalDateTime,
-    private val message: String
+    val targetUserId: String,
 ) : ChatMessageMongoEntity(
-    roomId = roomId,
+    messageId = messageId,
+    chatRoomId = chatRoomId,
     senderId = senderId,
     type = MessageType.CHAT,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime
 ) {
-    override fun toChatMessage(): ChatLog1 {
-        return ChatInviteLog.of(
+    companion object {
+        fun from(
+            chatInviteMessage: ChatInviteMessage
+        ): ChatInviteMongoEntity {
+            return ChatInviteMongoEntity(
+                messageId = chatInviteMessage.messageId,
+                chatRoomId = chatInviteMessage.chatRoomId,
+                senderId = chatInviteMessage.senderId,
+                seqNumber = chatInviteMessage.number.sequenceNumber,
+                page = chatInviteMessage.number.page,
+                sendTime = chatInviteMessage.timestamp,
+                targetUserId = chatInviteMessage.targetUserId,
+            )
+        }
+    }
+
+    override fun toChatMessage(): ChatMessage {
+        return ChatInviteMessage.of(
             messageId = messageId,
-            roomId = roomId,
+            chatRoomId = chatRoomId,
             senderId = senderId,
             timestamp = sendTime,
-            seqNumber = seqNumber,
-            page = page,
-            text = message
+            number = ChatNumber.of(chatRoomId, seqNumber, page),
+            targetUserId = targetUserId
         )
     }
 }

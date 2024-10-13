@@ -1,3 +1,9 @@
+import org.chewing.v1.dto.request.chat.message.ChatReadDto
+import org.chewing.v1.service.ChatService
+import org.springframework.messaging.handler.annotation.Header
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.stereotype.Controller
+
 //package org.chewing.v1.controller
 //
 //
@@ -26,12 +32,20 @@
 //import java.io.FileInputStream
 //import java.io.IOException
 //
-//@Controller
-//class ChatController(
-//    private val chatService: ChatService,
-//    private val authService: AuthService
-//) {
-//
+@Controller
+class ChatController(
+    private val chatService: ChatService,
+) {
+    @MessageMapping("/chat/pub/read")
+    fun sendReadMessage(
+        message: ChatReadDto,
+        @Header("simpSessionAttributes") sessionAttributes: Map<String, Any>
+    ) {
+        val userId = sessionAttributes["userId"] as String
+        chatService.processRead(message.chatRoomId, userId)
+    }
+}
+
 //
 //    @MessageMapping("/chat/pub")
 //    fun sendMessage(message: ChatDto) {
@@ -43,7 +57,7 @@
 //    // 1.채팅방 입장(읽음 처리용)
 //    @MessageMapping("/chat/pub/in")
 //    fun enterChatRoom(message: ChatDto) {
-//        chatService.enterChatRoom(message.roomId!!, message.sender)
+//        chatService.enterChatRoom(message.chatRoomId!!, message.sender)
 //    }
 //
 //    // 2. 채팅방 메시지 보내기 (파일 포함)
@@ -78,7 +92,7 @@
 //    // 3.메시지 삭제 (type: DELETE)
 //    @MessageMapping("/chat/pub/delete")
 //    fun deleteMessage(message: ChatDto) {
-//        chatService.deleteChatMessage(message.roomId!!, message.messageId!!)
+//        chatService.deleteChatMessage(message.chatRoomId!!, message.messageId!!)
 //    }
 //
 //    // 4.대댓글 (type: REPLY)
@@ -90,7 +104,7 @@
 //    // 5.채팅방 나가기(읽음 처리용)
 //    @MessageMapping("/chat/pub/out")
 //    fun leaveChatRoom(message: ChatDto) {
-//        chatService.leaveChatRoom(message.roomId!!, message.sender)
+//        chatService.leaveChatRoom(message.chatRoomId!!, message.sender)
 //
 //    }
 //

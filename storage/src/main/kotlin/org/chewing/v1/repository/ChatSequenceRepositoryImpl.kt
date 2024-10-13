@@ -12,30 +12,41 @@ internal class ChatSequenceRepositoryImpl(
     private val mongoTemplate: MongoTemplate,
 ) : ChatSequenceRepository {
 
-    override fun readCurrent(roomId: String): ChatRoomSequenceNumber {
-        val sequenceEntity = mongoTemplate.findById(roomId, ChatSequenceMongoEntity::class.java)
-        return sequenceEntity?.seqNumber?.let { ChatRoomSequenceNumber.of(it, roomId) }
-            ?: ChatRoomSequenceNumber.of(0, roomId)
+    override fun readCurrent(chatRoomId: String): ChatRoomSequenceNumber {
+        val sequenceEntity = mongoTemplate.findById(chatRoomId, ChatSequenceMongoEntity::class.java)
+        return sequenceEntity?.seqNumber?.let { ChatRoomSequenceNumber.of(it, chatRoomId) }
+            ?: ChatRoomSequenceNumber.of(0, chatRoomId)
     }
 
-    override fun updateSequenceIncrement(roomId: String): ChatRoomSequenceNumber {
-        val sequenceEntity = mongoTemplate.findById(roomId, ChatSequenceMongoEntity::class.java)
+    override fun updateSequenceIncrement(chatRoomId: String): ChatRoomSequenceNumber {
+        val sequenceEntity = mongoTemplate.findById(chatRoomId, ChatSequenceMongoEntity::class.java)
         return if (sequenceEntity != null) {
             sequenceEntity.incrementSeqNumber()
             mongoTemplate.save(sequenceEntity)
-            ChatRoomSequenceNumber.of(sequenceEntity.seqNumber, roomId)
+            ChatRoomSequenceNumber.of(sequenceEntity.seqNumber, chatRoomId)
         } else {
-            val newEntity = ChatSequenceMongoEntity(roomId = roomId, seqNumber = 1)
+            val newEntity = ChatSequenceMongoEntity(chatRoomId = chatRoomId, seqNumber = 1)
             mongoTemplate.save(newEntity)
-            ChatRoomSequenceNumber.of(1, roomId)
+            ChatRoomSequenceNumber.of(1, chatRoomId)
         }
     }
 
-    override fun readSeqNumbers(roomIds: List<String>): List<ChatRoomSequenceNumber> {
-        val query = Query(Criteria.where("roomId").`in`(roomIds))
+    override fun updateSequenceIncrements(chatRoomIds: List<String>): List<ChatRoomSequenceNumber> {
+        val query = Query(Criteria.where("chatRoomId").`in`(chatRoomIds))
+
+        return mongoTemplate.find(query, ChatSequenceMongoEntity::class.java)
+            .map {
+                it.incrementSeqNumber()
+                mongoTemplate.save(it)
+                ChatRoomSequenceNumber.of(it.seqNumber, it.chatRoomId) // 결과 리스트로 변환
+            }
+    }
+
+    override fun readSeqNumbers(chatRoomIds: List<String>): List<ChatRoomSequenceNumber> {
+        val query = Query(Criteria.where("chatRoomId").`in`(chatRoomIds))
 
         val entities = mongoTemplate.find(query, ChatSequenceMongoEntity::class.java)
 
-        return entities.map { ChatRoomSequenceNumber.of(it.seqNumber, it.roomId) }
+        return entities.map { ChatRoomSequenceNumber.of(it.seqNumber, it.chatRoomId) }
     }
 }

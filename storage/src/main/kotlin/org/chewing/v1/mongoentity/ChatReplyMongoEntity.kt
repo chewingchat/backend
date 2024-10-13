@@ -1,14 +1,16 @@
 package org.chewing.v1.mongoentity
 
 import org.chewing.v1.model.chat.MessageType
-import org.chewing.v1.model.chat.log.ChatLog1
-import org.chewing.v1.model.chat.log.ChatReplyLog
+import org.chewing.v1.model.chat.message.ChatMessage
+import org.chewing.v1.model.chat.message.ChatReplyMessage
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document(collection = "chat_messages")
 internal class ChatReplyMongoEntity(
-    roomId: String,
+    messageId: String,
+    chatRoomId: String,
     senderId: String,
     seqNumber: Int,
     page: Int,
@@ -19,26 +21,26 @@ internal class ChatReplyMongoEntity(
     private val parentSeqNumber: Int,
     private val parentMessageText: String,
 ) : ChatMessageMongoEntity(
-    roomId = roomId,
+    messageId = messageId,
+    chatRoomId = chatRoomId,
     senderId = senderId,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime,
     type = MessageType.REPLY,
 ) {
-    override fun toChatMessage(): ChatLog1 {
-        return ChatReplyLog.of(
+    override fun toChatMessage(): ChatMessage {
+        return ChatReplyMessage.of(
             messageId = messageId,
-            roomId = roomId,
+            chatRoomId = chatRoomId,
             senderId = senderId,
             parentMessageId = parentMessageId,
             parentMessagePage = parentMessagePage,
             parentSeqNumber = parentSeqNumber,
             parentMessageText = parentMessageText,
             text = message,
-            seqNumber = seqNumber,
             timestamp = sendTime,
-            page = page
-        )
+            number = ChatNumber.of(chatRoomId, seqNumber, page),
+            )
     }
 }
