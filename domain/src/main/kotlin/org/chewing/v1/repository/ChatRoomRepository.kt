@@ -23,9 +23,9 @@ interface ChatRoomRepository {
     // 채팅방 파일 업로드
 //    fun saveUploadedMedia(chatRoomId: String, uploadedMedia: List<Media>)
 
-    fun findByChatRoomId(roomId: String): ChatRoomInfo
+    fun findByChatRoomId(chatRoomId: String): ChatRoomInfo
 
     fun appendChatRoom(isGroup: Boolean): String
 
-    fun readChatRooms(roomIds: List<String>): List<ChatRoomInfo>
+    fun readChatRooms(chatRoomIds: List<String>): List<ChatRoomInfo>
 }

@@ -1,9 +1,9 @@
 package org.chewing.v1.mongoentity
 
 import org.chewing.v1.model.chat.MessageType
-import org.chewing.v1.model.chat.log.ChatFileLog
-import org.chewing.v1.model.chat.log.ChatLog1
-import org.chewing.v1.model.chat.room.ChatRoomNumber
+import org.chewing.v1.model.chat.message.ChatFileMessage
+import org.chewing.v1.model.chat.message.ChatMessage
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.media.Media
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
@@ -11,14 +11,16 @@ import java.time.LocalDateTime
 
 @Document(collection = "chat_messages")
 internal class ChatFileMongoEntity(
-    roomId: String,
+    messageId: String,
+    chatRoomId: String,
     senderId: String,
     seqNumber: Int,
     page: Int,
     sendTime: LocalDateTime,
     val medias: List<Media>
 ) : ChatMessageMongoEntity(
-    roomId = roomId,
+    messageId = messageId,
+    chatRoomId = chatRoomId,
     senderId = senderId,
     type = MessageType.FILE,
     seqNumber = seqNumber,
@@ -26,31 +28,28 @@ internal class ChatFileMongoEntity(
     sendTime = sendTime
 ) {
     companion object {
-        fun fromFileMessage(
-            medias: List<Media>,
-            roomId: String,
-            senderId: String,
-            number: ChatRoomNumber
+        fun from(
+            chatFileMessage: ChatFileMessage
         ): ChatFileMongoEntity {
             return ChatFileMongoEntity(
-                roomId = roomId,
-                senderId = senderId,
-                seqNumber = number.sequenceNumber,
-                page = number.page,
-                sendTime = LocalDateTime.now(),
-                medias = medias
+                chatFileMessage.messageId,
+                chatFileMessage.chatRoomId,
+                chatFileMessage.senderId,
+                chatFileMessage.number.sequenceNumber,
+                chatFileMessage.number.page,
+                chatFileMessage.timestamp,
+                chatFileMessage.medias
             )
         }
     }
 
-    override fun toChatMessage(): ChatLog1 {
-        return ChatFileLog.of(
+    override fun toChatMessage(): ChatMessage {
+        return ChatFileMessage.of(
             messageId = messageId,
-            roomId = roomId,
+            chatRoomId = chatRoomId,
             senderId = senderId,
             timestamp = sendTime,
-            seqNumber = seqNumber,
-            page = page,
+            number = ChatNumber.of(chatRoomId, seqNumber, page),
             medias = medias
         )
     }

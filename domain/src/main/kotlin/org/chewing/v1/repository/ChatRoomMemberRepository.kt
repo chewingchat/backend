@@ -1,18 +1,20 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.room.ChatNumber
 
 interface ChatRoomMemberRepository {
-    fun readChatRoomMembers(roomId: String): List<ChatRoomMemberInfo>
-    fun readChatRoomMember(roomId: String, userId: String): ChatRoomMemberInfo?
-    fun saveChatRoomMember(roomId: String, userId: String)
-    fun changeChatRoomFavorite(roomId: String, userId: String, isFavorite: Boolean)
+    fun readChatRoomMembers(chatRoomId: String): List<ChatRoomMemberInfo>
+    fun readChatRoomMember(chatRoomId: String, userId: String): ChatRoomMemberInfo?
+    fun saveChatRoomMember(chatRoomId: String, userId: String)
+    fun changeChatRoomFavorite(chatRoomId: String, userId: String, isFavorite: Boolean)
     fun readChatRoomUsers(userId: String): List<ChatRoomMemberInfo>
-    fun readChatRoomsMember(roomIds: List<String>, userId: String): List<ChatRoomMemberInfo>
+    fun readChatRoomsMember(chatRoomIds: List<String>, userId: String): List<ChatRoomMemberInfo>
     fun removeChatRoomMembers(chatRoomIds: List<String>,userId: String): List<ChatRoomMemberInfo>
-    fun appendChatRoomMember(roomId: String, userId: String)
+    fun appendChatRoomMember(chatRoomId: String, userId: String)
     fun readPersonalChatRoomId(userId: String, friendId: String): String?
 
-    fun appendChatRoomMembers(roomId: String, userIds: List<String>)
-    fun updateUnDelete(roomId: String, userId: String)
+    fun appendChatRoomMembers(chatRoomId: String, userIds: List<String>)
+    fun updateUnDelete(chatRoomId: String, userId: String)
+    fun updateRead(userId: String, number: ChatNumber)
 }

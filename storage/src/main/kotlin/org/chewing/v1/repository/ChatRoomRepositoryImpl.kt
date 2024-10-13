@@ -3,7 +3,6 @@ package org.chewing.v1.repository
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.chat.ChatRoomEntity
-import org.chewing.v1.model.chat.ChatLog
 import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.jparepository.ChatRoomJpaRepository
 import org.chewing.v1.model.chat.room.ChatRoomInfo
@@ -18,9 +17,6 @@ internal class ChatRoomRepositoryImpl(
     private val chatRoomJpaRepository: ChatRoomJpaRepository, // JPA 레포지토리
 
 ) : ChatRoomRepository {
-    private val chatRooms = mutableListOf<ChatRoom>()
-    private val chatLogs = mutableMapOf<String, MutableList<ChatLog>>()
-
     /***.
      * 채팅방 ChatRoomMemberRepository에서 유저의 채팅방 목록 가져올게용
      */
@@ -102,16 +98,16 @@ internal class ChatRoomRepositoryImpl(
 //            ?: throw NotFoundException(ErrorCode.CHATLOG_NOT_FOUND)
 //
 //        // 답글의 부모 메시지 정보 추가
-//        return logs.map { log ->
-//            if (log.type == "REPLY") {
-//                val parentMessage = findParentMessage(log.parentMessageId ?: "")
-//                log.copy(
+//        return logs.map { message ->
+//            if (message.type == "REPLY") {
+//                val parentMessage = findParentMessage(message.parentMessageId ?: "")
+//                message.copy(
 //                    parentMessage = parentMessage?.message,
 //                    parentMessagePage = parentMessage?.page,
 //                    seqNumber = parentMessage?.seqNumber
 //                )
 //            } else {
-//                log
+//                message
 //            }
 //        }
 //    }
@@ -145,7 +141,7 @@ internal class ChatRoomRepositoryImpl(
 //                parentMessagePage = null,  // 부모 메시지 페이지가 없는 경우 null
 //                parentSeqNumber = null,  // 부모 메시지 시퀀스 번호가 없는 경우 null
 //                type = MessageType.FILE,
-//                roomId = chatRoomId,
+//                chatRoomId = chatRoomId,
 //                sender = "system",
 //                timestamp = LocalDateTime.now(),
 //                seqNumber = chatMessageMongoRepository.countByRoomId(chatRoomId).toInt(),
@@ -160,16 +156,16 @@ internal class ChatRoomRepositoryImpl(
     /**
      * 채팅 방 찾는 로직
      * */
-    override fun findByChatRoomId(roomId: String): ChatRoomInfo {
-        return chatRoomJpaRepository.findByChatRoomId(roomId).orElse(null).toChatRoomInfo()
+    override fun findByChatRoomId(chatRoomId: String): ChatRoomInfo {
+        return chatRoomJpaRepository.findByChatRoomId(chatRoomId).orElse(null).toChatRoomInfo()
     }
 
     override fun appendChatRoom(isGroup: Boolean): String {
         return chatRoomJpaRepository.save(ChatRoomEntity.generate(isGroup)).toChatRoomId()
     }
 
-    override fun readChatRooms(roomIds: List<String>): List<ChatRoomInfo> {
-        return chatRoomJpaRepository.findByChatRoomIdIn(roomIds).map { it.toChatRoomInfo() }
+    override fun readChatRooms(chatRoomIds: List<String>): List<ChatRoomInfo> {
+        return chatRoomJpaRepository.findByChatRoomIdIn(chatRoomIds).map { it.toChatRoomInfo() }
     }
 
     /**

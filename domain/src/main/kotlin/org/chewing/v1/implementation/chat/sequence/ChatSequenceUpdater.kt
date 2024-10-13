@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component
 @Component
 class ChatSequenceUpdater(private val chatSequenceRepository: ChatSequenceRepository) {
 
-    fun updateSequenceIncrement(roomId: String): ChatRoomSequenceNumber {
-        return chatSequenceRepository.updateSequenceIncrement(roomId)
+    fun updateSequenceIncrement(chatRoomId: String): ChatRoomSequenceNumber {
+        return chatSequenceRepository.updateSequenceIncrement(chatRoomId)
+    }
+
+    fun updateSequenceIncrements(chatRoomIds: List<String>): List<ChatRoomSequenceNumber> {
+        return chatSequenceRepository.updateSequenceIncrements(chatRoomIds)
     }
 }

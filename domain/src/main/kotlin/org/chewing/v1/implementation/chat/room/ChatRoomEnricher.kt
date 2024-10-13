@@ -2,12 +2,8 @@ package org.chewing.v1.implementation.chat.room
 
 import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.model.chat.ChatRoomMemberInfo
-import org.chewing.v1.model.chat.ChatUser
 import org.chewing.v1.model.chat.room.ChatRoomInfo
-import org.chewing.v1.model.chat.room.ChatRoomNumber
-import org.chewing.v1.model.chat.room.ChatRoomSequenceNumber
-import org.chewing.v1.model.friend.FriendShip
-import org.chewing.v1.model.user.User
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,11 +13,11 @@ class ChatRoomEnricher {
         chatRoomMemberInfos: List<ChatRoomMemberInfo>,
         userChatRooms: List<ChatRoomMemberInfo>,
         chatRoomInfos: List<ChatRoomInfo>,
-        roomSequenceNumbers: List<ChatRoomNumber>
+        roomSequenceNumbers: List<ChatNumber>
     ): List<ChatRoom> {
         val groupedChatRoomMembers = chatRoomMemberInfos.groupBy { it.chatRoomId }
         val userChatRoomsMap = userChatRooms.associateBy { it.chatRoomId }
-        val roomSequenceNumberMap = roomSequenceNumbers.associateBy { it.roomId }
+        val roomSequenceNumberMap = roomSequenceNumbers.associateBy { it.chatRoomId }
 
         return chatRoomInfos.mapNotNull { chatRoomInfo ->
             // myChatRoom이 없는 경우 필터링

@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.chat.sequence
 
-import org.chewing.v1.model.chat.room.ChatRoomNumber
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.stereotype.Component
 
 @Component
@@ -12,20 +12,31 @@ class ChatHelper(
         const val PAGE_SIZE = 50
     }
 
-    fun readLastPage(roomId: String): Int {
-        return (chatSequenceReader.readCurrent(roomId).sequenceNumber / PAGE_SIZE)
+    fun readLastPage(chatRoomId: String): Int {
+        return (chatSequenceReader.readCurrent(chatRoomId).sequenceNumber / PAGE_SIZE)
     }
 
 
-    fun readNumbers(roomIds: List<String>): List<ChatRoomNumber> {
-        val sequenceNumbers = chatSequenceReader.readSeqNumbers(roomIds)
+    fun readNumbers(chatRoomIds: List<String>): List<ChatNumber> {
+        val sequenceNumbers = chatSequenceReader.readSeqNumbers(chatRoomIds)
         return sequenceNumbers.map {
-            ChatRoomNumber.of(it, (it.sequenceNumber / PAGE_SIZE))
+            ChatNumber.of(it.chatRoomId, it.sequenceNumber, (it.sequenceNumber / PAGE_SIZE))
         }
     }
 
-    fun findNextNumber(roomId: String): ChatRoomNumber {
-        val nextSequenceNumber = chatSequenceUpdater.updateSequenceIncrement(roomId)
-        return ChatRoomNumber.of(nextSequenceNumber, (nextSequenceNumber.sequenceNumber / PAGE_SIZE))
+    fun findNextNumbers(chatRoomIds: List<String>): List<ChatNumber> {
+        val sequenceNumbers = chatSequenceUpdater.updateSequenceIncrements(chatRoomIds)
+        return sequenceNumbers.map {
+            ChatNumber.of(it.chatRoomId, it.sequenceNumber, (it.sequenceNumber / PAGE_SIZE))
+        }
+    }
+
+    fun findNextNumber(chatRoomId: String): ChatNumber {
+        val number = chatSequenceUpdater.updateSequenceIncrement(chatRoomId)
+        return ChatNumber.of(number.chatRoomId, number.sequenceNumber, (number.sequenceNumber / PAGE_SIZE))
+    }
+    fun findCurrentNumber(chatRoomId: String): ChatNumber {
+        val number = chatSequenceReader.readCurrent(chatRoomId)
+        return ChatNumber.of(number.chatRoomId, number.sequenceNumber, (number.sequenceNumber / PAGE_SIZE))
     }
 }

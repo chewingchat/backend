@@ -1,50 +1,51 @@
-package org.chewing.v1.model.chat.log
+package org.chewing.v1.model.chat.message
 
 import org.chewing.v1.model.chat.MessageType
+import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
 
-class ChatReplyLog private constructor(
-    override val messageId: String,
-    override val roomId: String,
+class ChatReplyMessage private constructor(
+    val messageId: String,
+    override val chatRoomId: String,
     override val senderId: String,
+    override val timestamp: LocalDateTime,
+    override val number: ChatNumber,
+    override val type: MessageType,
     val text: String,
     val parentMessageId: String,
     val parentMessagePage: Int,
     val parentMessageText: String,
     val parentSeqNumber: Int,
-    override val timestamp: LocalDateTime,
-    override val seqNumber: Int,
-    override val page: Int
-) : ChatLog1() {
-    override val type: MessageType
-        get() = MessageType.REPLY
-
+    val parentMessageType: MessageType
+) : ChatMessage() {
     companion object {
         fun of(
             messageId: String,
-            roomId: String,
+            chatRoomId: String,
             senderId: String,
             parentMessageId: String,
             parentMessagePage: Int,
             parentSeqNumber: Int,
             timestamp: LocalDateTime,
-            seqNumber: Int,
-            page: Int,
+            number: ChatNumber,
             text: String,
-            parentMessageText: String
-        ): ChatReplyLog {
-            return ChatReplyLog(
+            parentMessageText: String,
+            type: MessageType,
+            parentMessageType: MessageType
+        ): ChatReplyMessage {
+            return ChatReplyMessage(
                 messageId = messageId,
-                roomId = roomId,
+                chatRoomId = chatRoomId,
                 senderId = senderId,
                 parentMessageId = parentMessageId,
                 parentMessagePage = parentMessagePage,
                 parentSeqNumber = parentSeqNumber,
                 timestamp = timestamp,
-                seqNumber = seqNumber,
-                page = page,
+                number = number,
                 text = text,
-                parentMessageText = parentMessageText
+                parentMessageText = parentMessageText,
+                type = type,
+                parentMessageType = parentMessageType
             )
         }
     }

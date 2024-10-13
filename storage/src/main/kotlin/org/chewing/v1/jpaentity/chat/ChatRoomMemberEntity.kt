@@ -2,6 +2,7 @@ package org.chewing.v1.jpaentity.chat
 
 import jakarta.persistence.*
 import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.room.ChatNumber
 import java.util.*
 import kotlin.jvm.Transient
 
@@ -43,5 +44,8 @@ data class ChatRoomMemberEntity(
     }
     fun updateUnDelete() {
         this.isDeleted = false
+    }
+    fun updateRead(number: ChatNumber){
+        this.readSeqNumber = number.sequenceNumber
     }
 }

@@ -2,35 +2,34 @@ package org.chewing.v1.model.chat.message
 
 import org.chewing.v1.model.chat.MessageType
 import org.chewing.v1.model.chat.room.ChatNumber
-import org.chewing.v1.model.media.Media
 import java.time.LocalDateTime
 
-class ChatFileMessage private constructor(
+class ChatInviteMessage private constructor(
     val messageId: String,
     override val chatRoomId: String,
     override val senderId: String,
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
-    val medias: List<Media>
+    val targetUserId: String
 ) : ChatMessage() {
-    override val type: MessageType = MessageType.FILE
+    override val type: MessageType = MessageType.INVITE
 
     companion object {
         fun of(
             messageId: String,
             chatRoomId: String,
             senderId: String,
-            medias: List<Media>,
             timestamp: LocalDateTime,
-            number: ChatNumber
-        ): ChatFileMessage {
-            return ChatFileMessage(
+            number: ChatNumber,
+            targetUserId: String
+        ): ChatInviteMessage {
+            return ChatInviteMessage(
                 messageId = messageId,
                 chatRoomId = chatRoomId,
                 senderId = senderId,
-                medias = medias,
                 timestamp = timestamp,
-                number = number
+                number = number,
+                targetUserId = targetUserId
             )
         }
     }

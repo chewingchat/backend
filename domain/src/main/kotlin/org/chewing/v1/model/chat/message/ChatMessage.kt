@@ -1,14 +1,13 @@
-package org.chewing.v1.model.chat.log
+package org.chewing.v1.model.chat.message
 
 import org.chewing.v1.model.chat.MessageType
+import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
 
-sealed class ChatLog1 {
+sealed class ChatMessage {
     abstract val type: MessageType
-    abstract val messageId: String
-    abstract val roomId: String
+    abstract val chatRoomId: String
     abstract val senderId: String
     abstract val timestamp: LocalDateTime
-    abstract val seqNumber: Int
-    abstract val page: Int
+    abstract val number: ChatNumber
 }

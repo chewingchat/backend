@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component
 class ChatSequenceReader(
     private val chatSequenceRepository: ChatSequenceRepository,
 ) {
-    fun readCurrent(roomId: String): ChatRoomSequenceNumber {
-        return chatSequenceRepository.readCurrent(roomId)
+    fun readCurrent(chatRoomId: String): ChatRoomSequenceNumber {
+        return chatSequenceRepository.readCurrent(chatRoomId)
     }
-    fun readSeqNumbers(roomIds: List<String>): List<ChatRoomSequenceNumber> {
-        return chatSequenceRepository.readSeqNumbers(roomIds)
+    fun readSeqNumbers(chatRoomIds: List<String>): List<ChatRoomSequenceNumber> {
+        return chatSequenceRepository.readSeqNumbers(chatRoomIds)
     }
 }

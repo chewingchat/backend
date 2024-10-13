@@ -1,22 +1,22 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.chat.log.ChatLogReader
+import org.chewing.v1.implementation.chat.message.ChatReader
 import org.chewing.v1.implementation.chat.sequence.ChatHelper
-import org.chewing.v1.model.chat.log.ChatLog1
+import org.chewing.v1.model.chat.message.ChatMessage
 import org.springframework.stereotype.Service
 
 @Service
 class ChatLogService(
-    private val chatLogReader: ChatLogReader,
+    private val chatReader: ChatReader,
     private val chatHelper: ChatHelper,
 ) {
 
-    fun getChatLog(roomId: String, page: Int): List<ChatLog1> {
-        return chatLogReader.readChatLog(roomId, page)
+    fun getChatLog(chatRoomId: String, page: Int): List<ChatMessage> {
+        return chatReader.readChatLog(chatRoomId, page)
     }
 
-    fun getChatLogLatest(roomId: String): List<ChatLog1> {
-        val page = chatHelper.readLastPage(roomId)
-        return chatLogReader.readChatLog(roomId, page)
+    fun getChatLogLatest(chatRoomId: String): List<ChatMessage> {
+        val page = chatHelper.readLastPage(chatRoomId)
+        return chatReader.readChatLog(chatRoomId, page)
     }
 }

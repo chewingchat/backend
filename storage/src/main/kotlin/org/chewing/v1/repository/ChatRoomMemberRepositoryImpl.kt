@@ -3,14 +3,15 @@ package org.chewing.v1.repository
 import org.chewing.v1.jpaentity.chat.ChatRoomMemberEntity
 import org.chewing.v1.jparepository.ChatRoomMemberJpaRepository
 import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.stereotype.Repository
 
 @Repository
 internal class ChatRoomMemberRepositoryImpl(
     private val chatRoomMemberJpaRepository: ChatRoomMemberJpaRepository
 ) : ChatRoomMemberRepository {
-    override fun readChatRoomMembers(roomId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberJpaRepository.findAllByChatRoomId(roomId).map {
+    override fun readChatRoomMembers(chatRoomId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberJpaRepository.findAllByChatRoomId(chatRoomId).map {
             it.toRoomMember()
         }
     }
@@ -21,22 +22,22 @@ internal class ChatRoomMemberRepositoryImpl(
         }
     }
 
-    override fun readChatRoomsMember(roomIds: List<String>, userId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberJpaRepository.findAllByChatRoomIdInAndUserId(roomIds, userId).map {
+    override fun readChatRoomsMember(chatRoomIds: List<String>, userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberJpaRepository.findAllByChatRoomIdInAndUserId(chatRoomIds, userId).map {
             it.toRoomMember()
         }
     }
 
-    override fun readChatRoomMember(roomId: String, userId: String): ChatRoomMemberInfo? {
-        return chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(roomId, userId)?.toRoomMember()
+    override fun readChatRoomMember(chatRoomId: String, userId: String): ChatRoomMemberInfo? {
+        return chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(chatRoomId, userId)?.toRoomMember()
     }
 
-    override fun saveChatRoomMember(roomId: String, userId: String) {
-        chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, roomId))
+    override fun saveChatRoomMember(chatRoomId: String, userId: String) {
+        chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, chatRoomId))
     }
 
-    override fun changeChatRoomFavorite(roomId: String, userId: String, isFavorite: Boolean) {
-        chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(roomId, userId)?.let {
+    override fun changeChatRoomFavorite(chatRoomId: String, userId: String, isFavorite: Boolean) {
+        chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(chatRoomId, userId)?.let {
             it.updateFavorite(isFavorite)
             chatRoomMemberJpaRepository.save(it)
         }
@@ -58,12 +59,12 @@ internal class ChatRoomMemberRepositoryImpl(
         }
     }
 
-    override fun appendChatRoomMember(roomId: String, userId: String) {
-        chatRoomMemberJpaRepository.findByUserIdAndChatRoomId(userId, roomId)?.let { entity ->
+    override fun appendChatRoomMember(chatRoomId: String, userId: String) {
+        chatRoomMemberJpaRepository.findByUserIdAndChatRoomId(userId, chatRoomId)?.let { entity ->
             entity.updateUnDelete()
             chatRoomMemberJpaRepository.save(entity)
         } ?: run {
-            chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, roomId))
+            chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, chatRoomId))
         }
     }
 
@@ -77,15 +78,22 @@ internal class ChatRoomMemberRepositoryImpl(
         }
     }
 
-    override fun appendChatRoomMembers(roomId: String, userIds: List<String>) {
-        userIds.map { ChatRoomMemberEntity.generate(it, roomId) }.let {
+    override fun appendChatRoomMembers(chatRoomId: String, userIds: List<String>) {
+        userIds.map { ChatRoomMemberEntity.generate(it, chatRoomId) }.let {
             chatRoomMemberJpaRepository.saveAll(it)
         }
     }
 
-    override fun updateUnDelete(roomId: String, userId: String) {
-        chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(roomId, userId)?.let {
+    override fun updateUnDelete(chatRoomId: String, userId: String) {
+        chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(chatRoomId, userId)?.let {
             it.updateUnDelete()
+            chatRoomMemberJpaRepository.save(it)
+        }
+    }
+
+    override fun updateRead(userId: String, number: ChatNumber) {
+        chatRoomMemberJpaRepository.findByUserIdAndChatRoomId(userId, number.chatRoomId)?.let {
+            it.updateRead(number)
             chatRoomMemberJpaRepository.save(it)
         }
     }

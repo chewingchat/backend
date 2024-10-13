@@ -7,7 +7,7 @@
 //
 //data class ChatDto(
 //    val type: MessageType,
-//    val roomId: String?,
+//    val chatRoomId: String?,
 //    val sender: String,
 //    val messageSendType: MessageSendType?,  // messageSendType 필드 수정
 //    val timestamp: LocalDateTime?,
@@ -21,7 +21,7 @@
 //        // ChatMessage를 ChatDto로 변환하는 메서드
 //        fun from(chatMessage: ChatMessage) = ChatDto(
 //            chatMessage.type,
-//            chatMessage.roomId,
+//            chatMessage.chatRoomId,
 //            chatMessage.sender,
 //            chatMessage.messageSendType,  // 수정된 필드
 //            chatMessage.timestamp,
@@ -36,7 +36,7 @@
 //    // ChatDto를 ChatMessage로 변환하는 메서드
 //    fun toChat() = ChatMessage.withoutId(
 //        type,
-//        roomId!!,
+//        chatRoomId!!,
 //        sender,
 //        messageSendType!!,  // 수정된 필드
 //        parentMessageId,

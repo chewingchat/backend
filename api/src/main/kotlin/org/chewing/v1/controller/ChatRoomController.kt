@@ -65,7 +65,7 @@ class ChatRoomController(
 //
 //
 //    // 채팅방 로그 가져오기
-//    @PostMapping("/log")
+//    @PostMapping("/message")
 //    fun getChatLogs(
 //        @RequestBody request: ChatLogRequest
 //    ): ResponseEntity<HttpResponse<List<ChatLog>>> {

@@ -1,9 +1,9 @@
 package org.chewing.v1.external
 
-import org.chewing.v1.model.chat.ChatMessage
-import org.chewing.v1.model.chat.log.ChatLog1
+import org.chewing.v1.model.chat.message.ChatMessage
 
 
 interface ExternalChatClient {
-    fun sendMessage(chatMessage: ChatLog1)
+    fun sendMessage(chatMessage: ChatMessage)
+    fun sendMessages(chatMessages: List<ChatMessage>)
 }
