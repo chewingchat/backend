@@ -1,8 +1,7 @@
-package org.chewing.v1.model.chat
+package org.chewing.v1.model.chat.room
 
-import org.chewing.v1.model.chat.room.ChatRoomInfo
-import org.chewing.v1.model.friend.FriendShip
-import org.chewing.v1.model.user.User
+import org.chewing.v1.model.chat.member.ChatRoomMember
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import java.time.LocalDateTime
 
 
@@ -13,16 +12,18 @@ data class ChatRoom(
     val latestMessage: String,
     val latestMessageTime: LocalDateTime,
     val totalUnReadMessage: Int,
+    val latestSeqNumber: Int,
     val latestPage: Int,
-    val chatRoomMemberInfos: List<ChatRoomMemberInfo>,
+    val chatRoomMemberInfos: List<ChatRoomMember>,
 ) {
     companion object {
         fun of(
             chatRoomInfo: ChatRoomInfo,
             userChatRoom: ChatRoomMemberInfo,
-            chatRoomMembers: List<ChatRoomMemberInfo>,
+            chatRoomMembers: List<ChatRoomMember>,
             totalUnReadMessage: Int,
             latestPage: Int,
+            latestSeqNumber: Int
         ): ChatRoom {
             return ChatRoom(
                 chatRoomId = chatRoomInfo.chatRoomId,
@@ -32,6 +33,7 @@ data class ChatRoom(
                 latestMessageTime = chatRoomInfo.latestMessageTime,
                 totalUnReadMessage = totalUnReadMessage,
                 latestPage = latestPage,
+                latestSeqNumber = latestSeqNumber,
                 chatRoomMemberInfos = chatRoomMembers
             )
         }

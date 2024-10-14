@@ -4,7 +4,7 @@ import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.stereotype.Component
 
 @Component
-class ChatHelper(
+class ChatFinder(
     private val chatSequenceReader: ChatSequenceReader,
     private val chatSequenceUpdater: ChatSequenceUpdater,
 ) {
@@ -12,12 +12,12 @@ class ChatHelper(
         const val PAGE_SIZE = 50
     }
 
-    fun readLastPage(chatRoomId: String): Int {
+    fun findLastPage(chatRoomId: String): Int {
         return (chatSequenceReader.readCurrent(chatRoomId).sequenceNumber / PAGE_SIZE)
     }
 
 
-    fun readNumbers(chatRoomIds: List<String>): List<ChatNumber> {
+    fun findCurrentNumbers(chatRoomIds: List<String>): List<ChatNumber> {
         val sequenceNumbers = chatSequenceReader.readSeqNumbers(chatRoomIds)
         return sequenceNumbers.map {
             ChatNumber.of(it.chatRoomId, it.sequenceNumber, (it.sequenceNumber / PAGE_SIZE))

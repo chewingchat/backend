@@ -2,7 +2,7 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.chat.ChatRoomMemberEntity
 import org.chewing.v1.jparepository.ChatRoomMemberJpaRepository
-import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.stereotype.Repository
 
@@ -53,7 +53,7 @@ internal class ChatRoomMemberRepositoryImpl(
             chatRoomMemberJpaRepository.save(it)
             it
         }.filter {
-            it.isDeleted
+            it.deleted
         }.map {
             it.toRoomMember()
         }

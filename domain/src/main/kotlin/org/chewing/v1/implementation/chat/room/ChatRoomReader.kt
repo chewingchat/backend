@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.chat.room
 
-import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.chewing.v1.repository.ChatRoomMemberRepository
 import org.chewing.v1.repository.ChatRoomRepository
@@ -13,10 +13,6 @@ class ChatRoomReader(
 ) {
     fun readChatRooms(chatRoomIds: List<String>): List<ChatRoomInfo> {
         return chatRoomRepository.readChatRooms(chatRoomIds)
-    }
-
-    fun readChatRoom(chatRoomId: String): ChatRoomInfo {
-        return chatRoomRepository.readChatRoom(chatRoomId)
     }
 
     fun readPersonalChatRoomId(userId: String, friendId: String): String?{

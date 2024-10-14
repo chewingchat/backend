@@ -1,4 +1,4 @@
-package org.chewing.v1.model.chat
+package org.chewing.v1.model.chat.message
 
 enum class MessageType {
     REPLY, DELETE, LEAVE, READ, CHAT, FILE, INVITE

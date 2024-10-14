@@ -1,10 +1,9 @@
 package org.chewing.v1.jpaentity.chat
 
 import jakarta.persistence.*
-import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatNumber
 import java.util.*
-import kotlin.jvm.Transient
 
 @Entity
 @Table(name = "chat_room_member", schema = "chewing")
@@ -15,7 +14,7 @@ data class ChatRoomMemberEntity(
     var favorite: Boolean,
     val chatRoomId: String,
     var readSeqNumber: Int,
-    var isDeleted: Boolean = false
+    var deleted: Boolean = false
 ) {
     companion object{
         fun generate(userId: String, chatRoomId: String): ChatRoomMemberEntity {
@@ -40,10 +39,10 @@ data class ChatRoomMemberEntity(
         this.favorite = favorite
     }
     fun updateDelete() {
-        this.isDeleted = true
+        this.deleted = true
     }
     fun updateUnDelete() {
-        this.isDeleted = false
+        this.deleted = false
     }
     fun updateRead(number: ChatNumber){
         this.readSeqNumber = number.sequenceNumber

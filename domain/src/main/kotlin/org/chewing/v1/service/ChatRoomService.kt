@@ -4,8 +4,8 @@ import org.chewing.v1.implementation.chat.message.ChatAppender
 import org.chewing.v1.implementation.chat.message.ChatGenerator
 import org.chewing.v1.implementation.chat.message.ChatSender
 import org.chewing.v1.implementation.chat.room.*
-import org.chewing.v1.implementation.chat.sequence.ChatHelper
-import org.chewing.v1.model.chat.ChatRoom
+import org.chewing.v1.implementation.chat.sequence.ChatFinder
+import org.chewing.v1.model.chat.room.ChatRoom
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,20 +18,21 @@ class ChatRoomService(
     private val chatGenerator: ChatGenerator,
     private val chatAppender: ChatAppender,
     private val chatSender: ChatSender,
-    private val chatHelper: ChatHelper,
+    private val chatFinder: ChatFinder,
 ) {
     fun getChatRooms(userId: String): List<ChatRoom> {
         val userChatRooms = chatRoomReader.readUserInChatRooms(userId)
         val chatRoomIds = userChatRooms.map { it.chatRoomId }
         val chatRoomMemberInfos = chatRoomReader.readChatRoomsMember(chatRoomIds, userId)
         val chatRoomInfos = chatRoomReader.readChatRooms(chatRoomMemberInfos.map { it.chatRoomId })
-        val roomSequenceNumbers = chatHelper.readNumbers(chatRoomIds)
+        val roomSequenceNumbers = chatFinder.findCurrentNumbers(chatRoomIds)
 
         return chatRoomEnricher.enrichChatRooms(
             userChatRooms,
             chatRoomMemberInfos,
             chatRoomInfos,
-            roomSequenceNumbers
+            roomSequenceNumbers,
+            userId
         )
     }
 
@@ -40,11 +41,10 @@ class ChatRoomService(
 
         val members = chatRoomReader.readUserInChatRooms(userId)
 
-        val chatLogs = chatHelper.findNextNumbers(chatRoomIds).map { number ->
+        chatFinder.findNextNumbers(chatRoomIds).forEach { number ->
             val message = chatGenerator.generateLeaveMessage(number.chatRoomId, userId, number)
             chatAppender.appendChatLog(message)
             chatSender.sendChat(message, members)
-            message
         }
     }
 
@@ -64,12 +64,11 @@ class ChatRoomService(
 
         val members = chatRoomReader.readUserInChatRooms(userId)
 
-        val messages = friendIds.map { friendId ->
-            val number = chatHelper.findNextNumber(newRoomId)
+        friendIds.forEach { friendId ->
+            val number = chatFinder.findNextNumber(newRoomId)
             val message = chatGenerator.generateInviteMessage(newRoomId, userId, number, friendId)
             chatAppender.appendChatLog(message)
             chatSender.sendChat(message, members)
-            message
         }
     }
 

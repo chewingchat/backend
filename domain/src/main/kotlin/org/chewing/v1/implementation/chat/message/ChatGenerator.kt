@@ -1,6 +1,8 @@
 package org.chewing.v1.implementation.chat.message
 
-import org.chewing.v1.model.chat.MessageType
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.media.Media
@@ -108,62 +110,27 @@ class ChatGenerator {
         text: String,
         parentMessage: ChatMessage
     ): ChatReplyMessage {
-        when (parentMessage) {
-            is ChatCommonMessage -> {
-                return ChatReplyMessage.of(
-                    generateKey(chatRoomId),
-                    chatRoomId = chatRoomId,
-                    senderId = userId,
-                    timestamp = LocalDateTime.now(),
-                    number = number,
-                    text = text,
-                    parentMessageId = parentMessage.messageId,
-                    parentMessagePage = parentMessage.number.page,
-                    parentMessageText = parentMessage.text,
-                    parentSeqNumber = parentMessage.number.sequenceNumber,
-                    parentMessageType = parentMessage.type,
-                    type = MessageType.REPLY
-                )
-            }
-
-            is ChatReplyMessage -> {
-                return ChatReplyMessage.of(
-                    generateKey(chatRoomId),
-                    chatRoomId = chatRoomId,
-                    senderId = userId,
-                    timestamp = LocalDateTime.now(),
-                    number = number,
-                    text = text,
-                    parentMessageId = parentMessage.parentMessageId,
-                    parentMessagePage = parentMessage.parentMessagePage,
-                    parentMessageText = parentMessage.parentMessageText,
-                    parentSeqNumber = parentMessage.parentSeqNumber,
-                    parentMessageType = parentMessage.type,
-                    type = MessageType.REPLY
-                )
-            }
-
-            is ChatFileMessage -> {
-                return ChatReplyMessage.of(
-                    generateKey(chatRoomId),
-                    chatRoomId = chatRoomId,
-                    senderId = userId,
-                    timestamp = LocalDateTime.now(),
-                    number = number,
-                    text = text,
-                    parentMessageId = parentMessage.messageId,
-                    parentMessagePage = parentMessage.number.page,
-                    parentMessageText = parentMessage.medias[0].url,
-                    parentSeqNumber = parentMessage.number.sequenceNumber,
-                    parentMessageType = parentMessage.type,
-                    type = MessageType.REPLY
-                )
-            }
-
-            else -> {
-                throw IllegalArgumentException("Invalid parent message type")
-            }
+        val (parentMessageId, parentMessageText) = when (parentMessage) {
+            is ChatCommonMessage -> Pair(parentMessage.messageId, parentMessage.text)
+            is ChatReplyMessage -> Pair(parentMessage.messageId, parentMessage.text)
+            is ChatFileMessage -> Pair(parentMessage.messageId, parentMessage.medias[0].url)
+            else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
+
+        return ChatReplyMessage.of(
+            generateKey(chatRoomId),
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            timestamp = LocalDateTime.now(),
+            number = number,
+            text = text,
+            parentMessageId = parentMessageId,
+            parentMessagePage = parentMessage.number.page,
+            parentMessageText = parentMessageText,
+            parentSeqNumber = parentMessage.number.sequenceNumber,
+            parentMessageType = parentMessage.type,
+            type = MessageType.REPLY
+        )
     }
 
     private fun generateKey(chatRoomId: String): String {

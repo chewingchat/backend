@@ -1,4 +1,4 @@
-package org.chewing.v1.model.chat
+package org.chewing.v1.model.chat.message
 
 import org.chewing.v1.model.media.MediaType
 

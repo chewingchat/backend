@@ -1,9 +1,6 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.jpaentity.chat.ChatRoomEntity
-import org.chewing.v1.model.chat.ChatRoom
 import org.chewing.v1.jparepository.ChatRoomJpaRepository
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.springframework.stereotype.Repository
