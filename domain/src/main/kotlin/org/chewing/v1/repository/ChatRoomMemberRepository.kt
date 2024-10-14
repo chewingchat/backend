@@ -1,6 +1,6 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.model.chat.ChatRoomMemberInfo
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatNumber
 
 interface ChatRoomMemberRepository {

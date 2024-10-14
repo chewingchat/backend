@@ -1,7 +1,10 @@
 package org.chewing.v1.dto.response.chat
 
 import org.chewing.v1.dto.response.MediaResponse
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.message.*
+import org.springframework.web.client.HttpClientErrorException.Conflict
 import java.time.LocalDateTime
 
 sealed class ChatLogMessageResponse {
@@ -82,33 +85,25 @@ sealed class ChatLogMessageResponse {
                     parentSeqNumber = chatLog.parentSeqNumber,
                     parentMessageText = chatLog.parentMessageText,
                     timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
                     text = chatLog.text
-                )
-                is ChatDeleteMessage -> Delete(
-                    messageId = chatLog.messageId,
-                    chatRoomId = chatLog.chatRoomId,
-                    senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
                 )
                 is ChatLeaveMessage -> Leave(
                     messageId = chatLog.messageId,
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
                     timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
                 )
                 is ChatInviteMessage -> Invite(
                     messageId = chatLog.messageId,
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
                     timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
                 )
                 is ChatFileMessage -> File(
                     messageId = chatLog.messageId,
@@ -116,8 +111,8 @@ sealed class ChatLogMessageResponse {
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
                     timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
                     files = chatLog.medias.map { MediaResponse.from(it) }
                 )
                 is ChatCommonMessage -> Message(
@@ -126,10 +121,11 @@ sealed class ChatLogMessageResponse {
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
                     timestamp = chatLog.timestamp,
-                    seqNumber = chatLog.seqNumber,
-                    page = chatLog.page,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
                     text = chatLog.text
                 )
+                else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
             }
         }
     }

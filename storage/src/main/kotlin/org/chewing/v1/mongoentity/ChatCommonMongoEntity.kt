@@ -1,6 +1,6 @@
 package org.chewing.v1.mongoentity
 
-import org.chewing.v1.model.chat.MessageType
+import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatCommonMessage
 import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.model.chat.room.ChatNumber
@@ -48,7 +48,8 @@ internal class ChatCommonMongoEntity(
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            text = message
+            text = message,
+            type = type
         )
     }
 }

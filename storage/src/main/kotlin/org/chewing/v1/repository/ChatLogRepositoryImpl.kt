@@ -5,6 +5,7 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.media.Media
+import org.chewing.v1.mongoentity.*
 import org.chewing.v1.mongoentity.ChatCommonMongoEntity
 import org.chewing.v1.mongoentity.ChatFileMongoEntity
 import org.chewing.v1.mongoentity.ChatInviteMongoEntity
@@ -96,6 +97,10 @@ internal class ChatLogRepositoryImpl(
 
             is ChatInviteMessage -> {
                 val entity = ChatInviteMongoEntity.from(chatMessage)
+                chatLogMongoRepository.save(entity)
+            }
+            is ChatReplyMessage -> {
+                val entity = ChatReplyMongoEntity.from(chatMessage)
                 chatLogMongoRepository.save(entity)
             }
 

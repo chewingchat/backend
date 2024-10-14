@@ -11,7 +11,7 @@ data class ChatLogResponse(
         fun from(list: List<ChatMessage>): ChatLogResponse {
             return ChatLogResponse(
                 chatRoomId = list.first().chatRoomId,
-                currentPage = list.first().page,
+                currentPage = list.first().number.page,
                 chatMessages = list.map { ChatLogMessageResponse.from(it) }
             )
         }
