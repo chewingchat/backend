@@ -5,7 +5,8 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.implementation.feed.like.*
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.repository.FeedLikesRepository
+import org.chewing.v1.repository.feed.FeedLikesRepository
+import org.chewing.v1.service.feed.FeedLikesService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

@@ -1,6 +1,5 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.request.*
 import org.chewing.v1.dto.request.auth.LoginRequest
 import org.chewing.v1.dto.request.auth.VerificationCheckRequest
 import org.chewing.v1.dto.request.auth.VerificationRequest
@@ -9,7 +8,7 @@ import org.chewing.v1.dto.response.auth.TokenResponse
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.AuthService
+import org.chewing.v1.service.auth.AuthService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.http.ResponseEntity

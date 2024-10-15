@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.auth
 
 import org.chewing.v1.model.token.RefreshToken
-import org.chewing.v1.repository.LoggedInRepository
+import org.chewing.v1.repository.auth.LoggedInRepository
 import org.springframework.stereotype.Component
 
 @Component

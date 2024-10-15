@@ -4,7 +4,8 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.announcement.AnnouncementReader
-import org.chewing.v1.repository.AnnouncementRepository
+import org.chewing.v1.repository.announcement.AnnouncementRepository
+import org.chewing.v1.service.announcement.AnnouncementService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock

@@ -9,7 +9,8 @@ import org.chewing.v1.implementation.feed.comment.*
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.implementation.notification.NotificationHandler
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.repository.CommentRepository
+import org.chewing.v1.repository.feed.CommentRepository
+import org.chewing.v1.service.feed.FeedCommentService
 import org.chewing.v1.util.AsyncJobExecutor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

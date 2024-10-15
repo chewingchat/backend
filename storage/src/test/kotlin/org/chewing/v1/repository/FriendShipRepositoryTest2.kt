@@ -1,8 +1,8 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.friend.FriendShipId
-import org.chewing.v1.jparepository.FriendShipJpaRepository
-import org.chewing.v1.jparepository.UserJpaRepository
+import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
+import org.chewing.v1.repository.friend.FriendShipRepositoryImpl
 import org.chewing.v1.repository.support.UserProvider
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock

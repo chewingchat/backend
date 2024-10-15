@@ -1,7 +1,6 @@
 package org.chewing.v1.dto.response.friend
 
-import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.UserName
 
 data class FriendInfoResponse(

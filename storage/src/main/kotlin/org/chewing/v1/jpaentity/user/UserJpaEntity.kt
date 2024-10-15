@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone

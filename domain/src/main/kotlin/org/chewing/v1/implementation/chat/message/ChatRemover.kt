@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.chat.message
 
-import org.chewing.v1.repository.ChatLogRepository
+import org.chewing.v1.repository.chat.ChatLogRepository
 import org.springframework.stereotype.Component
 
 @Component

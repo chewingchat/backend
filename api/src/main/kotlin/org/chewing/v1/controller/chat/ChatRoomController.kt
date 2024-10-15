@@ -8,8 +8,9 @@ import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.RoomService
+import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.util.ResponseHelper
+import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -55,9 +56,9 @@ class ChatRoomController(
     fun createChatRoom(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: ChatRoomRequest.Create
-    ): ResponseEntity<HttpResponse<SuccessCreateResponse>> {
+    ): SuccessResponseEntity<ChatRoomIdResponse> {
         val roomId = roomService.createChatRoom(userId, request.friendId)
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
     }
 
     // 그룹 채팅방 생성
@@ -65,8 +66,8 @@ class ChatRoomController(
     fun createGroupChatRoom(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: ChatRoomRequest.CreateGroup
-    ): ResponseEntity<HttpResponse<SuccessCreateResponse>> {
+    ): SuccessResponseEntity<ChatRoomIdResponse> {
         val roomId = chatRoomFacade.createGroupChatRoom(userId, request.friendIds)
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
     }
 }

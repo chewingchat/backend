@@ -5,7 +5,7 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.feed.FeedCommentController
 import org.chewing.v1.facade.FeedFacade
-import org.chewing.v1.service.FeedCommentService
+import org.chewing.v1.service.feed.FeedCommentService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

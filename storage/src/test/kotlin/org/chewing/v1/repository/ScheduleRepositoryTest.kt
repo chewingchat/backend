@@ -1,11 +1,11 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.jparepository.ScheduleJpaRepository
+import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.model.schedule.ScheduleType
 import org.chewing.v1.repository.support.ScheduleProvider
 import org.chewing.v1.repository.support.TestDataGenerator
-import org.chewing.v1.repository.support.UserProvider
+import org.chewing.v1.repository.user.ScheduleRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 

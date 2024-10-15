@@ -5,7 +5,8 @@ import org.chewing.v1.implementation.user.schedule.ScheduleAppender
 import org.chewing.v1.implementation.user.schedule.ScheduleReader
 import org.chewing.v1.implementation.user.schedule.ScheduleRemover
 import org.chewing.v1.model.schedule.ScheduleType
-import org.chewing.v1.repository.ScheduleRepository
+import org.chewing.v1.repository.user.ScheduleRepository
+import org.chewing.v1.service.user.ScheduleService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.kotlin.mock

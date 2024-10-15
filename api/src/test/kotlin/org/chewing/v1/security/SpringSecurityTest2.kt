@@ -6,7 +6,7 @@ import org.chewing.v1.config.SecurityConfig
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.model.auth.LoginInfo
-import org.chewing.v1.service.AuthService
+import org.chewing.v1.service.auth.AuthService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any

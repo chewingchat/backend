@@ -2,11 +2,11 @@ package org.chewing.v1.facade
 
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.main.MainAggregator
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria
-import org.chewing.v1.service.FriendShipService
-import org.chewing.v1.service.UserService
-import org.chewing.v1.service.UserStatusService
+import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.UserService
+import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

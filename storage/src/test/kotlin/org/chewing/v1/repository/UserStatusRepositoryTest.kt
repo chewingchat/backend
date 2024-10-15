@@ -1,8 +1,9 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.jparepository.UserStatusJpaRepository
+import org.chewing.v1.jparepository.user.UserStatusJpaRepository
 import org.chewing.v1.repository.support.TestDataGenerator
+import org.chewing.v1.repository.user.UserStatusRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
