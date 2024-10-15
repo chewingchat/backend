@@ -7,7 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class ChatSequenceMongoEntity(
     @Id
     val id: String? = null,
-    val roomId: String,
-    val userId: String,
-    var seqNumber: Long
-)
+    val chatRoomId: String,
+    var seqNumber: Int
+) {
+    fun incrementSeqNumber() {
+        this.seqNumber += 1
+    }
+}

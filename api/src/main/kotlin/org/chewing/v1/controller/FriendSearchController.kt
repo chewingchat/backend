@@ -1,6 +1,7 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.dto.request.FriendSearchRequest
+import org.chewing.v1.dto.request.friend.FriendSearchRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
 import org.chewing.v1.dto.response.search.FriendSearchResultResponse
 import org.chewing.v1.response.SuccessCreateResponse
@@ -33,7 +34,7 @@ class FriendSearchController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         userService.createSearchKeyword(userId, request.keyword)
         //성공 응답 200 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @GetMapping("/recent")

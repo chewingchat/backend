@@ -1,5 +1,6 @@
 package org.chewing.v1.util
 
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -18,7 +19,7 @@ object ResponseHelper {
         return ResponseEntity(response, HttpStatus.OK)
     }
 
-    fun successCreate(): SuccessResponseEntity<SuccessCreateResponse> {
+    fun successCreate(from: ChatRoomIdResponse): SuccessResponseEntity<SuccessCreateResponse> {
         val response = HttpResponse(status = HttpStatus.CREATED.value(), data = SuccessCreateResponse())
         return ResponseEntity(response, HttpStatus.CREATED)
     }

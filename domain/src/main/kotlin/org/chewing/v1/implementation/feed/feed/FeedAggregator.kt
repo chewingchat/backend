@@ -17,9 +17,7 @@ class FeedAggregator(
         return commentsInfo.mapNotNull { comment ->
             // 댓글 작성자의 친구 정보를 찾고, 사용자 정보를 업데이트
             val user = friendsMap[comment.userId]?.let { friend ->
-                usersMap[friend.friendId]?.let { user ->
-                    updateToUser(user, friend)
-                }
+                usersMap[friend.friendId]?.updateName(friend.friendName)
             }
 
             // 유효한 사용자와 친구가 존재하는 경우에만 Comment 객체 반환
@@ -27,17 +25,5 @@ class FeedAggregator(
                 Comment.of(comment.commentId, comment.comment, comment.createAt, user) // 사용자 정보를 포함하여 새로운 Comment 객체 생성
             }
         }
-    }
-
-    private fun updateToUser(user: User, friend: FriendShip): User {
-        return User.of(
-            userId = user.userId,
-            firstName = friend.friendName.firstName,
-            lastName = friend.friendName.lastName,
-            image = user.image,
-            backgroundImage = user.backgroundImage,
-            birth = user.birth,
-            status = user.status
-        )
     }
 }
