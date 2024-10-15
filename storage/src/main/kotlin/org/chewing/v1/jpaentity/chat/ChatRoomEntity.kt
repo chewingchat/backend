@@ -1,6 +1,7 @@
 package org.chewing.v1.jpaentity.chat
 
 import jakarta.persistence.*
+import org.chewing.v1.model.chat.message.MessageType
 
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import java.time.LocalDateTime
@@ -16,8 +17,8 @@ internal class ChatRoomEntity(
 //    val favorite: Boolean,
 
     private val groupChatRoom: Boolean,
-    private val latestMessage: String,
-    private val latestMessageTime: LocalDateTime,
+
+
 
 //  이거 chatSequence에서 번호 가져오고 chatFriendEntity에서 unread 가져와서 뺄셈 하면 될거 같아요
 //    @Column(name = "total_unread_message", nullable = false)
@@ -35,8 +36,6 @@ internal class ChatRoomEntity(
         fun generate(groupChatRoom: Boolean): ChatRoomEntity {
             return ChatRoomEntity(
                 groupChatRoom = groupChatRoom,
-                latestMessage = "",
-                latestMessageTime = LocalDateTime.now()
             )
         }
     }
@@ -46,12 +45,12 @@ internal class ChatRoomEntity(
         return ChatRoomInfo.of(
             chatRoomId = this.chatRoomId,
             isGroup = this.groupChatRoom,
-            latestMessage = this.latestMessage,
-            latestMessageTime = this.latestMessageTime
         )
     }
 
     fun toChatRoomId(): String {
         return this.chatRoomId
     }
+
+
 }

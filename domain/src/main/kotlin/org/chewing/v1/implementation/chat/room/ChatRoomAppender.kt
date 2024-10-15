@@ -9,14 +9,10 @@ class ChatRoomAppender(
     private val chatRoomMemberRepository: ChatRoomMemberRepository,
     private val chatRoomRepository: ChatRoomRepository
 ) {
-    fun appendChatRoomMember(chatRoomId: String, userId: String) {
-        chatRoomMemberRepository.appendChatRoomMember(chatRoomId, userId)
-    }
-
-    fun appendChatRoom(isGroup: Boolean): String {
+    fun append(isGroup: Boolean): String {
         return chatRoomRepository.appendChatRoom(isGroup)
     }
-    fun appendChatRoomMembers(chatRoomId: String, userIds: List<String>) {
+    fun appendMembers(chatRoomId: String, userIds: List<String>) {
         chatRoomMemberRepository.appendChatRoomMembers(chatRoomId, userIds)
     }
 }

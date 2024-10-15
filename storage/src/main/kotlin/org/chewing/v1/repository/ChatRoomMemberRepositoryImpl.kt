@@ -10,26 +10,22 @@ import org.springframework.stereotype.Repository
 internal class ChatRoomMemberRepositoryImpl(
     private val chatRoomMemberJpaRepository: ChatRoomMemberJpaRepository
 ) : ChatRoomMemberRepository {
-    override fun readChatRoomMembers(chatRoomId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberJpaRepository.findAllByChatRoomId(chatRoomId).map {
+
+    override fun readChatRoomFriendMember(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberJpaRepository.findAllByChatRoomIdAndUserIdNot(chatRoomId, userId).map {
             it.toRoomMember()
         }
     }
 
-    override fun readChatRoomUsers(userId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberJpaRepository.findAllByUserIdAndDeletedFalse(userId).map {
-            it.toRoomMember()
-        }
-    }
+    override fun readMembersByUserId(userId: String): List<ChatRoomMemberInfo> {
+        // Step 1: 해당 유저가 속한 채팅방 ID 목록을 조회
+        val userChatRooms = chatRoomMemberJpaRepository.findAllByUserIdAndDeletedFalse(userId)
 
-    override fun readChatRoomsMember(chatRoomIds: List<String>, userId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberJpaRepository.findAllByChatRoomIdInAndUserId(chatRoomIds, userId).map {
-            it.toRoomMember()
-        }
-    }
+        // chatRoomId 목록만 추출
+        val chatRoomIds = userChatRooms.map { it.chatRoomId() }
 
-    override fun readChatRoomMember(chatRoomId: String, userId: String): ChatRoomMemberInfo? {
-        return chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(chatRoomId, userId)?.toRoomMember()
+        // Step 2: 해당 chatRoomIds에 속한 모든 멤버를 조회
+        return chatRoomMemberJpaRepository.findByChatRoomIdIn(chatRoomIds).map { it.toRoomMember() }
     }
 
     override fun saveChatRoomMember(chatRoomId: String, userId: String) {
@@ -43,20 +39,13 @@ internal class ChatRoomMemberRepositoryImpl(
         }
     }
 
-    override fun removeChatRoomMembers(chatRoomIds: List<String>, userId: String): List<ChatRoomMemberInfo> {
+    override fun removeChatRoomMembers(chatRoomIds: List<String>, userId: String){
         // 한 번만 조회한 후 상태 업데이트 및 변환 작업을 수행
         val entities = chatRoomMemberJpaRepository.findAllByChatRoomIdInAndUserId(chatRoomIds, userId)
-
-        // 상태를 업데이트하면서, 동시에 변환 수행
-        return entities.map {
+        entities.forEach {
             it.updateDelete()
-            chatRoomMemberJpaRepository.save(it)
-            it
-        }.filter {
-            it.deleted
-        }.map {
-            it.toRoomMember()
         }
+        chatRoomMemberJpaRepository.saveAll(entities)
     }
 
     override fun appendChatRoomMember(chatRoomId: String, userId: String) {

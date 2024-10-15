@@ -1,6 +1,8 @@
 package org.chewing.v1.dto.response.chat
 
 import org.chewing.v1.model.chat.room.ChatRoom
+import org.chewing.v1.model.chat.room.Room
+import java.time.format.DateTimeFormatter
 
 data class ChatRoomResponse(
     val chatRoomId: String,   // 채팅방 ID
@@ -16,12 +18,14 @@ data class ChatRoomResponse(
     companion object {
         // ChatRoom을 ChatRoomResponse로 변환하는 함수
         fun from(chatRoom: ChatRoom): ChatRoomResponse {
+            val formatLatestMessageTime =
+                chatRoom.latestMessageTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return ChatRoomResponse(
                 chatRoomId = chatRoom.chatRoomId,
                 favorite = chatRoom.favorite,
                 groupChatRoom = chatRoom.groupChatRoom,
                 latestMessage = chatRoom.latestMessage,
-                latestMessageTime = chatRoom.latestMessageTime.toString(),
+                latestMessageTime = formatLatestMessageTime,
                 totalUnReadMessage = chatRoom.totalUnReadMessage,
                 latestPage = chatRoom.latestPage,
                 latestSeqNumber = chatRoom.latestSeqNumber,

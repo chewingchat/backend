@@ -1,6 +1,7 @@
 package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.CommentRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedTarget
@@ -29,7 +30,7 @@ class FeedCommentController(
             FeedTarget.COMMENTS
         )
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @DeleteMapping("/comment")

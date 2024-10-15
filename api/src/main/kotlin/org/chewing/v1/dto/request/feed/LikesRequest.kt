@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.request
+package org.chewing.v1.dto.request.feed
 
 import org.chewing.v1.model.feed.FeedTarget
 

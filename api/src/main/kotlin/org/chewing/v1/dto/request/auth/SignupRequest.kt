@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.request
+package org.chewing.v1.dto.request.auth
 
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.user.UserContent

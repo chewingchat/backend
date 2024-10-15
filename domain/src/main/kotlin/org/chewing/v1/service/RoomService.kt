@@ -1,75 +1,51 @@
 package org.chewing.v1.service
 
-import org.chewing.v1.implementation.chat.message.ChatAppender
-import org.chewing.v1.implementation.chat.message.ChatGenerator
-import org.chewing.v1.implementation.chat.message.ChatSender
 import org.chewing.v1.implementation.chat.room.*
-import org.chewing.v1.implementation.chat.sequence.ChatFinder
-import org.chewing.v1.model.chat.room.ChatRoom
+import org.chewing.v1.model.chat.room.Room
 import org.springframework.stereotype.Service
 
 @Service
-class ChatRoomService(
+class RoomService(
     private val chatRoomReader: ChatRoomReader,
     private val chatRoomRemover: ChatRoomRemover,
     private val chatRoomEnricher: ChatRoomEnricher,
     private val chatRoomAppender: ChatRoomAppender,
-    private val chatRoomUpdater: ChatRoomUpdater,
-    private val chatGenerator: ChatGenerator,
-    private val chatAppender: ChatAppender,
-    private val chatSender: ChatSender,
-    private val chatFinder: ChatFinder,
+    private val chatRoomHandler: ChatRoomHandler,
 ) {
-    fun getChatRooms(userId: String): List<ChatRoom> {
-        val userChatRooms = chatRoomReader.readUserInChatRooms(userId)
-        val chatRoomIds = userChatRooms.map { it.chatRoomId }
-        val chatRoomMemberInfos = chatRoomReader.readChatRoomsMember(chatRoomIds, userId)
-        val chatRoomInfos = chatRoomReader.readChatRooms(chatRoomMemberInfos.map { it.chatRoomId })
-        val roomSequenceNumbers = chatFinder.findCurrentNumbers(chatRoomIds)
-
+    fun getChatRooms(userId: String): List<Room> {
+        val chatRoomMembers = chatRoomReader.readChatRoomMembersByUserId(userId)
+        val chatRoomInfos = chatRoomReader.reads(chatRoomMembers.map { it.chatRoomId })
         return chatRoomEnricher.enrichChatRooms(
-            userChatRooms,
-            chatRoomMemberInfos,
+            chatRoomMembers,
             chatRoomInfos,
-            roomSequenceNumbers,
             userId
         )
     }
 
-    fun leaveChatRooms(chatRoomIds: List<String>, userId: String) {
-        chatRoomRemover.removeChatRoomsMember(chatRoomIds, userId)
-
-        val members = chatRoomReader.readUserInChatRooms(userId)
-
-        chatFinder.findNextNumbers(chatRoomIds).forEach { number ->
-            val message = chatGenerator.generateLeaveMessage(number.chatRoomId, userId, number)
-            chatAppender.appendChatLog(message)
-            chatSender.sendChat(message, members)
-        }
+    fun deleteGroupChatRooms(chatRoomIds: List<String>, userId: String) {
+        chatRoomRemover.removeMembers(chatRoomIds, userId)
     }
 
-    fun createChatRoom(userId: String, friendId: String) {
+    fun deleteChatRoom(chatRoomIds: List<String>, userId: String) {
+        chatRoomRemover.removeMembers(chatRoomIds, userId)
+    }
+
+    fun createChatRoom(userId: String, friendId: String): String {
         val chatRoomId = chatRoomReader.readPersonalChatRoomId(userId, friendId)
-        if (chatRoomId == null) {
-            val newRoomId = chatRoomAppender.appendChatRoom(false)
-            chatRoomAppender.appendChatRoomMembers(newRoomId, listOf(userId, friendId))
+        return if (chatRoomId == null) {
+            val newRoomId = chatRoomAppender.append(false)
+            chatRoomAppender.appendMembers(newRoomId, listOf(userId, friendId))
+            newRoomId
         } else {
-            chatRoomUpdater.updateUnDelete(chatRoomId, userId)
+            chatRoomHandler.lockActivateChatRoomUser(chatRoomId, userId)
+            chatRoomId
         }
     }
 
-    fun createGroupChatRoom(userId: String, friendIds: List<String>) {
-        val newRoomId = chatRoomAppender.appendChatRoom(true)
-        chatRoomAppender.appendChatRoomMembers(newRoomId, friendIds)
-
-        val members = chatRoomReader.readUserInChatRooms(userId)
-
-        friendIds.forEach { friendId ->
-            val number = chatFinder.findNextNumber(newRoomId)
-            val message = chatGenerator.generateInviteMessage(newRoomId, userId, number, friendId)
-            chatAppender.appendChatLog(message)
-            chatSender.sendChat(message, members)
-        }
+    fun createGroupChatRoom(userId: String, friendIds: List<String>): String {
+        val newRoomId = chatRoomAppender.append(true)
+        chatRoomAppender.appendMembers(newRoomId, friendIds)
+        return newRoomId
     }
 
 

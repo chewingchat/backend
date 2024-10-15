@@ -1,6 +1,7 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.user
 
 import org.chewing.v1.dto.request.ScheduleRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.schedule.ScheduleListResponse
 import org.chewing.v1.model.schedule.ScheduleType
 import org.chewing.v1.response.SuccessCreateResponse
@@ -33,7 +34,7 @@ class UserScheduleController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val scheduleId = request.toScheduleId()
         scheduleService.remove(scheduleId)
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @PostMapping("")

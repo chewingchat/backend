@@ -7,14 +7,16 @@ import java.util.*
 
 @Entity
 @Table(name = "chat_room_member", schema = "chewing")
-data class ChatRoomMemberEntity(
+internal data class ChatRoomMemberEntity(
     @Id
-    val id: String = UUID.randomUUID().toString(),
-    val userId: String,
-    var favorite: Boolean,
-    val chatRoomId: String,
-    var readSeqNumber: Int,
-    var deleted: Boolean = false
+    private val id: String = UUID.randomUUID().toString(),
+    private val userId: String,
+    private var favorite: Boolean,
+    private val chatRoomId: String,
+    private var readSeqNumber: Int,
+    @Version
+    private var version: Long? = 0,
+    private var deleted: Boolean = false
 ) {
     companion object{
         fun generate(userId: String, chatRoomId: String): ChatRoomMemberEntity {
@@ -46,5 +48,9 @@ data class ChatRoomMemberEntity(
     }
     fun updateRead(number: ChatNumber){
         this.readSeqNumber = number.sequenceNumber
+    }
+
+    fun chatRoomId(): String {
+        return chatRoomId
     }
 }

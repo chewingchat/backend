@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.request
+package org.chewing.v1.dto.request.user
 
 import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName

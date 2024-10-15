@@ -2,6 +2,7 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.jpaentity.chat.ChatRoomEntity
 import org.chewing.v1.jparepository.ChatRoomJpaRepository
+import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.springframework.stereotype.Repository
 

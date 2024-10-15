@@ -58,6 +58,15 @@ internal class ChatLogRepositoryImpl(
         return chatLogMongoRepository.findById(messageId).map { it.toChatMessage() }.orElse(null)
     }
 
+    override fun readLatestMessages(numbers: List<ChatNumber>): List<ChatMessage> {
+        val conditions = numbers.map {
+            mapOf("chatRoomId" to it.chatRoomId, "seqNumber" to it.sequenceNumber)
+        }
+
+        val messages = chatLogMongoRepository.findByRoomIdAndSeqNumbers(conditions)
+        return messages.map { it.toChatMessage() }
+    }
+
     // 메시지를 삭제하는 기능
     /**
      * room확인 하지 않고

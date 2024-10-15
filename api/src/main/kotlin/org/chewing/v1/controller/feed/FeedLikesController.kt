@@ -1,6 +1,7 @@
 package org.chewing.v1.controller.feed
 
-import org.chewing.v1.dto.request.LikesRequest
+import org.chewing.v1.dto.request.feed.LikesRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.FeedLikesService
@@ -21,7 +22,7 @@ class FeedLikesController(
         val feedId = request.toFeedId()
         feedLikesService.like(userId, feedId, request.toTarget())
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @DeleteMapping("")

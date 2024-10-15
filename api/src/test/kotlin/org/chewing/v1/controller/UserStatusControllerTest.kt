@@ -3,6 +3,7 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.controller.user.UserStatusController
 import org.chewing.v1.service.UserStatusService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

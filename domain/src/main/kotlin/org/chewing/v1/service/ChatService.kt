@@ -5,8 +5,8 @@ import org.chewing.v1.implementation.chat.message.ChatReader
 import org.chewing.v1.implementation.chat.message.ChatGenerator
 import org.chewing.v1.implementation.chat.message.ChatRemover
 import org.chewing.v1.implementation.chat.message.ChatSender
+import org.chewing.v1.implementation.chat.room.ChatRoomHandler
 import org.chewing.v1.implementation.chat.room.ChatRoomReader
-import org.chewing.v1.implementation.chat.room.ChatRoomUpdater
 import org.chewing.v1.implementation.chat.sequence.ChatFinder
 import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.model.chat.message.ChatMessage
@@ -23,26 +23,24 @@ class ChatService(
     private val chatAppender: ChatAppender,
     private val chatReader: ChatReader,
     private val chatRoomReader: ChatRoomReader,
-    private val chatRoomUpdater: ChatRoomUpdater,
     private val chatGenerator: ChatGenerator,
     private val chatRemover: ChatRemover,
+    private val chatRoomHandler: ChatRoomHandler
 ) {
-    fun uploadFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String) {
+    fun processFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String) {
         val medias = fileHandler.handleNewFiles(userId, fileDataList, FileCategory.CHATROOM)
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
         val chatMessage = chatGenerator.generateFileMessage(chatRoomId, userId, chatRoomNumber, medias)
         chatAppender.appendChatLog(chatMessage)
-        val members = chatRoomReader.readUserInChatRooms(chatRoomId)
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
         chatSender.sendChat(chatMessage, members)
     }
 
     fun processRead(chatRoomId: String, userId: String) {
-        val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
-        chatFinder.findCurrentNumber(chatRoomId)
+        val chatRoomNumber = chatFinder.findCurrentNumber(chatRoomId)
         val chatMessage = chatGenerator.generateReadMessage(chatRoomId, userId, chatRoomNumber)
-        chatAppender.appendChatLog(chatMessage)
-        chatRoomUpdater.updateRead(userId, chatRoomNumber)
-        val members = chatRoomReader.readUserInChatRooms(chatRoomId)
+        chatRoomHandler.lockReadChatRoom(userId, chatRoomNumber)
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
         chatSender.sendChat(chatMessage, members)
     }
 
@@ -50,7 +48,7 @@ class ChatService(
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
         val chatMessage = chatGenerator.generateDeleteMessage(chatRoomId, userId, chatRoomNumber, messageId)
         chatRemover.removeChatLog(messageId)
-        val members = chatRoomReader.readUserInChatRooms(chatRoomId)
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
         chatSender.sendChat(chatMessage, members)
     }
 
@@ -59,7 +57,7 @@ class ChatService(
         val parentMessage = chatReader.readChatMessage(parentMessageId)
         val chatMessage = chatGenerator.generateReplyMessage(chatRoomId, userId, chatRoomNumber, text, parentMessage)
         chatAppender.appendChatLog(chatMessage)
-        val members = chatRoomReader.readUserInChatRooms(chatRoomId)
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
         chatSender.sendChat(chatMessage, members)
     }
 
@@ -67,18 +65,32 @@ class ChatService(
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
         val chatMessage = chatGenerator.generateCommonMessage(chatRoomId, userId, chatRoomNumber, text)
         chatAppender.appendChatLog(chatMessage)
-        val members = chatRoomReader.readUserInChatRooms(chatRoomId)
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
         chatSender.sendChat(chatMessage, members)
     }
 
-
-    fun getChatLog(chatRoomId: String, page: Int): List<ChatMessage> {
-        return chatReader.readChatLog(chatRoomId, page)
+    fun processLeaves(chatRoomIds: List<String>, userId: String) {
+        chatFinder.findNextNumbers(chatRoomIds).forEach { number ->
+            val members = chatRoomReader.readChatRoomFriendMember(number.chatRoomId, userId)
+            val message = chatGenerator.generateLeaveMessage(number.chatRoomId, userId, number)
+            chatAppender.appendChatLog(message)
+            chatSender.sendChat(message, members)
+        }
     }
 
-    fun getChatLogLatest(chatRoomId: String): List<ChatMessage> {
-        val page = chatFinder.findLastPage(chatRoomId)
-        return chatReader.readChatLog(chatRoomId, page)
+    fun processInvites(friendIds: List<String>, chatRoomId: String, userId: String) {
+        val members = chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
+        friendIds.forEach { friendId ->
+            val number = chatFinder.findNextNumber(chatRoomId)
+            val message = chatGenerator.generateInviteMessage(chatRoomId, userId, number, friendId)
+            chatAppender.appendChatLog(message)
+            chatSender.sendChat(message, members)
+        }
+    }
+
+    fun getLatestChat(chatRoomIds: List<String>): List<ChatMessage> {
+        val chatNumbers = chatFinder.findCurrentNumbers(chatRoomIds)
+        return chatReader.readLatestMessages(chatNumbers)
     }
 
 //
