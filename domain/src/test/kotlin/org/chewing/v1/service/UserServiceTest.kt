@@ -7,9 +7,10 @@ import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.repository.PushNotificationRepository
-import org.chewing.v1.repository.UserRepository
-import org.chewing.v1.repository.UserSearchRepository
+import org.chewing.v1.repository.user.PushNotificationRepository
+import org.chewing.v1.repository.user.UserRepository
+import org.chewing.v1.repository.user.UserSearchRepository
+import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

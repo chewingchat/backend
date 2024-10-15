@@ -3,7 +3,7 @@ package org.chewing.v1.implementation.announcement
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.announcement.Announcement
-import org.chewing.v1.repository.AnnouncementRepository
+import org.chewing.v1.repository.announcement.AnnouncementRepository
 import org.springframework.stereotype.Component
 
 @Component

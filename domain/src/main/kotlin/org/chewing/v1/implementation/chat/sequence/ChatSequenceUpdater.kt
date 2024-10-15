@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.chat.sequence
 
 import org.chewing.v1.model.chat.room.ChatSequenceNumber
-import org.chewing.v1.repository.ChatSequenceRepository
+import org.chewing.v1.repository.chat.ChatSequenceRepository
 import org.springframework.stereotype.Component
 
 @Component

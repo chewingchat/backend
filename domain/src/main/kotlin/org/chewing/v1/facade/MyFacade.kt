@@ -3,6 +3,10 @@ package org.chewing.v1.facade
 import org.chewing.v1.implementation.my.MyAggregator
 import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.service.*
+import org.chewing.v1.service.feed.FeedCommentService
+import org.chewing.v1.service.feed.FeedService
+import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.UserService
 import org.springframework.stereotype.Service
 
 @Service

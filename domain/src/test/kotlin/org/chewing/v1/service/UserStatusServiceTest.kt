@@ -5,7 +5,8 @@ import org.chewing.v1.implementation.user.status.UserStatusAppender
 import org.chewing.v1.implementation.user.status.UserStatusReader
 import org.chewing.v1.implementation.user.status.UserStatusRemover
 import org.chewing.v1.implementation.user.status.UserStatusUpdater
-import org.chewing.v1.repository.UserStatusRepository
+import org.chewing.v1.repository.user.UserStatusRepository
+import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.kotlin.mock

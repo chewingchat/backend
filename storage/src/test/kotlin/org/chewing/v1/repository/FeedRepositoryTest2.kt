@@ -1,7 +1,8 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jparepository.FeedJpaRepository
+import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedTarget
+import org.chewing.v1.repository.feed.FeedRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

@@ -4,9 +4,9 @@ import org.chewing.v1.implementation.friend.FriendSearchEngine
 import org.chewing.v1.implementation.search.SearchAggregator
 import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.friend.FriendSortCriteria
-import org.chewing.v1.service.FriendShipService
-import org.chewing.v1.service.UserService
-import org.chewing.v1.service.UserStatusService
+import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.UserService
+import org.chewing.v1.service.user.UserStatusService
 import org.springframework.stereotype.Service
 
 @Service

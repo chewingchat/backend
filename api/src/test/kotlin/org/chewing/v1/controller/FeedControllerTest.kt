@@ -6,7 +6,7 @@ import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.feed.FeedController
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
-import org.chewing.v1.service.FeedService
+import org.chewing.v1.service.feed.FeedService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

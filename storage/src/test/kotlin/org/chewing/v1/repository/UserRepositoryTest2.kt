@@ -1,10 +1,11 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.jparepository.UserJpaRepository
+import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.repository.support.EmailProvider
 import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.PhoneProvider
 import org.chewing.v1.repository.support.UserProvider
+import org.chewing.v1.repository.user.UserRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

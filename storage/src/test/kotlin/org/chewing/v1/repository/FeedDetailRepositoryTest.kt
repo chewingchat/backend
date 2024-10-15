@@ -1,7 +1,8 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.jparepository.FeedDetailJpaRepository
+import org.chewing.v1.jparepository.feed.FeedDetailJpaRepository
+import org.chewing.v1.repository.feed.FeedDetailRepositoryImpl
 import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.TestDataGenerator
 import org.junit.jupiter.api.Test

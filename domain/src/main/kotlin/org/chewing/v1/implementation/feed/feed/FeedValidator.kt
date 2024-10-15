@@ -2,8 +2,7 @@ package org.chewing.v1.implementation.feed.feed
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.repository.FeedRepository
+import org.chewing.v1.repository.feed.FeedRepository
 import org.springframework.stereotype.Component
 
 @Component

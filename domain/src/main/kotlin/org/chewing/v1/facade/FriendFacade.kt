@@ -2,9 +2,9 @@ package org.chewing.v1.facade
 
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.service.AuthService
-import org.chewing.v1.service.FriendShipService
-import org.chewing.v1.service.UserService
+import org.chewing.v1.service.auth.AuthService
+import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.UserService
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,8 +1,8 @@
 package org.chewing.v1.implementation.feed.feed
 
 import org.chewing.v1.model.media.Media
-import org.chewing.v1.repository.FeedDetailRepository
-import org.chewing.v1.repository.FeedRepository
+import org.chewing.v1.repository.feed.FeedDetailRepository
+import org.chewing.v1.repository.feed.FeedRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

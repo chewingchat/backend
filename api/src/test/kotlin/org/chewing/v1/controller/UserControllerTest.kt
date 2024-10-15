@@ -1,16 +1,14 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.user.UserController
 import org.chewing.v1.facade.AccountFacade
-import org.chewing.v1.service.UserService
+import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean

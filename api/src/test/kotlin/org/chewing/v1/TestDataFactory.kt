@@ -1,12 +1,11 @@
 package org.chewing.v1
 
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.comment.Comment
-import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo

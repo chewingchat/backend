@@ -2,9 +2,10 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.DbContextTest
 import org.chewing.v1.jpaentity.friend.FriendShipId
-import org.chewing.v1.jparepository.FriendShipJpaRepository
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria
+import org.chewing.v1.repository.friend.FriendShipRepositoryImpl
 import org.chewing.v1.repository.support.TestDataGenerator
 import org.chewing.v1.repository.support.UserProvider
 import org.junit.jupiter.api.Test

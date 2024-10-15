@@ -1,6 +1,6 @@
 package org.chewing.v1
 
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.*
 import org.chewing.v1.model.comment.CommentInfo

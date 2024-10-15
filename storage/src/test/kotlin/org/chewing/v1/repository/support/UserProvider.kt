@@ -1,6 +1,6 @@
 package org.chewing.v1.repository.support
 
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType

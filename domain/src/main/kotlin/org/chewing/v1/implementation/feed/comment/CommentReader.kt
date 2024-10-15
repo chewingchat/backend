@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.feed.comment
 
 import org.chewing.v1.model.comment.CommentInfo
-import org.chewing.v1.repository.CommentRepository
+import org.chewing.v1.repository.feed.CommentRepository
 import org.springframework.stereotype.Component
 
 @Component

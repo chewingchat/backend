@@ -2,10 +2,10 @@ package org.chewing.v1.facade
 
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.model.contact.ContactType
-import org.chewing.v1.service.AuthService
-import org.chewing.v1.service.ScheduleService
-import org.chewing.v1.service.UserService
-import org.chewing.v1.service.UserStatusService
+import org.chewing.v1.service.auth.AuthService
+import org.chewing.v1.service.user.ScheduleService
+import org.chewing.v1.service.user.UserService
+import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.kotlin.any

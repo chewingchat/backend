@@ -1,10 +1,9 @@
 package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.feed.LikesRequest
-import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.FeedLikesService
+import org.chewing.v1.service.feed.FeedLikesService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,7 +21,7 @@ class FeedLikesController(
         val feedId = request.toFeedId()
         feedLikesService.like(userId, feedId, request.toTarget())
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate()
     }
 
     @DeleteMapping("")

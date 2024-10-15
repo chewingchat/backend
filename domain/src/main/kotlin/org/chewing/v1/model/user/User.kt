@@ -1,7 +1,5 @@
 package org.chewing.v1.model.user
 
-import org.chewing.v1.model.AccessStatus
-import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.media.Media
 
 

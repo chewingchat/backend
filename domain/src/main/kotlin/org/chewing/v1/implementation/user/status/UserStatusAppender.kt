@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.user.status
 
-import org.chewing.v1.repository.UserStatusRepository
+import org.chewing.v1.repository.user.UserStatusRepository
 import org.springframework.stereotype.Component
 
 @Component

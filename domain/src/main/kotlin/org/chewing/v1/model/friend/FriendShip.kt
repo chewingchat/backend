@@ -1,6 +1,6 @@
 package org.chewing.v1.model.friend
 
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.UserName
 
 class FriendShip private constructor(

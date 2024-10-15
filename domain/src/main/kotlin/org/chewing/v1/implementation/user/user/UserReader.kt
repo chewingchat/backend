@@ -2,17 +2,14 @@ package org.chewing.v1.implementation.user.user
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.implementation.auth.AuthReader
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.user.UserAccount
-import org.chewing.v1.model.user.UserStatus
-import org.chewing.v1.repository.PushNotificationRepository
-import org.chewing.v1.repository.UserRepository
-import org.chewing.v1.repository.UserSearchRepository
-import org.chewing.v1.repository.UserStatusRepository
+import org.chewing.v1.repository.user.PushNotificationRepository
+import org.chewing.v1.repository.user.UserRepository
+import org.chewing.v1.repository.user.UserSearchRepository
 import org.springframework.stereotype.Component
 
 /**
