@@ -11,20 +11,22 @@ class ChatRoomReader(
     private val chatRoomRepository: ChatRoomRepository,
     private val chatRoomMemberRepository: ChatRoomMemberRepository
 ) {
-    fun readChatRooms(chatRoomIds: List<String>): List<ChatRoomInfo> {
+    fun reads(chatRoomIds: List<String>): List<ChatRoomInfo> {
         return chatRoomRepository.readChatRooms(chatRoomIds)
     }
 
-    fun readPersonalChatRoomId(userId: String, friendId: String): String?{
+    fun readPersonalChatRoomId(userId: String, friendId: String): String? {
         return chatRoomMemberRepository.readPersonalChatRoomId(userId, friendId)
     }
 
-
-    fun readUserInChatRooms(chatRoomId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberRepository.readChatRoomUsers(chatRoomId)
+    fun readChatRoomFriendMember(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberRepository.readChatRoomFriendMember(chatRoomId, userId)
     }
 
-    fun readChatRoomsMember(chatRoomIds: List<String>, userId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberRepository.readChatRoomsMember(chatRoomIds, userId)
+    fun readsMemberByUserId(userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberRepository.readMembersByUserId(userId)
+    }
+    fun readChatRoomMembersByUserId(userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomMemberRepository.readMembersByUserId(userId)
     }
 }

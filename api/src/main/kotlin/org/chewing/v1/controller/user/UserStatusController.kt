@@ -1,6 +1,7 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.user
 
-import org.chewing.v1.dto.request.UserStatusRequest
+import org.chewing.v1.dto.request.user.UserStatusRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.user.UserStatusesResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -38,7 +39,7 @@ class UserStatusController(
         @RequestBody request: UserStatusRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
         userStatusService.createUserStatus(userId, request.message, request.emoji)
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
 

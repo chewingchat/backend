@@ -1,42 +1,26 @@
+package org.chewing.v1.controller.chat
+
 import org.chewing.v1.dto.request.chat.message.ChatReadDto
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.model.chat.message.ChatCommonMessage
 import org.chewing.v1.model.chat.message.ChatDeleteMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
+import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.service.ChatService
+import org.chewing.v1.util.FileUtil
+import org.chewing.v1.util.ResponseHelper
+import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestAttribute
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.multipart.MultipartFile
 
-//package org.chewing.v1.controller
-//
-//
-//import org.chewing.v1.dto.request.chat.FileUploadRequest
-//import org.chewing.v1.dto.response.auth.LogInfoResponse
-//import org.chewing.v1.dto.response.auth.TokenResponse
-//import org.chewing.v1.dto.response.chat.ChatDto
-//import org.chewing.v1.model.auth.JwtToken
-//import org.chewing.v1.model.media.FileData
-//import org.chewing.v1.model.media.MediaType
-//import org.chewing.v1.response.HttpResponse
-//import org.chewing.v1.response.SuccessOnlyResponse
-//import org.chewing.v1.service.AuthService
-//import org.chewing.v1.service.ChatService
-//import org.chewing.v1.util.FileUtil
-//import org.chewing.v1.util.ResponseHelper
-//import org.springframework.http.ResponseEntity
-//import org.springframework.messaging.handler.annotation.MessageMapping
-//import org.springframework.stereotype.Controller
-//import org.springframework.web.bind.annotation.GetMapping
-//import org.springframework.web.bind.annotation.PostMapping
-//import org.springframework.web.bind.annotation.RequestBody
-//import org.springframework.web.bind.annotation.RequestHeader
-//import org.springframework.web.multipart.MultipartFile
-//import java.io.File
-//import java.io.FileInputStream
-//import java.io.IOException
-//
 @Controller
-class ChatStompController(
+class ChatController(
     private val chatService: ChatService,
 ) {
     @MessageMapping("/chat/pub/read")
@@ -75,7 +59,17 @@ class ChatStompController(
         chatService.processChat(message.chatRoomId, userId, message.text)
     }
 
-
+    @PostMapping("/api/chatRooms/{chatRoomId}/file/upload")
+    fun uploadFiles(
+        @RequestPart("files") files: List<MultipartFile>,
+        @RequestAttribute("userId") userId: String,
+        @PathVariable("chatRoomId") chatRoomId: String
+    ): SuccessResponseEntity<SuccessCreateResponse> {
+        val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
+        chatService.processFiles(convertFiles, userId, chatRoomId)
+        //생성 완료 응답 201 반환
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+    }
 }
 
 //
@@ -174,8 +168,6 @@ class ChatStompController(
 //        val newToken: JwtToken = authService.refreshJwtToken(refreshToken)
 //        return ResponseHelper.success(TokenResponse.of(newToken))
 //    }
-//
-//
 //}
 //
 //

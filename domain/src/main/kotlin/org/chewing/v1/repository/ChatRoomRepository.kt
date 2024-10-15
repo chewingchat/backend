@@ -1,7 +1,6 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.model.chat.room.ChatRoomInfo
-import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 
 interface ChatRoomRepository {
 

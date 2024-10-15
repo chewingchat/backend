@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.request
+package org.chewing.v1.dto.request.feed
 
 class FeedRequest {
     data class Delete(

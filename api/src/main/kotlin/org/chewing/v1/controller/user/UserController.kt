@@ -1,12 +1,9 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.user
 
-import org.chewing.v1.dto.request.UserRequest
-import org.chewing.v1.dto.request.UserStatusRequest
+import org.chewing.v1.dto.request.user.UserRequest
 import org.chewing.v1.dto.response.user.AccountResponse
-import org.chewing.v1.dto.response.user.UserStatusesResponse
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.UserService

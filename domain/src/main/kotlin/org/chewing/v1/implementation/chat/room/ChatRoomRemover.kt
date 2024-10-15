@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class ChatRoomRemover(
     private val chatRoomMemberRepository: ChatRoomMemberRepository
 ) {
-    fun removeChatRoomsMember(chatRoomIds: List<String>, userId: String):List<ChatRoomMemberInfo> {
+    fun removeMembers(chatRoomIds: List<String>, userId: String){
         return chatRoomMemberRepository.removeChatRoomMembers(chatRoomIds, userId)
     }
 }

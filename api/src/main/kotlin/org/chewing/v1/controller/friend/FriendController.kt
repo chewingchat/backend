@@ -1,6 +1,8 @@
 package org.chewing.v1.controller.friend
 
 import org.chewing.v1.dto.request.*
+import org.chewing.v1.dto.request.friend.FriendRequest
+import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.facade.FriendFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
@@ -23,7 +25,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toEmail())
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @PostMapping("/phone")
@@ -33,7 +35,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toPhoneNumber())
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @PutMapping("/favorite")
