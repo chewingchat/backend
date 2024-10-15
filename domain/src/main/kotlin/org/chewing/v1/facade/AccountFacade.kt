@@ -5,7 +5,10 @@ import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.ContactType
-import org.chewing.v1.service.*
+import org.chewing.v1.service.auth.AuthService
+import org.chewing.v1.service.user.ScheduleService
+import org.chewing.v1.service.user.UserService
+import org.chewing.v1.service.user.UserStatusService
 import org.springframework.stereotype.Service
 
 @Service

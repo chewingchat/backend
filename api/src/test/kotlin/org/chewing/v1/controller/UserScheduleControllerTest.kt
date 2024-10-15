@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createSchedule
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.user.UserScheduleController
-import org.chewing.v1.service.ScheduleService
+import org.chewing.v1.service.user.ScheduleService
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever

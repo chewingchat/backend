@@ -3,7 +3,7 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createAnnouncement
 import org.chewing.v1.config.TestSecurityConfig
-import org.chewing.v1.service.AnnouncementService
+import org.chewing.v1.service.announcement.AnnouncementService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever

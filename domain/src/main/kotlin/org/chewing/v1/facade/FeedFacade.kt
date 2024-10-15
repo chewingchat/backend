@@ -4,6 +4,11 @@ import org.chewing.v1.implementation.feed.feed.FeedAggregator
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.service.*
+import org.chewing.v1.service.feed.FeedCommentService
+import org.chewing.v1.service.feed.FeedLikesService
+import org.chewing.v1.service.feed.FeedService
+import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.UserService
 import org.springframework.stereotype.Component
 
 @Component

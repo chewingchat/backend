@@ -5,9 +5,9 @@ import org.chewing.v1.TestDataFactory.createJwtToken
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.facade.AccountFacade
-import org.chewing.v1.model.AccessStatus
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.auth.LoginInfo
-import org.chewing.v1.service.AuthService
+import org.chewing.v1.service.auth.AuthService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any

@@ -8,9 +8,9 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
-import org.chewing.v1.repository.EmailRepository
-import org.chewing.v1.repository.PhoneRepository
-import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.auth.EmailRepository
+import org.chewing.v1.repository.auth.PhoneRepository
+import org.chewing.v1.repository.user.UserRepository
 import org.springframework.stereotype.Component
 
 @Component

@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.feed.like
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.repository.FeedLikesRepository
+import org.chewing.v1.repository.feed.FeedLikesRepository
 import org.springframework.stereotype.Component
 
 @Component

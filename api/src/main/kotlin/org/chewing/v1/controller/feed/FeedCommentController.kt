@@ -1,13 +1,12 @@
 package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.CommentRequest
-import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.FeedCommentService
+import org.chewing.v1.service.feed.FeedCommentService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -30,7 +29,7 @@ class FeedCommentController(
             FeedTarget.COMMENTS
         )
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate()
     }
 
     @DeleteMapping("/comment")

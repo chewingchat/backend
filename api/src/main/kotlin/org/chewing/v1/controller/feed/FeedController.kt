@@ -1,7 +1,6 @@
 package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.feed.FeedRequest
-import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.OwnedFeedResponse
 import org.chewing.v1.dto.response.friend.FeedsResponse
@@ -11,7 +10,7 @@ import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
-import org.chewing.v1.service.FeedService
+import org.chewing.v1.service.feed.FeedService
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
@@ -111,6 +110,6 @@ class FeedController(
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         feedService.make(userId, convertFiles, topic, FileCategory.FEED)
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate()
     }
 }

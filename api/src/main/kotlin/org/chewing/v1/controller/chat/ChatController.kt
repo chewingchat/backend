@@ -1,12 +1,11 @@
 package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.message.ChatReadDto
-import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
 import org.chewing.v1.model.chat.message.ChatCommonMessage
 import org.chewing.v1.model.chat.message.ChatDeleteMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
 import org.chewing.v1.response.SuccessCreateResponse
-import org.chewing.v1.service.ChatService
+import org.chewing.v1.service.chat.ChatService
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
@@ -68,7 +67,7 @@ class ChatController(
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         chatService.processFiles(convertFiles, userId, chatRoomId)
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate()
     }
 }
 

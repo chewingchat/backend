@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.friend.friendship
 
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.repository.FriendShipRepository
+import org.chewing.v1.repository.friend.FriendShipRepository
 import org.springframework.stereotype.Component
 
 @Component

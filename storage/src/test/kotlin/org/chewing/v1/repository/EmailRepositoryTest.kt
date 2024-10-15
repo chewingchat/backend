@@ -2,12 +2,10 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.repository.support.TestDataGenerator
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.jparepository.EmailJpaRepository
+import org.chewing.v1.jparepository.auth.EmailJpaRepository
+import org.chewing.v1.repository.auth.EmailRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.chewing.v1.repository.support.EmailProvider
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 
 internal class EmailRepositoryTest(

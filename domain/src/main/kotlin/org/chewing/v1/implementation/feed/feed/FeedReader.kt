@@ -5,8 +5,8 @@ import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedStatus
-import org.chewing.v1.repository.FeedDetailRepository
-import org.chewing.v1.repository.FeedRepository
+import org.chewing.v1.repository.feed.FeedDetailRepository
+import org.chewing.v1.repository.feed.FeedRepository
 import org.springframework.stereotype.Component
 
 @Component

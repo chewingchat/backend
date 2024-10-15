@@ -2,12 +2,10 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.repository.support.TestDataGenerator
 import org.chewing.v1.config.DbContextTest
-import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.jparepository.PhoneJpaRepository
+import org.chewing.v1.jparepository.auth.PhoneJpaRepository
+import org.chewing.v1.repository.auth.PhoneRepositoryImpl
 import org.chewing.v1.repository.support.PhoneProvider
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 
 class PhoneRepositoryTest : DbContextTest() {

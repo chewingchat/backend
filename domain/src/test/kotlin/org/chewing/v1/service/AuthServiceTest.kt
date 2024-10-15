@@ -6,10 +6,11 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.external.ExternalAuthClient
 import org.chewing.v1.implementation.auth.*
-import org.chewing.v1.repository.EmailRepository
-import org.chewing.v1.repository.LoggedInRepository
-import org.chewing.v1.repository.PhoneRepository
-import org.chewing.v1.repository.UserRepository
+import org.chewing.v1.repository.auth.EmailRepository
+import org.chewing.v1.repository.auth.LoggedInRepository
+import org.chewing.v1.repository.auth.PhoneRepository
+import org.chewing.v1.repository.user.UserRepository
+import org.chewing.v1.service.auth.AuthService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

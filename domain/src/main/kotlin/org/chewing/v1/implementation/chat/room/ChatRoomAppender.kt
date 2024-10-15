@@ -1,7 +1,7 @@
 package org.chewing.v1.implementation.chat.room
 
-import org.chewing.v1.repository.ChatRoomMemberRepository
-import org.chewing.v1.repository.ChatRoomRepository
+import org.chewing.v1.repository.chat.ChatRoomMemberRepository
+import org.chewing.v1.repository.chat.ChatRoomRepository
 import org.springframework.stereotype.Component
 
 @Component
