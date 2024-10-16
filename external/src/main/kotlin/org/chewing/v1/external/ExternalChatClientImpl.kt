@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ExternalChatClientImpl : ExternalChatClient {
-    override fun sendMessage(chatMessage: ChatMessage) {
+    override fun sendMessage(chatMessage: ChatMessage, sessionIds: List<String>) {
         println()
     }
 

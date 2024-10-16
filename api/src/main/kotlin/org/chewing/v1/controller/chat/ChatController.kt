@@ -11,11 +11,9 @@ import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestAttribute
-import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @Controller
@@ -25,44 +23,44 @@ class ChatController(
     @MessageMapping("/chat/pub/read")
     fun readMessage(
         message: ChatReadDto,
-        @Header("simpSessionAttributes") sessionAttributes: Map<String, Any>
+        accessor: SimpMessageHeaderAccessor
     ) {
-        val userId = sessionAttributes["userId"] as String
+        val userId = accessor.sessionAttributes!!["userId"] as String
         chatService.processRead(message.chatRoomId, userId)
     }
 
     @MessageMapping("/chat/pub/delete")
     fun deleteMessage(
         message: ChatDeleteMessage,
-        @Header("simpSessionAttributes") sessionAttributes: Map<String, Any>
+        accessor: SimpMessageHeaderAccessor
     ) {
-        val userId = sessionAttributes["userId"] as String
+        val userId = accessor.sessionAttributes!!["userId"] as String
         chatService.processDelete(message.chatRoomId, userId, message.messageId)
     }
 
     @MessageMapping("/chat/pub/reply")
     fun replyMessage(
         message: ChatReplyMessage,
-        @Header("simpSessionAttributes") sessionAttributes: Map<String, Any>
+        accessor: SimpMessageHeaderAccessor
     ) {
-        val userId = sessionAttributes["userId"] as String
+        val userId = accessor.sessionAttributes!!["userId"] as String
         chatService.processReply(message.chatRoomId, userId, message.parentMessageId, message.text)
     }
 
     @MessageMapping("/chat/pub/chat")
     fun chatMessage(
         message: ChatCommonMessage,
-        @Header("simpSessionAttributes") sessionAttributes: Map<String, Any>
+        accessor: SimpMessageHeaderAccessor
     ) {
-        val userId = sessionAttributes["userId"] as String
+        val userId = accessor.sessionAttributes!!["userId"] as String
         chatService.processChat(message.chatRoomId, userId, message.text)
     }
 
-    @PostMapping("/api/chatRooms/{chatRoomId}/file/upload")
+    @PostMapping("/api/chat/file/upload")
     fun uploadFiles(
         @RequestPart("files") files: List<MultipartFile>,
         @RequestAttribute("userId") userId: String,
-        @PathVariable("chatRoomId") chatRoomId: String
+        @RequestParam("chatRoomId") chatRoomId: String
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         chatService.processFiles(convertFiles, userId, chatRoomId)
