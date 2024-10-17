@@ -10,22 +10,10 @@ import org.springframework.stereotype.Component
 @Component
 class ChatSender(
     private val externalChatClient: ExternalChatClient,
-    private val webSocketProvider: WebSocketProvider
 ) {
 
-    fun sendChat(chatLog: ChatMessage, chatRoomMemberInfos: List<ChatRoomMemberInfo>) {
-        val userIds = chatRoomMemberInfos.map { it.memberId }
-        userIds.forEach {
-            val sessionIds = webSocketProvider.readAll(it)
-            if(sessionIds.isNotEmpty()) {
-                sessionIds.forEach { sessionId ->
-                    externalChatClient.sendMessage(chatLog, sessionIds)
-                }
-            }
-            else{
-                // notification 호출
-            }
-        }
+    fun sendChat(chatLog: ChatMessage, activeUserIds: List<String>) {
+        externalChatClient.sendMessage(chatLog, activeUserIds)
     }
 
     fun sendsChat(chatLogs: List<ChatMessage>) {
