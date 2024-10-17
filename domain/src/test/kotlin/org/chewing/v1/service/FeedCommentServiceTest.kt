@@ -7,7 +7,6 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.implementation.feed.comment.*
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
-import org.chewing.v1.implementation.notification.NotificationHandler
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.feed.CommentRepository
 import org.chewing.v1.service.feed.FeedCommentService
@@ -25,8 +24,6 @@ class FeedCommentServiceTest {
 
     private val commentRepository: CommentRepository = mock()
     private val feedUpdater: FeedUpdater = mock()
-    private val notificationHandler: NotificationHandler = mock()
-
     private val commentReader = CommentReader(commentRepository)
     private val commentRemover = CommentRemover(commentRepository)
     private val commentValidator = CommentValidator(commentRepository)
@@ -35,7 +32,7 @@ class FeedCommentServiceTest {
     private val commentProcessor = CommentProcessor(commentRemover, commentAppender, feedUpdater)
     private val asyncJobExecutor = AsyncJobExecutor(ioScope)
     private val commentHandler = CommentHandler(commentProcessor, asyncJobExecutor)
-    private val feedCommentService = FeedCommentService(commentReader, commentHandler, commentRemover, commentValidator, notificationHandler)
+    private val feedCommentService = FeedCommentService(commentReader, commentHandler, commentRemover, commentValidator)
 
 
     @Test

@@ -1,15 +1,15 @@
 package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.message.ChatReadDto
+import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.model.chat.message.ChatCommonMessage
 import org.chewing.v1.model.chat.message.ChatDeleteMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
 import org.chewing.v1.response.SuccessCreateResponse
-import org.chewing.v1.service.chat.ChatService
+import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
-import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.stereotype.Controller
@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Controller
 class ChatController(
-    private val chatService: ChatService,
+    private val chatFacade: ChatFacade
 ) {
     @MessageMapping("/chat/pub/read")
     fun readMessage(
@@ -26,7 +26,7 @@ class ChatController(
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatService.processRead(message.chatRoomId, userId)
+        chatFacade.processRead(message.chatRoomId, userId)
     }
 
     @MessageMapping("/chat/pub/delete")
@@ -35,7 +35,7 @@ class ChatController(
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatService.processDelete(message.chatRoomId, userId, message.messageId)
+        chatFacade.processDelete(message.chatRoomId, userId, message.messageId)
     }
 
     @MessageMapping("/chat/pub/reply")
@@ -44,7 +44,7 @@ class ChatController(
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatService.processReply(message.chatRoomId, userId, message.parentMessageId, message.text)
+        chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.text)
     }
 
     @MessageMapping("/chat/pub/chat")
@@ -53,7 +53,7 @@ class ChatController(
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatService.processChat(message.chatRoomId, userId, message.text)
+        chatFacade.processChat(message.chatRoomId, userId, message.text)
     }
 
     @PostMapping("/api/chat/file/upload")
@@ -63,7 +63,7 @@ class ChatController(
         @RequestParam("chatRoomId") chatRoomId: String
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
-        chatService.processFiles(convertFiles, userId, chatRoomId)
+        chatFacade.processFiles(convertFiles, userId, chatRoomId)
         //생성 완료 응답 201 반환
         return ResponseHelper.successCreate()
     }
