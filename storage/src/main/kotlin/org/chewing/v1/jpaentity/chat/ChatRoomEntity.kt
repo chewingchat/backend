@@ -18,7 +18,7 @@ internal class ChatRoomEntity(
 
     private val groupChatRoom: Boolean,
 
-
+    private val createdAt: LocalDateTime = LocalDateTime.now(),
 
 //  이거 chatSequence에서 번호 가져오고 chatFriendEntity에서 unread 가져와서 뺄셈 하면 될거 같아요
 //    @Column(name = "total_unread_message", nullable = false)

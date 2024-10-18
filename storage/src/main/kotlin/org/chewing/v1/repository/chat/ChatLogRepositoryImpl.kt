@@ -2,13 +2,10 @@ package org.chewing.v1.repository.chat
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.chat.log.ChatLog
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.mongoentity.*
-import org.chewing.v1.mongoentity.ChatCommonMongoEntity
-import org.chewing.v1.mongoentity.ChatFileMongoEntity
-import org.chewing.v1.mongoentity.ChatInviteMongoEntity
-import org.chewing.v1.mongoentity.ChatLeaveMongoEntity
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
 import org.springframework.stereotype.Repository
 
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class ChatLogRepositoryImpl(
     private val chatLogMongoRepository: ChatLogMongoRepository,
-//    private val chatRoomJpaRepository: ChatRoomJpaRepository
 ) : ChatLogRepository {
 //
 //    // 메시지를 MongoDB에 저장하는 로직 (기존 로직 사용)
@@ -26,7 +22,7 @@ internal class ChatLogRepositoryImpl(
 //    }
 
     // 채팅방의 특정 페이지의 메시지를 조회
-    override fun readChatMessages(chatRoomId: String, page: Int): List<ChatMessage> {
+    override fun readChatMessages(chatRoomId: String, page: Int): List<ChatLog> {
         // MongoDB에서 chatRoomId와 page로 메시지 조회
         val messageEntities = chatLogMongoRepository.findByRoomIdAndPage(chatRoomId, page)
 
@@ -50,20 +46,20 @@ internal class ChatLogRepositoryImpl(
 //        }
 
         // ChatMessageMongoEntity를 ChatMessage로 변환하여 ChatLog를 생성
-        return messageEntities.map { it.toChatMessage() }
+        return messageEntities.map { it.toChatLog() }
     }
 
-    override fun readChatMessage(messageId: String): ChatMessage? {
-        return chatLogMongoRepository.findById(messageId).map { it.toChatMessage() }.orElse(null)
+    override fun readChatMessage(messageId: String): ChatLog? {
+        return chatLogMongoRepository.findById(messageId).map { it.toChatLog() }.orElse(null)
     }
 
-    override fun readLatestMessages(numbers: List<ChatNumber>): List<ChatMessage> {
+    override fun readLatestMessages(numbers: List<ChatNumber>): List<ChatLog> {
         val conditions = numbers.map {
             mapOf("chatRoomId" to it.chatRoomId, "seqNumber" to it.sequenceNumber)
         }
 
         val messages = chatLogMongoRepository.findByRoomIdAndSeqNumbers(conditions)
-        return messages.map { it.toChatMessage() }
+        return messages.map { it.toChatLog() }
     }
 
     // 메시지를 삭제하는 기능
@@ -87,33 +83,11 @@ internal class ChatLogRepositoryImpl(
     }
 
     override fun appendChatLog(chatMessage: ChatMessage) {
-        when (chatMessage) {
-            is ChatCommonMessage -> {
-                val entity = ChatCommonMongoEntity.from(chatMessage)
-                chatLogMongoRepository.save(entity)
-            }
-
-            is ChatFileMessage -> {
-                val entity = ChatFileMongoEntity.from(chatMessage)
-                chatLogMongoRepository.save(entity)
-            }
-
-            is ChatLeaveMessage -> {
-                val entity = ChatLeaveMongoEntity.from(chatMessage)
-                chatLogMongoRepository.save(entity)
-            }
-
-            is ChatInviteMessage -> {
-                val entity = ChatInviteMongoEntity.from(chatMessage)
-                chatLogMongoRepository.save(entity)
-            }
-            is ChatReplyMessage -> {
-                val entity = ChatReplyMongoEntity.from(chatMessage)
-                chatLogMongoRepository.save(entity)
-            }
-
-            else -> throw ConflictException(ErrorCode.WRONG_VALIDATE_CODE)
-        }
+        chatLogMongoRepository.save(
+            ChatMessageMongoEntity.fromChatMessage(chatMessage) ?: throw ConflictException(
+                ErrorCode.WRONG_VALIDATE_CODE
+            )
+        )
 
         // MongoDB에서 친구의 마지막 읽은 메시지 시퀀스를 조회
         /** ChatRoomMemberRepository에서

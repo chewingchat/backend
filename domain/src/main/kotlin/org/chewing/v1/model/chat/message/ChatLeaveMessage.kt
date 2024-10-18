@@ -9,9 +9,9 @@ class ChatLeaveMessage private constructor(
     override val chatRoomId: String,
     override val senderId: String,
     override val timestamp: LocalDateTime,
+    override val type: MessageType = MessageType.LEAVE,
     override val number: ChatNumber,
 ) : ChatMessage() {
-    override val type: MessageType = MessageType.LEAVE
 
     companion object {
         fun of(

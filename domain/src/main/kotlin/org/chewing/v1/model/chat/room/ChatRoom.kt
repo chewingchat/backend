@@ -2,8 +2,8 @@ package org.chewing.v1.model.chat.room
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.model.chat.member.ChatRoomMember
-import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.*
 import java.time.LocalDateTime
 
@@ -22,76 +22,73 @@ data class ChatRoom(
     companion object {
         fun of(
             room: Room,
-            chatMessage: ChatMessage
+            chatLog: ChatLog
         ): ChatRoom {
-            when(chatMessage){
-                is ChatCommonMessage -> {
+            when(chatLog){
+                is ChatNormalLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
                         favorite = room.favorite,
                         groupChatRoom = room.groupChatRoom,
-                        latestMessage = chatMessage.text,
-                        latestMessageTime = chatMessage.timestamp,
-                        totalUnReadMessage = chatMessage.number.sequenceNumber - room.readSequenceNumber,
-                        latestSeqNumber = chatMessage.number.sequenceNumber,
-                        latestPage = chatMessage.number.page,
+                        latestMessage = chatLog.text,
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
-                is ChatReplyMessage -> {
+                is ChatReplyLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
                         favorite = room.favorite,
                         groupChatRoom = room.groupChatRoom,
-                        latestMessage = chatMessage.text,
-                        latestMessageTime = chatMessage.timestamp,
-                        totalUnReadMessage = chatMessage.number.sequenceNumber - room.readSequenceNumber,
-                        latestSeqNumber = chatMessage.number.sequenceNumber,
-                        latestPage = chatMessage.number.page,
+                        latestMessage = chatLog.text,
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
-                is ChatFileMessage -> {
+                is ChatFileLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
                         favorite = room.favorite,
                         groupChatRoom = room.groupChatRoom,
-                        latestMessage = chatMessage.medias[0].url,
-                        latestMessageTime = chatMessage.timestamp,
-                        totalUnReadMessage = chatMessage.number.sequenceNumber - room.readSequenceNumber,
-                        latestSeqNumber = chatMessage.number.sequenceNumber,
-                        latestPage = chatMessage.number.page,
+                        latestMessage = chatLog.medias[0].url,
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
-                is ChatInviteMessage -> {
-                    return ChatRoom(
-                        chatRoomId = room.chatRoomId,
-                        favorite = room.favorite,
-                        groupChatRoom = room.groupChatRoom,
-                        latestMessage = "",
-                        latestMessageTime = chatMessage.timestamp,
-                        totalUnReadMessage = chatMessage.number.sequenceNumber - room.readSequenceNumber,
-                        latestSeqNumber = chatMessage.number.sequenceNumber,
-                        latestPage = chatMessage.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
-                    )
-                }
-                is ChatLeaveMessage -> {
+                is ChatInviteLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
                         favorite = room.favorite,
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = "",
-                        latestMessageTime = chatMessage.timestamp,
-                        totalUnReadMessage = chatMessage.number.sequenceNumber - room.readSequenceNumber,
-                        latestSeqNumber = chatMessage.number.sequenceNumber,
-                        latestPage = chatMessage.number.page,
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
-                else -> {
-                    throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
+                is ChatLeaveLog -> {
+                    return ChatRoom(
+                        chatRoomId = room.chatRoomId,
+                        favorite = room.favorite,
+                        groupChatRoom = room.groupChatRoom,
+                        latestMessage = "",
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
+                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                    )
                 }
             }
         }

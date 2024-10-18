@@ -1,13 +1,13 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jpaentity.user.FeedLikeId
 import org.chewing.v1.jparepository.feed.FeedLikesJpaRepository
 import org.chewing.v1.repository.feed.FeedLikesRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-internal class FeedLikesRepositoryTest:DbContextTest() {
+internal class FeedLikesRepositoryTest:JpaContextTest() {
     @Autowired
     private lateinit var feedLikesJpaRepository: FeedLikesJpaRepository
 

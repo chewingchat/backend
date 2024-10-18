@@ -45,9 +45,7 @@ internal class ChatSequenceRepositoryImpl(
 
     override fun readSeqNumbers(chatRoomIds: List<String>): List<ChatSequenceNumber> {
         val query = Query(Criteria.where("chatRoomId").`in`(chatRoomIds))
-
         val entities = mongoTemplate.find(query, ChatSequenceMongoEntity::class.java)
-
         return entities.map { ChatSequenceNumber.of(it.seqNumber, it.chatRoomId) }
     }
 }

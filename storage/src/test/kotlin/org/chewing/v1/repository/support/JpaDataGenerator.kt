@@ -12,7 +12,6 @@ import org.chewing.v1.jpaentity.user.ScheduleJpaEntity
 import org.chewing.v1.jpaentity.user.PushNotificationJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
-import org.chewing.v1.jparepository.*
 import org.chewing.v1.jparepository.announcement.AnnouncementJpaRepository
 import org.chewing.v1.jparepository.auth.EmailJpaRepository
 import org.chewing.v1.jparepository.auth.LoggedInJpaRepository
@@ -45,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class TestDataGenerator(
+class JpaDataGenerator(
 ) {
     @Autowired
     private lateinit var emailJpaRepository: EmailJpaRepository

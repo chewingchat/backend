@@ -1,5 +1,8 @@
 package org.chewing.v1.mongoentity
 
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatLogType
+import org.chewing.v1.model.chat.log.ChatReplyLog
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
@@ -20,7 +23,7 @@ internal class ChatReplyMongoEntity(
     private val parentMessagePage: Int,
     private val parentSeqNumber: Int,
     private val parentMessageText: String,
-    private val parentMessageType: MessageType,
+    private val parentMessageType: ChatLogType,
 ) : ChatMessageMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
@@ -28,9 +31,9 @@ internal class ChatReplyMongoEntity(
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime,
-    type = MessageType.REPLY,
+    type = ChatLogType.REPLY,
 ) {
-    companion object{
+    companion object {
         fun from(
             chatReplyMessage: ChatReplyMessage
         ): ChatReplyMongoEntity {
@@ -46,13 +49,13 @@ internal class ChatReplyMongoEntity(
                 parentMessagePage = chatReplyMessage.parentMessagePage,
                 parentSeqNumber = chatReplyMessage.parentSeqNumber,
                 parentMessageText = chatReplyMessage.parentMessageText,
-                parentMessageType = chatReplyMessage.parentMessageType
+                parentMessageType = chatReplyMessage.parentMessageType,
             )
-
         }
     }
-    override fun toChatMessage(): ChatMessage {
-        return ChatReplyMessage.of(
+
+    override fun toChatLog(): ChatLog {
+        return ChatReplyLog.of(
             messageId = messageId,
             chatRoomId = chatRoomId,
             senderId = senderId,
@@ -64,7 +67,7 @@ internal class ChatReplyMongoEntity(
             timestamp = sendTime,
             type = type,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            parentMessageType = parentMessageType
-            )
+            parentMessageType = parentMessageType,
+        )
     }
 }

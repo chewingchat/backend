@@ -1,20 +1,20 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
 import org.chewing.v1.repository.support.PushTokenProvider
-import org.chewing.v1.repository.support.TestDataGenerator
+import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.UserProvider
 import org.chewing.v1.repository.user.PushNotificationRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class PushNotificationTest : DbContextTest() {
+class PushNotificationTest : JpaContextTest() {
     @Autowired
     private lateinit var pushNotificationJpaRepository: PushNotificationJpaRepository
 
     @Autowired
-    private lateinit var testDataGenerator: TestDataGenerator
+    private lateinit var jpaDataGenerator: JpaDataGenerator
 
     private val pushNotificationRepositoryImpl: PushNotificationRepositoryImpl by lazy {
         PushNotificationRepositoryImpl(pushNotificationJpaRepository)
@@ -33,7 +33,7 @@ class PushNotificationTest : DbContextTest() {
     @Test
     fun `푸시 알림 삭제에 성공`() {
         val userId = "userId2"
-        val pushNotification = testDataGenerator.pushNotificationData(userId)
+        val pushNotification = jpaDataGenerator.pushNotificationData(userId)
         pushNotificationRepositoryImpl.remove(pushNotification.device)
         assert(pushNotificationJpaRepository.findById(pushNotification.pushTokenId).isEmpty)
     }
@@ -41,7 +41,7 @@ class PushNotificationTest : DbContextTest() {
     @Test
     fun `푸시 알림 전체 삭제에 성공`() {
         val userId = "userId3"
-        val pushNotification = testDataGenerator.pushNotificationData(userId)
+        val pushNotification = jpaDataGenerator.pushNotificationData(userId)
         val result = pushNotificationRepositoryImpl.reads(userId)
         assert(result.size == 1)
     }
