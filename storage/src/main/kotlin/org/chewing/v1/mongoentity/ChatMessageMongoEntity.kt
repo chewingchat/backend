@@ -1,6 +1,7 @@
 package org.chewing.v1.mongoentity
 
-import org.chewing.v1.model.chat.*
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.message.*
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
@@ -18,16 +19,30 @@ internal sealed class ChatMessageMongoEntity(
     @Id
     protected val messageId: String,
     protected val chatRoomId: String,
-    protected var type: MessageType,
+    protected var type: ChatLogType,
     protected val senderId: String,
     protected val seqNumber: Int,
     protected val page: Int,
     protected val sendTime: LocalDateTime,
 ) {
 
-    abstract fun toChatMessage(): ChatMessage
+    companion object {
+        fun fromChatMessage(chatMessage: ChatMessage): ChatMessageMongoEntity? {
+            return when (chatMessage) {
+                is ChatNormalMessage -> ChatNormalMongoEntity.from(chatMessage)
+                is ChatInviteMessage -> ChatInviteMongoEntity.from(chatMessage)
+                is ChatLeaveMessage -> ChatLeaveMongoEntity.from(chatMessage)
+                is ChatFileMessage -> ChatFileMongoEntity.from(chatMessage)
+                is ChatDeleteMessage -> null
+                is ChatReadMessage -> null
+                is ChatReplyMessage -> ChatReplyMongoEntity.from(chatMessage)
+            }
+        }
+    }
+
+    abstract fun toChatLog(): ChatLog
 
     fun delete() {
-        this.type = MessageType.DELETE
+        this.type = ChatLogType.DELETE
     }
 }

@@ -1,5 +1,8 @@
 package org.chewing.v1.mongoentity
 
+import org.chewing.v1.model.chat.log.ChatFileLog
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatFileMessage
 import org.chewing.v1.model.chat.message.ChatMessage
@@ -22,7 +25,7 @@ internal class ChatFileMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
     senderId = senderId,
-    type = MessageType.FILE,
+    type = ChatLogType.FILE,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime
@@ -43,14 +46,15 @@ internal class ChatFileMongoEntity(
         }
     }
 
-    override fun toChatMessage(): ChatMessage {
-        return ChatFileMessage.of(
+    override fun toChatLog(): ChatLog {
+        return ChatFileLog.of(
             messageId = messageId,
             chatRoomId = chatRoomId,
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            medias = medias
+            medias = medias,
+            type = type
         )
     }
 }

@@ -1,18 +1,18 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.announcement.AnnouncementJpaRepository
 import org.chewing.v1.repository.announcement.AnnouncementRepositoryImpl
-import org.chewing.v1.repository.support.TestDataGenerator
+import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class AnnouncementRepositoryTest : DbContextTest() {
+class AnnouncementRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var announcementJpaRepository: AnnouncementJpaRepository
 
     @Autowired
-    private lateinit var testDataGenerator: TestDataGenerator
+    private lateinit var jpaDataGenerator: JpaDataGenerator
 
     private val announcementRepositoryImpl: AnnouncementRepositoryImpl by lazy {
         AnnouncementRepositoryImpl(announcementJpaRepository)
@@ -20,7 +20,7 @@ class AnnouncementRepositoryTest : DbContextTest() {
 
     @Test
     fun `공지사항 조회에 성공해야 한다`() {
-        val announcement = testDataGenerator.announcementEntityData()
+        val announcement = jpaDataGenerator.announcementEntityData()
 
         val result = announcementRepositoryImpl.read(announcement.id)
 
@@ -31,7 +31,7 @@ class AnnouncementRepositoryTest : DbContextTest() {
 
     @Test
     fun `공지사항 조회에 실패해야 한다`() {
-        testDataGenerator.announcementEntityData()
+        jpaDataGenerator.announcementEntityData()
 
         val result = announcementRepositoryImpl.read("wrongId")
 
@@ -40,7 +40,7 @@ class AnnouncementRepositoryTest : DbContextTest() {
 
     @Test
     fun `공지사항 목록 조회에 성공해야 한다`() {
-        testDataGenerator.announcementEntityDataList()
+        jpaDataGenerator.announcementEntityDataList()
 
         val result = announcementRepositoryImpl.reads()
 

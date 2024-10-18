@@ -6,6 +6,7 @@ import org.chewing.v1.implementation.chat.message.ChatGenerator
 import org.chewing.v1.implementation.chat.message.ChatRemover
 import org.chewing.v1.implementation.chat.sequence.ChatFinder
 import org.chewing.v1.implementation.media.FileHandler
+import org.chewing.v1.model.chat.log.ChatLog
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
@@ -24,7 +25,9 @@ class ChatLogService(
     fun uploadFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String): ChatFileMessage {
         val medias = fileHandler.handleNewFiles(userId, fileDataList, FileCategory.CHATROOM)
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
-        return chatGenerator.generateFileMessage(chatRoomId, userId, chatRoomNumber, medias)
+        val chatMessage = chatGenerator.generateFileMessage(chatRoomId, userId, chatRoomNumber, medias)
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
     }
 
     fun readMessage(chatRoomId: String, userId: String): ChatReadMessage {
@@ -47,7 +50,7 @@ class ChatLogService(
         return chatMessage
     }
 
-    fun chatCommonMessage(chatRoomId: String, userId: String, text: String): ChatCommonMessage {
+    fun chatCommonMessage(chatRoomId: String, userId: String, text: String): ChatNormalMessage {
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
         val chatMessage = chatGenerator.generateCommonMessage(chatRoomId, userId, chatRoomNumber, text)
         chatAppender.appendChatLog(chatMessage)
@@ -71,15 +74,15 @@ class ChatLogService(
         }
     }
 
-    fun getLatestChat(chatRoomIds: List<String>): List<ChatMessage> {
+    fun getLatestChat(chatRoomIds: List<String>): List<ChatLog> {
         val chatNumbers = chatFinder.findCurrentNumbers(chatRoomIds)
         return chatReader.readLatestMessages(chatNumbers)
     }
-    fun getChatLog(chatRoomId: String, page: Int): List<ChatMessage> {
+    fun getChatLog(chatRoomId: String, page: Int): List<ChatLog> {
         return chatReader.readChatLog(chatRoomId, page)
     }
 
-    fun getChatLogLatest(chatRoomId: String): List<ChatMessage> {
+    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
         val page = chatFinder.findLastPage(chatRoomId)
         return chatReader.readChatLog(chatRoomId, page)
     }

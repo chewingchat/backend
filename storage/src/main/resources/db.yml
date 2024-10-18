@@ -22,6 +22,11 @@ spring:
   h2:
     console:
       enabled: true
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.1.0
 chewing:
   datasource:
     main:

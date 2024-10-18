@@ -2,6 +2,10 @@ package org.chewing.v1.implementation.chat.message
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.model.chat.log.ChatFileLog
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatNormalLog
+import org.chewing.v1.model.chat.log.ChatReplyLog
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
@@ -45,15 +49,14 @@ class ChatGenerator {
         userId: String,
         number: ChatNumber,
         text: String
-    ): ChatCommonMessage {
-        return ChatCommonMessage.of(
+    ): ChatNormalMessage {
+        return ChatNormalMessage.of(
             generateKey(chatRoomId),
             chatRoomId = chatRoomId,
             senderId = userId,
             timestamp = LocalDateTime.now(),
             number = number,
             text = text,
-            type = MessageType.CHAT
         )
     }
 
@@ -108,12 +111,12 @@ class ChatGenerator {
         userId: String,
         number: ChatNumber,
         text: String,
-        parentMessage: ChatMessage
+        parentLog: ChatLog
     ): ChatReplyMessage {
-        val (parentMessageId, parentMessageText) = when (parentMessage) {
-            is ChatCommonMessage -> Pair(parentMessage.messageId, parentMessage.text)
-            is ChatReplyMessage -> Pair(parentMessage.messageId, parentMessage.text)
-            is ChatFileMessage -> Pair(parentMessage.messageId, parentMessage.medias[0].url)
+        val (parentMessageId, parentMessageText) = when (parentLog) {
+            is ChatNormalLog -> Pair(parentLog.messageId, parentLog.text)
+            is ChatReplyLog -> Pair(parentLog.messageId, parentLog.text)
+            is ChatFileLog -> Pair(parentLog.messageId, parentLog.medias[0].url)
             else -> throw ConflictException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
 
@@ -125,10 +128,10 @@ class ChatGenerator {
             number = number,
             text = text,
             parentMessageId = parentMessageId,
-            parentMessagePage = parentMessage.number.page,
+            parentMessagePage = parentLog.number.page,
             parentMessageText = parentMessageText,
-            parentSeqNumber = parentMessage.number.sequenceNumber,
-            parentMessageType = parentMessage.type,
+            parentSeqNumber = parentLog.number.sequenceNumber,
+            parentMessageType = parentLog.type,
             type = MessageType.REPLY
         )
     }

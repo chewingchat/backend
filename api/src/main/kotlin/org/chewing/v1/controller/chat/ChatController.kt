@@ -2,11 +2,10 @@ package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.message.ChatReadDto
 import org.chewing.v1.facade.ChatFacade
-import org.chewing.v1.model.chat.message.ChatCommonMessage
+import org.chewing.v1.model.chat.message.ChatNormalMessage
 import org.chewing.v1.model.chat.message.ChatDeleteMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
 import org.chewing.v1.response.SuccessCreateResponse
-import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
@@ -49,7 +48,7 @@ class ChatController(
 
     @MessageMapping("/chat/pub/chat")
     fun chatMessage(
-        message: ChatCommonMessage,
+        message: ChatNormalMessage,
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String

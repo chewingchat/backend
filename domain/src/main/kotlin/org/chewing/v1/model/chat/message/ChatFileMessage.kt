@@ -11,9 +11,9 @@ class ChatFileMessage private constructor(
     override val senderId: String,
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
+    override val type: MessageType = MessageType.FILE,
     val medias: List<Media>
 ) : ChatMessage() {
-    override val type: MessageType = MessageType.FILE
 
     companion object {
         fun of(

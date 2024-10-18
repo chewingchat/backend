@@ -1,17 +1,19 @@
-package org.chewing.v1.model.chat.message
+package org.chewing.v1.model.chat.log
 
+import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
 
-class ChatDeleteMessage private constructor(
-    val messageId: String,
+class ChatInviteLog private constructor(
+    override val messageId: String,
     override val chatRoomId: String,
     override val senderId: String,
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
-    override val type: MessageType = MessageType.DELETE
-): ChatMessage() {
+    override val type: ChatLogType,
+    val targetUserId: String
+) : ChatLog() {
 
     companion object {
         fun of(
@@ -19,14 +21,18 @@ class ChatDeleteMessage private constructor(
             chatRoomId: String,
             senderId: String,
             timestamp: LocalDateTime,
-            number: ChatNumber
-        ): ChatDeleteMessage {
-            return ChatDeleteMessage(
+            number: ChatNumber,
+            targetUserId: String,
+            type: ChatLogType
+        ): ChatInviteLog {
+            return ChatInviteLog(
                 messageId = messageId,
                 chatRoomId = chatRoomId,
                 senderId = senderId,
                 timestamp = timestamp,
-                number = number
+                number = number,
+                targetUserId = targetUserId,
+                type = type
             )
         }
     }
