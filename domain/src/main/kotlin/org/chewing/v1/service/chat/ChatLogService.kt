@@ -23,7 +23,7 @@ class ChatLogService(
     private val chatRemover: ChatRemover,
 ) {
     fun uploadFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String): ChatFileMessage {
-        val medias = fileHandler.handleNewFiles(userId, fileDataList, FileCategory.CHATROOM)
+        val medias = fileHandler.handleNewFiles(userId, fileDataList, FileCategory.CHAT)
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
         val chatMessage = chatGenerator.generateFileMessage(chatRoomId, userId, chatRoomNumber, medias)
         chatAppender.appendChatLog(chatMessage)

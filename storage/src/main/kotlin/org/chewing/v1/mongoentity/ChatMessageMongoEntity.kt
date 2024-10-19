@@ -11,8 +11,12 @@ import java.time.LocalDateTime
 
 @Document(collection = "chat_messages")
 // 복합 인덱스 설정
+
 @CompoundIndexes(
-    CompoundIndex(name = "chatRoomId_page_idx", def = "{'chatRoomId': 1, 'page': 1}"),
+    CompoundIndex(
+        name = "chatRoomId_page_seqNumber_idx",
+        def = "{'chatRoomId': 1, 'page': 1, 'seqNumber': 1}"
+    ),
     CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}")
 )
 internal sealed class ChatMessageMongoEntity(

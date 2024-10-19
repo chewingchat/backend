@@ -23,7 +23,7 @@ internal class ChatInviteMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
     senderId = senderId,
-    type = ChatLogType.NORMAL,
+    type = ChatLogType.INVITE,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime
