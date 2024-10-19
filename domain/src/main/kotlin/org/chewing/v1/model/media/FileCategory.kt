@@ -6,5 +6,5 @@ enum class FileCategory {
     FEED,
     EMOTICON,
     TTS,
-    CHATROOM,
+    CHAT,
 }

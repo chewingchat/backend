@@ -26,4 +26,7 @@ object MediaProvider {
     fun buildFeedContents(): List<Media> {
         return listOf(buildFeedContent(1), buildFeedContent(0))
     }
+    fun buildChatContent(): Media {
+        return Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG)
+    }
 }
