@@ -178,7 +178,7 @@ class UserRepositoryTest : JpaContextTest() {
     @Test
     fun `연락처가 다른 유저 소유 있는지 확인`() {
         val phone = PhoneProvider.buildNormal()
-        val user = jpaDataGenerator.userEntityPhoneData(phone)
+        jpaDataGenerator.userEntityPhoneData(phone)
         val newUserId = "newUserId"
 
         val result = userRepositoryImpl.checkContactIsUsedByElse(phone, newUserId)
@@ -189,7 +189,7 @@ class UserRepositoryTest : JpaContextTest() {
     @Test
     fun `이메일이 다른 유저 소유 인지 확인`(){
         val email = EmailProvider.buildNormal()
-        val user = jpaDataGenerator.userEntityEmailData(email)
+        jpaDataGenerator.userEntityEmailData(email)
 
         val newUserId  = "newUserId"
 
