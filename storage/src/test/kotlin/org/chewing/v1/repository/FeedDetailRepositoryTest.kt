@@ -44,8 +44,8 @@ class FeedDetailRepositoryTest : JpaContextTest() {
     @Test
     fun `피드 상세를 Index 기준으로 첫번째만 조회해야 한다`() {
         val feedIds = listOf("feedId3", "feedId4")
-        val feedDetails = jpaDataGenerator.feedDetailEntityDataAsc("feedId3")
-        val feedDetails2 = jpaDataGenerator.feedDetailEntityDataAsc("feedId4")
+        jpaDataGenerator.feedDetailEntityDataAsc("feedId3")
+        jpaDataGenerator.feedDetailEntityDataAsc("feedId4")
         val result = feedDetailRepositoryImpl.readsFirstIndex(feedIds)
         assert(result.isNotEmpty())
         assert(result.size == feedIds.size)

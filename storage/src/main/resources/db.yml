@@ -27,6 +27,7 @@ de:
     mongodb:
       embedded:
         version: 7.1.0
+
 chewing:
   datasource:
     main:
@@ -36,6 +37,7 @@ chewing:
       pool-name: main-db-pool
       data-source-properties:
         rewriteBatchedStatements: true
+
 
 ---
 

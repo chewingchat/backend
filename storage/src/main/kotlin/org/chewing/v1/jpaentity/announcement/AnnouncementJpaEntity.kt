@@ -33,7 +33,7 @@ internal class AnnouncementJpaEntity(
         return Announcement.of(
             announcementId,
             topic,
-            createdAt!!,
+            createdAt,
             content
         )
     }

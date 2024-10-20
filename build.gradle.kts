@@ -12,7 +12,6 @@ dependencies {
     jacocoAggregation(project(":common"))
     jacocoAggregation(project(":api"))
     jacocoAggregation(project(":domain"))
-
 }
 
 
@@ -68,9 +67,10 @@ allprojects {
 
     tasks.test {
         useJUnitPlatform()
-        maxParallelForks = 4
+        maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
         forkEvery = 100
     }
+
 }
 
 subprojects {

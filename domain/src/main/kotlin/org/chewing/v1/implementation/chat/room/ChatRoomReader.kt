@@ -22,10 +22,6 @@ class ChatRoomReader(
     fun readChatRoomFriendMember(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> {
         return chatRoomMemberRepository.readChatRoomFriendMember(chatRoomId, userId)
     }
-
-    fun readsMemberByUserId(userId: String): List<ChatRoomMemberInfo> {
-        return chatRoomMemberRepository.readMembersByUserId(userId)
-    }
     fun readChatRoomMembersByUserId(userId: String): List<ChatRoomMemberInfo> {
         return chatRoomMemberRepository.readMembersByUserId(userId)
     }
