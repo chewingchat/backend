@@ -2,6 +2,7 @@ package org.chewing.v1.config
 
 import org.chewing.v1.DbTestApplication
 import org.chewing.v1.repository.support.JpaDataGenerator
+import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import

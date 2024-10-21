@@ -72,6 +72,17 @@ sealed class ChatLogMessageResponse {
         val text: String
     ) : ChatLogMessageResponse()
 
+    data class Bomb(
+        val messageId: String,
+        val chatRoomId: String,
+        val senderId: String,
+        val timestamp: LocalDateTime,
+        val seqNumber: Int,
+        val page: Int,
+        val expiredAt: LocalDateTime,
+        val text: String
+    ) : ChatLogMessageResponse()
+
     companion object {
         fun from(chatLog: ChatLog): ChatLogMessageResponse {
             return when (chatLog) {
@@ -123,6 +134,16 @@ sealed class ChatLogMessageResponse {
                     timestamp = chatLog.timestamp,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
+                    text = chatLog.text
+                )
+                is ChatBombLog -> Bomb(
+                    messageId = chatLog.messageId,
+                    chatRoomId = chatLog.chatRoomId,
+                    senderId = chatLog.senderId,
+                    timestamp = chatLog.timestamp,
+                    seqNumber = chatLog.number.sequenceNumber,
+                    page = chatLog.number.page,
+                    expiredAt = chatLog.expiredAt,
                     text = chatLog.text
                 )
             }

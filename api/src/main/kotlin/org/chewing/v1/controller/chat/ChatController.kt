@@ -2,6 +2,7 @@ package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.message.ChatReadDto
 import org.chewing.v1.facade.ChatFacade
+import org.chewing.v1.model.chat.message.ChatBombMessage
 import org.chewing.v1.model.chat.message.ChatNormalMessage
 import org.chewing.v1.model.chat.message.ChatDeleteMessage
 import org.chewing.v1.model.chat.message.ChatReplyMessage
@@ -44,6 +45,15 @@ class ChatController(
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
         chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.text)
+    }
+
+    @MessageMapping("/chat/pub/bomb")
+    fun bombMessage(
+        message: ChatBombMessage,
+        accessor: SimpMessageHeaderAccessor
+    ) {
+        val userId = accessor.sessionAttributes!!["userId"] as String
+        chatFacade.processBombing(message.chatRoomId, userId, message.text, message.expiredAt)
     }
 
     @MessageMapping("/chat/pub/chat")

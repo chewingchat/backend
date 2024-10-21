@@ -4,7 +4,6 @@ import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.log.ChatNormalLog
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
-import org.chewing.v1.model.media.Media
 import java.time.LocalDateTime
 
 object ChatMessageProvider {
@@ -76,6 +75,17 @@ object ChatMessageProvider {
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
             type = ChatLogType.NORMAL
+        )
+    }
+    fun buildBombMessage(messageId: String, chatRoomId: String): ChatBombMessage {
+        return ChatBombMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            text = "text",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            expiredAt = LocalDateTime.now().plusDays(1)
         )
     }
 }

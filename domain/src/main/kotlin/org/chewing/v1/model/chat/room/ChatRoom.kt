@@ -24,7 +24,7 @@ data class ChatRoom(
             room: Room,
             chatLog: ChatLog
         ): ChatRoom {
-            when(chatLog){
+            when (chatLog) {
                 is ChatNormalLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
@@ -38,6 +38,7 @@ data class ChatRoom(
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
+
                 is ChatReplyLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
@@ -51,6 +52,7 @@ data class ChatRoom(
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
+
                 is ChatFileLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
@@ -64,6 +66,7 @@ data class ChatRoom(
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
+
                 is ChatInviteLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
@@ -77,12 +80,27 @@ data class ChatRoom(
                         chatRoomMemberInfos = room.chatRoomMemberInfos
                     )
                 }
+
                 is ChatLeaveLog -> {
                     return ChatRoom(
                         chatRoomId = room.chatRoomId,
                         favorite = room.favorite,
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = "",
+                        latestMessageTime = chatLog.timestamp,
+                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        latestSeqNumber = chatLog.number.sequenceNumber,
+                        latestPage = chatLog.number.page,
+                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                    )
+                }
+
+                is ChatBombLog -> {
+                    return ChatRoom(
+                        chatRoomId = room.chatRoomId,
+                        favorite = room.favorite,
+                        groupChatRoom = room.groupChatRoom,
+                        latestMessage = chatLog.text,
                         latestMessageTime = chatLog.timestamp,
                         totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
                         latestSeqNumber = chatLog.number.sequenceNumber,

@@ -11,6 +11,7 @@ import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 
 @Service
@@ -74,10 +75,18 @@ class ChatLogService(
         }
     }
 
+    fun bombingMessage(chatRoomId: String, userId: String, text: String, expiredAt: LocalDateTime): ChatBombMessage {
+        val number = chatFinder.findNextNumber(chatRoomId)
+        val chatMessage = chatGenerator.generateBombMessage(chatRoomId, userId, number, text, expiredAt)
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
+    }
+
     fun getLatestChat(chatRoomIds: List<String>): List<ChatLog> {
         val chatNumbers = chatFinder.findCurrentNumbers(chatRoomIds)
         return chatReader.readLatestMessages(chatNumbers)
     }
+
     fun getChatLog(chatRoomId: String, page: Int): List<ChatLog> {
         return chatReader.readChatLog(chatRoomId, page)
     }
