@@ -25,7 +25,6 @@ internal class ChatRoomEntity(
         }
     }
 
-    // ChatRoomEntity -> ChatRoom 변환 메서드
     fun toChatRoomInfo(): ChatRoomInfo {
         return ChatRoomInfo.of(
             chatRoomId = this.chatRoomId,

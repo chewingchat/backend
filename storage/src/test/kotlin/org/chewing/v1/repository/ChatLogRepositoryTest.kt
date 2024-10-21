@@ -2,7 +2,6 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.MongoContextTest
 import org.chewing.v1.model.chat.log.*
-import org.chewing.v1.model.chat.message.ChatNormalMessage
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
 import org.chewing.v1.repository.chat.ChatLogRepositoryImpl
 import org.chewing.v1.repository.support.ChatMessageProvider
@@ -119,6 +118,24 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
+    fun `폭탄 채팅 읽기 - 존재함`(){
+        val messageId = "testMessageId16"
+        val chatRoomId = "testRoomId16"
+        val chatMessage = ChatMessageProvider.buildBombMessage(messageId, chatRoomId)
+        mongoDataGenerator.chatLogEntityData(chatMessage)
+        val chatLog = chatLogRepositoryImpl.readChatMessage(messageId) as ChatBombLog
+        assert(chatLog.messageId == messageId)
+        assert(chatLog.chatRoomId == chatRoomId)
+        assert(chatLog.senderId == chatMessage.senderId)
+        assert(chatLog.text == chatMessage.text)
+        assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
+        assert(chatLog.number.page == chatMessage.number.page)
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.type == ChatLogType.BOMB)
+        assert(chatLog.expiredAt.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.expiredAt.truncatedTo(ChronoUnit.MILLIS)));
+    }
+
+    @Test
     fun `채팅로그 리스트 읽기`(){
         val chatRoomId = "testRoomId6"
         val chatMessage1 = ChatMessageProvider.buildNormalMessage("testMessageId6", chatRoomId)
@@ -139,6 +156,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLogs[3] is ChatFileLog)
         assert(chatLogs[4] is ChatReplyLog)
     }
+
 
     @Test
     fun `일반 채팅로그 삭제`(){

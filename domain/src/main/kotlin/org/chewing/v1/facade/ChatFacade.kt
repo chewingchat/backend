@@ -2,8 +2,10 @@ package org.chewing.v1.facade
 
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.service.chat.ChatLogService
+import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.notification.NotificationService
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class ChatFacade(
@@ -27,6 +29,11 @@ class ChatFacade(
 
     fun processReply(chatRoomId: String, userId: String, parentMessageId: String, text: String) {
         val chatMessage = chatLogService.replyMessage(chatRoomId, userId, parentMessageId, text)
+        notificationService.handleMessagesNotification(chatRoomId, userId, chatMessage)
+    }
+
+    fun processBombing(chatRoomId: String, userId: String, text: String, expiredAt: LocalDateTime) {
+        val chatMessage = chatLogService.bombingMessage(chatRoomId, userId, text,expiredAt)
         notificationService.handleMessagesNotification(chatRoomId, userId, chatMessage)
     }
 
