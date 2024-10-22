@@ -30,5 +30,8 @@ class WebSocketConfig(
             .setAllowedOrigins("*") // 모든 출처 허용
             .addInterceptors(stompHandshakeInterceptor)
             .withSockJS() // SockJS 지원 추가
+        registry.addEndpoint("/ws-stomp")
+            .setAllowedOrigins("*") // 모든 출처 허용
+            .addInterceptors(stompHandshakeInterceptor)
     }
 }

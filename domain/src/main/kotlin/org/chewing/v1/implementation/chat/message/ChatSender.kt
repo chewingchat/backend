@@ -1,9 +1,6 @@
 package org.chewing.v1.implementation.chat.message
 
 import org.chewing.v1.external.ExternalChatClient
-import org.chewing.v1.external.ExternalNotificationClient
-import org.chewing.v1.implementation.WebSocketProvider
-import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.ChatMessage
 import org.springframework.stereotype.Component
 

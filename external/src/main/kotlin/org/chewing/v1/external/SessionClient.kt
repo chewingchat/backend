@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
 @Component
-class LocalCacheManager {
+class SessionClient {
 
     private val cache: Cache<String, MutableList<String>> = Caffeine.newBuilder()
         .expireAfterWrite(1, TimeUnit.DAYS)

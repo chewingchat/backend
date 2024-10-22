@@ -1,6 +1,6 @@
 package org.chewing.v1.controller.chat
 
-import org.chewing.v1.dto.request.chat.message.ChatReadDto
+import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.model.chat.message.ChatBombMessage
 import org.chewing.v1.model.chat.message.ChatNormalMessage
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile
 class ChatController(
     private val chatFacade: ChatFacade
 ) {
-    @MessageMapping("/chat/pub/read")
+    @MessageMapping("/chat/read")
     fun readMessage(
         message: ChatReadDto,
         accessor: SimpMessageHeaderAccessor
@@ -29,40 +29,40 @@ class ChatController(
         chatFacade.processRead(message.chatRoomId, userId)
     }
 
-    @MessageMapping("/chat/pub/delete")
+    @MessageMapping("/chat/delete")
     fun deleteMessage(
-        message: ChatDeleteMessage,
+        message: ChatDeleteDto,
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
         chatFacade.processDelete(message.chatRoomId, userId, message.messageId)
     }
 
-    @MessageMapping("/chat/pub/reply")
+    @MessageMapping("/chat/reply")
     fun replyMessage(
-        message: ChatReplyMessage,
+        message: ChatReplyDto,
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.text)
+        chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.message)
     }
 
-    @MessageMapping("/chat/pub/bomb")
+    @MessageMapping("/chat/bomb")
     fun bombMessage(
-        message: ChatBombMessage,
+        message: ChatBombDto,
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatFacade.processBombing(message.chatRoomId, userId, message.text, message.expiredAt)
+        chatFacade.processBombing(message.chatRoomId, userId, message.message, message.toExpireAt())
     }
 
-    @MessageMapping("/chat/pub/chat")
+    @MessageMapping("/chat/common")
     fun chatMessage(
-        message: ChatNormalMessage,
+        message: ChatCommonDto,
         accessor: SimpMessageHeaderAccessor
     ) {
         val userId = accessor.sessionAttributes!!["userId"] as String
-        chatFacade.processChat(message.chatRoomId, userId, message.text)
+        chatFacade.processCommon(message.chatRoomId, userId, message.message)
     }
 
     @PostMapping("/api/chat/file/upload")

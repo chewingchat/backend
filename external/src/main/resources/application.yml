@@ -1,0 +1,3 @@
+fcm:
+  api:
+    url: https://fcm.googleapis.com/fcm/send

@@ -15,32 +15,19 @@ class NotificationGenerator {
         sourceUser: User,
         pushTokens: List<PushToken>,
         feedInfo: FeedInfo
-    ): Pair<List<Notification>, List<Notification>> {
-        val groupedByProvider = pushTokens.groupBy { it.device.provider }
-        val fcmList = groupedByProvider[PushToken.Provider.FCM] ?: emptyList()
-        val apnsList = groupedByProvider[PushToken.Provider.APNS] ?: emptyList()
-        val notificationFcmList = fcmList.map {
+    ): List<Notification> {
+        return pushTokens.map {
             Notification.makeCommentNotification(sourceUser, it, feedInfo)
         }
-        val notificationApnsList = apnsList.map {
-            Notification.makeCommentNotification(sourceUser, it, feedInfo)
-        }
-        return Pair(notificationFcmList, notificationApnsList)
     }
+
     fun generateMessageNotification(
         sourceUser: User,
         pushTokens: List<PushToken>,
         message: ChatMessage
-    ): Pair<List<Notification>, List<Notification>> {
-        val groupedByProvider = pushTokens.groupBy { it.device.provider }
-        val fcmList = groupedByProvider[PushToken.Provider.FCM] ?: emptyList()
-        val apnsList = groupedByProvider[PushToken.Provider.APNS] ?: emptyList()
-        val notificationFcmList = fcmList.map {
+    ): List<Notification> {
+        return pushTokens.map {
             Notification.makeMessageNotification(sourceUser, it, message)
         }
-        val notificationApnsList = apnsList.map {
-            Notification.makeMessageNotification(sourceUser, it, message)
-        }
-        return Pair(notificationFcmList, notificationApnsList)
     }
 }
