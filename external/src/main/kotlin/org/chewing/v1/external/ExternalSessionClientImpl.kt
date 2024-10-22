@@ -3,17 +3,17 @@ package org.chewing.v1.external
 import org.springframework.stereotype.Component
 
 @Component
-class ExternalWebSocketClientImpl(
-    private val localCacheManager: LocalCacheManager
-): ExternalWebSocketClient {
+class ExternalSessionClientImpl(
+    private val sessionClient: SessionClient
+): ExternalSessionClient {
     override fun connect(userId: String, sessionId: String){
-        localCacheManager.put(userId, sessionId)
+        sessionClient.put(userId, sessionId)
     }
     override fun readAll(userId: String): List<String> {
-        return localCacheManager.get(userId)
+        return sessionClient.get(userId)
     }
 
     override fun unConnect(userId: String, sessionId: String) {
-        localCacheManager.removeValue(userId, sessionId)
+        sessionClient.removeValue(userId, sessionId)
     }
 }

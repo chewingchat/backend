@@ -1,6 +1,7 @@
 package org.chewing.v1.security
 
 import org.chewing.v1.config.SecurityConfig
+import org.chewing.v1.config.WebConfig
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(SecurityConfig::class)
+@Import(WebConfig::class, SecurityConfig::class)
 @AutoConfigureMockMvc
 class SpringSecurityTest(
     @Autowired private val mockMvc: MockMvc,

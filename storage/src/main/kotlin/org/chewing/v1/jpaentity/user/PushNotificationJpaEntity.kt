@@ -39,7 +39,7 @@ internal class PushNotificationJpaEntity(
     fun toPushToken(): PushToken {
         return PushToken.of(
             pushTokenId = pushId,
-            appToken = appToken,
+            fcmToken = appToken,
             deviceId = deviceId,
             provider = provider
         )

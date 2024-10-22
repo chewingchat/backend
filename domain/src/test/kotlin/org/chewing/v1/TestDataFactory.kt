@@ -87,7 +87,7 @@ object TestDataFactory {
     }
 
     fun createDevice(): PushToken.Device {
-        return PushToken.Device.of("deviceId", PushToken.Provider.FCM)
+        return PushToken.Device.of("deviceId", PushToken.Provider.ANDROID)
     }
 
     fun createJwtToken(): JwtToken {

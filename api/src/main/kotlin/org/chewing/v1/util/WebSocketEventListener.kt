@@ -1,7 +1,7 @@
 package org.chewing.v1.util
 
 import mu.KotlinLogging
-import org.chewing.v1.implementation.WebSocketProvider
+import org.chewing.v1.implementation.SessionProvider
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.stereotype.Component
@@ -12,7 +12,7 @@ private val logger = KotlinLogging.logger { }
 
 @Component
 class WebSocketEventListener(
-    private val webSocketProvider: WebSocketProvider
+    private val sessionProvider: SessionProvider
 ) {
 
     @EventListener
@@ -21,7 +21,7 @@ class WebSocketEventListener(
         val sessionId = accessor.sessionId ?: return
         val userId = accessor.sessionAttributes?.get("userId") as? String ?: return
 
-        webSocketProvider.connect(userId, sessionId)
+        sessionProvider.connect(userId, sessionId)
         logger.info("세션 연결됨: userId=$userId, sessionId=$sessionId")
     }
 
@@ -31,7 +31,7 @@ class WebSocketEventListener(
         val sessionId = accessor.sessionId ?: return
         val userId = accessor.sessionAttributes?.get("userId") as? String ?: return
 
-        webSocketProvider.unConnect(userId, sessionId)
+        sessionProvider.unConnect(userId, sessionId)
         logger.info("세션 해제됨: userId=$userId, sessionId=$sessionId")
     }
 }
