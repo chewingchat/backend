@@ -3,31 +3,31 @@ package org.chewing.v1.external
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.stereotype.Component
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 @Component
 class SessionClient {
 
-    private val cache: Cache<String, MutableList<String>> = Caffeine.newBuilder()
-        .expireAfterWrite(1, TimeUnit.DAYS)
-        .maximumSize(100)
-        .build()
+    private val sessions = ConcurrentHashMap<String, MutableSet<String>>()
 
-    fun get(key: String): List<String> {
-        return cache.getIfPresent(key) ?: emptyList()
+    fun addSession(userId: String, sessionId: String) {
+        sessions.computeIfAbsent(userId) { ConcurrentHashMap.newKeySet() }.add(sessionId)
     }
 
-    fun put(key: String, value: String) {
-        val values = cache.getIfPresent(key) ?: mutableListOf()
-        values.add(value)
-        cache.put(key, values)
+    fun removeSession(userId: String, sessionId: String) {
+        sessions[userId]?.remove(sessionId)
+        if (sessions[userId]?.isEmpty() == true) {
+            sessions.remove(userId)
+        }
     }
 
-    fun remove(key: String) {
-        cache.invalidate(key)
+
+    fun isUserOnline(userId: String): Boolean {
+        return sessions.containsKey(userId)
     }
 
-    fun removeValue(key: String, value: String) {
-        cache.getIfPresent(key)?.remove(value)
+    fun getSessionId(userId: String): String {
+        return sessions[userId]?.firstOrNull() ?: ""
     }
 }
