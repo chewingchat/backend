@@ -30,30 +30,26 @@ class NotificationService(
 
     // sender에게 메시지 알림
     fun handleOwnedMessageNotification(userId: String, chatMessage: ChatMessage) {
-        val sessionIds = sessionProvider.readAll(userId)
-        chatSender.sendChat(chatMessage, sessionIds)
+        chatSender.sendChat(chatMessage, userId)
     }
 
-    fun handleMessagesNotification(userId: String, chatMessage: ChatMessage) {
-        // 1. memberId와 session을 함께 가져옴
-        val members = chatRoomReader.readChatRoomFriendMember(chatMessage.chatRoomId, userId)
-        val (activeSessions, noActiveSessions) = members.map { it.memberId to sessionProvider.readAll(it.memberId) }
-            .partition { (_, sessions) -> sessions.isNotEmpty() }
+    fun handleMessagesNotification(senderId: String, chatMessage: ChatMessage) {
+        val members = chatRoomReader.readChatRoomFriendMember(chatMessage.chatRoomId, senderId)
+        val memberIds = members.map { it.memberId }
 
-        // 2. activeUserSessions 추출
-        val activeUserSessions = activeSessions.flatMap { (_, sessions) -> sessions }
+        chatSender.sendsChat(chatMessage, memberIds)
 
-        // 3. 세션이 있는 사용자들에게 메시지 전송
-        chatSender.sendChat(chatMessage, activeUserSessions)
-
-        // 4. 세션이 없는 사용자들에게 푸시 알림 전송
-        noActiveSessions.forEach { (memberId, _) ->  // 세션 대신 memberId만 사용
-            val user = userReader.read(memberId)  // memberId를 사용하여 사용자 정보 조회
-            val pushTokens = userReader.readsPushToken(memberId)  // memberId로 푸시 토큰 조회
-            val commentNotificationList =
-                notificationGenerator.generateMessageNotification(user, pushTokens, chatMessage)
-            notificationSender.send(commentNotificationList)
+        memberIds.forEach { memberId ->
+            // 온라인 상태 확인
+            if (!sessionProvider.isOnline(memberId)) {
+                // 오프라인 유저에게 푸시 알림 전송
+                val user = userReader.read(memberId)
+                val pushTokens = userReader.readsPushToken(memberId)
+                val notificationList = notificationGenerator.generateMessageNotification(user, pushTokens, chatMessage)
+                notificationSender.send(notificationList)
+            }
         }
     }
+
 
 }

@@ -11,8 +11,12 @@ class SessionProvider(
         externalSessionClient.connect(userId, sessionId)
     }
 
-    fun readAll(userId: String): List<String> {
-        return externalSessionClient.readAll(userId)
+    fun getSessionId(userId: String): String {
+        return externalSessionClient.getSessionId(userId)
+    }
+
+    fun isOnline(userId: String): Boolean {
+        return externalSessionClient.isOnline(userId)
     }
 
     fun unConnect(userId: String, sessionId: String) {

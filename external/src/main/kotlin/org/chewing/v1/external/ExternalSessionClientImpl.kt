@@ -7,13 +7,17 @@ class ExternalSessionClientImpl(
     private val sessionClient: SessionClient
 ): ExternalSessionClient {
     override fun connect(userId: String, sessionId: String){
-        sessionClient.put(userId, sessionId)
+        sessionClient.addSession(userId, sessionId)
     }
-    override fun readAll(userId: String): List<String> {
-        return sessionClient.get(userId)
+    override fun isOnline(userId: String): Boolean {
+        return sessionClient.isUserOnline(userId)
+    }
+
+    override fun getSessionId(userId: String): String {
+        return sessionClient.getSessionId(userId)
     }
 
     override fun unConnect(userId: String, sessionId: String) {
-        sessionClient.removeValue(userId, sessionId)
+        sessionClient.removeSession(userId, sessionId)
     }
 }

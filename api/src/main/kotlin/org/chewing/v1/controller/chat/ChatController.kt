@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.security.Principal
 
 @Controller
 class ChatController(
@@ -23,45 +24,45 @@ class ChatController(
     @MessageMapping("/chat/read")
     fun readMessage(
         message: ChatReadDto,
-        accessor: SimpMessageHeaderAccessor
+        principal: Principal
     ) {
-        val userId = accessor.sessionAttributes!!["userId"] as String
+        val userId = principal.name
         chatFacade.processRead(message.chatRoomId, userId)
     }
 
     @MessageMapping("/chat/delete")
     fun deleteMessage(
         message: ChatDeleteDto,
-        accessor: SimpMessageHeaderAccessor
+        principal: Principal
     ) {
-        val userId = accessor.sessionAttributes!!["userId"] as String
+        val userId = principal.name
         chatFacade.processDelete(message.chatRoomId, userId, message.messageId)
     }
 
     @MessageMapping("/chat/reply")
     fun replyMessage(
         message: ChatReplyDto,
-        accessor: SimpMessageHeaderAccessor
+        principal: Principal
     ) {
-        val userId = accessor.sessionAttributes!!["userId"] as String
+        val userId = principal.name
         chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.message)
     }
 
     @MessageMapping("/chat/bomb")
     fun bombMessage(
         message: ChatBombDto,
-        accessor: SimpMessageHeaderAccessor
+        principal: Principal
     ) {
-        val userId = accessor.sessionAttributes!!["userId"] as String
+        val userId = principal.name
         chatFacade.processBombing(message.chatRoomId, userId, message.message, message.toExpireAt())
     }
 
     @MessageMapping("/chat/common")
     fun chatMessage(
         message: ChatCommonDto,
-        accessor: SimpMessageHeaderAccessor
+        principal: Principal
     ) {
-        val userId = accessor.sessionAttributes!!["userId"] as String
+        val userId = principal.name
         chatFacade.processCommon(message.chatRoomId, userId, message.message)
     }
 
