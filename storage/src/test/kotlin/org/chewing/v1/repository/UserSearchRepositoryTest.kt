@@ -1,6 +1,6 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jpaentity.friend.UserSearchJpaEntity
 import org.chewing.v1.jparepository.user.UserSearchJpaRepository
 import org.chewing.v1.repository.user.UserSearchRepositoryImpl
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 
-class UserSearchRepositoryTest : DbContextTest() {
+class UserSearchRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var userSearchJpaRepository: UserSearchJpaRepository
 

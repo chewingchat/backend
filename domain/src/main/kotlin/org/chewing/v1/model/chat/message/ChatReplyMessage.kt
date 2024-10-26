@@ -1,5 +1,6 @@
 package org.chewing.v1.model.chat.message
 
+import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
@@ -16,7 +17,7 @@ class ChatReplyMessage private constructor(
     val parentMessagePage: Int,
     val parentMessageText: String,
     val parentSeqNumber: Int,
-    val parentMessageType: MessageType
+    val parentMessageType: ChatLogType
 ) : ChatMessage() {
     companion object {
         fun of(
@@ -31,7 +32,7 @@ class ChatReplyMessage private constructor(
             text: String,
             parentMessageText: String,
             type: MessageType,
-            parentMessageType: MessageType
+            parentMessageType: ChatLogType
         ): ChatReplyMessage {
             return ChatReplyMessage(
                 messageId = messageId,

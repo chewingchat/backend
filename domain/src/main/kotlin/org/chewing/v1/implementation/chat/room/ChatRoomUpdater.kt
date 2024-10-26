@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 @Component
 class ChatRoomUpdater(
     private val chatRoomMemberRepository: ChatRoomMemberRepository,
-    private val chatRoomRepository: ChatRoomRepository
 ) {
     fun updateUnDelete(chatRoomId: String, userId: String) {
         chatRoomMemberRepository.updateUnDelete(chatRoomId, userId)
@@ -17,8 +16,5 @@ class ChatRoomUpdater(
 
     fun updateRead(userId: String, number: ChatNumber) {
         chatRoomMemberRepository.updateRead(userId, number)
-    }
-    fun updateLatestMessage(chatMessage: ChatMessage){
-        chatRoomRepository
     }
 }

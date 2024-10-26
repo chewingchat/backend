@@ -90,7 +90,7 @@ class AuthControllerTest(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "apns"
+            "provider" to "ios"
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
@@ -121,7 +121,7 @@ class AuthControllerTest(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "FCM"
+            "provider" to "android"
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)

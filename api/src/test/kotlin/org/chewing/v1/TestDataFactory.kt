@@ -27,7 +27,7 @@ object TestDataFactory {
     }
 
     fun createPushToken(): PushToken {
-        return PushToken.of("pushTokenId", "appToken", PushToken.Provider.FCM, "deviceId")
+        return PushToken.of("pushTokenId", "appToken", PushToken.Provider.ANDROID, "deviceId")
     }
 
     fun createEmailAddress(): String {
@@ -43,7 +43,7 @@ object TestDataFactory {
     }
 
     fun createDevice(): PushToken.Device {
-        return PushToken.Device.of("deviceId", PushToken.Provider.FCM)
+        return PushToken.Device.of("deviceId", PushToken.Provider.ANDROID)
     }
 
     fun createJwtToken(): JwtToken {

@@ -1,5 +1,6 @@
 package org.chewing.v1.dto.response.chat
 
+import org.chewing.v1.model.chat.log.ChatLog
 import org.chewing.v1.model.chat.message.ChatMessage
 
 data class ChatLogResponse(
@@ -8,7 +9,7 @@ data class ChatLogResponse(
     val chatMessages: List<ChatLogMessageResponse>
 ) {
     companion object {
-        fun from(list: List<ChatMessage>): ChatLogResponse {
+        fun from(list: List<ChatLog>): ChatLogResponse {
             return ChatLogResponse(
                 chatRoomId = list.first().chatRoomId,
                 currentPage = list.first().number.page,

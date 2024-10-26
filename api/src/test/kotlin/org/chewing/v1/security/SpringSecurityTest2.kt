@@ -3,6 +3,7 @@ package org.chewing.v1.security
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.SecurityConfig
+import org.chewing.v1.config.WebConfig
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.model.auth.LoginInfo
@@ -22,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(SecurityConfig::class)
+@Import(WebConfig::class, SecurityConfig::class)
 @AutoConfigureMockMvc
 class SpringSecurityTest2(
     @Autowired
@@ -31,7 +32,6 @@ class SpringSecurityTest2(
     private val objectMapper: ObjectMapper,
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
     @Autowired private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
-
 ) {
 
     @MockBean
@@ -81,7 +81,7 @@ class SpringSecurityTest2(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "apns"
+            "provider" to "IOS"
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
@@ -105,7 +105,7 @@ class SpringSecurityTest2(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "FCM"
+            "provider" to "ANDROID"
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)

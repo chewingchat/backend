@@ -10,5 +10,5 @@ interface ChatSequenceRepository {
     // 시퀀스 증가 로직 -> 없다면 생성
     fun updateSequenceIncrement(chatRoomId: String): ChatSequenceNumber
     fun updateSequenceIncrements(chatRoomIds: List<String>): List<ChatSequenceNumber>
-    fun readSeqNumbers(chatRoomIds: List<String>): List<ChatSequenceNumber>
+    fun readCurrentSeqNumbers(chatRoomIds: List<String>): List<ChatSequenceNumber>
 }

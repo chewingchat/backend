@@ -1,19 +1,19 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.repository.support.TestDataGenerator
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.repository.support.JpaDataGenerator
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.auth.PhoneJpaRepository
 import org.chewing.v1.repository.auth.PhoneRepositoryImpl
 import org.chewing.v1.repository.support.PhoneProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class PhoneRepositoryTest : DbContextTest() {
+class PhoneRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var phoneJpaRepository: PhoneJpaRepository
 
     @Autowired
-    private lateinit var testDataGenerator: TestDataGenerator
+    private lateinit var jpaDataGenerator: JpaDataGenerator
 
     private val phoneRepositoryImpl: PhoneRepositoryImpl by lazy {
         PhoneRepositoryImpl(phoneJpaRepository)
@@ -22,7 +22,7 @@ class PhoneRepositoryTest : DbContextTest() {
     @Test
     fun `전화번호 조회에 성공해야 한다`() {
         val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-        testDataGenerator.phoneEntityData(phoneNumber)
+        jpaDataGenerator.phoneEntityData(phoneNumber)
 
         val result = phoneRepositoryImpl.read(phoneNumber)
 
@@ -34,7 +34,7 @@ class PhoneRepositoryTest : DbContextTest() {
     @Test
     fun `전화번호 조회에 실패해야 한다`() {
         val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-        testDataGenerator.phoneEntityData(phoneNumber)
+        jpaDataGenerator.phoneEntityData(phoneNumber)
 
         val wrongPhoneNumber = PhoneProvider.buildWrongPhoneNumber()
 
@@ -46,7 +46,7 @@ class PhoneRepositoryTest : DbContextTest() {
     @Test
     fun `전화번호가 존재 한다면 저장하지 않는다`() {
         val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-        val oldPhone = testDataGenerator.phoneEntityData(phoneNumber)
+        val oldPhone = jpaDataGenerator.phoneEntityData(phoneNumber)
 
         phoneRepositoryImpl.appendIfNotExists(phoneNumber)
         val result = phoneJpaRepository.findByNumberAndCountryCode(phoneNumber.number, phoneNumber.number)
@@ -68,7 +68,7 @@ class PhoneRepositoryTest : DbContextTest() {
     @Test
     fun `전화번호를 전화번호 아이디로 읽는다`() {
         val phoneNumber = PhoneProvider.buildNormalPhoneNumber()
-        val phone = testDataGenerator.phoneEntityData(phoneNumber)
+        val phone = jpaDataGenerator.phoneEntityData(phoneNumber)
 
         val result = phoneRepositoryImpl.readById(phone.phoneId)
 

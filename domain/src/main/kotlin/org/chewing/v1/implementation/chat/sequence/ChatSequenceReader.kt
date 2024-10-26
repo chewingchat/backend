@@ -12,6 +12,6 @@ class ChatSequenceReader(
         return chatSequenceRepository.readCurrent(chatRoomId)
     }
     fun readSeqNumbers(chatRoomIds: List<String>): List<ChatSequenceNumber> {
-        return chatSequenceRepository.readSeqNumbers(chatRoomIds)
+        return chatSequenceRepository.readCurrentSeqNumbers(chatRoomIds)
     }
 }

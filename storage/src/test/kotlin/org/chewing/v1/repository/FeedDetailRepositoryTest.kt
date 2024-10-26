@@ -1,19 +1,19 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedDetailJpaRepository
 import org.chewing.v1.repository.feed.FeedDetailRepositoryImpl
 import org.chewing.v1.repository.support.MediaProvider
-import org.chewing.v1.repository.support.TestDataGenerator
+import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class FeedDetailRepositoryTest : DbContextTest() {
+class FeedDetailRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var feedDetailJpaRepository: FeedDetailJpaRepository
 
     @Autowired
-    private lateinit var testDataGenerator: TestDataGenerator
+    private lateinit var jpaDataGenerator: JpaDataGenerator
 
     private val feedDetailRepositoryImpl: FeedDetailRepositoryImpl by lazy {
         FeedDetailRepositoryImpl(feedDetailJpaRepository)
@@ -32,7 +32,7 @@ class FeedDetailRepositoryTest : DbContextTest() {
     @Test
     fun `피드 상세를 Index 기준으로 순서대로 조회해야 한다`() {
         val feedId = "feedId2"
-        val feedDetails = testDataGenerator.feedDetailEntityDataAsc(feedId)
+        val feedDetails = jpaDataGenerator.feedDetailEntityDataAsc(feedId)
         val result = feedDetailRepositoryImpl.read(feedId)
         assert(result.isNotEmpty())
         assert(result.size == feedDetails.size)
@@ -44,8 +44,8 @@ class FeedDetailRepositoryTest : DbContextTest() {
     @Test
     fun `피드 상세를 Index 기준으로 첫번째만 조회해야 한다`() {
         val feedIds = listOf("feedId3", "feedId4")
-        val feedDetails = testDataGenerator.feedDetailEntityDataAsc("feedId3")
-        val feedDetails2 = testDataGenerator.feedDetailEntityDataAsc("feedId4")
+        jpaDataGenerator.feedDetailEntityDataAsc("feedId3")
+        jpaDataGenerator.feedDetailEntityDataAsc("feedId4")
         val result = feedDetailRepositoryImpl.readsFirstIndex(feedIds)
         assert(result.isNotEmpty())
         assert(result.size == feedIds.size)
@@ -57,8 +57,8 @@ class FeedDetailRepositoryTest : DbContextTest() {
     @Test
     fun `피드 상세를 삭제해야 한다`() {
         val feedIds = listOf("feedId5", "feedId6")
-        val feedDetails = testDataGenerator.feedDetailEntityDataAsc("feedId5")
-        val feedDetails2 = testDataGenerator.feedDetailEntityDataAsc("feedId6")
+        val feedDetails = jpaDataGenerator.feedDetailEntityDataAsc("feedId5")
+        val feedDetails2 = jpaDataGenerator.feedDetailEntityDataAsc("feedId6")
         val result = feedDetailRepositoryImpl.removes(feedIds)
         assert(result.isNotEmpty())
         assert(result.size == feedDetails.size + feedDetails2.size)

@@ -1,5 +1,8 @@
 package org.chewing.v1.mongoentity
 
+import org.chewing.v1.model.chat.log.ChatInviteLog
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatInviteMessage
 import org.chewing.v1.model.chat.message.ChatMessage
@@ -20,7 +23,7 @@ internal class ChatInviteMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
     senderId = senderId,
-    type = MessageType.CHAT,
+    type = ChatLogType.INVITE,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime
@@ -41,14 +44,15 @@ internal class ChatInviteMongoEntity(
         }
     }
 
-    override fun toChatMessage(): ChatMessage {
-        return ChatInviteMessage.of(
+    override fun toChatLog(): ChatLog {
+        return ChatInviteLog.of(
             messageId = messageId,
             chatRoomId = chatRoomId,
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            targetUserId = targetUserId
+            targetUserId = targetUserId,
+            type = type
         )
     }
 }

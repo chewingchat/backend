@@ -1,5 +1,8 @@
 package org.chewing.v1.mongoentity
 
+import org.chewing.v1.model.chat.log.ChatLeaveLog
+import org.chewing.v1.model.chat.log.ChatLog
+import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatLeaveMessage
 import org.chewing.v1.model.chat.message.ChatMessage
@@ -19,7 +22,7 @@ internal class ChatLeaveMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
     senderId = senderId,
-    type = MessageType.LEAVE,
+    type = ChatLogType.LEAVE,
     seqNumber = seqNumber,
     page = page,
     sendTime = sendTime
@@ -40,14 +43,14 @@ internal class ChatLeaveMongoEntity(
         }
     }
 
-    override fun toChatMessage(): ChatMessage {
-        return ChatLeaveMessage.of(
+    override fun toChatLog(): ChatLog {
+        return ChatLeaveLog.of(
             messageId = messageId,
             chatRoomId = chatRoomId,
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-
-            )
+            type = type
+        )
     }
 }

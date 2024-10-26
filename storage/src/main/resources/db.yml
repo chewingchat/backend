@@ -16,12 +16,18 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
         default_schema: chewing
   h2:
     console:
       enabled: true
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.1.0
+
 chewing:
   datasource:
     main:
@@ -31,6 +37,7 @@ chewing:
       pool-name: main-db-pool
       data-source-properties:
         rewriteBatchedStatements: true
+
 
 ---
 

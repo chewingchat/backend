@@ -28,10 +28,6 @@ internal class ChatRoomMemberRepositoryImpl(
         return chatRoomMemberJpaRepository.findByChatRoomIdIn(chatRoomIds).map { it.toRoomMember() }
     }
 
-    override fun saveChatRoomMember(chatRoomId: String, userId: String) {
-        chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, chatRoomId))
-    }
-
     override fun changeChatRoomFavorite(chatRoomId: String, userId: String, isFavorite: Boolean) {
         chatRoomMemberJpaRepository.findByChatRoomIdAndUserId(chatRoomId, userId)?.let {
             it.updateFavorite(isFavorite)
@@ -46,15 +42,6 @@ internal class ChatRoomMemberRepositoryImpl(
             it.updateDelete()
         }
         chatRoomMemberJpaRepository.saveAll(entities)
-    }
-
-    override fun appendChatRoomMember(chatRoomId: String, userId: String) {
-        chatRoomMemberJpaRepository.findByUserIdAndChatRoomId(userId, chatRoomId)?.let { entity ->
-            entity.updateUnDelete()
-            chatRoomMemberJpaRepository.save(entity)
-        } ?: run {
-            chatRoomMemberJpaRepository.save(ChatRoomMemberEntity.generate(userId, chatRoomId))
-        }
     }
 
     override fun readPersonalChatRoomId(userId: String, friendId: String): String? {

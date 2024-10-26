@@ -1,7 +1,6 @@
 package org.chewing.v1.service.feed
 
 import org.chewing.v1.implementation.feed.comment.*
-import org.chewing.v1.implementation.notification.NotificationHandler
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.stereotype.Service
@@ -12,7 +11,6 @@ class FeedCommentService(
     private val commentHandler: CommentHandler,
     private val commentRemover: CommentRemover,
     private val commentValidator: CommentValidator,
-    private val notificationHandler: NotificationHandler
 ) {
     fun remove(userId: String, commentIds: List<String>, target: FeedTarget) {
         commentValidator.isOwned(userId, commentIds)
@@ -25,7 +23,6 @@ class FeedCommentService(
 
     fun comment(userId: String, feedId: String, comment: String, target: FeedTarget) {
         commentHandler.handleComment(userId, feedId, comment, target)
-        notificationHandler.handleCommentNotification(userId, feedId)
     }
 
     fun getOwnedComment(userId: String): List<CommentInfo> {

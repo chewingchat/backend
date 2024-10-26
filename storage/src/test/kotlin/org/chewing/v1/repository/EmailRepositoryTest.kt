@@ -1,7 +1,7 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.repository.support.TestDataGenerator
-import org.chewing.v1.config.DbContextTest
+import org.chewing.v1.repository.support.JpaDataGenerator
+import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.auth.EmailJpaRepository
 import org.chewing.v1.repository.auth.EmailRepositoryImpl
 import org.junit.jupiter.api.Test
@@ -9,13 +9,13 @@ import org.chewing.v1.repository.support.EmailProvider
 import org.springframework.beans.factory.annotation.Autowired
 
 internal class EmailRepositoryTest(
-) : DbContextTest() {
+) : JpaContextTest() {
 
     @Autowired
     private lateinit var emailJpaRepository: EmailJpaRepository
 
     @Autowired
-    private lateinit var testDataGenerator: TestDataGenerator
+    private lateinit var jpaDataGenerator: JpaDataGenerator
 
 
     private val emailRepositoryImpl: EmailRepositoryImpl by lazy {
@@ -25,7 +25,7 @@ internal class EmailRepositoryTest(
     @Test
     fun `이메일 조회에 성공해야 한다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
-        testDataGenerator.emailEntityData(emailAddress)
+        jpaDataGenerator.emailEntityData(emailAddress)
 
         val result = emailRepositoryImpl.read(emailAddress)
 
@@ -36,7 +36,7 @@ internal class EmailRepositoryTest(
     @Test
     fun `이메일 조회에 실패해야 한다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
-        testDataGenerator.emailEntityData(emailAddress)
+        jpaDataGenerator.emailEntityData(emailAddress)
 
         val wrongEmailAddress = EmailProvider.buildWrongEmailAddress()
 
@@ -49,7 +49,7 @@ internal class EmailRepositoryTest(
     fun `이메일이 존재 한다면 저장하지 않는다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
 
-        val oldEmail = testDataGenerator.emailEntityData(emailAddress)
+        val oldEmail = jpaDataGenerator.emailEntityData(emailAddress)
 
         val newEmailAddress = EmailProvider.buildNormalAddress()
 
@@ -75,7 +75,7 @@ internal class EmailRepositoryTest(
     fun `이메일을 이메일 아이디로 읽는다`() {
         val emailAddress = EmailProvider.buildNormalAddress()
 
-        val email = testDataGenerator.emailEntityData(emailAddress)
+        val email = jpaDataGenerator.emailEntityData(emailAddress)
 
         val result = emailRepositoryImpl.readById(email.emailId)
 

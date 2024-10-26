@@ -1,18 +1,23 @@
 package org.chewing.v1.implementation.chat.message
 
 import org.chewing.v1.external.ExternalChatClient
-import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.ChatMessage
+import org.chewing.v1.util.AsyncJobExecutor
 import org.springframework.stereotype.Component
 
 @Component
-class ChatSender(private val externalChatClient: ExternalChatClient) {
+class ChatSender(
+    private val externalChatClient: ExternalChatClient,
+    private val asyncJobExecutor: AsyncJobExecutor
+) {
 
-    fun sendChat(chatLog: ChatMessage, chatRoomMemberInfos : List<ChatRoomMemberInfo>) {
-        externalChatClient.sendMessage(chatLog)
+    fun sendsChat(chatLog: ChatMessage, userIds: List<String>) {
+        asyncJobExecutor.executeAsyncJobs(userIds) {
+            externalChatClient.sendMessage(chatLog, it)
+        }
     }
 
-    fun sendsChat(chatLogs: List<ChatMessage>) {
-        externalChatClient.sendMessages(chatLogs)
+    fun sendChat(chatLog: ChatMessage, userId: String) {
+        externalChatClient.sendMessage(chatLog, userId)
     }
 }

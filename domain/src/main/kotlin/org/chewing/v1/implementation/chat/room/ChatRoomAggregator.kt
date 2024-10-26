@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.chat.room
 
-import org.chewing.v1.model.chat.message.ChatMessage
+import org.chewing.v1.model.chat.log.ChatLog
 import org.chewing.v1.model.chat.room.ChatRoom
 import org.chewing.v1.model.chat.room.Room
 import org.springframework.stereotype.Component
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class ChatRoomAggregator {
     fun aggregateChatRoom(
         chatRooms: List<Room>,
-        latestMessages: List<ChatMessage>
+        latestMessages: List<ChatLog>
     ): List<ChatRoom> {
         val chatRoomMap = chatRooms.associateBy { it.chatRoomId }
         return latestMessages.mapNotNull {
@@ -17,7 +17,7 @@ class ChatRoomAggregator {
                 ?: return@mapNotNull null
             ChatRoom.of(
                 room = myChatRoom,
-                chatMessage = it
+                chatLog = it
             )
         }
     }

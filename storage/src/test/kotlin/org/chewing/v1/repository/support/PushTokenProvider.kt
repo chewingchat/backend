@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 object PushTokenProvider {
     fun buildDeviceNormal(): PushToken.Device {
-        return PushToken.Device.of("deviceId", PushToken.Provider.FCM)
+        return PushToken.Device.of("deviceId", PushToken.Provider.ANDROID)
     }
 
     fun buildAppTokenNormal(): String {
