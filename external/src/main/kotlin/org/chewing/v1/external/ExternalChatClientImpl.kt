@@ -10,19 +10,17 @@ import org.springframework.stereotype.Component
 
 @Component
 class ExternalChatClientImpl(
-    private val messagingTemplate: SimpMessagingTemplate,
-    private val objectMapper: ObjectMapper
+    private val messagingTemplate: SimpMessagingTemplate
 ) : ExternalChatClient {
     override fun sendMessage(chatMessage: ChatMessage, userId: String) {
 
         val headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE)
         headerAccessor.setLeaveMutable(true)
 
-
         messagingTemplate.convertAndSendToUser(
             userId,
             "/queue/chat/private",
-            TestMessage("1")
+            ChatMessageDto.from(chatMessage),
         )
     }
 }

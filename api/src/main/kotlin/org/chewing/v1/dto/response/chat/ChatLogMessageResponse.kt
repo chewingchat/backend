@@ -6,6 +6,7 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.model.chat.message.*
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 sealed class ChatLogMessageResponse {
     data class Reply(
@@ -17,7 +18,7 @@ sealed class ChatLogMessageResponse {
         val parentMessagePage: Int,
         val parentSeqNumber: Int,
         val parentMessageText: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
         val text: String
@@ -25,27 +26,30 @@ sealed class ChatLogMessageResponse {
 
     data class Delete(
         val messageId: String,
+        val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
     ) : ChatLogMessageResponse()
 
     data class Leave(
         val messageId: String,
+        val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
     ) : ChatLogMessageResponse()
 
     data class Invite(
         val messageId: String,
+        val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
     ) : ChatLogMessageResponse()
@@ -55,7 +59,7 @@ sealed class ChatLogMessageResponse {
         val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
         val files: List<MediaResponse>
@@ -66,7 +70,7 @@ sealed class ChatLogMessageResponse {
         val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
         val text: String
@@ -74,17 +78,21 @@ sealed class ChatLogMessageResponse {
 
     data class Bomb(
         val messageId: String,
+        val type: String,
         val chatRoomId: String,
         val senderId: String,
-        val timestamp: LocalDateTime,
+        val timestamp: String,
         val seqNumber: Int,
         val page: Int,
-        val expiredAt: LocalDateTime,
+        val expiredAt: String,
         val text: String
     ) : ChatLogMessageResponse()
 
     companion object {
         fun from(chatLog: ChatLog): ChatLogMessageResponse {
+            val formattedTime = chatLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+            val formattedExpiredTime = chatLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+
             return when (chatLog) {
                 is ChatReplyLog -> Reply(
                     messageId = chatLog.messageId,
@@ -95,24 +103,26 @@ sealed class ChatLogMessageResponse {
                     parentMessagePage = chatLog.parentMessagePage,
                     parentSeqNumber = chatLog.parentSeqNumber,
                     parentMessageText = chatLog.parentMessageText,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
                     text = chatLog.text
                 )
                 is ChatLeaveLog -> Leave(
                     messageId = chatLog.messageId,
+                    type = chatLog.type.toString(),
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
                 )
                 is ChatInviteLog -> Invite(
                     messageId = chatLog.messageId,
+                    type = chatLog.type.toString(),
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
                 )
@@ -121,7 +131,7 @@ sealed class ChatLogMessageResponse {
                     type = chatLog.type.toString(),
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
                     files = chatLog.medias.map { MediaResponse.from(it) }
@@ -131,19 +141,20 @@ sealed class ChatLogMessageResponse {
                     type = chatLog.type.toString(),
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
                     text = chatLog.text
                 )
                 is ChatBombLog -> Bomb(
                     messageId = chatLog.messageId,
+                    type = chatLog.type.toString(),
                     chatRoomId = chatLog.chatRoomId,
                     senderId = chatLog.senderId,
-                    timestamp = chatLog.timestamp,
+                    timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
-                    expiredAt = chatLog.expiredAt,
+                    expiredAt = formattedExpiredTime,
                     text = chatLog.text
                 )
             }
