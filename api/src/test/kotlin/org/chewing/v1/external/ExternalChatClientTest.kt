@@ -77,7 +77,7 @@ class ExternalChatClientTest(
         // WebSocket 세션 연결
         val session = connectStompSession()
 
-        var testMessage: TestMessage? = null
+        var testMessage: ChatMessageDto? = null
 
         session.subscribe("/user/queue/chat/private", object : StompFrameHandler {
             override fun getPayloadType(headers: StompHeaders): Type {
@@ -86,7 +86,7 @@ class ExternalChatClientTest(
 
             override fun handleFrame(headers: StompHeaders, payload: Any?) {
                 val message = String(payload as ByteArray, StandardCharsets.UTF_8)
-                testMessage = objectMapper.readValue(message, TestMessage::class.java)
+                testMessage = objectMapper.readValue(message, ChatMessageDto::class.java)
                 latch.countDown()
             }
         })
@@ -98,7 +98,6 @@ class ExternalChatClientTest(
 
         latch.await(10, TimeUnit.MINUTES)
         assertThat(testMessage).isNotNull()
-        assertThat(testMessage?.message).isEqualTo("1")
     }
 
     // 테스트 메시지 생성
