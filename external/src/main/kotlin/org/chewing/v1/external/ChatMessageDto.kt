@@ -1,7 +1,5 @@
 package org.chewing.v1.external
 
-import org.chewing.v1.model.chat.log.*
-import java.time.LocalDateTime
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
@@ -20,7 +18,7 @@ import org.chewing.v1.model.chat.message.*
     JsonSubTypes.Type(value = ChatMessageDto.Leave::class, name = "Leave"),
     JsonSubTypes.Type(value = ChatMessageDto.Invite::class, name = "Invite"),
     JsonSubTypes.Type(value = ChatMessageDto.File::class, name = "File"),
-    JsonSubTypes.Type(value = ChatMessageDto.Message::class, name = "Message"),
+    JsonSubTypes.Type(value = ChatMessageDto.Normal::class, name = "Message"),
     JsonSubTypes.Type(value = ChatMessageDto.Bomb::class, name = "Bomb"),
     JsonSubTypes.Type(value = ChatMessageDto.Read::class, name = "Read")
 )
@@ -41,7 +39,7 @@ sealed class ChatMessageDto {
     ) : ChatMessageDto()
 
     data class Delete @JsonCreator constructor(
-        @JsonProperty("messageId") val messageId: String,
+        @JsonProperty("targetMessageId") val targetMessageId: String,
         @JsonProperty("type") val type: String,
         @JsonProperty("chatRoomId") val chatRoomId: String,
         @JsonProperty("senderId") val senderId: String,
@@ -81,7 +79,7 @@ sealed class ChatMessageDto {
         @JsonProperty("files") val files: List<MediaDto>
     ) : ChatMessageDto()
 
-    data class Message @JsonCreator constructor(
+    data class Normal @JsonCreator constructor(
         @JsonProperty("messageId") val messageId: String,
         @JsonProperty("type") val type: String,
         @JsonProperty("chatRoomId") val chatRoomId: String,
@@ -120,7 +118,7 @@ sealed class ChatMessageDto {
             return when (chatMessage) {
                 is ChatReplyMessage -> Reply(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     parentMessageId = chatMessage.parentMessageId,
@@ -134,7 +132,7 @@ sealed class ChatMessageDto {
                 )
                 is ChatLeaveMessage -> Leave(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -143,7 +141,7 @@ sealed class ChatMessageDto {
                 )
                 is ChatInviteMessage -> Invite(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -152,7 +150,7 @@ sealed class ChatMessageDto {
                 )
                 is ChatFileMessage -> File(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -160,9 +158,9 @@ sealed class ChatMessageDto {
                     page = chatMessage.number.page,
                     files = chatMessage.medias.map { MediaDto.from(it) }
                 )
-                is ChatNormalMessage -> Message(
+                is ChatNormalMessage -> Normal(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -172,7 +170,7 @@ sealed class ChatMessageDto {
                 )
                 is ChatBombMessage -> Bomb(
                     messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -182,7 +180,7 @@ sealed class ChatMessageDto {
                     text = chatMessage.text
                 )
                 is ChatReadMessage -> Read(
-                    type = chatMessage.type.toString(),
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,
@@ -191,8 +189,8 @@ sealed class ChatMessageDto {
                 )
 
                 is ChatDeleteMessage -> Delete(
-                    messageId = chatMessage.messageId,
-                    type = chatMessage.type.toString(),
+                    targetMessageId = chatMessage.targetMessageId,
+                    type = chatMessage.type.toString().lowercase(),
                     chatRoomId = chatMessage.chatRoomId,
                     senderId = chatMessage.senderId,
                     timestamp = formattedTime,

@@ -35,6 +35,4 @@ internal class ChatRoomEntity(
     fun toChatRoomId(): String {
         return this.chatRoomId
     }
-
-
 }

@@ -2,6 +2,7 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.config.SecurityConfig
 import org.chewing.v1.config.WebConfig
+import org.chewing.v1.config.WebSocketConfig
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
@@ -29,7 +30,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebConfig::class, SecurityConfig::class)
+@Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
 class ChatControllerTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
 ) {

@@ -5,6 +5,9 @@ import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
+import org.chewing.v1.model.chat.log.*
+import org.chewing.v1.model.chat.message.*
+import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
@@ -128,4 +131,192 @@ object TestDataFactory {
     fun createAnnouncement(): Announcement {
         return Announcement.of("announcementId", "title", LocalDateTime.now(), "content")
     }
+
+    fun createNormalMessage(messageId: String, chatRoomId: String): ChatNormalMessage {
+        return ChatNormalMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            text = "text",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createBombMessage(messageId: String, chatRoomId: String): ChatBombMessage {
+        return ChatBombMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            text = "text",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
+    }
+
+    fun createInviteMessage(messageId: String, chatRoomId: String): ChatInviteMessage {
+        return ChatInviteMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            targetUserId = "targetUserId"
+        )
+    }
+
+    fun createFileMessage(messageId: String, chatRoomId: String): ChatFileMessage {
+        return ChatFileMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            medias = listOf(Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG))
+        )
+    }
+
+    fun createLeaveMessage(messageId: String, chatRoomId: String): ChatLeaveMessage {
+        return ChatLeaveMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createReadMessage(chatRoomId: String): ChatReadMessage {
+        return ChatReadMessage.of(
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createReplyMessage(messageId: String, chatRoomId: String): ChatReplyMessage {
+        return ChatReplyMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            parentMessageId = "parentMessageId",
+            parentMessageText = "parentMessageText",
+            parentMessagePage = 1,
+            parentMessageType = ChatLogType.REPLY,
+            parentSeqNumber = 1,
+            type = MessageType.REPLY,
+            text = "text"
+        )
+    }
+
+    fun createDeleteMessage(messageId: String, chatRoomId: String): ChatDeleteMessage {
+        return ChatDeleteMessage.of(
+            targetMessageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now()
+        )
+    }
+
+    fun createReplyLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatReplyLog {
+        return ChatReplyLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            parentMessageId = "parentMessageId",
+            parentMessageText = "parentMessageText",
+            parentMessagePage = 1,
+            parentMessageType = ChatLogType.NORMAL,
+            parentSeqNumber = 1,
+            text = "text",
+            type = ChatLogType.REPLY,
+        )
+    }
+    fun createNormalLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatNormalLog {
+        return ChatNormalLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            text = "text",
+            type = ChatLogType.NORMAL,
+        )
+    }
+    fun createFileLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatFileLog {
+        return ChatFileLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            medias = listOf(Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG)),
+            type = ChatLogType.FILE,
+        )
+    }
+    fun createLeaveLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatLeaveLog {
+        return ChatLeaveLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            type = ChatLogType.LEAVE,
+        )
+    }
+    fun createInviteLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatInviteLog {
+        return ChatInviteLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            targetUserId = "targetUserId",
+            type = ChatLogType.INVITE,
+        )
+    }
+    fun createBombLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatBombLog {
+        return ChatBombLog.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = userId,
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            expiredAt = LocalDateTime.now().plusMinutes(1),
+            text = "text",
+            type = ChatLogType.BOMB,
+        )
+    }
+
 }

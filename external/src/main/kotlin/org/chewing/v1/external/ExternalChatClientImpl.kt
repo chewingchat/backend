@@ -19,7 +19,7 @@ class ExternalChatClientImpl(
 
         messagingTemplate.convertAndSendToUser(
             userId,
-            "/queue/chat/private",
+            "/queue/chat",
             ChatMessageDto.from(chatMessage),
         )
     }

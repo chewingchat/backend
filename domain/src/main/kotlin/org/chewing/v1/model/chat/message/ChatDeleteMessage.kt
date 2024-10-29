@@ -1,11 +1,10 @@
 package org.chewing.v1.model.chat.message
 
-import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
 
 class ChatDeleteMessage private constructor(
-    val messageId: String,
+    val targetMessageId: String,
     override val chatRoomId: String,
     override val senderId: String,
     override val timestamp: LocalDateTime,
@@ -15,14 +14,14 @@ class ChatDeleteMessage private constructor(
 
     companion object {
         fun of(
-            messageId: String,
+            targetMessageId: String,
             chatRoomId: String,
             senderId: String,
             timestamp: LocalDateTime,
             number: ChatNumber
         ): ChatDeleteMessage {
             return ChatDeleteMessage(
-                messageId = messageId,
+                targetMessageId = targetMessageId,
                 chatRoomId = chatRoomId,
                 senderId = senderId,
                 timestamp = timestamp,

@@ -43,7 +43,7 @@ class ChatFacade(
     }
 
     fun processCommon(chatRoomId: String, userId: String, text: String) {
-        val chatMessage = chatLogService.chatCommonMessage(chatRoomId, userId, text)
+        val chatMessage = chatLogService.chatNormalMessage(chatRoomId, userId, text)
         notificationService.handleOwnedMessageNotification(userId, chatMessage)
 
         notificationService.handleMessagesNotification(userId, chatMessage)

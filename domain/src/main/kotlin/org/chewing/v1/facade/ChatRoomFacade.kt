@@ -39,6 +39,4 @@ class ChatRoomFacade(
         val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, chatNumbers)
         return ChatRoomSortEngine.sortChatRoom(chatRooms, sort)
     }
-
-
 }

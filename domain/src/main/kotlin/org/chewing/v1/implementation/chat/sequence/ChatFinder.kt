@@ -12,9 +12,9 @@ class ChatFinder(
         const val PAGE_SIZE = 50
     }
 
-    fun findLastPage(chatRoomId: String): Int {
-        return (chatSequenceReader.readCurrent(chatRoomId).sequenceNumber / PAGE_SIZE)
-    }
+//    fun findLastPage(chatRoomId: String): Int {
+//        return (chatSequenceReader.readCurrent(chatRoomId).sequenceNumber / PAGE_SIZE)
+//    }
 
 
     fun findCurrentNumbers(chatRoomIds: List<String>): List<ChatNumber> {
