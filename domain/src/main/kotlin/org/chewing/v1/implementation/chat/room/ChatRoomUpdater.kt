@@ -13,8 +13,4 @@ class ChatRoomUpdater(
     fun updateUnDelete(chatRoomId: String, userId: String) {
         chatRoomMemberRepository.updateUnDelete(chatRoomId, userId)
     }
-
-    fun updateRead(userId: String, number: ChatNumber) {
-        chatRoomMemberRepository.updateRead(userId, number)
-    }
 }

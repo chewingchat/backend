@@ -20,7 +20,7 @@ class ChatRoomFacade(
         roomService.deleteGroupChatRooms(chatRoomIds, userId)
         val chatMessages = chatLogService.leaveMessages(chatRoomIds, userId)
         chatMessages.forEach {
-            notificationService.handleMessagesNotification(userId, it)
+            notificationService.handleMessageNotification(userId, it)
         }
     }
 
@@ -28,7 +28,7 @@ class ChatRoomFacade(
         val newRoomId = roomService.createGroupChatRoom(userId, friendIds)
         val chatMessages = chatLogService.inviteMessages(friendIds, newRoomId, userId)
         chatMessages.forEach {
-            notificationService.handleMessagesNotification(userId, it)
+            notificationService.handleMessageNotification(userId, it)
         }
         return newRoomId
     }
