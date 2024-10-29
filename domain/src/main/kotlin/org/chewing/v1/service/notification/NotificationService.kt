@@ -33,8 +33,8 @@ class NotificationService(
         chatSender.sendChat(chatMessage, userId)
     }
 
-    fun handleMessagesNotification(senderId: String, chatMessage: ChatMessage) {
-        val members = chatRoomReader.readChatRoomFriendMember(chatMessage.chatRoomId, senderId)
+    fun handleMessageNotification(chatMessage: ChatMessage) {
+        val members = chatRoomReader.readChatRoomFriendMember(chatMessage.chatRoomId, chatMessage.senderId)
         val memberIds = members.map { it.memberId }
 
         chatSender.sendsChat(chatMessage, memberIds)
@@ -50,6 +50,4 @@ class NotificationService(
             }
         }
     }
-
-
 }

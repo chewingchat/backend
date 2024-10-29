@@ -1,5 +1,7 @@
 package org.chewing.v1.implementation.chat.room
 
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.util.AsyncJobExecutor
@@ -25,5 +27,6 @@ class ChatRoomHandler(
                 delayTime *= 2
             }
         }
+        throw ConflictException(ErrorCode.CHATROOM_CREATE_FAILED)
     }
 }

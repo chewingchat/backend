@@ -6,8 +6,10 @@ import org.chewing.v1.model.auth.*
 import org.chewing.v1.model.chat.log.ChatFileLog
 import org.chewing.v1.model.chat.log.ChatLogType
 import org.chewing.v1.model.chat.log.ChatNormalLog
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
+import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.chewing.v1.model.chat.room.ChatSequenceNumber
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
@@ -218,5 +220,22 @@ object TestDataFactory {
 
     fun createChatNumber(chatRoomId: String): ChatNumber {
         return ChatNumber.of(chatRoomId, 0, 0)
+    }
+
+    fun createChatRoomInfo(chatRoomId: String): ChatRoomInfo {
+        return ChatRoomInfo.of(chatRoomId, false)
+    }
+
+    fun createGroupChatRoomInfo(chatRoomId: String): ChatRoomInfo {
+        return ChatRoomInfo.of(chatRoomId, true)
+    }
+
+    fun createChatRoomMemberInfo(
+        chatRoomId: String,
+        userId: String,
+        readNumber: Int,
+        favorite: Boolean
+    ): ChatRoomMemberInfo {
+        return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber, favorite)
     }
 }

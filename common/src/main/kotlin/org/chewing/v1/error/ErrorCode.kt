@@ -56,6 +56,7 @@ enum class ErrorCode(
     EMOTICON_NOT_FOUND("EMOTICON_1", "이모티콘을 찾을 수 없음."),
 
     CHATROOM_NOT_FOUND("CHATROOM_1", "채팅방을 찾을 수 없음."),
+    CHATROOM_CREATE_FAILED("CHATROOM_2", "채팅방 생성을 실패하였습니다."),
     CHATLOG_NOT_FOUND("CHATLOG_1", "채팅 로그를 찾을 수 없음."),
 
     ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_1", "공지사항을 찾을 수 없음."),

@@ -30,7 +30,7 @@ internal data class ChatRoomMemberEntity(
     }
     // ChatFriendEntity -> ChatFriend 변환 메서드
     fun toRoomMember(): ChatRoomMemberInfo {
-        return ChatRoomMemberInfo(
+        return ChatRoomMemberInfo.of(
             memberId = this.userId,
             chatRoomId = this.chatRoomId,
             readSeqNumber = this.readSeqNumber,
