@@ -3,6 +3,12 @@ package org.chewing.v1
 import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.*
+import org.chewing.v1.model.chat.log.ChatFileLog
+import org.chewing.v1.model.chat.log.ChatLogType
+import org.chewing.v1.model.chat.log.ChatNormalLog
+import org.chewing.v1.model.chat.message.*
+import org.chewing.v1.model.chat.room.ChatNumber
+import org.chewing.v1.model.chat.room.ChatSequenceNumber
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
@@ -168,5 +174,49 @@ object TestDataFactory {
 
     fun createLoginInfo(user: User): LoginInfo {
         return LoginInfo.of(createJwtToken(), user)
+    }
+
+    fun createChatNormalLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber
+    ): ChatNormalLog {
+        return ChatNormalLog.of(
+            messageId,
+            chatRoomId,
+            userId,
+            "text",
+            chatRoomNumber,
+            LocalDateTime.now(),
+            ChatLogType.NORMAL
+        )
+    }
+
+    fun createChatFileLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber,
+    ): ChatFileLog {
+        return ChatFileLog.of(
+            messageId,
+            chatRoomId,
+            userId,
+            listOf(
+                Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG)
+            ),
+            LocalDateTime.now(),
+            chatRoomNumber,
+            ChatLogType.FILE,
+        )
+    }
+
+    fun createChatSequenceNumber(chatRoomId: String): ChatSequenceNumber {
+        return ChatSequenceNumber.of(1, chatRoomId)
+    }
+
+    fun createChatNumber(chatRoomId: String): ChatNumber {
+        return ChatNumber.of(chatRoomId, 0, 0)
     }
 }

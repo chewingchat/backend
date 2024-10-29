@@ -51,9 +51,9 @@ class ChatLogService(
         return chatMessage
     }
 
-    fun chatCommonMessage(chatRoomId: String, userId: String, text: String): ChatNormalMessage {
+    fun chatNormalMessage(chatRoomId: String, userId: String, text: String): ChatNormalMessage {
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
-        val chatMessage = chatGenerator.generateCommonMessage(chatRoomId, userId, chatRoomNumber, text)
+        val chatMessage = chatGenerator.generateNormalMessage(chatRoomId, userId, chatRoomNumber, text)
         chatAppender.appendChatLog(chatMessage)
         return chatMessage
     }
@@ -91,8 +91,8 @@ class ChatLogService(
         return chatReader.readChatLog(chatRoomId, page)
     }
 
-    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
-        val page = chatFinder.findLastPage(chatRoomId)
-        return chatReader.readChatLog(chatRoomId, page)
-    }
+//    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
+//        val page = chatFinder.findLastPage(chatRoomId)
+//        return chatReader.readChatLog(chatRoomId, page)
+//    }
 }

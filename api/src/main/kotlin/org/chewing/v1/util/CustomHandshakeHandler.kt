@@ -17,23 +17,7 @@ class CustomHandshakeHandler(
         wsHandler: WebSocketHandler,
         attributes: MutableMap<String, Any>
     ): Principal? {
-        val servletRequest = (request as ServletServerHttpRequest).servletRequest
-        val token = servletRequest.getHeader("Authorization")?.substringAfter("Bearer ")
-
-        if (token != null) {
-            try {
-                val userId = jwtTokenProvider.getUserIdFromToken(token)
-                return StompPrincipal(userId)
-            } catch (e: Exception) {
-                logger.error { "Failed to determine user ${e.message}" }
-                return null
-            }
-        }
-        logger.warn { "Authorization header missing" }
-        return null
+        // HandshakeInterceptor에서 이미 Principal을 attributes에 추가했으므로 이를 반환
+        return attributes["user"] as? Principal
     }
-}
-
-class StompPrincipal(private val name: String) : Principal {
-    override fun getName(): String = name
 }

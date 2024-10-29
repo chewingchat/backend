@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
 import java.lang.Exception
+import java.security.Principal
 
 @Component
 class StompHandshakeInterceptor(
@@ -24,16 +25,20 @@ class StompHandshakeInterceptor(
         logger.info { "beforeHandshake" }
         val servletRequest = (request as ServletServerHttpRequest).servletRequest
         val token = servletRequest.getHeader("Authorization")?.substringAfter("Bearer ")
-
         if (token != null) {
-            try {
+            return try {
                 val userId = jwtTokenProvider.getUserIdFromToken(token)
-                attributes["userId"] = userId
-                return true
+                // 사용자 정보를 attributes에 추가할 수 있습니다.
+                attributes["user"] = Principal { userId }
+                true
             } catch (e: Exception) {
-                return false
+                logger.error("Failed to authenticate user: ${e.message}")
+                response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED)
+                false
             }
         }
+        logger.warn("Authorization header missing")
+        response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED)
         return false
     }
 

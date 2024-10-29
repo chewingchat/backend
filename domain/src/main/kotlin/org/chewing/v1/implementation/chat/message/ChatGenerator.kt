@@ -36,7 +36,7 @@ class ChatGenerator {
         messageId: String
     ): ChatDeleteMessage {
         return ChatDeleteMessage.of(
-            messageId = messageId,
+            targetMessageId = messageId,
             chatRoomId = chatRoomId,
             senderId = userId,
             timestamp = LocalDateTime.now(),
@@ -44,7 +44,7 @@ class ChatGenerator {
         )
     }
 
-    fun generateCommonMessage(
+    fun generateNormalMessage(
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
