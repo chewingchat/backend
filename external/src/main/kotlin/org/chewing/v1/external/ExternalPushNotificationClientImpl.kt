@@ -7,9 +7,9 @@ import org.chewing.v1.model.notification.Notification
 import org.springframework.stereotype.Component
 
 @Component
-class ExternalNotificationClientImpl(
+class ExternalPushNotificationClientImpl(
     private val fcmClient: FcmClient
-) : ExternalNotificationClient {
+) : ExternalPushNotificationClient {
     private val logger = KotlinLogging.logger {}
 
     @Throws(JsonParseException::class, JsonProcessingException::class)

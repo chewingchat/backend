@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(WebSocketConfig::class, SecurityConfig::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ExternalChatClientTest(
+class ExternalChatNotificationClientTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
-    @Autowired private val externalChatClient: ExternalChatClient,
+    @Autowired private val externalChatNotificationClient: ExternalChatNotificationClient,
     @Autowired private val sessionProvider: SessionProvider
 ) {
 
@@ -129,14 +129,14 @@ class ExternalChatClientTest(
 
         sleep(1000)
         // 메시지 전송
-        externalChatClient.sendMessage(normalMessage, userId)
-        externalChatClient.sendMessage(inviteMessage, userId)
-        externalChatClient.sendMessage(fileMessage, userId)
-        externalChatClient.sendMessage(deleteMessage, userId)
-        externalChatClient.sendMessage(readMessage, userId)
-        externalChatClient.sendMessage(replyMessage, userId)
-        externalChatClient.sendMessage(bombMessage, userId)
-        externalChatClient.sendMessage(leaveMessage, userId)
+        externalChatNotificationClient.sendMessage(normalMessage, userId)
+        externalChatNotificationClient.sendMessage(inviteMessage, userId)
+        externalChatNotificationClient.sendMessage(fileMessage, userId)
+        externalChatNotificationClient.sendMessage(deleteMessage, userId)
+        externalChatNotificationClient.sendMessage(readMessage, userId)
+        externalChatNotificationClient.sendMessage(replyMessage, userId)
+        externalChatNotificationClient.sendMessage(bombMessage, userId)
+        externalChatNotificationClient.sendMessage(leaveMessage, userId)
 
         latch.await(10, TimeUnit.SECONDS)
 

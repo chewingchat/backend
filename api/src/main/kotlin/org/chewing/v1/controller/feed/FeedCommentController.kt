@@ -22,7 +22,7 @@ class FeedCommentController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: CommentRequest.AddCommentRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        feedCommentService.comment(
+        feedFacade.commentFeed(
             userId,
             request.toFeedId(),
             request.toComment(),

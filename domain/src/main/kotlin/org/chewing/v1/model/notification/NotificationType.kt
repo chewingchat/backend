@@ -3,6 +3,10 @@ package org.chewing.v1.model.notification
 enum class NotificationType {
     COMMENT,
     LIKE,
-    NONE,
-    MESSAGE
+    CHAT_NORMAL,
+    CHAT_FILE,
+    CHAT_LEAVE,
+    CHAT_REPLY,
+    CHAT_INVITE,
+    CHAT_BOMB,
 }

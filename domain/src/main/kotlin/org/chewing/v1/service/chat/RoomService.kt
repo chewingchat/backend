@@ -1,6 +1,7 @@
 package org.chewing.v1.service.chat
 
 import org.chewing.v1.implementation.chat.room.*
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.Room
 import org.springframework.stereotype.Service
 
@@ -46,5 +47,9 @@ class RoomService(
         val newRoomId = chatRoomAppender.append(true)
         chatRoomAppender.appendMembers(newRoomId, friendIds)
         return newRoomId
+    }
+
+    fun getChatRoomFriends(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> {
+        return chatRoomReader.readChatRoomFriendMember(chatRoomId, userId)
     }
 }

@@ -6,13 +6,10 @@ import org.springframework.stereotype.Component
 @Component
 class SessionProvider(
     private val externalSessionClient: ExternalSessionClient
+
 ) {
     fun connect(userId: String, sessionId: String) {
         externalSessionClient.connect(userId, sessionId)
-    }
-
-    fun getSessionId(userId: String): String {
-        return externalSessionClient.getSessionId(userId)
     }
 
     fun isOnline(userId: String): Boolean {
