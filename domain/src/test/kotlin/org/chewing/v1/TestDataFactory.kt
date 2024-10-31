@@ -238,4 +238,114 @@ object TestDataFactory {
     ): ChatRoomMemberInfo {
         return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber, favorite)
     }
+
+    fun createPushToken(pushTokenId: String): PushToken {
+        return PushToken.of(pushTokenId, "testToken", PushToken.Provider.ANDROID, "deviceId")
+    }
+
+    fun createChatNormalMessage(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+    ): ChatNormalMessage {
+        return ChatNormalMessage.of(
+            messageId,
+            chatRoomId,
+            userId,
+            "text",
+            createChatNumber(chatRoomId),
+            LocalDateTime.now()
+        )
+    }
+
+    fun createNormalMessage(messageId: String, chatRoomId: String): ChatNormalMessage {
+        return ChatNormalMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            text = "text",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createBombMessage(messageId: String, chatRoomId: String): ChatBombMessage {
+        return ChatBombMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            text = "text",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
+    }
+
+    fun createInviteMessage(messageId: String, chatRoomId: String): ChatInviteMessage {
+        return ChatInviteMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            targetUserId = "targetUserId"
+        )
+    }
+
+    fun createFileMessage(messageId: String, chatRoomId: String): ChatFileMessage {
+        return ChatFileMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            medias = listOf(Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG))
+        )
+    }
+
+    fun createLeaveMessage(messageId: String, chatRoomId: String): ChatLeaveMessage {
+        return ChatLeaveMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createReadMessage(chatRoomId: String): ChatReadMessage {
+        return ChatReadMessage.of(
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+        )
+    }
+
+    fun createReplyMessage(messageId: String, chatRoomId: String): ChatReplyMessage {
+        return ChatReplyMessage.of(
+            messageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now(),
+            parentMessageId = "parentMessageId",
+            parentMessageText = "parentMessageText",
+            parentMessagePage = 1,
+            parentMessageType = ChatLogType.REPLY,
+            parentSeqNumber = 1,
+            type = MessageType.REPLY,
+            text = "text"
+        )
+    }
+
+    fun createDeleteMessage(messageId: String, chatRoomId: String): ChatDeleteMessage {
+        return ChatDeleteMessage.of(
+            targetMessageId = messageId,
+            chatRoomId = chatRoomId,
+            senderId = "sender",
+            number = ChatNumber.of(chatRoomId, 1, 1),
+            timestamp = LocalDateTime.now()
+        )
+    }
 }

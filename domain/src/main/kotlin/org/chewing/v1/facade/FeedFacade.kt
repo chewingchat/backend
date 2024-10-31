@@ -30,7 +30,7 @@ class FeedFacade(
 
     fun commentFeed(userId: String, feedId: String, comment: String, target: FeedTarget) {
         feedCommentService.comment(userId, feedId, comment, target)
-        notificationService.handleCommentNotification(userId, feedId)
+        notificationService.handleCommentNotification(userId, feedId,comment)
     }
 
     fun getOwnedFeed(userId: String, feedId: String): Pair<Feed, Boolean> {
