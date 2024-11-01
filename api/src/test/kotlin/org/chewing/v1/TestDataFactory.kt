@@ -9,6 +9,8 @@ import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.model.emoticon.Emoticon
+import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
@@ -243,6 +245,7 @@ object TestDataFactory {
             type = ChatLogType.REPLY,
         )
     }
+
     fun createNormalLog(
         messageId: String,
         chatRoomId: String,
@@ -258,6 +261,7 @@ object TestDataFactory {
             type = ChatLogType.NORMAL,
         )
     }
+
     fun createFileLog(
         messageId: String,
         chatRoomId: String,
@@ -273,6 +277,7 @@ object TestDataFactory {
             type = ChatLogType.FILE,
         )
     }
+
     fun createLeaveLog(
         messageId: String,
         chatRoomId: String,
@@ -287,6 +292,7 @@ object TestDataFactory {
             type = ChatLogType.LEAVE,
         )
     }
+
     fun createInviteLog(
         messageId: String,
         chatRoomId: String,
@@ -302,6 +308,7 @@ object TestDataFactory {
             type = ChatLogType.INVITE,
         )
     }
+
     fun createBombLog(
         messageId: String,
         chatRoomId: String,
@@ -319,4 +326,25 @@ object TestDataFactory {
         )
     }
 
+    fun createEmoticon(
+        emoticonId: String,
+    ): Emoticon {
+        return Emoticon.of(
+            id = emoticonId,
+            name = "emoticonName",
+            url = "www.example.com",
+        )
+    }
+
+    fun createEmoticonPack(
+        emoticonPackId: String,
+        emoticons: List<Emoticon>
+    ): EmoticonPack {
+        return EmoticonPack.of(
+            id = emoticonPackId,
+            name = "emoticonPackName",
+            url = "www.example.com",
+            emoticons = emoticons
+        )
+    }
 }

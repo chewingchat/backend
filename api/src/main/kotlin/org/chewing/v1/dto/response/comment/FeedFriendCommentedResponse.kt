@@ -30,7 +30,7 @@ data class FeedFriendCommentedResponse(
                         userName = friendComment.writer.name,
                         imageUrl = friendComment.writer.image.url,
                         access = friendComment.writer.status,
-                        imageType = friendComment.writer.image.type.toString().lowercase()
+                        imageType = friendComment.writer.image.type.value().lowercase()
                     ),
                     comment = CommentResponse.of(friendComment)
                 )

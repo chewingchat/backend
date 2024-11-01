@@ -24,7 +24,7 @@ data class FriendResponse(
                 statusMessage = friend.status.message,
                 favorite = friend.isFavorite,
                 statusEmoji = friend.status.emoji,
-                imageType = friend.user.image.type.toString().lowercase(),
+                imageType = friend.user.image.type.value().lowercase(),
             )
         }
     }

@@ -4,24 +4,31 @@ import org.chewing.v1.jpaentity.announcement.AnnouncementJpaEntity
 import org.chewing.v1.jpaentity.auth.EmailJpaEntity
 import org.chewing.v1.jpaentity.auth.LoggedInJpaEntity
 import org.chewing.v1.jpaentity.auth.PhoneJpaEntity
+import org.chewing.v1.jpaentity.emoticon.EmoticonJpaEntity
+import org.chewing.v1.jpaentity.emoticon.EmoticonPackJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedCommentJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedDetailJpaEntity
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jpaentity.friend.FriendShipJpaEntity
-import org.chewing.v1.jpaentity.user.ScheduleJpaEntity
+import org.chewing.v1.jpaentity.user.*
 import org.chewing.v1.jpaentity.user.PushNotificationJpaEntity
+import org.chewing.v1.jpaentity.user.ScheduleJpaEntity
+import org.chewing.v1.jpaentity.user.UserEmoticonJpaEntity
 import org.chewing.v1.jpaentity.user.UserJpaEntity
 import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.chewing.v1.jparepository.announcement.AnnouncementJpaRepository
 import org.chewing.v1.jparepository.auth.EmailJpaRepository
 import org.chewing.v1.jparepository.auth.LoggedInJpaRepository
 import org.chewing.v1.jparepository.auth.PhoneJpaRepository
-import org.chewing.v1.jparepository.user.ScheduleJpaRepository
+import org.chewing.v1.jparepository.emoticon.EmoticonJpaRepository
+import org.chewing.v1.jparepository.emoticon.EmoticonPackJpaRepository
 import org.chewing.v1.jparepository.feed.FeedCommentJpaRepository
 import org.chewing.v1.jparepository.feed.FeedDetailJpaRepository
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
+import org.chewing.v1.jparepository.user.*
 import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
+import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.jparepository.user.UserStatusJpaRepository
 import org.chewing.v1.model.user.AccessStatus
@@ -32,6 +39,8 @@ import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.emoticon.EmoticonInfo
+import org.chewing.v1.model.emoticon.EmoticonPackInfo
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.schedule.Schedule
@@ -39,9 +48,11 @@ import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.User
+import org.chewing.v1.model.user.UserEmoticonPackInfo
 import org.chewing.v1.model.user.UserStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 class JpaDataGenerator(
@@ -81,6 +92,15 @@ class JpaDataGenerator(
 
     @Autowired
     private lateinit var friendShipJpaRepository: FriendShipJpaRepository
+
+    @Autowired
+    private lateinit var userEmoticonJpaRepository: UserEmoticonJpaRepository
+
+    @Autowired
+    private lateinit var emoticonPackJpaRepository: EmoticonPackJpaRepository
+
+    @Autowired
+    private lateinit var emoticonJpaRepository: EmoticonJpaRepository
 
     fun emailEntityData(emailAddress: EmailAddress): Email {
         val email = EmailJpaEntity.generate(emailAddress)
@@ -218,12 +238,38 @@ class JpaDataGenerator(
     fun friendShipEntityData(userId: String, friendId: String, access: AccessStatus) {
         val friendName = UserProvider.buildFriendName()
         val entity = FriendShipJpaEntity.generate(userId, friendId, friendName)
-        when(access) {
+        when (access) {
             AccessStatus.DELETE -> entity.updateDelete()
             AccessStatus.BLOCK -> entity.updateBlock()
             AccessStatus.BLOCKED -> entity.updateBlocked()
             else -> {}
         }
         friendShipJpaRepository.save(entity)
+    }
+
+    fun userEmoticonEntityData(userId: String, emoticonPackId: String): UserEmoticonPackInfo {
+        val emoticon = UserEmoticonJpaEntity(UserEmoticonId(userId, emoticonPackId), LocalDateTime.now())
+        userEmoticonJpaRepository.save(emoticon)
+        return emoticon.toUserEmoticon()
+    }
+
+    fun emoticonPackEntityData(): EmoticonPackInfo {
+        val emoticonPack = EmoticonPackJpaEntity.of("emoticonPackImageUrl", "emoticonPackName")
+        emoticonPackJpaRepository.save(emoticonPack)
+        return emoticonPack.toEmoticonPack()
+    }
+
+    fun emoticonEntityData(emoticonPackId: String): EmoticonInfo {
+        val emoticon = EmoticonJpaEntity.of("emoticonImageUrl", "emoticonName", emoticonPackId)
+        emoticonJpaRepository.save(emoticon)
+        return emoticon.toEmoticon()
+    }
+
+    fun emoticonEntityDataList(emoticonPackId: String): List<EmoticonInfo> {
+        val emoticonList = (1..10).map {
+            EmoticonJpaEntity.of("emoticonImageUrl $it", "emoticonName $it", emoticonPackId)
+        }
+        emoticonJpaRepository.saveAll(emoticonList)
+        return emoticonList.map { it.toEmoticon() }
     }
 }

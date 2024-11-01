@@ -109,7 +109,7 @@ class FeedCommentControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.firstName").value(comment.writer.name.firstName()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.lastName").value(comment.writer.name.lastName()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageUrl").value(comment.writer.image.url))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageType").value(comment.writer.image.type.toString().lowercase()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageType").value(comment.writer.image.type.value().lowercase()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.access").value(comment.writer.status.name.lowercase()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentId").value(comment.id))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.comment").value(comment.comment))

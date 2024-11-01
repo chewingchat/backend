@@ -10,7 +10,7 @@ data class MediaResponse(
     companion object {
         fun from(media: Media): MediaResponse {
             return MediaResponse(
-                fileType = media.type.toString().lowercase(),
+                fileType = media.type.value().lowercase(),
                 fileUrl = media.url,
                 index = media.index,
             )
