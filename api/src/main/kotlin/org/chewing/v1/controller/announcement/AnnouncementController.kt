@@ -1,4 +1,4 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.announcement
 
 import org.chewing.v1.dto.response.announcement.AnnouncementDetailResponse
 import org.chewing.v1.dto.response.announcement.AnnouncementListResponse

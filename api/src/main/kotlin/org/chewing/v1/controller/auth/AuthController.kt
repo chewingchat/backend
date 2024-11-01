@@ -1,4 +1,4 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.auth
 
 import org.chewing.v1.dto.request.auth.LoginRequest
 import org.chewing.v1.dto.request.auth.VerificationCheckRequest

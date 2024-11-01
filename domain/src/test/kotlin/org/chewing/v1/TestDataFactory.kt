@@ -14,6 +14,8 @@ import org.chewing.v1.model.chat.room.ChatSequenceNumber
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
+import org.chewing.v1.model.emoticon.EmoticonInfo
+import org.chewing.v1.model.emoticon.EmoticonPackInfo
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.friend.FriendShip
@@ -347,5 +349,22 @@ object TestDataFactory {
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now()
         )
+    }
+
+    fun createEmoticonInfo(emoticonId: String, emoticonPackId: String): EmoticonInfo {
+        return EmoticonInfo.of(emoticonId, "name", "url", emoticonPackId)
+    }
+
+    fun createEmoticonPackInfo(
+        emoticonPackId: String,
+    ): EmoticonPackInfo {
+        return EmoticonPackInfo.of(emoticonPackId, "name", "url")
+    }
+
+    fun createUserEmoticonPackInfo(
+        emoticonPackId: String,
+        userId: String,
+    ): UserEmoticonPackInfo {
+        return UserEmoticonPackInfo.of(emoticonPackId, userId, LocalDateTime.now())
     }
 }

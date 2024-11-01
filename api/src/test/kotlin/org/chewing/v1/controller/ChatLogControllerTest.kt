@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.chat.ChatLogController
-import org.chewing.v1.service.auth.AuthService
 import org.chewing.v1.service.chat.ChatLogService
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -73,7 +72,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[0].senderId").value(userId))
             .andExpect(jsonPath("$.data.chatLogs[0].seqNumber").value(chatFileLog.number.sequenceNumber))
             .andExpect(jsonPath("$.data.chatLogs[0].page").value(chatFileLog.number.page))
-            .andExpect(jsonPath("$.data.chatLogs[0].files[0].fileType").value(chatFileLog.medias[0].type.toString().lowercase()))
+            .andExpect(jsonPath("$.data.chatLogs[0].files[0].fileType").value(chatFileLog.medias[0].type.value().lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[0].files[0].fileUrl").value(chatFileLog.medias[0].url))
             .andExpect(jsonPath("$.data.chatLogs[0].files[0].index").value(chatFileLog.medias[0].index))
             .andExpect(jsonPath("$.data.chatLogs[0].timestamp").value(chatFileLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))

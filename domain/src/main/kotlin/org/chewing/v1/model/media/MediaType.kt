@@ -14,9 +14,10 @@ enum class MediaType(val type: String) {
 
     // pdf 추가
 
-    override fun toString(): String {
+    fun value(): String {
         return type
     }
+
     companion object {
         fun fromType(type: String): MediaType? {
             return entries.find { it.type.equals(type, ignoreCase = true) }

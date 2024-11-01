@@ -2,11 +2,9 @@ package org.chewing.v1.dto.response.my
 
 import org.chewing.v1.dto.response.feed.MainFeedResponse
 import org.chewing.v1.dto.response.friend.FriendInfoResponse
-import org.chewing.v1.dto.response.friend.FriendResponse
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.user.User
 import java.time.format.DateTimeFormatter
@@ -49,7 +47,7 @@ data class MyCommentResponse(
                         friendId = friendShip.friendId,
                         userName = friendShip.friendName,
                         imageUrl = user.image.url,
-                        imageType = user.image.type.toString().lowercase(),
+                        imageType = user.image.type.value().lowercase(),
                         access = user.status
                     ),
                     MainFeedResponse.of(feed),

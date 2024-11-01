@@ -30,12 +30,12 @@ data class MainResponse(
                     firstName = friend.name.firstName(),
                     lastName = friend.name.lastName(),
                     imageUrl = friend.user.image.url,
-                    imageType = friend.user.image.type.toString().lowercase(),
+                    imageType = friend.user.image.type.value().lowercase(),
                     statusMessage = friend.status.message,
                     favorite = friend.isFavorite,
                     access = friend.user.status.name.lowercase(),
                     backgroundImageUrl = friend.user.backgroundImage.url,
-                    backgroundImageType = friend.user.backgroundImage.type.toString().lowercase(),
+                    backgroundImageType = friend.user.backgroundImage.type.value().lowercase(),
                     statusEmoji = friend.status.emoji
                 )
             }

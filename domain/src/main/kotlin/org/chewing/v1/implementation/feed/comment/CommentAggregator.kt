@@ -1,15 +1,14 @@
-package org.chewing.v1.implementation.my
+package org.chewing.v1.implementation.feed.comment
 
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.user.User
 import org.springframework.stereotype.Component
 
 @Component
-class MyAggregator {
+class CommentAggregator {
 
     fun aggregateUserCommented(
         friendShips: List<FriendShip>,

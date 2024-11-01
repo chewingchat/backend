@@ -2,6 +2,7 @@ package org.chewing.v1.jpaentity.emoticon
 
 import jakarta.persistence.*
 import org.chewing.v1.model.emoticon.Emoticon
+import org.chewing.v1.model.emoticon.EmoticonInfo
 import java.util.*
 
 @Entity
@@ -14,25 +15,24 @@ internal class EmoticonJpaEntity(
     private val emoticonPackId: String,
 ) {
     companion object {
-        fun fromEmoticon(emoticon: Emoticon, emoticonPackId: String): EmoticonJpaEntity {
+        fun of(
+            url: String,
+            name: String,
+            emoticonPackId: String
+        ): EmoticonJpaEntity {
             return EmoticonJpaEntity(
-                emoticon.id,
-                emoticon.media.url,
-                emoticon.name,
-                emoticonPackId
+                url = url,
+                name = name,
+                emoticonPackId = emoticonPackId
             )
         }
     }
-
-    fun toEmoticon(): Emoticon {
-        return Emoticon.of(
+    fun toEmoticon(): EmoticonInfo {
+        return EmoticonInfo.of(
             emoticonId,
             name,
-            url
+            url,
+            emoticonPackId
         )
-    }
-
-    fun getEmoticonId(): String {
-        return emoticonId
     }
 }
