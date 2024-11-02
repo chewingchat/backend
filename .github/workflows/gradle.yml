@@ -15,6 +15,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dev  # gradlew 파일이 있는 디렉토리로 설정
 
     steps:
       - name: Checkout Code
