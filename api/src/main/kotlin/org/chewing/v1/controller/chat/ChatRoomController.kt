@@ -6,7 +6,6 @@ import org.chewing.v1.dto.response.chat.ChatRoomResponse
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.response.HttpResponse
-import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.util.ResponseHelper
@@ -20,19 +19,15 @@ class ChatRoomController(
     private val chatRoomFacade: ChatRoomFacade,
     private val roomService: RoomService
 ) {
-
-    // 채팅방 목록 가져오기
-    // sort 추가 해야함
     @PostMapping("/list")
     fun getChatRooms(
         @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: ChatRoomSortCriteria
     ): ResponseEntity<HttpResponse<List<ChatRoomResponse>>> {
         val chatRooms = chatRoomFacade.getChatRooms(userId, sort)
-        return ResponseHelper.success(chatRooms.map { ChatRoomResponse.from(it) })
+        return ResponseHelper.success(chatRooms.map { ChatRoomResponse.of(it) })
     }
 
-    // 채팅방 삭제
     @PostMapping("/delete")
     fun deleteChatRooms(
         @RequestBody request: ChatRoomRequest.Delete,
@@ -51,7 +46,6 @@ class ChatRoomController(
         return ResponseHelper.successOnly()
     }
 
-    // 채팅방 생성
     @PostMapping("/create")
     fun createChatRoom(
         @RequestAttribute("userId") userId: String,
@@ -61,7 +55,6 @@ class ChatRoomController(
         return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
     }
 
-    // 그룹 채팅방 생성
     @PostMapping("/create/group")
     fun createGroupChatRoom(
         @RequestAttribute("userId") userId: String,
@@ -69,5 +62,23 @@ class ChatRoomController(
     ): SuccessResponseEntity<ChatRoomIdResponse> {
         val roomId = chatRoomFacade.createGroupChatRoom(userId, request.friendIds)
         return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
+    }
+
+    @PostMapping("/invite")
+    fun inviteChatRoom(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: ChatRoomRequest.Invite
+    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        chatRoomFacade.inviteChatRoom(userId, request.chatRoomId, request.friendId)
+        return ResponseHelper.successOnly()
+    }
+
+    @PostMapping("/favorite")
+    fun updateFavorite(
+        @RequestAttribute("userId") userId: String,
+        @RequestBody request: ChatRoomRequest.Favorite
+    ): ResponseEntity<HttpResponse<SuccessOnlyResponse>> {
+        roomService.favoriteChatRoom(userId, request.chatRoomId, request.favorite)
+        return ResponseHelper.successOnly()
     }
 }

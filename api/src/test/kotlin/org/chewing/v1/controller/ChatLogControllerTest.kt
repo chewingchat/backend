@@ -107,7 +107,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[3].senderId").value(userId))
             .andExpect(jsonPath("$.data.chatLogs[3].seqNumber").value(chatInviteLog.number.sequenceNumber))
             .andExpect(jsonPath("$.data.chatLogs[3].page").value(chatInviteLog.number.page))
-            .andExpect(jsonPath("$.data.chatLogs[3].targetUserId").value(chatInviteLog.targetUserId))
+            .andExpect(jsonPath("$.data.chatLogs[3].targetUserIds[0]").value(chatInviteLog.targetUserIds[0]))
             .andExpect(jsonPath("$.data.chatLogs[3].timestamp").value(chatInviteLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
 
             //폭탄 메시지

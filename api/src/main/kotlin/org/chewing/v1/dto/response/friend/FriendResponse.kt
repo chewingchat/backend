@@ -14,7 +14,7 @@ data class FriendResponse(
     val statusEmoji: String,
 ) {
     companion object {
-        fun of(friend: Friend): FriendResponse {
+        fun from(friend: Friend): FriendResponse {
             return FriendResponse(
                 friendId = friend.user.userId,
                 firstName = friend.name.firstName(),

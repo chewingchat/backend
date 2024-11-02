@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component
 class UserReader(
     private val userRepository: UserRepository,
     private val pushNotificationRepository: PushNotificationRepository,
-    private val userSearchRepository: UserSearchRepository
 ) {
     /**
      * 주어진 사용자 ID에 해당하는 사용자 정보를 읽어옵니다.
@@ -42,11 +41,6 @@ class UserReader(
 
     fun reads(userIds: List<String>): List<User> {
         return userRepository.reads(userIds)
-    }
-
-    //유저의 최근 친구 검색 목록을 읽어옴
-    fun readSearched(userId: String): List<UserSearch> {
-        return userSearchRepository.readSearchHistory(userId)
     }
 
     fun readsPushToken(userId: String): List<PushToken> {

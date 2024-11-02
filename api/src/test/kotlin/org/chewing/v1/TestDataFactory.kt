@@ -27,30 +27,6 @@ import java.time.LocalDateTime
 
 object TestDataFactory {
 
-    fun createPhoneNumber(): PhoneNumber {
-        return PhoneNumber.of("82", "1234567890")
-    }
-
-    fun createPushToken(): PushToken {
-        return PushToken.of("pushTokenId", "appToken", PushToken.Provider.ANDROID, "deviceId")
-    }
-
-    fun createEmailAddress(): String {
-        return "test@example.com"
-    }
-
-    fun createVerificationCode(): String {
-        return "123456"
-    }
-
-    fun createAppToken(): String {
-        return "someAppToken"
-    }
-
-    fun createDevice(): PushToken.Device {
-        return PushToken.Device.of("deviceId", PushToken.Provider.ANDROID)
-    }
-
     fun createJwtToken(): JwtToken {
         return JwtToken.of("accessToken", RefreshToken.of("refreshToken", LocalDateTime.now()))
     }
@@ -164,7 +140,7 @@ object TestDataFactory {
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            targetUserId = "targetUserId"
+            targetUserIds = listOf("targetUserId")
         )
     }
 
@@ -304,7 +280,7 @@ object TestDataFactory {
             senderId = userId,
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            targetUserId = "targetUserId",
+            targetUserIds = listOf("targetUserId"),
             type = ChatLogType.INVITE,
         )
     }

@@ -5,15 +5,11 @@ import java.time.LocalDateTime
 
 class UserSearch private constructor(
     val keyword: String,
-    val searchAt: LocalDateTime?
+    val searchAt: LocalDateTime
 ) {
     companion object {
         fun of(keyword: String, searchTime: LocalDateTime): UserSearch {
             return UserSearch(keyword, searchTime)
-        }
-
-        fun generate(keyword: String): UserSearch {
-            return UserSearch(keyword, null)
         }
     }
 }

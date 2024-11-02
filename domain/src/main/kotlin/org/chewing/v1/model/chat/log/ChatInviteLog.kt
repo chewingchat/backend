@@ -12,7 +12,7 @@ class ChatInviteLog private constructor(
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
     override val type: ChatLogType,
-    val targetUserId: String
+    val targetUserIds: List<String>
 ) : ChatLog() {
 
     companion object {
@@ -22,7 +22,7 @@ class ChatInviteLog private constructor(
             senderId: String,
             timestamp: LocalDateTime,
             number: ChatNumber,
-            targetUserId: String,
+            targetUserIds: List<String>,
             type: ChatLogType
         ): ChatInviteLog {
             return ChatInviteLog(
@@ -31,7 +31,7 @@ class ChatInviteLog private constructor(
                 senderId = senderId,
                 timestamp = timestamp,
                 number = number,
-                targetUserId = targetUserId,
+                targetUserIds = targetUserIds,
                 type = type
             )
         }

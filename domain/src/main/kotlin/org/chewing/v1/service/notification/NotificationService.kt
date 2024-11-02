@@ -1,6 +1,6 @@
 package org.chewing.v1.service.notification
 
-import org.chewing.v1.implementation.SessionProvider
+import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.notification.NotificationGenerator
 import org.chewing.v1.implementation.notification.NotificationSender
 import org.chewing.v1.implementation.user.user.UserReader

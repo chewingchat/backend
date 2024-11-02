@@ -34,7 +34,7 @@ object ChatMessageProvider {
             chatRoomId = chatRoomId,
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
-            targetUserId = "target",
+            targetUserIds = listOf("target"),
             timestamp = LocalDateTime.now(),
         )
     }
@@ -87,5 +87,8 @@ object ChatMessageProvider {
             timestamp = LocalDateTime.now(),
             expiredAt = LocalDateTime.now().plusDays(1)
         )
+    }
+    fun buildChatNumber(chatRoomId: String): ChatNumber {
+        return ChatNumber.of(chatRoomId, 100, 2)
     }
 }

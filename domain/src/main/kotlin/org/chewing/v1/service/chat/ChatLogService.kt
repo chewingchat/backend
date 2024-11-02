@@ -66,13 +66,18 @@ class ChatLogService(
         }
     }
 
-    fun inviteMessages(friendIds: List<String>, chatRoomId: String, userId: String): List<ChatInviteMessage> {
-        return friendIds.map { friendId ->
-            val number = chatFinder.findNextNumber(chatRoomId)
-            val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, friendId)
-            chatAppender.appendChatLog(chatMessage)
-            chatMessage
-        }
+    fun inviteMessages(friendIds: List<String>, chatRoomId: String, userId: String): ChatInviteMessage {
+        val number = chatFinder.findNextNumber(chatRoomId)
+        val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, friendIds)
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
+    }
+
+    fun inviteMessage(chatRoomId: String, friendId: String, userId: String): ChatInviteMessage {
+        val number = chatFinder.findNextNumber(chatRoomId)
+        val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, listOf(friendId))
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
     }
 
     fun bombingMessage(chatRoomId: String, userId: String, text: String, expiredAt: LocalDateTime): ChatBombMessage {

@@ -26,9 +26,11 @@ class ChatFacadeTest {
 
         val chatMessage = TestDataFactory.createFileMessage(messageId, chatRoomId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.uploadFiles(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processFiles(listOf(), userId, chatRoomId)
 
@@ -43,9 +45,12 @@ class ChatFacadeTest {
 
         val chatMessage = TestDataFactory.createReadMessage(messageId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.readMessage(any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.getChatRoom(any())).thenReturn(chatRoomInfo)
+
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processRead(chatRoomId, userId)
 
@@ -61,9 +66,11 @@ class ChatFacadeTest {
 
         val chatMessage = TestDataFactory.createDeleteMessage(messageId, chatRoomId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.deleteMessage(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.getChatRoom(any())).thenReturn(chatRoomInfo)
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processDelete(chatRoomId, userId, messageId)
 
@@ -79,9 +86,11 @@ class ChatFacadeTest {
 
         val chatMessage = TestDataFactory.createReplyMessage(messageId, parentMessageId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.replyMessage(any(), any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processReply(chatRoomId, userId, parentMessageId, "text")
 
@@ -94,11 +103,13 @@ class ChatFacadeTest {
         val userId = "userId"
         val chatRoomId = "chatRoomId"
 
-        val chatMessage = TestDataFactory.createBombMessage(messageId,chatRoomId)
+        val chatMessage = TestDataFactory.createBombMessage(messageId, chatRoomId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.bombingMessage(any(), any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processBombing(chatRoomId, userId, "text", LocalDateTime.now())
 
@@ -113,9 +124,11 @@ class ChatFacadeTest {
 
         val chatMessage = TestDataFactory.createNormalMessage(messageId, chatRoomId)
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
+        val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
         whenever(chatLogService.chatNormalMessage(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoomFriends(any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
+        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
 
         chatFacade.processCommon(chatRoomId, userId, "text")
 

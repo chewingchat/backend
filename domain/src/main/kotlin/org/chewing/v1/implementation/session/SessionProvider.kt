@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.implementation.session
 
 import org.chewing.v1.external.ExternalSessionClient
 import org.springframework.stereotype.Component

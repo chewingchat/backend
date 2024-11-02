@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.response.chat
 
-import org.chewing.v1.dto.response.MediaResponse
+import org.chewing.v1.dto.response.media.MediaResponse
 import org.chewing.v1.model.chat.log.*
 import java.time.format.DateTimeFormatter
 
@@ -39,7 +39,7 @@ sealed class ChatLogMessageResponse {
         val timestamp: String,
         val seqNumber: Int,
         val page: Int,
-        val targetUserId: String,
+        val targetUserIds: List<String>,
     ) : ChatLogMessageResponse()
 
     data class File(
@@ -115,7 +115,7 @@ sealed class ChatLogMessageResponse {
                     timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
-                    targetUserId = chatLog.targetUserId
+                    targetUserIds = chatLog.targetUserIds
                 )
 
                 is ChatFileLog -> File(

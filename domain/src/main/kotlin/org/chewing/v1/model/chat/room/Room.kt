@@ -9,6 +9,7 @@ data class Room(
     val favorite: Boolean,
     val groupChatRoom: Boolean,
     val readSequenceNumber: Int,
+    val startSequenceNumber: Int,
     val chatRoomMemberInfos: List<ChatRoomMember>,
 ) {
     companion object {
@@ -22,7 +23,8 @@ data class Room(
                 favorite = userChatRoom.favorite,
                 groupChatRoom = chatRoomInfo.isGroup,
                 readSequenceNumber = userChatRoom.readSeqNumber,
-                chatRoomMemberInfos = chatRoomMembers
+                startSequenceNumber = userChatRoom.startSeqNumber,
+                chatRoomMemberInfos = chatRoomMembers,
             )
         }
 

@@ -18,7 +18,7 @@ internal class ChatInviteMongoEntity(
     seqNumber: Int,
     page: Int,
     sendTime: LocalDateTime,
-    val targetUserId: String,
+    val targetUserIds: List<String>,
 ) : ChatMessageMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
@@ -39,7 +39,7 @@ internal class ChatInviteMongoEntity(
                 seqNumber = chatInviteMessage.number.sequenceNumber,
                 page = chatInviteMessage.number.page,
                 sendTime = chatInviteMessage.timestamp,
-                targetUserId = chatInviteMessage.targetUserId,
+                targetUserIds = chatInviteMessage.targetUserIds,
             )
         }
     }
@@ -51,7 +51,7 @@ internal class ChatInviteMongoEntity(
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            targetUserId = targetUserId,
+            targetUserIds = targetUserIds,
             type = type
         )
     }

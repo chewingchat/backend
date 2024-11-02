@@ -15,7 +15,7 @@ data class MainFriendListResponse(
     companion object {
         fun ofList(user: User, userStatus: UserStatus, friends: List<Friend>): MainFriendListResponse {
             return MainFriendListResponse(
-                friends = friends.map { FriendResponse.of(it) },
+                friends = friends.map { FriendResponse.from(it) },
                 user = UserResponse.of(user, userStatus),
                 totalFriends = friends.size
             )
