@@ -1,14 +1,12 @@
 package org.chewing.v1.util
 
 import mu.KotlinLogging
-import org.chewing.v1.implementation.SessionProvider
+import org.chewing.v1.implementation.session.SessionProvider
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.SessionConnectedEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
-import org.springframework.web.socket.messaging.SessionSubscribeEvent
-
 
 
 private val logger = KotlinLogging.logger { }

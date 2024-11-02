@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.SecurityConfig
 import org.chewing.v1.config.WebSocketConfig
-import org.chewing.v1.implementation.SessionProvider
+import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

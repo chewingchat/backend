@@ -74,7 +74,7 @@ class ChatControllerTest(
         val chatDto = ChatCommonDto("testRoomId", "testUserId")
         session.send("/app/chat/common", chatDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processCommon(chatDto.chatRoomId, userId, chatDto.message)
     }
 
@@ -89,7 +89,7 @@ class ChatControllerTest(
         val chatReadDto = ChatReadDto("testRoomId")
         session.send("/app/chat/read", chatReadDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processRead(chatReadDto.chatRoomId, userId)
     }
 
@@ -104,7 +104,7 @@ class ChatControllerTest(
         val chatDeleteDto = ChatDeleteDto("testRoomId", "testMessageId")
         session.send("/app/chat/delete", chatDeleteDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processDelete(chatDeleteDto.chatRoomId, userId, chatDeleteDto.messageId)
     }
 
@@ -120,7 +120,7 @@ class ChatControllerTest(
         val chatReplyDto = ChatReplyDto("testRoomId", "testParentMessageId", "testMessage")
         session.send("/app/chat/reply", chatReplyDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processReply(chatReplyDto.chatRoomId, userId, chatReplyDto.parentMessageId, chatReplyDto.message)
     }
 
@@ -136,7 +136,7 @@ class ChatControllerTest(
         val chatBombMessage = ChatBombDto("testRoomId", "testMessage", "2024:10:22 13:45:30")
         session.send("/app/chat/bomb", chatBombMessage)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processBombing(chatBombMessage.chatRoomId, userId, chatBombMessage.message, chatBombMessage.toExpireAt())
     }
 

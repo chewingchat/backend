@@ -20,17 +20,16 @@ class ChatRoomFacade(
         roomService.deleteGroupChatRooms(chatRoomIds, userId)
         val chatMessages = chatLogService.leaveMessages(chatRoomIds, userId)
         chatMessages.forEach {
-            val membersInfo = roomService.getChatRoomFriends(it.chatRoomId, userId)
+            val chatRoomInfo = roomService.activateChatRoom(it.chatRoomId, userId, it.number)
+            val membersInfo = roomService.getChatRoomFriends(it.chatRoomId, userId, chatRoomInfo)
             notificationService.handleMessagesNotification(it, membersInfo.map { it.memberId }, userId)
         }
     }
 
     fun createGroupChatRoom(userId: String, friendIds: List<String>): String {
         val newRoomId = roomService.createGroupChatRoom(userId, friendIds)
-        val chatMessages = chatLogService.inviteMessages(friendIds, newRoomId, userId)
-        chatMessages.forEach {
-            notificationService.handleMessagesNotification(it, friendIds, userId)
-        }
+        val chatMessage = chatLogService.inviteMessages(friendIds, newRoomId, userId)
+        notificationService.handleMessagesNotification(chatMessage, friendIds, userId)
         return newRoomId
     }
 
@@ -39,5 +38,13 @@ class ChatRoomFacade(
         val chatNumbers = chatLogService.getLatestChat(roomInfos.map { it.chatRoomId })
         val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, chatNumbers)
         return ChatRoomSortEngine.sortChatRoom(chatRooms, sort)
+    }
+
+    fun inviteChatRoom(userId: String, chatRoomId: String, friendId: String) {
+        roomService.inviteChatRoom(chatRoomId, friendId, userId)
+        val chatMessage = chatLogService.inviteMessage(chatRoomId, friendId, userId)
+        val chatRoomInfo = roomService.activateChatRoom(chatRoomId, userId, chatMessage.number)
+        val membersInfo = roomService.getChatRoomFriends(chatRoomId, userId, chatRoomInfo)
+        notificationService.handleMessagesNotification(chatMessage, membersInfo.map { it.memberId }, userId)
     }
 }

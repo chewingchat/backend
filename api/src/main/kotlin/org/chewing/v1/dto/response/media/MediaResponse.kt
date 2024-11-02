@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.response
+package org.chewing.v1.dto.response.media
 
 import org.chewing.v1.model.media.Media
 

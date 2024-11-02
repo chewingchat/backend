@@ -10,4 +10,12 @@ class ChatRoomRequest{
     data class Delete(
         val chatRoomIds: List<String> = emptyList()
     )
+    data class Invite(
+        val chatRoomId: String = "",
+        val friendId: String = ""
+    )
+    data class Favorite(
+        val chatRoomId: String = "",
+        val favorite: Boolean = true
+    )
 }

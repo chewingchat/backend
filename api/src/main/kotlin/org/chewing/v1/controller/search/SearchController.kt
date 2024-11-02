@@ -1,29 +1,29 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.search
 
 import org.chewing.v1.dto.request.friend.FriendSearchRequest
 import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
-import org.chewing.v1.dto.response.search.FriendSearchResultResponse
+import org.chewing.v1.dto.response.search.SearchResultResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.facade.SearchFacade
-import org.chewing.v1.service.user.UserService
+import org.chewing.v1.service.search.SearchService
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/friend/search")
-class FriendSearchController(
+@RequestMapping("/api/search")
+class SearchController(
     private val searchFacade: SearchFacade,
-    private val userService: UserService
+    private val searchService: SearchService
 ) {
     @GetMapping("")
-    fun searchFriend(
+    fun search(
         @RequestAttribute("userId") userId: String,
         @RequestParam("keyword") keyword: String
-    ): SuccessResponseEntity<FriendSearchResultResponse> {
-        val friends = searchFacade.searchFriends(userId, keyword)
+    ): SuccessResponseEntity<SearchResultResponse> {
+        val search = searchFacade.search(userId, keyword)
         //성공 응답 200 반환
-        return ResponseHelper.success(FriendSearchResultResponse.ofList(friends))
+        return ResponseHelper.success(SearchResultResponse.ofList(search))
     }
 
     @PostMapping("")
@@ -31,7 +31,7 @@ class FriendSearchController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: FriendSearchRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        userService.createSearchKeyword(userId, request.keyword)
+        searchService.createSearchKeyword(userId, request.keyword)
         //성공 응답 200 반환
         return ResponseHelper.successCreate()
     }
@@ -40,7 +40,7 @@ class FriendSearchController(
     fun getSearchHistory(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<FriendSearchHistoryResponse> {
-        val friends = userService.getSearchKeywords(userId)
+        val friends = searchService.getSearchKeywords(userId)
         //성공 응답 200 반환
         return ResponseHelper.success(FriendSearchHistoryResponse.ofList(friends))
     }

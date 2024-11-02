@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component
 class ChatRoomHandler(
     private val chatRoomUpdater: ChatRoomUpdater,
 ) {
-    fun lockActivateChatRoomUser(chatRoomId: String, userId: String) {
+    fun lockFavoriteChatRoom(chatRoomId: String, userId: String, isFavorite: Boolean, isGroup: Boolean) {
         var retryCount = 0
         val maxRetry = 5
         var delayTime = 100L
         while (retryCount < maxRetry) {
             try {
-                chatRoomUpdater.updateUnDelete(chatRoomId, userId)
+                chatRoomUpdater.updateFavorite(chatRoomId, userId, isFavorite, isGroup)
                 return
             } catch (ex: OptimisticLockingFailureException) {
                 // 예외 처리: 버전 충돌 시 재시도
@@ -27,6 +27,23 @@ class ChatRoomHandler(
                 delayTime *= 2
             }
         }
-        throw ConflictException(ErrorCode.CHATROOM_CREATE_FAILED)
+        throw ConflictException(ErrorCode.CHATROOM_FAVORITE_FAILED)
+    }
+
+    fun lockReadChatRoom(userId: String, number: ChatNumber, isGroup: Boolean) {
+        var retryCount = 0
+        val maxRetry = 5
+        var delayTime = 100L
+        while (retryCount < maxRetry) {
+            try {
+                chatRoomUpdater.updateRead( userId, number, isGroup)
+                return
+            } catch (ex: OptimisticLockingFailureException) {
+                // 예외 처리: 버전 충돌 시 재시도
+                retryCount++
+                Thread.sleep(delayTime)
+                delayTime *= 2
+            }
+        }
     }
 }

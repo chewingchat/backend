@@ -64,7 +64,7 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        targetUserId: String
+        targetUserIds: List<String>
     ): ChatInviteMessage {
         return ChatInviteMessage.of(
             generateKey(chatRoomId),
@@ -72,7 +72,7 @@ class ChatGenerator {
             senderId = userId,
             timestamp = LocalDateTime.now(),
             number = number,
-            targetUserId = targetUserId
+            targetUserIds = targetUserIds
         )
     }
 

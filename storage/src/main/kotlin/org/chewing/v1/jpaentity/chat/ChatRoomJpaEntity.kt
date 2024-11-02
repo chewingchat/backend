@@ -1,7 +1,6 @@
 package org.chewing.v1.jpaentity.chat
 
 import jakarta.persistence.*
-import org.chewing.v1.model.chat.message.MessageType
 
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import java.time.LocalDateTime
@@ -9,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "chatrooms", schema = "chewing")
-internal class ChatRoomEntity(
+internal class ChatRoomJpaEntity(
     @Id
     private val chatRoomId: String = UUID.randomUUID().toString(),
 
@@ -18,8 +17,8 @@ internal class ChatRoomEntity(
     private val createdAt: LocalDateTime = LocalDateTime.now(),
 ) {
     companion object {
-        fun generate(groupChatRoom: Boolean): ChatRoomEntity {
-            return ChatRoomEntity(
+        fun generate(groupChatRoom: Boolean): ChatRoomJpaEntity {
+            return ChatRoomJpaEntity(
                 groupChatRoom = groupChatRoom,
             )
         }
@@ -34,5 +33,9 @@ internal class ChatRoomEntity(
 
     fun toChatRoomId(): String {
         return this.chatRoomId
+    }
+
+    fun isGroup(): Boolean {
+        return this.groupChatRoom
     }
 }

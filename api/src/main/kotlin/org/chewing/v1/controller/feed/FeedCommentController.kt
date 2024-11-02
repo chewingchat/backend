@@ -1,6 +1,6 @@
 package org.chewing.v1.controller.feed
 
-import org.chewing.v1.dto.request.CommentRequest
+import org.chewing.v1.dto.request.feed.CommentRequest
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
 import org.chewing.v1.dto.response.my.MyCommentResponse
 import org.chewing.v1.facade.FeedFacade

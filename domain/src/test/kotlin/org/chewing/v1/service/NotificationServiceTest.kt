@@ -6,7 +6,7 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.external.ExternalChatNotificationClient
 import org.chewing.v1.external.ExternalPushNotificationClient
 import org.chewing.v1.external.ExternalSessionClient
-import org.chewing.v1.implementation.SessionProvider
+import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.notification.NotificationGenerator
 import org.chewing.v1.implementation.notification.NotificationSender
 import org.chewing.v1.implementation.user.user.UserReader
@@ -27,7 +27,7 @@ class NotificationServiceTest {
     private val externalChatNotificationClient: ExternalChatNotificationClient = mock()
     private val externalSessionClient: ExternalSessionClient = mock()
 
-    private val userReader: UserReader = UserReader(userRepository, pushNotificationRepository, mock())
+    private val userReader: UserReader = UserReader(userRepository, pushNotificationRepository)
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private val asyncJobExecutor = AsyncJobExecutor(ioScope)
     private val notificationSender: NotificationSender =

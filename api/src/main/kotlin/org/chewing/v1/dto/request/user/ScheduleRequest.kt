@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.request
+package org.chewing.v1.dto.request.user
 
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime

@@ -1,4 +1,4 @@
-package org.chewing.v1.controller
+package org.chewing.v1.controller.main
 
 import org.chewing.v1.dto.response.main.MainResponse
 import org.chewing.v1.facade.MainFacade

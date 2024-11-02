@@ -232,7 +232,7 @@ class ChatLogServiceTest {
     }
 
     @Test
-    fun `초대 메시지 생성 및 저장`() {
+    fun `초대 메시지 리스트 생성 및 저장`() {
         val friendIds = listOf("friendId")
         val chatRoomId = "chatRoomId"
         val userId = "userId"
@@ -244,14 +244,35 @@ class ChatLogServiceTest {
 
         val result = chatLogService.inviteMessages(friendIds, chatRoomId, userId)
 
-        assert(result.size == 1)
-        assert(result[0].chatRoomId == chatRoomId)
-        assert(result[0].senderId == userId)
-        assert(result[0].type == MessageType.INVITE)
-        assert(result[0].number.chatRoomId == chatRoomId)
-        assert(result[0].number.sequenceNumber == seqNumber.sequenceNumber)
-        assert(result[0].number.page == seqNumber.sequenceNumber / ChatFinder.PAGE_SIZE)
-        assert(result[0].targetUserId == friendIds[0])
+        assert(result.chatRoomId == chatRoomId)
+        assert(result.senderId == userId)
+        assert(result.type == MessageType.INVITE)
+        assert(result.number.chatRoomId == chatRoomId)
+        assert(result.number.sequenceNumber == seqNumber.sequenceNumber)
+        assert(result.number.page == seqNumber.sequenceNumber / ChatFinder.PAGE_SIZE)
+        assert(result.targetUserIds[0] == friendIds[0])
+    }
+
+    @Test
+    fun `초대 메시지 생성 및 저장`() {
+        val chatRoomId = "chatRoomId"
+        val friendId = "friendId"
+        val userId = "userId"
+        val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
+
+        whenever(
+            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
+        ).thenReturn(seqNumber)
+
+        val result = chatLogService.inviteMessage(chatRoomId, friendId, userId)
+
+        assert(result.chatRoomId == chatRoomId)
+        assert(result.senderId == userId)
+        assert(result.type == MessageType.INVITE)
+        assert(result.number.chatRoomId == chatRoomId)
+        assert(result.number.sequenceNumber == seqNumber.sequenceNumber)
+        assert(result.number.page == seqNumber.sequenceNumber / ChatFinder.PAGE_SIZE)
+        assert(result.targetUserIds[0] == friendId)
     }
 
     @Test

@@ -238,7 +238,7 @@ object TestDataFactory {
         readNumber: Int,
         favorite: Boolean
     ): ChatRoomMemberInfo {
-        return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber, favorite)
+        return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber,readNumber, favorite)
     }
 
     fun createPushToken(pushTokenId: String): PushToken {
@@ -290,7 +290,7 @@ object TestDataFactory {
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            targetUserId = "targetUserId"
+            targetUserIds = listOf("targetUserId")
         )
     }
 
