@@ -10,7 +10,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev  # 'dev' 브랜치에서만 워크플로우 실행 mm
+      - dev  # 'dev' 브랜치에서만 워크플로우 실행 mm..
 
 jobs:
   build:
