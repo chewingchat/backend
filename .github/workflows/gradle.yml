@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: dev  # gradlew 파일이 있는 디렉토리로 설정
+        working-directory: /home/runner/work/backend/backend/dev  # 프로젝트의 실제 경로로 설정
 
     steps:
       - name: Checkout Code
