@@ -67,7 +67,7 @@ jobs:
         with:
           host: ${{ secrets.NCP_SERVER_HOST }}
           username: ${{ secrets.NCP_USERNAME }}
-          key: ${{ secrets.NCP_SSH_KEY }} # 다시 원상복구함
+          key: ${{ secrets.NCP_SSH_KEY }} # 다시 원상복구함...
           script: |
             docker pull yhkim052556/chewingrepository:latest
             docker stop spring-app || true
