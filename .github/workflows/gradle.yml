@@ -10,7 +10,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev  # 'dev' 브랜치에 푸시될 때만 실행되도록 설정
+      - main  # main 브랜치에 푸시될 때만 전체 워크플로우 실행
 
 jobs:
   build:
@@ -40,4 +40,5 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
+        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 빌드 단계 실행
         run: ./gradlew clean build
