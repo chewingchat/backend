@@ -10,7 +10,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때만 전체 워크플로우 실행
+      - main  # main 브랜치에 푸시될 때 전체 워크플로우 실행
 
 jobs:
   build:
@@ -40,5 +40,38 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 빌드 단계 실행
+        # dev 브랜치에서 빌드 단계 실행 (main 브랜치에도 실행되도록 설정)
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
         run: ./gradlew clean build
+
+      - name: Build Docker Image
+        if: github.ref == 'refs/heads/main'  # main 브랜치에서만 Docker 이미지 빌드
+        run: docker build -t your-docker-image-name .
+
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/main'  # main 브랜치에서만 Docker Hub 로그인
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Push Docker Image to Docker Hub
+        if: github.ref == 'refs/heads/main'  # main 브랜치에서만 Docker 이미지 푸시
+        run: docker push your-docker-image-name
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # main 브랜치에서만 배포 실행
+    steps:
+      - name: SSH to NCP Server and Deploy
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          script: |
+            docker pull your-docker-image-name
+            docker stop spring-app || true
+            docker rm spring-app || true
+            docker run -d --name spring-app -p 8080:8080 your-docker-image-name
