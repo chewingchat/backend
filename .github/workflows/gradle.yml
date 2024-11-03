@@ -46,7 +46,7 @@ jobs:
 
       - name: Build Docker Image
         if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 빌드
-        run: docker build -t your-docker-image-name .
+        run: docker build -t yhkim052556/chewingrepository:latest .
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'  # main 브랜치에서만 Docker Hub 로그인
@@ -57,7 +57,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         if: github.ref == 'refs/heads/main'  # main 브랜치에서만 Docker 이미지 푸시
-        run: docker push your-docker-image-name
+        run: docker push yhkim052556/chewingrepository:latest
 
   deploy:
     needs: build
