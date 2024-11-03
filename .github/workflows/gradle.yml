@@ -62,7 +62,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # main 브랜치에서만 배포 실행
+    if: github.ref == 'refs/heads/dev'  # main 브랜치에서만 배포 실행
     steps:
       - name: SSH to NCP Server and Deploy
         uses: appleboy/ssh-action@v0.1.6
