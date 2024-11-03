@@ -58,11 +58,9 @@ jobs:
       - name: Push Docker Image to Docker Hub
         if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 푸시
         run: docker push yhkim052556/chewingrepository:latest
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'  # main 브랜치에서만 배포 실행
     steps:
       - name: SSH to NCP Server and Deploy
         uses: appleboy/ssh-action@v0.1.6
@@ -71,7 +69,8 @@ jobs:
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
           script: |
-            docker pull your-docker-image-name
+            docker pull yhkim052556/chewingrepository:latest
             docker stop spring-app || true
             docker rm spring-app || true
-            docker run -d --name spring-app -p 8080:8080 your-docker-image-name
+            docker run -d --name spring-app -p 8080:8080 yhkim052556/chewingrepository:latest
+ 
