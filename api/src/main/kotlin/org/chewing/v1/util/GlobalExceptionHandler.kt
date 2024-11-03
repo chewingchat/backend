@@ -22,51 +22,50 @@ class GlobalExceptionHandler {
 
     private val logger = KotlinLogging.logger {}
 
+    private fun handleException(e: Exception, errorCode: ErrorCode, status: HttpStatus) : ErrorResponseEntity {
+        logger.info { "${errorCode.code}: ${e.message}" }
+        return ResponseHelper.error(status, ErrorResponse.from(errorCode))
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ErrorResponseEntity {
-        val errorCode = ErrorCode.VARIABLE_WRONG
-        logger.info { "파라미터가 누락됨: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.BAD_REQUEST, ErrorResponse.from(errorCode))
+        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
     fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ErrorResponseEntity {
-        val errorCode = ErrorCode.PATH_WRONG
-        logger.info { "지원하지 않는 HTTP 메소드: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.BAD_REQUEST, ErrorResponse.from(errorCode))
+        return handleException(e, ErrorCode.PATH_WRONG, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponseEntity {
-        val errorCode = ErrorCode.VARIABLE_WRONG
-        logger.info { "잘못된 인자: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.BAD_REQUEST, ErrorResponse.from(errorCode))
+        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(AuthorizationException::class)
     protected fun handleAuthorizationException(e: AuthorizationException): ErrorResponseEntity {
-        val errorCode = e.errorCode
-        logger.info { "인증 예외 발생: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.UNAUTHORIZED, ErrorResponse.from(errorCode))
+        return handleException(e, e.errorCode, HttpStatus.UNAUTHORIZED)
     }
+
     @ExceptionHandler(HttpMessageNotReadableException::class)
     protected fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ErrorResponseEntity {
-        val errorCode = ErrorCode.VARIABLE_WRONG
-        logger.info { "잘못된 메세지: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.BAD_REQUEST, ErrorResponse.from(errorCode))
+        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(NotFoundException::class)
     protected fun handleNotFoundException(e: NotFoundException): ErrorResponseEntity {
-        val errorCode = e.errorCode
-        logger.info { "리소스를 찾을 수 없음: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.NOT_FOUND, ErrorResponse.from(errorCode))
+        return handleException(e, e.errorCode, HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(ConflictException::class)
     protected fun handleConflictException(e: ConflictException): ErrorResponseEntity {
-        val errorCode = e.errorCode
-        logger.info { "충돌 예외 발생: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.CONFLICT, ErrorResponse.from(errorCode))
+        return handleException(e, e.errorCode, HttpStatus.CONFLICT)
+    }
+
+    // Optional: 처리되지 않은 예외를 위한 핸들러 추가
+    @ExceptionHandler(Exception::class)
+    fun handleGenericException(e: Exception): ErrorResponseEntity {
+        logger.error(e) { "예기치 않은 오류 발생: ${e.message}" }
+        return ResponseHelper.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR))
     }
 }

@@ -24,7 +24,7 @@ class ScheduleService(
         scheduleRemover.removeUsers(userId)
     }
 
-    fun fetches(userId: String, type: ScheduleType): List<Schedule> {
-        return scheduleReader.reads(userId, type)
+    fun fetches(userId: String, type: ScheduleType, isOwned: Boolean): List<Schedule> {
+        return scheduleReader.reads(userId, type, isOwned)
     }
 }

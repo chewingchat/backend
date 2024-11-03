@@ -3,7 +3,7 @@ package org.chewing.v1.controller.feed
 import org.chewing.v1.dto.request.feed.FeedRequest
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.OwnedFeedResponse
-import org.chewing.v1.dto.response.friend.FeedsResponse
+import org.chewing.v1.dto.response.feed.FeedsResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
@@ -110,6 +110,6 @@ class FeedController(
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         feedService.make(userId, convertFiles, topic, FileCategory.FEED)
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 }

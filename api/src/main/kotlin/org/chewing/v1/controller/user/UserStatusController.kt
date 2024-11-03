@@ -38,7 +38,7 @@ class UserStatusController(
         @RequestBody request: UserStatusRequest.Add
     ): SuccessResponseEntity<SuccessCreateResponse> {
         userStatusService.createUserStatus(userId, request.message, request.emoji)
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
 

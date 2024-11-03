@@ -16,13 +16,25 @@ class UserScheduleController(
     private val scheduleService: ScheduleService
 ) {
     @GetMapping("")
-    fun getSchedule(
+    fun getOwnedSchedule(
         @RequestAttribute("userId") userId: String,
         @RequestParam("year") year: Int,
         @RequestParam("month") month: Int
     ): SuccessResponseEntity<ScheduleListResponse> {
         val type = ScheduleType.of(year, month)
-        val schedules = scheduleService.fetches(userId, type)
+        val schedules = scheduleService.fetches(userId, type, true)
+        return ResponseHelper.success(ScheduleListResponse.of(schedules))
+    }
+
+    @GetMapping("/friend/{friendId}")
+    fun getFriendSchedule(
+        @RequestAttribute("userId") userId: String,
+        @PathVariable("friendId") friendId: String,
+        @RequestParam("year") year: Int,
+        @RequestParam("month") month: Int
+    ): SuccessResponseEntity<ScheduleListResponse> {
+        val type = ScheduleType.of(year, month)
+        val schedules = scheduleService.fetches(friendId, type, false)
         return ResponseHelper.success(ScheduleListResponse.of(schedules))
     }
 
@@ -33,7 +45,7 @@ class UserScheduleController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val scheduleId = request.toScheduleId()
         scheduleService.remove(scheduleId)
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
     @PostMapping("")

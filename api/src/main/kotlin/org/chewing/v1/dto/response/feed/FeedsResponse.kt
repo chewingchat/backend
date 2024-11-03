@@ -1,4 +1,4 @@
-package org.chewing.v1.dto.response.friend
+package org.chewing.v1.dto.response.feed
 
 import org.chewing.v1.dto.response.feed.MainFeedResponse
 import org.chewing.v1.model.feed.Feed

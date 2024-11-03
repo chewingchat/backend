@@ -55,10 +55,10 @@ class ScheduleServiceTest {
         val type = ScheduleType.of(2021, 1)
         val schedule = TestDataFactory.createSchedule()
 
-        whenever(scheduleRepository.read(userId, type)).thenReturn(listOf(schedule))
+        whenever(scheduleRepository.reads(userId, type,true)).thenReturn(listOf(schedule))
 
         val result = assertDoesNotThrow {
-            scheduleService.fetches(userId, type)
+            scheduleService.fetches(userId, type, true)
         }
         
         assert(result.size == 1)

@@ -2,7 +2,7 @@ package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.feed.CommentRequest
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
-import org.chewing.v1.dto.response.my.MyCommentResponse
+import org.chewing.v1.dto.response.comment.MyCommentResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.response.SuccessCreateResponse
@@ -30,7 +30,7 @@ class FeedCommentController(
             FeedTarget.COMMENTS
         )
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
     @DeleteMapping("/comment")

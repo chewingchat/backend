@@ -1,7 +1,7 @@
 package org.chewing.v1.controller.search
 
 import org.chewing.v1.dto.request.friend.FriendSearchRequest
-import org.chewing.v1.dto.response.search.FriendSearchHistoryResponse
+import org.chewing.v1.dto.response.search.SearchHistoriesResponse
 import org.chewing.v1.dto.response.search.SearchResultResponse
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.facade.SearchFacade
@@ -33,15 +33,15 @@ class SearchController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         searchService.createSearchKeyword(userId, request.keyword)
         //성공 응답 200 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
     @GetMapping("/recent")
     fun getSearchHistory(
         @RequestAttribute("userId") userId: String
-    ): SuccessResponseEntity<FriendSearchHistoryResponse> {
-        val friends = searchService.getSearchKeywords(userId)
+    ): SuccessResponseEntity<SearchHistoriesResponse> {
+        val searchKeywords = searchService.getSearchKeywords(userId)
         //성공 응답 200 반환
-        return ResponseHelper.success(FriendSearchHistoryResponse.ofList(friends))
+        return ResponseHelper.success(SearchHistoriesResponse.ofList(searchKeywords))
     }
 }

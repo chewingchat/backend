@@ -6,9 +6,7 @@ import org.chewing.v1.config.WebSocketConfig
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.verify
@@ -31,6 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChatControllerTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
 ) {
@@ -43,6 +42,7 @@ class ChatControllerTest(
 
     private val userId = "testUserId"
     private val token = jwtTokenProvider.createAccessToken(userId)
+    private lateinit var session: StompSession
 
     private val stompClient: WebSocketStompClient by lazy {
         WebSocketStompClient(StandardWebSocketClient()).apply {
@@ -50,7 +50,7 @@ class ChatControllerTest(
         }
     }
 
-    private val session: StompSession by lazy {
+    private fun connectStompSession(): StompSession {
         val headers = WebSocketHttpHeaders().apply {
             set("Authorization", "Bearer $token")
         }
@@ -59,7 +59,12 @@ class ChatControllerTest(
         // CompletableFuture 사용
         val futureSession = stompClient.connectAsync(url, headers, object : StompSessionHandlerAdapter() {
         })
-        futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
+        return futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
+    }
+
+    @BeforeAll
+    fun setup() {
+        session = connectStompSession()
     }
 
 
@@ -73,7 +78,6 @@ class ChatControllerTest(
 
         val chatDto = ChatCommonDto("testRoomId", "testUserId")
         session.send("/app/chat/common", chatDto)
-
         latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processCommon(chatDto.chatRoomId, userId, chatDto.message)
     }

@@ -3,11 +3,14 @@ package org.chewing.v1
 import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
-import org.chewing.v1.model.auth.PushToken
-import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.chat.log.*
+import org.chewing.v1.model.chat.member.ChatRoomMember
+import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
+import org.chewing.v1.model.chat.room.ChatRoom
+import org.chewing.v1.model.chat.room.ChatRoomInfo
+import org.chewing.v1.model.chat.room.Room
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonPack
@@ -15,10 +18,12 @@ import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.friend.Friend
+import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.schedule.Schedule
+import org.chewing.v1.model.search.Search
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
@@ -56,7 +61,7 @@ object TestDataFactory {
         return Friend.of(createUser(), true, createFriendName(), createUserStatus(), AccessStatus.ACCESS)
     }
 
-    fun createSchedule(): Schedule {
+    fun createPrivateSchedule(): Schedule {
         return Schedule.of(
             "testScheduleId",
             "testScheduleTitle",
@@ -64,7 +69,21 @@ object TestDataFactory {
             LocalDateTime.now(),
             LocalDateTime.now(),
             LocalDateTime.now(),
-            "testLocation"
+            "testLocation",
+            true
+        )
+    }
+
+    fun createPublicSchedule(): Schedule {
+        return Schedule.of(
+            "testScheduleId",
+            "testScheduleTitle",
+            "testScheduleMemo",
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            "testLocation",
+            false
         )
     }
 
@@ -321,6 +340,70 @@ object TestDataFactory {
             name = "emoticonPackName",
             url = "www.example.com",
             emoticons = emoticons
+        )
+    }
+
+    fun createFriendShip(): FriendShip {
+        return FriendShip.of(
+            "testFriendId",
+            createFriendName(),
+            isFavorite = true,
+            AccessStatus.ACCESS
+        )
+    }
+
+    fun createRoomInfo(): ChatRoomInfo {
+        return ChatRoomInfo.of(
+            "chatRoomId",
+            true
+        )
+    }
+
+    fun createChatRoomMemberInfo(
+        userId: String,
+    ): ChatRoomMemberInfo {
+        return ChatRoomMemberInfo.of(
+            userId,
+            "chatRoomId",
+            1,
+            1,
+            true
+        )
+    }
+
+    fun createChatRoomMember(
+        userId: String,
+        isOwned: Boolean,
+    ): ChatRoomMember {
+        return ChatRoomMember.of(
+            userId,
+            1,
+            isOwned,
+        )
+    }
+
+    fun createRoom(): Room {
+        return Room.of(
+            createRoomInfo(),
+            createChatRoomMemberInfo("userId"),
+            listOf(createChatRoomMember("userId", true), createChatRoomMember("friendId", false))
+        )
+    }
+
+    fun createChatRoom(): ChatRoom {
+        return ChatRoom.of(
+            room = createRoom(),
+            chatLog = createNormalLog("messageId", "chatRoomId", "userId")
+        )
+    }
+
+    fun createSearch(
+        chatRooms : List<ChatRoom>,
+        friends : List<FriendShip>
+    ): Search {
+        return Search.of(
+            chatRooms,
+            friends
         )
     }
 }
