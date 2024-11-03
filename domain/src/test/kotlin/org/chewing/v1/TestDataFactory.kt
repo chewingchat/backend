@@ -133,7 +133,7 @@ object TestDataFactory {
     }
 
     fun createScheduleContent(): ScheduleContent {
-        return ScheduleContent.of("testTitle", "memo", "location")
+        return ScheduleContent.of("testTitle", "memo", "location", true)
     }
 
     fun createSchedule(): Schedule {
@@ -144,7 +144,8 @@ object TestDataFactory {
             LocalDateTime.now(),
             LocalDateTime.now().plusHours(1),
             LocalDateTime.now(),
-            "location"
+            "location",
+            true
         )
     }
 
@@ -238,7 +239,7 @@ object TestDataFactory {
         readNumber: Int,
         favorite: Boolean
     ): ChatRoomMemberInfo {
-        return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber,readNumber, favorite)
+        return ChatRoomMemberInfo.of(userId, chatRoomId, readNumber, readNumber, favorite)
     }
 
     fun createPushToken(pushTokenId: String): PushToken {

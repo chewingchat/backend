@@ -16,14 +16,16 @@ class Schedule(
             endTime: LocalDateTime,
             notificationTime: LocalDateTime,
             location: String,
+            private: Boolean,
         ): Schedule {
             return Schedule(
                 scheduleId,
                 ScheduleContent.of(
                     title,
                     memo,
-                    location
-                    ),
+                    location,
+                    private
+                ),
                 ScheduleTime.of(
                     startTime,
                     endTime,

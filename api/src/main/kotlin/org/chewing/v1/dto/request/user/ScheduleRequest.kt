@@ -20,10 +20,11 @@ class ScheduleRequest {
         val endTime: String,
         val notificationTime: String,
         val memo: String,
-        val location: String
+        val location: String,
+        val private: Boolean
     ) {
         fun toScheduleContent(): ScheduleContent {
-            return ScheduleContent.of(title, memo, location)
+            return ScheduleContent.of(title, memo, location, private)
         }
 
         fun toScheduleTime(): ScheduleTime {

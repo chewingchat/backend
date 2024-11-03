@@ -21,6 +21,7 @@ internal class ScheduleJpaEntity(
     private val endAt: LocalDateTime,
     private val notificationAt: LocalDateTime,
     private val userId: String,
+    private val private: Boolean,
     private val location: String,
 ) {
     companion object {
@@ -36,7 +37,8 @@ internal class ScheduleJpaEntity(
                 endAt = scheduleTime.endAt,
                 notificationAt = scheduleTime.notificationAt,
                 userId = userId,
-                location = scheduleContent.location
+                location = scheduleContent.location,
+                private = scheduleContent.private
             )
         }
     }
@@ -49,7 +51,8 @@ internal class ScheduleJpaEntity(
             startAt,
             endAt,
             notificationAt,
-            location
+            location,
+            private
         )
     }
 }

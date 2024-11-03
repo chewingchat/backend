@@ -2,6 +2,7 @@ package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.ChatRoomRequest
 import org.chewing.v1.dto.response.chat.ChatRoomIdResponse
+import org.chewing.v1.dto.response.chat.ChatRoomListResponse
 import org.chewing.v1.dto.response.chat.ChatRoomResponse
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
@@ -14,7 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/chatRooms")
+@RequestMapping("/api/chatRoom")
 class ChatRoomController(
     private val chatRoomFacade: ChatRoomFacade,
     private val roomService: RoomService
@@ -23,9 +24,9 @@ class ChatRoomController(
     fun getChatRooms(
         @RequestAttribute("userId") userId: String,
         @RequestParam("sort") sort: ChatRoomSortCriteria
-    ): ResponseEntity<HttpResponse<List<ChatRoomResponse>>> {
+    ): SuccessResponseEntity<ChatRoomListResponse> {
         val chatRooms = chatRoomFacade.getChatRooms(userId, sort)
-        return ResponseHelper.success(chatRooms.map { ChatRoomResponse.of(it) })
+        return ResponseHelper.success(ChatRoomListResponse.ofList(chatRooms))
     }
 
     @PostMapping("/delete")
@@ -52,7 +53,7 @@ class ChatRoomController(
         @RequestBody request: ChatRoomRequest.Create
     ): SuccessResponseEntity<ChatRoomIdResponse> {
         val roomId = roomService.createChatRoom(userId, request.friendId)
-        return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @PostMapping("/create/group")
@@ -61,7 +62,7 @@ class ChatRoomController(
         @RequestBody request: ChatRoomRequest.CreateGroup
     ): SuccessResponseEntity<ChatRoomIdResponse> {
         val roomId = chatRoomFacade.createGroupChatRoom(userId, request.friendIds)
-        return ResponseHelper.success(ChatRoomIdResponse.from(roomId))
+        return ResponseHelper.successCreate(ChatRoomIdResponse.from(roomId))
     }
 
     @PostMapping("/invite")

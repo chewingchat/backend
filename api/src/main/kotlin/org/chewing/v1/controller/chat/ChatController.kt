@@ -2,16 +2,11 @@ package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
-import org.chewing.v1.model.chat.message.ChatBombMessage
-import org.chewing.v1.model.chat.message.ChatNormalMessage
-import org.chewing.v1.model.chat.message.ChatDeleteMessage
-import org.chewing.v1.model.chat.message.ChatReplyMessage
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -75,7 +70,7 @@ class ChatController(
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         chatFacade.processFiles(convertFiles, userId, chatRoomId)
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 }
 

@@ -21,7 +21,7 @@ class FeedLikesController(
         val feedId = request.toFeedId()
         feedLikesService.like(userId, feedId, request.toTarget())
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
     @DeleteMapping("")
