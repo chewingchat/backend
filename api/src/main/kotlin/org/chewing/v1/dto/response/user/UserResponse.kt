@@ -20,7 +20,7 @@ data class UserResponse(
                 statusMessage = userStatus.message,
                 statusEmoji = userStatus.emoji,
                 imageUrl = user.image.url,
-                imageType = user.image.type.toString().lowercase(),
+                imageType = user.image.type.value().lowercase(),
                 firstName = user.name.firstName(),
                 lastName = user.name.lastName(),
             )

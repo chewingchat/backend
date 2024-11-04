@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonPack
+import org.chewing.v1.model.emoticon.EmoticonPackInfo
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 
@@ -18,14 +19,25 @@ internal class EmoticonPackJpaEntity(
 
     private val packName: String,
 ) : BaseEntity() {
-    fun toEmoticonPack(emoticons: List<Emoticon>): EmoticonPack {
-        return EmoticonPack.of(
+    companion object{
+        fun of(
+            packUrl: String,
+            packName: String
+        ): EmoticonPackJpaEntity {
+            return EmoticonPackJpaEntity(
+                packUrl = packUrl,
+                packName = packName
+            )
+        }
+    }
+    fun toEmoticonPack(): EmoticonPackInfo {
+        return EmoticonPackInfo.of(
             emoticonPackId,
             packName,
-            packUrl,
-            emoticons
+            packUrl
         )
     }
+
     fun getEmoticonId(): String {
         return emoticonPackId
     }

@@ -15,29 +15,35 @@ data class EmoticonPacksResponse(
     }
 
     data class EmoticonPackResponse(
-        val id: String,
+        val emoticonPackId: String,
+        val fileUrl: String,
+        val fileType: String,
         val emoticons: List<EmoticonResponse>
     ) {
         companion object {
             fun of(emoticonPack: EmoticonPack): EmoticonPackResponse {
                 return EmoticonPackResponse(
-                    id = emoticonPack.id,
+                    emoticonPackId = emoticonPack.id,
+                    fileUrl = emoticonPack.media.url,
+                    fileType = emoticonPack.media.type.value(),
                     emoticons = emoticonPack.emoticons.map { EmoticonResponse.of(it) }
                 )
             }
         }
 
         data class EmoticonResponse(
-            val id: String,
+            val emoticonId: String,
             val name: String,
-            val imageUrl: String
+            val fileUrl: String,
+            val fileType: String
         ) {
             companion object {
                 fun of(emoticon: Emoticon): EmoticonResponse {
                     return EmoticonResponse(
-                        id = emoticon.id,
+                        emoticonId = emoticon.id,
                         name = emoticon.name,
-                        imageUrl = emoticon.media.url
+                        fileUrl = emoticon.media.url,
+                        fileType = emoticon.media.type.value()
                     )
                 }
             }

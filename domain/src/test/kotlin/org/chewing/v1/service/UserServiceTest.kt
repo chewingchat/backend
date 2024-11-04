@@ -20,15 +20,14 @@ import org.mockito.kotlin.whenever
 class UserServiceTest {
     private val userRepository: UserRepository = mock()
     private val pushNotificationRepository: PushNotificationRepository = mock()
-    private val userSearchRepository: UserSearchRepository = mock()
     private val fileHandler: FileHandler = mock()
 
     private val userReader =
-        UserReader(userRepository, pushNotificationRepository, userSearchRepository)
+        UserReader(userRepository, pushNotificationRepository)
     private val userUpdater = UserUpdater(userRepository)
     private val userRemover = UserRemover(userRepository, pushNotificationRepository)
     private val userAppender =
-        UserAppender(userRepository, pushNotificationRepository, userSearchRepository)
+        UserAppender(userRepository, pushNotificationRepository)
     private val userValidator = UserValidator()
 
     private val userService =
@@ -335,28 +334,4 @@ class UserServiceTest {
 
         assert(result.errorCode == ErrorCode.USER_NOT_FOUND)
     }
-
-    @Test
-    fun `유저의 검색 키워드를 추가한다`() {
-        val userId = "userId"
-        val keyword = "keyword"
-        assertDoesNotThrow {
-            userService.createSearchKeyword(userId, keyword)
-        }
-    }
-
-    @Test
-    fun `유저의 검색 키워드를 가져온다`() {
-        val userId = "userId"
-        val userSearch = TestDataFactory.createUserSearch(userId)
-        whenever(userSearchRepository.readSearchHistory(userId)).thenReturn(listOf(userSearch))
-
-        val result = assertDoesNotThrow {
-            userService.getSearchKeywords(userId)
-        }
-
-        assert(result.size == 1)
-    }
-
-
 }

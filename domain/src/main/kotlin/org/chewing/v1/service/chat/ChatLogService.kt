@@ -51,9 +51,9 @@ class ChatLogService(
         return chatMessage
     }
 
-    fun chatCommonMessage(chatRoomId: String, userId: String, text: String): ChatNormalMessage {
+    fun chatNormalMessage(chatRoomId: String, userId: String, text: String): ChatNormalMessage {
         val chatRoomNumber = chatFinder.findNextNumber(chatRoomId)
-        val chatMessage = chatGenerator.generateCommonMessage(chatRoomId, userId, chatRoomNumber, text)
+        val chatMessage = chatGenerator.generateNormalMessage(chatRoomId, userId, chatRoomNumber, text)
         chatAppender.appendChatLog(chatMessage)
         return chatMessage
     }
@@ -66,13 +66,18 @@ class ChatLogService(
         }
     }
 
-    fun inviteMessages(friendIds: List<String>, chatRoomId: String, userId: String): List<ChatInviteMessage> {
-        return friendIds.map { friendId ->
-            val number = chatFinder.findNextNumber(chatRoomId)
-            val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, friendId)
-            chatAppender.appendChatLog(chatMessage)
-            chatMessage
-        }
+    fun inviteMessages(friendIds: List<String>, chatRoomId: String, userId: String): ChatInviteMessage {
+        val number = chatFinder.findNextNumber(chatRoomId)
+        val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, friendIds)
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
+    }
+
+    fun inviteMessage(chatRoomId: String, friendId: String, userId: String): ChatInviteMessage {
+        val number = chatFinder.findNextNumber(chatRoomId)
+        val chatMessage = chatGenerator.generateInviteMessage(chatRoomId, userId, number, listOf(friendId))
+        chatAppender.appendChatLog(chatMessage)
+        return chatMessage
     }
 
     fun bombingMessage(chatRoomId: String, userId: String, text: String, expiredAt: LocalDateTime): ChatBombMessage {
@@ -91,8 +96,8 @@ class ChatLogService(
         return chatReader.readChatLog(chatRoomId, page)
     }
 
-    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
-        val page = chatFinder.findLastPage(chatRoomId)
-        return chatReader.readChatLog(chatRoomId, page)
-    }
+//    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
+//        val page = chatFinder.findLastPage(chatRoomId)
+//        return chatReader.readChatLog(chatRoomId, page)
+//    }
 }

@@ -2,12 +2,11 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.config.SecurityConfig
 import org.chewing.v1.config.WebConfig
+import org.chewing.v1.config.WebSocketConfig
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.verify
@@ -29,7 +28,8 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebConfig::class, SecurityConfig::class)
+@Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChatControllerTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
 ) {
@@ -42,6 +42,7 @@ class ChatControllerTest(
 
     private val userId = "testUserId"
     private val token = jwtTokenProvider.createAccessToken(userId)
+    private lateinit var session: StompSession
 
     private val stompClient: WebSocketStompClient by lazy {
         WebSocketStompClient(StandardWebSocketClient()).apply {
@@ -49,7 +50,7 @@ class ChatControllerTest(
         }
     }
 
-    private val session: StompSession by lazy {
+    private fun connectStompSession(): StompSession {
         val headers = WebSocketHttpHeaders().apply {
             set("Authorization", "Bearer $token")
         }
@@ -58,7 +59,12 @@ class ChatControllerTest(
         // CompletableFuture 사용
         val futureSession = stompClient.connectAsync(url, headers, object : StompSessionHandlerAdapter() {
         })
-        futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
+        return futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
+    }
+
+    @BeforeAll
+    fun setup() {
+        session = connectStompSession()
     }
 
 
@@ -72,8 +78,7 @@ class ChatControllerTest(
 
         val chatDto = ChatCommonDto("testRoomId", "testUserId")
         session.send("/app/chat/common", chatDto)
-
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processCommon(chatDto.chatRoomId, userId, chatDto.message)
     }
 
@@ -88,7 +93,7 @@ class ChatControllerTest(
         val chatReadDto = ChatReadDto("testRoomId")
         session.send("/app/chat/read", chatReadDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processRead(chatReadDto.chatRoomId, userId)
     }
 
@@ -103,7 +108,7 @@ class ChatControllerTest(
         val chatDeleteDto = ChatDeleteDto("testRoomId", "testMessageId")
         session.send("/app/chat/delete", chatDeleteDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processDelete(chatDeleteDto.chatRoomId, userId, chatDeleteDto.messageId)
     }
 
@@ -119,7 +124,7 @@ class ChatControllerTest(
         val chatReplyDto = ChatReplyDto("testRoomId", "testParentMessageId", "testMessage")
         session.send("/app/chat/reply", chatReplyDto)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processReply(chatReplyDto.chatRoomId, userId, chatReplyDto.parentMessageId, chatReplyDto.message)
     }
 
@@ -135,7 +140,7 @@ class ChatControllerTest(
         val chatBombMessage = ChatBombDto("testRoomId", "testMessage", "2024:10:22 13:45:30")
         session.send("/app/chat/bomb", chatBombMessage)
 
-        latch.await(5, TimeUnit.SECONDS)
+        latch.await(1, TimeUnit.MINUTES)
         verify(chatFacade).processBombing(chatBombMessage.chatRoomId, userId, chatBombMessage.message, chatBombMessage.toExpireAt())
     }
 

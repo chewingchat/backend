@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory.createJwtToken
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.config.TestSecurityConfig
+import org.chewing.v1.controller.auth.AuthController
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.auth.LoginInfo

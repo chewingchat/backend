@@ -71,7 +71,7 @@ class FeedControllerTest(
             )
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.feeds[0].type")
-                    .value(feed.feedDetails[0].media.type.toString().lowercase())
+                    .value(feed.feedDetails[0].media.type.value().lowercase())
             )
     }
 
@@ -95,7 +95,7 @@ class FeedControllerTest(
             )
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.feeds[0].type")
-                    .value(feed.feedDetails[0].media.type.toString().lowercase())
+                    .value(feed.feedDetails[0].media.type.value().lowercase())
             )
     }
 
@@ -123,13 +123,13 @@ class FeedControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.uploadTime").value(uploadTime))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.details[0].type")
-                    .value(feed.feedDetails[0].media.type.toString().lowercase())
+                    .value(feed.feedDetails[0].media.type.value().lowercase())
             )
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.details[1].index").value(feed.feedDetails[1].media.index))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.details[1].fileUrl").value(feed.feedDetails[1].media.url))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.details[1].type")
-                    .value(feed.feedDetails[1].media.type.toString().lowercase())
+                    .value(feed.feedDetails[1].media.type.value().lowercase())
             )
     }
 
@@ -159,13 +159,13 @@ class FeedControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.uploadTime").value(uploadTime))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.details[0].type")
-                    .value(feed.feedDetails[0].media.type.toString().lowercase())
+                    .value(feed.feedDetails[0].media.type.value().lowercase())
             )
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.details[1].index").value(feed.feedDetails[1].media.index))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.details[1].fileUrl").value(feed.feedDetails[1].media.url))
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.details[1].type")
-                    .value(feed.feedDetails[1].media.type.toString().lowercase())
+                    .value(feed.feedDetails[1].media.type.value().lowercase())
             )
     }
 
@@ -189,7 +189,7 @@ class FeedControllerTest(
             )
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.feeds[0].type")
-                    .value(feed.feedDetails[0].media.type.toString().lowercase())
+                    .value(feed.feedDetails[0].media.type.value().lowercase())
             )
     }
 

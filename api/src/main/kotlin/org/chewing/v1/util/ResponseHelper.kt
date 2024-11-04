@@ -18,8 +18,13 @@ object ResponseHelper {
         return ResponseEntity(response, HttpStatus.OK)
     }
 
-    fun successCreate(): SuccessResponseEntity<SuccessCreateResponse> {
+    fun successCreateOnly(): SuccessResponseEntity<SuccessCreateResponse> {
         val response = HttpResponse(status = HttpStatus.CREATED.value(), data = SuccessCreateResponse())
+        return ResponseEntity(response, HttpStatus.CREATED)
+    }
+
+    fun <T> successCreate(data: T): SuccessResponseEntity<T> {
+        val response = HttpResponse(status = HttpStatus.CREATED.value(), data = data)
         return ResponseEntity(response, HttpStatus.CREATED)
     }
 

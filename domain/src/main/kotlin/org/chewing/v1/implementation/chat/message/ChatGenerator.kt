@@ -36,7 +36,7 @@ class ChatGenerator {
         messageId: String
     ): ChatDeleteMessage {
         return ChatDeleteMessage.of(
-            messageId = messageId,
+            targetMessageId = messageId,
             chatRoomId = chatRoomId,
             senderId = userId,
             timestamp = LocalDateTime.now(),
@@ -44,7 +44,7 @@ class ChatGenerator {
         )
     }
 
-    fun generateCommonMessage(
+    fun generateNormalMessage(
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
@@ -64,7 +64,7 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        targetUserId: String
+        targetUserIds: List<String>
     ): ChatInviteMessage {
         return ChatInviteMessage.of(
             generateKey(chatRoomId),
@@ -72,7 +72,7 @@ class ChatGenerator {
             senderId = userId,
             timestamp = LocalDateTime.now(),
             number = number,
-            targetUserId = targetUserId
+            targetUserIds = targetUserIds
         )
     }
 

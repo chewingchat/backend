@@ -14,7 +14,7 @@ data class MainFeedResponse(
             return MainFeedResponse(
                 feedId = feed.feed.feedId,
                 mainDetailFileUrl = feed.feedDetails[0].media.url,
-                type = feed.feedDetails[0].media.type.toString().lowercase()
+                type = feed.feedDetails[0].media.type.value().lowercase()
             )
         }
     }

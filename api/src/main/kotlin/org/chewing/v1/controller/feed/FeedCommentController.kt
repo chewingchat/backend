@@ -1,7 +1,8 @@
 package org.chewing.v1.controller.feed
 
-import org.chewing.v1.dto.request.CommentRequest
+import org.chewing.v1.dto.request.feed.CommentRequest
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
+import org.chewing.v1.dto.response.comment.MyCommentResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.response.SuccessCreateResponse
@@ -22,14 +23,14 @@ class FeedCommentController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: CommentRequest.AddCommentRequest
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        feedCommentService.comment(
+        feedFacade.commentFeed(
             userId,
             request.toFeedId(),
             request.toComment(),
             FeedTarget.COMMENTS
         )
         //생성 완료 응답 201 반환
-        return ResponseHelper.successCreate()
+        return ResponseHelper.successCreateOnly()
     }
 
     @DeleteMapping("/comment")
@@ -51,8 +52,17 @@ class FeedCommentController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FeedFriendCommentedResponse> {
-        val friendComment = feedFacade.fetches(userId, feedId)
+        val friendComment = feedFacade.getFeedComment(userId, feedId)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedFriendCommentedResponse.of(friendComment))
+    }
+
+    @GetMapping("/my/comment")
+    fun getMyCommentedFeed(
+        @RequestAttribute("userId") userId: String,
+    ): SuccessResponseEntity<MyCommentResponse> {
+        val myCommentedInfo = feedFacade.getUserCommented(userId)
+        //성공 응답 200 반환
+        return ResponseHelper.success(MyCommentResponse.of(myCommentedInfo))
     }
 }

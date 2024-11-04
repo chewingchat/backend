@@ -1,7 +1,8 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.chewing.v1.TestDataFactory.createSchedule
+import org.chewing.v1.TestDataFactory.createPrivateSchedule
+import org.chewing.v1.TestDataFactory.createPublicSchedule
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.user.UserScheduleController
 import org.chewing.v1.service.user.ScheduleService
@@ -33,7 +34,7 @@ class UserScheduleControllerTest(
 
     @Test
     fun getSchedule() {
-        val schedules = listOf(createSchedule())
+        val schedules = listOf(createPublicSchedule())
         val year = 2021
         val month = 1
         val formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")
@@ -42,7 +43,7 @@ class UserScheduleControllerTest(
         val notificationTime = schedules[0].time.notificationAt.format(formatter)
 
         // When
-        whenever(scheduleService.fetches(any(), any())).thenReturn(schedules)
+        whenever(scheduleService.fetches(any(), any(), any())).thenReturn(schedules)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +65,49 @@ class UserScheduleControllerTest(
                 MockMvcResultMatchers.jsonPath("$.data.schedules[0].notificationTime")
                     .value(notificationTime)
             )
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].location").value(schedules[0].content.location))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].location").value(schedules[0].content.location)
+            )
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private))
+    }
+
+    @Test
+    fun getFriendSchedule() {
+        val schedules = listOf(createPrivateSchedule())
+        val year = 2021
+        val month = 1
+        val formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")
+        val startTime = schedules[0].time.startAt.format(formatter)
+        val endTime = schedules[0].time.endAt.format(formatter)
+        val notificationTime = schedules[0].time.notificationAt.format(formatter)
+
+        // When
+        whenever(scheduleService.fetches(any(), any(), any())).thenReturn(schedules)
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/api/schedule/friend/testFriendId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("year", year.toString())
+                .param("month", month.toString())
+                .requestAttr("userId", "testUserId")  // userId 전달
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].scheduleId").value(schedules[0].id))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].title").value(schedules[0].content.title))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].memo").value(schedules[0].content.memo))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].startTime").value(startTime)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].endTime").value(endTime)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].notificationTime")
+                    .value(notificationTime)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].location").value(schedules[0].content.location)
+            )
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private))
     }
 
     @Test

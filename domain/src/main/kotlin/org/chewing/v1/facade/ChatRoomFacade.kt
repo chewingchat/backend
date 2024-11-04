@@ -20,25 +20,31 @@ class ChatRoomFacade(
         roomService.deleteGroupChatRooms(chatRoomIds, userId)
         val chatMessages = chatLogService.leaveMessages(chatRoomIds, userId)
         chatMessages.forEach {
-            notificationService.handleMessagesNotification(userId, it)
+            val chatRoomInfo = roomService.activateChatRoom(it.chatRoomId, userId, it.number)
+            val membersInfo = roomService.getChatRoomFriends(it.chatRoomId, userId, chatRoomInfo)
+            notificationService.handleMessagesNotification(it, membersInfo.map { member -> member.memberId }, userId)
         }
     }
 
     fun createGroupChatRoom(userId: String, friendIds: List<String>): String {
         val newRoomId = roomService.createGroupChatRoom(userId, friendIds)
-        val chatMessages = chatLogService.inviteMessages(friendIds, newRoomId, userId)
-        chatMessages.forEach {
-            notificationService.handleMessagesNotification(userId, it)
-        }
+        val chatMessage = chatLogService.inviteMessages(friendIds, newRoomId, userId)
+        notificationService.handleMessagesNotification(chatMessage, friendIds, userId)
         return newRoomId
     }
 
     fun getChatRooms(userId: String, sort: ChatRoomSortCriteria): List<ChatRoom> {
         val roomInfos = roomService.getChatRooms(userId)
-        val chatNumbers = chatLogService.getLatestChat(roomInfos.map { it.chatRoomId })
-        val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, chatNumbers)
+        val latestChatLogs = chatLogService.getLatestChat(roomInfos.map { it.chatRoomId })
+        val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, latestChatLogs)
         return ChatRoomSortEngine.sortChatRoom(chatRooms, sort)
     }
 
-
+    fun inviteChatRoom(userId: String, chatRoomId: String, friendId: String) {
+        roomService.inviteChatRoom(chatRoomId, friendId, userId)
+        val chatMessage = chatLogService.inviteMessage(chatRoomId, friendId, userId)
+        val chatRoomInfo = roomService.activateChatRoom(chatRoomId, userId, chatMessage.number)
+        val membersInfo = roomService.getChatRoomFriends(chatRoomId, userId, chatRoomInfo)
+        notificationService.handleMessagesNotification(chatMessage, membersInfo.map { it.memberId }, userId)
+    }
 }

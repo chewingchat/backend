@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 class UserAppender(
     private val userRepository: UserRepository,
     private val pushNotificationRepository: PushNotificationRepository,
-    private val userSearchRepository: UserSearchRepository
 ) {
 
     fun appendUserPushToken(user: User, appToken: String, device: PushToken.Device) {
@@ -21,9 +20,5 @@ class UserAppender(
 
     fun appendIfNotExist(contact: Contact): User {
         return userRepository.append(contact)
-    }
-
-    fun appendSearchKeyword(userId: String, keyword: String) {
-        return userSearchRepository.appendHistory(userId, keyword)
     }
 }

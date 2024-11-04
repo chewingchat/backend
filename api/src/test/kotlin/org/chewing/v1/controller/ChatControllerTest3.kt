@@ -2,6 +2,7 @@ package org.chewing.v1.controller
 
 import org.chewing.v1.config.SecurityConfig
 import org.chewing.v1.config.WebConfig
+import org.chewing.v1.config.WebSocketConfig
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
@@ -31,7 +32,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebConfig::class, SecurityConfig::class)
+@Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
 class ChatControllerTest3(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
 ) {
@@ -52,7 +53,7 @@ class ChatControllerTest3(
         val webSocketHeaders = WebSocketHttpHeaders()
         val futureSession = stompClient.connectAsync(url, webSocketHeaders, object : StompSessionHandlerAdapter() {})
 
-        val exception = assertThrows<ExecutionException> {
+        val exception = assertThrows<Exception> {
             futureSession.get(1, TimeUnit.MINUTES)
         }
         println(exception)

@@ -45,9 +45,6 @@ allprojects {
         //
         implementation("org.springframework.boot:spring-boot-starter-websocket")
 
-        implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-        implementation("org.springframework.security:spring-security-oauth2-client")
-
         //코루틴
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
@@ -86,12 +83,25 @@ tasks.test {
 }
 
 tasks.testCodeCoverageReport {
+
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
-}
 
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    exclude(
+                        "**/ChewingApplicationKt.class",
+                        "**/ChewingApplicationKt\$*.class",
+                    )
+                }
+            }
+        )
+    )
+}
 tasks {
     bootJar {
         enabled = false

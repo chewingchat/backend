@@ -21,9 +21,8 @@ data class FcmMessageDto(
                         "senderFirstName" to notification.user.name.firstName,
                         "senderLastName" to notification.user.name.lastName,
                         "type" to notification.type.name,
-                        "targetId" to notification.action.targetId,
-                        "message" to notification.message,
-                        "imageUrl" to notification.imageUrl
+                        "targetId" to notification.targetId,
+                        "content" to notification.content,
                     )
                 )
             )

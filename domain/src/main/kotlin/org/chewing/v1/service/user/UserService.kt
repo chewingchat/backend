@@ -68,15 +68,6 @@ class UserService(
         userUpdater.updateBirth(userId, birth)
     }
 
-    fun createSearchKeyword(userId: String, keyword: String) {
-        userAppender.appendSearchKeyword(userId, keyword)
-    }
-
-    fun getSearchKeywords(userId: String): List<UserSearch> {
-        return userReader.readSearched(userId)
-    }
-
-
     fun updateUserContact(userId: String, contact: Contact) {
         userUpdater.updateContact(userId, contact)
     }
