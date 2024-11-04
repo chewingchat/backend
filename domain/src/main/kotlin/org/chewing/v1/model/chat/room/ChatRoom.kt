@@ -24,6 +24,7 @@ data class ChatRoom(
             room: Room,
             chatLog: ChatLog
         ): ChatRoom {
+            val totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber
             when (chatLog) {
                 is ChatNormalLog -> {
                     return ChatRoom(
@@ -32,7 +33,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = chatLog.text,
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
@@ -46,7 +47,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = chatLog.text,
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
@@ -60,7 +61,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = chatLog.medias[0].url,
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
@@ -74,7 +75,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = "",
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
@@ -88,7 +89,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = "",
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos
@@ -102,7 +103,7 @@ data class ChatRoom(
                         groupChatRoom = room.groupChatRoom,
                         latestMessage = chatLog.text,
                         latestMessageTime = chatLog.timestamp,
-                        totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber,
+                        totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
                         chatRoomMemberInfos = room.chatRoomMemberInfos

@@ -52,7 +52,7 @@ class FeedCommentController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FeedFriendCommentedResponse> {
-        val friendComment = feedFacade.fetches(userId, feedId)
+        val friendComment = feedFacade.getFeedComment(userId, feedId)
         //성공 응답 200 반환
         return ResponseHelper.success(FeedFriendCommentedResponse.of(friendComment))
     }

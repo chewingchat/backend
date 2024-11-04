@@ -12,7 +12,7 @@ object ChatRoomSortEngine {
     ): List<ChatRoom> {
         return when (sort) {
             ChatRoomSortCriteria.FAVORITE -> chatRooms.sortedWith(
-                compareBy<ChatRoom> { it.favorite }.thenByDescending { it.latestMessageTime }
+                compareByDescending<ChatRoom> { it.favorite }.thenByDescending { it.latestMessageTime }
             )
             ChatRoomSortCriteria.DATE -> chatRooms.sortedWith(
                 compareByDescending<ChatRoom> { it.latestMessageTime }
