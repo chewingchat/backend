@@ -1,4 +1,7 @@
 package org.chewing.v1.dto
 
-class ChatGptMessage {
-}
+
+data class ChatGptMessage(
+    var role: String = "",
+    var content: String = ""
+)
