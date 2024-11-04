@@ -12,7 +12,7 @@ spring.config.activate.on-profile: test
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: false
@@ -37,29 +37,29 @@ storage:
       data-source-properties:
         rewriteBatchedStatements: true
 
----
-
-spring:
-  config:
-    activate:
-      on-profile: local
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate.format_sql: true
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true
-
-storage:
-  datasource:
-    core:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbcUrl: jdbc:mysql://localhost:3306/chewing?useSSL=false&allowPublicKeyRetrieval=true&useSSL=false
-      username: root
-      password: tjljh6767.
-      pool-name: core-db-pool
-      data-source-properties:
-        rewriteBatchedStatements: true
+#---
+#
+#spring:
+#  config:
+#    activate:
+#      on-profile: local
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#    properties:
+#      hibernate.format_sql: true
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#    defer-datasource-initialization: true
+#
+#storage:
+#  datasource:
+#    core:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      jdbcUrl: jdbc:mysql://localhost:3306/chewing?useSSL=false&allowPublicKeyRetrieval=true&useSSL=false
+#      username: root
+#      password: tjljh6767.
+#      pool-name: core-db-pool
+#      data-source-properties:
+#        rewriteBatchedStatements: true
