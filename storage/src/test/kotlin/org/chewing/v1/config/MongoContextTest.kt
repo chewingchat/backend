@@ -12,5 +12,4 @@ import org.springframework.test.context.TestPropertySource
 @ContextConfiguration(classes = [DbTestApplication::class])
 @ActiveProfiles("test")
 @Import(MongoDataGenerator::class)
-@TestPropertySource(properties = ["spring.config.location=classpath:db.yml"])
 abstract class MongoContextTest
