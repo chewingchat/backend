@@ -76,7 +76,6 @@ class ScheduleRepositoryTest : JpaContextTest() {
 
     @Test
     fun `시작시간 기준으로 친구 스케줄 조회에 성공`() {
-        val userId = "userId6"
         val friendId = "friendId"
         val content = ScheduleProvider.buildContent(false)
         val firstTime = ScheduleProvider.build1000YearFirstTime()
@@ -91,7 +90,6 @@ class ScheduleRepositoryTest : JpaContextTest() {
 
     @Test
     fun `시작시간 기준으로 친구 스케줄 조회 실패 - private 스케줄`(){
-        val userId = "userId7"
         val friendId = "friendId2"
         val content = ScheduleProvider.buildContent(true)
         val firstTime = ScheduleProvider.build1000YearFirstTime()
