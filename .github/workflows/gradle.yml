@@ -10,10 +10,12 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 전체 워크플로우 실행
+      - dev  # dev 브랜치에 푸시될 때 Docker 이미지 빌드 및 푸시
+      - main # main 브랜치에 푸시될 때 배포 실행
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 실행
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -38,28 +40,24 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Build with Gradle
-        # dev 브랜치에서 빌드 단계 실행 
-        if: github.ref == 'refs/heads/dev'
         run: ./gradlew clean build
 
       - name: Build Docker Image
-        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 빌드
         run: docker build -t yhkim052556/chewingrepository:latest .
 
       - name: Login to Docker Hub
-        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker Hub 로그인
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
       - name: Push Docker Image to Docker Hub
-        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 푸시
         run: docker push yhkim052556/chewingrepository:latest
-        
+
   deploy:
-    needs: build
+    if: github.ref == 'refs/heads/main'  # main 브랜치에서만 실행
     runs-on: ubuntu-latest
     steps:
       - name: SSH to NCP Server and Deploy
@@ -70,8 +68,9 @@ jobs:
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080  # SSH가 8080 포트에서 실행 중인 경우
           script: |
-            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin # 도커계정정보 등록
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker pull yhkim052556/chewingrepository:latest
             docker stop spring-app || true
             docker rm spring-app || true
             docker run -d --name spring-app -p 8080:8080 yhkim052556/chewingrepository:latest
+
