@@ -14,7 +14,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-@Profile("!test")
 class WebSocketConfig(
     private val stompCustomHandshakeHandler: CustomHandshakeHandler,
     private val stompHandshakeInterceptor: StompHandshakeInterceptor

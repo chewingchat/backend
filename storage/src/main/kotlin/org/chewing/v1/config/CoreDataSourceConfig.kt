@@ -8,16 +8,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class MainDataSourceConfig {
+internal class CoreDataSourceConfig {
     @Bean
-    @ConfigurationProperties(prefix = "chewing.datasource.main")
-    fun mainHikariConfig(): HikariConfig {
+    @ConfigurationProperties(prefix = "storage.datasource.core")
+    fun coreHikariConfig(): HikariConfig {
         return HikariConfig()
     }
 
     @Bean
-    fun mainDataSource(@Qualifier("mainHikariConfig") config: HikariConfig): HikariDataSource {
-        println("Test JDBC URL: " + config.jdbcUrl)
+    fun coreDataSource(@Qualifier("coreHikariConfig") config: HikariConfig): HikariDataSource {
         return HikariDataSource(config)
     }
 }

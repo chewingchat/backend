@@ -4,13 +4,12 @@ spring:
     hibernate:
       ddl-auto: none
     properties:
-      hibernate:
-        default_batch_fetch_size: 100
+      hibernate.default_batch_fetch_size: 100
+
 ---
+spring.config.activate.on-profile: test
+
 spring:
-  config:
-    activate:
-      on-profile: test
   jpa:
     hibernate:
       ddl-auto: create
@@ -28,16 +27,15 @@ de:
       embedded:
         version: 7.1.0
 
-chewing:
+storage:
   datasource:
-    main:
+    core:
       driver-class-name: org.h2.Driver
       jdbcUrl: jdbc:h2:mem:CHEWING;MODE=MySQL;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS CHEWING;DB_CLOSE_ON_EXIT=FALSE
       username: sa
-      pool-name: main-db-pool
+      pool-name: core-db-pool
       data-source-properties:
         rewriteBatchedStatements: true
-
 
 ---
 
@@ -55,13 +53,13 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
 
-chewing:
+storage:
   datasource:
-    main:
+    core:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbcUrl: jdbc:mysql://localhost:3306/chewing?useSSL=false&allowPublicKeyRetrieval=true&useSSL=false
       username: root
       password: tjljh6767.
-      pool-name: main-db-pool
+      pool-name: core-db-pool
       data-source-properties:
         rewriteBatchedStatements: true

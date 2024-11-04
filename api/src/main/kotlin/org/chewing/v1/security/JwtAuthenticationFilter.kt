@@ -14,7 +14,6 @@ import java.util.*
 
 
 @Component
-@Profile("!test")
 class JwtAuthenticationFilter(
     private val jwtTokenProvider: JwtTokenProvider
 ) : OncePerRequestFilter() {
