@@ -42,12 +42,13 @@ class FeedFacade(
         return Pair(feed, isLiked)
     }
 
-    fun fetches(userId: String, feedId: String): List<Comment> {
+    fun getFeedComment(userId: String, feedId: String): List<Comment> {
         val comments = feedCommentService.getComment(feedId)
         val friendShips = friendShipService.getAccessFriendShipsIn(comments.map { it.userId }, userId)
         val users = userService.getUsers(friendShips.map { it.friendId })
         return feedAggregator.aggregates(comments, friendShips, users)
     }
+
     fun getUserCommented(userId: String): List<UserCommentedInfo> {
         val comments = feedCommentService.getOwnedComment(userId)
         val feeds = feedService.getFeeds(comments.map { it.feedId })

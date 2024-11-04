@@ -22,7 +22,7 @@ class ChatRoomFacade(
         chatMessages.forEach {
             val chatRoomInfo = roomService.activateChatRoom(it.chatRoomId, userId, it.number)
             val membersInfo = roomService.getChatRoomFriends(it.chatRoomId, userId, chatRoomInfo)
-            notificationService.handleMessagesNotification(it, membersInfo.map { it.memberId }, userId)
+            notificationService.handleMessagesNotification(it, membersInfo.map { member -> member.memberId }, userId)
         }
     }
 
@@ -35,8 +35,8 @@ class ChatRoomFacade(
 
     fun getChatRooms(userId: String, sort: ChatRoomSortCriteria): List<ChatRoom> {
         val roomInfos = roomService.getChatRooms(userId)
-        val chatNumbers = chatLogService.getLatestChat(roomInfos.map { it.chatRoomId })
-        val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, chatNumbers)
+        val latestChatLogs = chatLogService.getLatestChat(roomInfos.map { it.chatRoomId })
+        val chatRooms = chatRoomAggregator.aggregateChatRoom(roomInfos, latestChatLogs)
         return ChatRoomSortEngine.sortChatRoom(chatRooms, sort)
     }
 

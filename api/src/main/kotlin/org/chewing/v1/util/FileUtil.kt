@@ -1,16 +1,12 @@
 package org.chewing.v1.util
 
-import com.nimbusds.jose.util.IOUtils
 import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.MediaType
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.socket.BinaryMessage
 import java.io.*
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 object FileUtil {

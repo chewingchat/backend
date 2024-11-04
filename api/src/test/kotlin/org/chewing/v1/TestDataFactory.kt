@@ -12,6 +12,8 @@ import org.chewing.v1.model.chat.room.ChatRoom
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.chewing.v1.model.chat.room.Room
 import org.chewing.v1.model.comment.Comment
+import org.chewing.v1.model.comment.CommentInfo
+import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.model.feed.Feed
@@ -404,6 +406,29 @@ object TestDataFactory {
         return Search.of(
             chatRooms,
             friends
+        )
+    }
+
+    fun createCommentInfo(
+        commentId: String,
+    ): CommentInfo {
+        return CommentInfo.of(
+            commentId,
+            "comment",
+            LocalDateTime.now(),
+            "userId",
+            "feedId"
+        )
+    }
+
+    fun createUserCommentedInfo(
+        commentId: String,
+    ): UserCommentedInfo {
+        return UserCommentedInfo.of(
+            createCommentInfo(commentId),
+            createFriendShip(),
+            createUser(),
+            createFeed()
         )
     }
 }

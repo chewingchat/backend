@@ -3,19 +3,20 @@ package org.chewing.v1
 import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.*
-import org.chewing.v1.model.chat.log.ChatFileLog
-import org.chewing.v1.model.chat.log.ChatLogType
-import org.chewing.v1.model.chat.log.ChatNormalLog
+import org.chewing.v1.model.chat.log.*
+import org.chewing.v1.model.chat.member.ChatRoomMember
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.chewing.v1.model.chat.room.ChatSequenceNumber
+import org.chewing.v1.model.chat.room.Room
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.emoticon.EmoticonInfo
 import org.chewing.v1.model.emoticon.EmoticonPackInfo
+import org.chewing.v1.model.feed.Feed
 import org.chewing.v1.model.feed.FeedDetail
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.friend.FriendShip
@@ -185,7 +186,8 @@ object TestDataFactory {
         messageId: String,
         chatRoomId: String,
         userId: String,
-        chatRoomNumber: ChatNumber
+        chatRoomNumber: ChatNumber,
+        time: LocalDateTime
     ): ChatNormalLog {
         return ChatNormalLog.of(
             messageId,
@@ -193,10 +195,84 @@ object TestDataFactory {
             userId,
             "text",
             chatRoomNumber,
+            time,
+            ChatLogType.NORMAL,
+        )
+    }
+
+    fun createChatInviteLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber
+    ): ChatInviteLog {
+        return ChatInviteLog.of(
+            messageId,
+            chatRoomId,
+            userId,
             LocalDateTime.now(),
+            chatRoomNumber,
+            listOf("targetUserId"),
+            ChatLogType.INVITE
+        )
+    }
+
+    fun createChatReplyLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber
+    ): ChatReplyLog {
+        return ChatReplyLog.of(
+            messageId,
+            chatRoomId,
+            userId,
+            "parentMessageId",
+            0,
+            0,
+            LocalDateTime.now(),
+            chatRoomNumber,
+            "text",
+            "parentMessageText",
+            ChatLogType.REPLY,
             ChatLogType.NORMAL
         )
     }
+
+    fun createChatLeaveLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber
+    ): ChatLeaveLog {
+        return ChatLeaveLog.of(
+            messageId,
+            chatRoomId,
+            userId,
+            LocalDateTime.now(),
+            chatRoomNumber,
+            ChatLogType.LEAVE
+        )
+    }
+
+    fun createChatBombLog(
+        messageId: String,
+        chatRoomId: String,
+        userId: String,
+        chatRoomNumber: ChatNumber
+    ): ChatBombLog {
+        return ChatBombLog.of(
+            messageId,
+            chatRoomId,
+            userId,
+            "text",
+            chatRoomNumber,
+            LocalDateTime.now(),
+            LocalDateTime.now().plusMinutes(1),
+            ChatLogType.BOMB
+        )
+    }
+
 
     fun createChatFileLog(
         messageId: String,
@@ -223,6 +299,10 @@ object TestDataFactory {
 
     fun createChatNumber(chatRoomId: String): ChatNumber {
         return ChatNumber.of(chatRoomId, 0, 0)
+    }
+
+    fun create100SeqChatNumber(chatRoomId: String): ChatNumber {
+        return ChatNumber.of(chatRoomId, 100, 2)
     }
 
     fun createChatRoomInfo(chatRoomId: String): ChatRoomInfo {
@@ -367,5 +447,37 @@ object TestDataFactory {
         userId: String,
     ): UserEmoticonPackInfo {
         return UserEmoticonPackInfo.of(emoticonPackId, userId, LocalDateTime.now())
+    }
+
+    fun createFeed(
+        feedId: String,
+        userId: String,
+    ): Feed {
+        return Feed.of(
+            createFeedInfo(feedId, userId),
+            listOf(createFeedDetail(feedId, "feedDetailId", 0))
+        )
+    }
+
+    fun createChatRoomMember(
+        userId: String
+    ): ChatRoomMember {
+        return ChatRoomMember.of(userId, 0, false)
+    }
+
+    fun createRoom(
+        chatRoomId: String,
+        userId: String,
+        friendId: String,
+        favorite: Boolean
+    ): Room {
+        return Room.of(
+            chatRoomInfo = createChatRoomInfo(chatRoomId),
+            userChatRoom = createChatRoomMemberInfo(chatRoomId, userId, 0, favorite),
+            chatRoomMembers = listOf(
+                createChatRoomMember(userId),
+                createChatRoomMember(friendId)
+            )
+        )
     }
 }

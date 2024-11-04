@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.format.DateTimeFormatter
 
 @WebMvcTest(FeedCommentController::class)
@@ -96,8 +98,9 @@ class FeedCommentControllerTest(
         val comment = TestDataFactory.createComment()
         val formattedCommentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
         // When
-        whenever(feedFacade.fetches("userId", feedId)).thenReturn(
-            listOf(comment, comment))
+        whenever(feedFacade.getFeedComment("userId", feedId)).thenReturn(
+            listOf(comment, comment)
+        )
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/$feedId/comment")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -105,15 +108,63 @@ class FeedCommentControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.friendId").value(comment.writer.userId))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.firstName").value(comment.writer.name.firstName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.lastName").value(comment.writer.name.lastName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageUrl").value(comment.writer.image.url))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageType").value(comment.writer.image.type.value().lowercase()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.access").value(comment.writer.status.name.lowercase()))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.friendId").value(comment.writer.userId)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.firstName")
+                    .value(comment.writer.name.firstName())
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.lastName")
+                    .value(comment.writer.name.lastName())
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageUrl").value(comment.writer.image.url)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.imageType")
+                    .value(comment.writer.image.type.value().lowercase())
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].friend.access")
+                    .value(comment.writer.status.name.lowercase())
+            )
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentId").value(comment.id))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.comment").value(comment.comment))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentTime").value(formattedCommentTime))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.comments[0].comment.commentTime").value(formattedCommentTime)
+            )
     }
 
+    @Test
+    @DisplayName("내가 댓글 단 피드 조회")
+    fun getMyCommentedFeed() {
+        val userId = "userId"
+        val commentId = "commentId"
+        val userCommentInfo = TestDataFactory.createUserCommentedInfo(commentId)
+        val formattedCommentTime = userCommentInfo.comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+        // When
+        whenever(feedFacade.getUserCommented(userId)).thenReturn(listOf(userCommentInfo))
+
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/feed/my/comment")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .requestAttr("userId", "userId")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.data.myComments[0].comments[0].commentId").value(commentId))
+                .andExpect(jsonPath("$.data.myComments[0].comments[0].comment").value(userCommentInfo.comment.comment))
+                .andExpect(jsonPath("$.data.myComments[0].comments[0].commentTime").value(formattedCommentTime))
+                .andExpect(jsonPath("$.data.myComments[0].friend.friendId").value(userCommentInfo.friendShip.friendId))
+                .andExpect(jsonPath("$.data.myComments[0].friend.firstName").value(userCommentInfo.friendShip.friendName.firstName()))
+                .andExpect(jsonPath("$.data.myComments[0].friend.lastName").value(userCommentInfo.friendShip.friendName.lastName()))
+                .andExpect(jsonPath("$.data.myComments[0].friend.imageUrl").value(userCommentInfo.user.image.url))
+                .andExpect(jsonPath("$.data.myComments[0].friend.imageType").value(userCommentInfo.user.image.type.value().lowercase()))
+                .andExpect(jsonPath("$.data.myComments[0].friend.access").value(userCommentInfo.user.status.name.lowercase()))
+                .andExpect(jsonPath("$.data.myComments[0].feed.feedId").value(userCommentInfo.feed.feed.feedId))
+                .andExpect(jsonPath("$.data.myComments[0].feed.mainDetailFileUrl").value(userCommentInfo.feed.feedDetails[0].media.url))
+                .andExpect(jsonPath("$.data.myComments[0].feed.type").value(userCommentInfo.feed.feedDetails[0].media.type.value().lowercase()))
+    }
 }
