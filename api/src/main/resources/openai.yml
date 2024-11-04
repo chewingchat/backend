@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+openai:
+  model: test
+  api:
+    url: test-url
+    key: test-key
