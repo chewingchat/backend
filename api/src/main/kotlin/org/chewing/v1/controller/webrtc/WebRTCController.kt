@@ -1,9 +1,10 @@
 package org.chewing.v1.controller.web
 
 
-import org.chewing.v1.model.WebRTCMessage
-import org.chewing.v1.model.IceCandidateMessage
-import org.chewing.v1.service.WebRTCSessionManager
+
+import org.chewing.v1.model.webrtc.IceCandidateMessage
+import org.chewing.v1.model.webrtc.WebRTCMessage
+import org.chewing.v1.service.web.WebRTCSessionManager
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.stereotype.Controller
