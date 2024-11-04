@@ -42,7 +42,7 @@ class PushNotificationTest : JpaContextTest() {
     @Test
     fun `푸시 알림을 위한 정보 전체 삭제에 성공`() {
         val userId = "userId3"
-        val pushNotification = jpaDataGenerator.pushNotificationData(userId)
+        jpaDataGenerator.pushNotificationData(userId)
         val result = pushNotificationRepositoryImpl.reads(userId)
         assert(result.size == 1)
     }
