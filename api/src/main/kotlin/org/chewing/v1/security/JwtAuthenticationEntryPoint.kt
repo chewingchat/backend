@@ -11,7 +11,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver
 
 
 @Component
-@Profile("!test")
 class JwtAuthenticationEntryPoint(
     @Qualifier("handlerExceptionResolver")
     private val resolver: HandlerExceptionResolver

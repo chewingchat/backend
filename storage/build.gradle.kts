@@ -13,9 +13,9 @@ dependencies {
     implementation(project(":common"))
     compileOnly(project(":domain"))
     runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // 테스트용
-    testImplementation("com.h2database:h2")
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.11.0")
     testImplementation(project(":domain"))
 }
