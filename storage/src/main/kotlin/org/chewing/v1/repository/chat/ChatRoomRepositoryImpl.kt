@@ -5,7 +5,6 @@ import org.chewing.v1.jparepository.chat.ChatRoomJpaRepository
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import org.springframework.stereotype.Repository
 
-
 @Repository
 /**
  * 채팅방 관련한 메소드만 들어갈게용

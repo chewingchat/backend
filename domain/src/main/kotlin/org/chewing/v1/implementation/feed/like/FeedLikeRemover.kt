@@ -10,7 +10,7 @@ class FeedLikeRemover(
     fun removeLikes(feedId: String, userId: String) {
         feedLikesRepository.unlikes(feedId, userId)
     }
-    fun removeAll(feedIds : List<String>) {
+    fun removeAll(feedIds: List<String>) {
         feedLikesRepository.unlikeAll(feedIds)
     }
 }

@@ -1,6 +1,6 @@
 package org.chewing.v1.dto.request.chat
 
-class ChatRoomRequest{
+class ChatRoomRequest {
     data class Create(
         val friendId: String = ""
     )

@@ -21,5 +21,4 @@ class NotificationSender(
     fun sendChatNotification(chatMessage: ChatMessage, userId: String) {
         externalChatNotificationClient.sendMessage(chatMessage, userId)
     }
-
 }

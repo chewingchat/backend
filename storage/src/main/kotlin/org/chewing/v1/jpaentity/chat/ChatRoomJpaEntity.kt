@@ -1,7 +1,6 @@
 package org.chewing.v1.jpaentity.chat
 
 import jakarta.persistence.*
-
 import org.chewing.v1.model.chat.room.ChatRoomInfo
 import java.time.LocalDateTime
 import java.util.*

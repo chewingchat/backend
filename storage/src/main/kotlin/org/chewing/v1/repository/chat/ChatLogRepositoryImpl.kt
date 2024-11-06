@@ -9,7 +9,6 @@ import org.chewing.v1.mongoentity.*
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
 import org.springframework.stereotype.Repository
 
-
 @Repository
 internal class ChatLogRepositoryImpl(
     private val chatLogMongoRepository: ChatLogMongoRepository,
@@ -66,5 +65,3 @@ internal class ChatLogRepositoryImpl(
 //    }
     }
 }
-
-

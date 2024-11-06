@@ -1,8 +1,8 @@
 package org.chewing.v1.service.notification
 
-import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.notification.NotificationGenerator
 import org.chewing.v1.implementation.notification.NotificationSender
+import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.user.user.UserReader
 import org.chewing.v1.model.chat.message.ChatMessage
 import org.springframework.stereotype.Service
@@ -36,8 +36,7 @@ class NotificationService(
                 val pushTokens = userReader.readsPushToken(memberId)
                 val notificationList = notificationGenerator.generateMessageNotification(user, pushTokens, chatMessage)
                 notificationSender.sendPushNotification(notificationList)
-            }
-            else{
+            } else {
                 notificationSender.sendChatNotification(chatMessage, memberId)
             }
         }

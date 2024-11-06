@@ -2,8 +2,7 @@
 FROM openjdk:17-jdk-slim
 
 # JAR 파일을 /app 디렉토리에 복사
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} /app/app.jar
+COPY api/build/libs/*.jar /app/app.jar
 
 # 애플리케이션을 실행
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

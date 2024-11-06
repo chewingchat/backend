@@ -8,6 +8,6 @@ class CommentAppender(
     private val commentRepository: CommentRepository
 ) {
     fun appendComment(userId: String, feedId: String, comment: String) {
-        commentRepository.append(userId,comment, feedId)
+        commentRepository.append(userId, comment, feedId)
     }
 }

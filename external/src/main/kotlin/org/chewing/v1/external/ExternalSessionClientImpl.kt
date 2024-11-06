@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component
 @Component
 class ExternalSessionClientImpl(
     private val sessionClient: SessionClient
-): ExternalSessionClient {
-    override fun connect(userId: String, sessionId: String){
+) : ExternalSessionClient {
+    override fun connect(userId: String, sessionId: String) {
         sessionClient.addSession(userId, sessionId)
     }
     override fun isOnline(userId: String): Boolean {

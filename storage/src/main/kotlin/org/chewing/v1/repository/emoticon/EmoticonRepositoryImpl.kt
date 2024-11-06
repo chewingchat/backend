@@ -2,9 +2,7 @@ package org.chewing.v1.repository.emoticon
 
 import org.chewing.v1.jparepository.emoticon.EmoticonJpaRepository
 import org.chewing.v1.jparepository.emoticon.EmoticonPackJpaRepository
-import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonInfo
-import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.model.emoticon.EmoticonPackInfo
 import org.springframework.stereotype.Repository
 

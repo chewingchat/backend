@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository
  * 친구 마지막 시퀀스는 나른 곳
  * */
 @Repository
-internal interface ChatSequenceMongoRepository : MongoRepository<ChatSequenceMongoEntity, String> {
-}
+internal interface ChatSequenceMongoRepository : MongoRepository<ChatSequenceMongoEntity, String>

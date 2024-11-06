@@ -2,8 +2,8 @@ package org.chewing.v1.model.user
 
 class UserAccount private constructor(
     val user: User,
-    val emailId : String?,
-    val phoneId : String?,
+    val emailId: String?,
+    val phoneId: String?,
 ) {
     companion object {
         fun of(

@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
-
 @Repository
 internal interface ScheduleJpaRepository : JpaRepository<ScheduleJpaEntity, String> {
     @Query("SELECT s FROM ScheduleJpaEntity s WHERE s.userId = :userId AND s.startAt BETWEEN :start AND :end AND (:isOwned = TRUE OR s.private = FALSE)")

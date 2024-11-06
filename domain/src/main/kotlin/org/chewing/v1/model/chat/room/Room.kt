@@ -3,7 +3,6 @@ package org.chewing.v1.model.chat.room
 import org.chewing.v1.model.chat.member.ChatRoomMember
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 
-
 data class Room(
     val chatRoomId: String,
     val favorite: Boolean,
@@ -27,6 +26,5 @@ data class Room(
                 chatRoomMemberInfos = chatRoomMembers,
             )
         }
-
     }
 }

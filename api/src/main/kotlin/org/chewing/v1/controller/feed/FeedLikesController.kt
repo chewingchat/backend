@@ -20,7 +20,7 @@ class FeedLikesController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val feedId = request.toFeedId()
         feedLikesService.like(userId, feedId, request.toTarget())
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 
@@ -31,8 +31,7 @@ class FeedLikesController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val feedId = request.toFeedId()
         feedLikesService.unlike(userId, feedId, request.toUpdateType())
-        //삭제 완료 응답 200 반환
+        // 삭제 완료 응답 200 반환
         return ResponseHelper.successOnly()
     }
-
 }

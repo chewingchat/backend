@@ -17,7 +17,7 @@ class EmoticonService(
         val userEmotionsPackIds = userEmoticons.map { it.emoticonPackId }
         val emoticonPacksInfo = emoticonReader.readsPack(userEmotionsPackIds)
         val emoticonsInfo = emoticonReader.reads(userEmotionsPackIds)
-        val emoticonPacks =  emoticonAggregator.aggregateEmoticons(emoticonPacksInfo, emoticonsInfo)
+        val emoticonPacks = emoticonAggregator.aggregateEmoticons(emoticonPacksInfo, emoticonsInfo)
         return emoticonPacks
     }
 }

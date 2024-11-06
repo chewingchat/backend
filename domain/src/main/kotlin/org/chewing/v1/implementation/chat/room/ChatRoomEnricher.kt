@@ -1,9 +1,9 @@
 package org.chewing.v1.implementation.chat.room
 
-import org.chewing.v1.model.chat.room.Room
 import org.chewing.v1.model.chat.member.ChatRoomMember
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatRoomInfo
+import org.chewing.v1.model.chat.room.Room
 import org.springframework.stereotype.Component
 
 @Component

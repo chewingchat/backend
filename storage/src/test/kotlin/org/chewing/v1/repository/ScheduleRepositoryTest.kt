@@ -3,8 +3,8 @@ package org.chewing.v1.repository
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.model.schedule.ScheduleType
-import org.chewing.v1.repository.support.ScheduleProvider
 import org.chewing.v1.repository.support.JpaDataGenerator
+import org.chewing.v1.repository.support.ScheduleProvider
 import org.chewing.v1.repository.user.ScheduleRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +33,7 @@ class ScheduleRepositoryTest : JpaContextTest() {
         val userId = "userId2"
         val content = ScheduleProvider.buildContent(true)
         val time = ScheduleProvider.buildTime()
-      val schedule = jpaDataGenerator.scheduleEntityData(content, time, userId)
+        val schedule = jpaDataGenerator.scheduleEntityData(content, time, userId)
         scheduleRepositoryImpl.remove(schedule.id)
         assert(scheduleJpaRepository.findById(schedule.id).isEmpty)
     }
@@ -89,7 +89,7 @@ class ScheduleRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `시작시간 기준으로 친구 스케줄 조회 실패 - private 스케줄`(){
+    fun `시작시간 기준으로 친구 스케줄 조회 실패 - private 스케줄`() {
         val friendId = "friendId2"
         val content = ScheduleProvider.buildContent(true)
         val firstTime = ScheduleProvider.build1000YearFirstTime()

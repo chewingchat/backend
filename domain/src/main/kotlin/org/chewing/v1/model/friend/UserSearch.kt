@@ -1,6 +1,5 @@
 package org.chewing.v1.model.friend
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 class UserSearch private constructor(

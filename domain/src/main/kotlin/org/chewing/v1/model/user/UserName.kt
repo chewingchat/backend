@@ -12,7 +12,6 @@ class UserName private constructor(
         return lastName
     }
 
-
     companion object {
         fun of(firstName: String, lastName: String): UserName {
             return UserName(firstName, lastName)

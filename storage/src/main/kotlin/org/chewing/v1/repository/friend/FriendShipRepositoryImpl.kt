@@ -3,11 +3,10 @@ package org.chewing.v1.repository.friend
 import org.chewing.v1.jpaentity.friend.FriendShipId
 import org.chewing.v1.jpaentity.friend.FriendShipJpaEntity
 import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
-import org.chewing.v1.model.user.AccessStatus
-import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.friend.FriendSortCriteria
-import org.chewing.v1.repository.friend.FriendShipRepository
+import org.chewing.v1.model.user.AccessStatus
+import org.chewing.v1.model.user.UserName
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -16,10 +15,12 @@ internal class FriendShipRepositoryImpl(
 ) : FriendShipRepository {
     override fun readsAccess(userId: String, accessStatus: AccessStatus, sort: FriendSortCriteria): List<FriendShip> {
         return when (sort) {
-            FriendSortCriteria.NAME -> friendShipJpaRepository
-                .findAllByIdUserIdAndTypeOrderByFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
-            FriendSortCriteria.FAVORITE -> friendShipJpaRepository
-                .findAllByIdUserIdAndTypeOrderByFavoriteAscFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
+            FriendSortCriteria.NAME ->
+                friendShipJpaRepository
+                    .findAllByIdUserIdAndTypeOrderByFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
+            FriendSortCriteria.FAVORITE ->
+                friendShipJpaRepository
+                    .findAllByIdUserIdAndTypeOrderByFavoriteAscFirstNameAscLastNameAsc(userId, accessStatus).map { it.toFriendShip() }
         }
     }
 

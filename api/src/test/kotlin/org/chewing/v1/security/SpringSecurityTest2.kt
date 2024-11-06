@@ -42,7 +42,6 @@ class SpringSecurityTest2(
     @MockBean
     private lateinit var accountFacade: AccountFacade
 
-
     @Test
     @DisplayName("휴대폰 인증번호 전송 - 인증 없이 통과해야함")
     fun sendPhoneVerification() {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-internal interface LoggedInJpaRepository : JpaRepository<LoggedInJpaEntity, String>{
+internal interface LoggedInJpaRepository : JpaRepository<LoggedInJpaEntity, String> {
     fun deleteByRefreshToken(refreshToken: String)
 
     fun findByRefreshToken(refreshToken: String): Optional<LoggedInJpaEntity>

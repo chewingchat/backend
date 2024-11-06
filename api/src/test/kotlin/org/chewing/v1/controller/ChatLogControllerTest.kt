@@ -1,34 +1,36 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.chat.ChatLogController
 import org.chewing.v1.service.chat.ChatLogService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.time.format.DateTimeFormatter
 
-@WebMvcTest(ChatLogController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class ChatLogControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class ChatLogControllerTest : RestDocsTest() {
     private lateinit var chatLogService: ChatLogService
+    private lateinit var chatLogController: ChatLogController
+    private lateinit var objectMapper: ObjectMapper
+
+    @BeforeEach
+    fun setUp() {
+        chatLogService = mock()
+        chatLogController = ChatLogController(chatLogService)
+        mockMvc = mockController(chatLogController)
+        objectMapper = objectMapper()
+    }
 
     @Test
     fun `채팅 로그 가져오기`() {
@@ -48,23 +50,23 @@ class ChatLogControllerTest(
         val chatBombLog = TestDataFactory.createBombLog(messageId5, chatRoomId, userId)
         val chatNormalLog = TestDataFactory.createNormalLog(messageId6, chatRoomId, userId)
 
-        whenever(chatLogService.getChatLog(chatRoomId,page)).thenReturn(
+        whenever(chatLogService.getChatLog(chatRoomId, page)).thenReturn(
             listOf(
                 chatFileLog,
                 chatReplyLog,
                 chatLeaveLog,
                 chatInviteLog,
                 chatBombLog,
-                chatNormalLog
-            )
+                chatNormalLog,
+            ),
         )
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/chatRooms/${chatRoomId}/log")
-                .param("page", "0")
+            MockMvcRequestBuilders.get("/api/chatRooms/$chatRoomId/log")
+                .param("page", "0"),
         )
         result
             .andExpect(MockMvcResultMatchers.status().isOk)
-            //파일 메시지
+            // 파일 메시지
             .andExpect(jsonPath("$.status").value(200))
             .andExpect(jsonPath("$.data.chatLogs[0].messageId").value(messageId1))
             .andExpect(jsonPath("$.data.chatLogs[0].type").value(chatFileLog.type.name.lowercase()))
@@ -76,7 +78,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[0].files[0].fileUrl").value(chatFileLog.medias[0].url))
             .andExpect(jsonPath("$.data.chatLogs[0].files[0].index").value(chatFileLog.medias[0].index))
             .andExpect(jsonPath("$.data.chatLogs[0].timestamp").value(chatFileLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
-            //답장 메시지
+            // 답장 메시지
             .andExpect(jsonPath("$.data.chatLogs[1].messageId").value(messageId2))
             .andExpect(jsonPath("$.data.chatLogs[1].type").value(chatReplyLog.type.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[1].chatRoomId").value(chatRoomId))
@@ -90,8 +92,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[1].parentMessageType").value(chatReplyLog.parentMessageType.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[1].text").value(chatReplyLog.text))
             .andExpect(jsonPath("$.data.chatLogs[1].timestamp").value(chatReplyLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
-
-            //채팅 나가기
+            // 채팅 나가기
             .andExpect(jsonPath("$.data.chatLogs[2].messageId").value(messageId3))
             .andExpect(jsonPath("$.data.chatLogs[2].type").value(chatLeaveLog.type.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[2].chatRoomId").value(chatRoomId))
@@ -99,8 +100,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[2].seqNumber").value(chatLeaveLog.number.sequenceNumber))
             .andExpect(jsonPath("$.data.chatLogs[2].page").value(chatLeaveLog.number.page))
             .andExpect(jsonPath("$.data.chatLogs[2].timestamp").value(chatLeaveLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
-
-            //초대 메시지
+            // 초대 메시지
             .andExpect(jsonPath("$.data.chatLogs[3].messageId").value(messageId4))
             .andExpect(jsonPath("$.data.chatLogs[3].type").value(chatInviteLog.type.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[3].chatRoomId").value(chatRoomId))
@@ -109,8 +109,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[3].page").value(chatInviteLog.number.page))
             .andExpect(jsonPath("$.data.chatLogs[3].targetUserIds[0]").value(chatInviteLog.targetUserIds[0]))
             .andExpect(jsonPath("$.data.chatLogs[3].timestamp").value(chatInviteLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
-
-            //폭탄 메시지
+            // 폭탄 메시지
             .andExpect(jsonPath("$.data.chatLogs[4].messageId").value(messageId5))
             .andExpect(jsonPath("$.data.chatLogs[4].type").value(chatBombLog.type.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[4].chatRoomId").value(chatRoomId))
@@ -120,9 +119,7 @@ class ChatLogControllerTest(
             .andExpect(jsonPath("$.data.chatLogs[4].text").value(chatBombLog.text))
             .andExpect(jsonPath("$.data.chatLogs[4].timestamp").value(chatBombLog.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
             .andExpect(jsonPath("$.data.chatLogs[4].expiredAt").value(chatBombLog.expiredAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))))
-
-
-            //일반 메시지
+            // 일반 메시지
             .andExpect(jsonPath("$.data.chatLogs[5].messageId").value(messageId6))
             .andExpect(jsonPath("$.data.chatLogs[5].type").value(chatNormalLog.type.name.lowercase()))
             .andExpect(jsonPath("$.data.chatLogs[5].chatRoomId").value(chatRoomId))

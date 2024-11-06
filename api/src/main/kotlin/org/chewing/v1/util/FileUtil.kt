@@ -8,7 +8,6 @@ import org.chewing.v1.model.media.MediaType
 import org.springframework.web.multipart.MultipartFile
 import java.io.*
 
-
 object FileUtil {
     @Throws(IOException::class, ConflictException::class)
     fun convertMultipartFileToFileData(file: MultipartFile): FileData {
@@ -22,12 +21,10 @@ object FileUtil {
             file.inputStream,
             mediaType,
             originalFilename,
-            file.size
+            file.size,
         )
     }
 
     @Throws(IOException::class, AuthorizationException::class)
-    fun convertMultipartFileToFileDataList(files: List<MultipartFile>): List<FileData> {
-        return files.map { convertMultipartFileToFileData(it) }
-    }
+    fun convertMultipartFileToFileDataList(files: List<MultipartFile>): List<FileData> = files.map { convertMultipartFileToFileData(it) }
 }

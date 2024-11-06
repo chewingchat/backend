@@ -1,6 +1,5 @@
 package org.chewing.v1.repository.support
 
-import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.token.RefreshToken
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime

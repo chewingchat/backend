@@ -3,8 +3,6 @@ package org.chewing.v1.implementation.chat.room
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.room.ChatNumber
-import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.util.AsyncJobExecutor
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
 
@@ -36,7 +34,7 @@ class ChatRoomHandler(
         var delayTime = 100L
         while (retryCount < maxRetry) {
             try {
-                chatRoomUpdater.updateRead( userId, number, isGroup)
+                chatRoomUpdater.updateRead(userId, number, isGroup)
                 return
             } catch (ex: OptimisticLockingFailureException) {
                 // 예외 처리: 버전 충돌 시 재시도

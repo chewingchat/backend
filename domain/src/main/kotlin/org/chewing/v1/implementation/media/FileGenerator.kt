@@ -2,7 +2,6 @@ package org.chewing.v1.implementation.media
 
 import org.chewing.v1.model.media.*
 import org.springframework.stereotype.Component
-import java.io.File
 
 @Component
 class FileGenerator {

@@ -6,8 +6,8 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.implementation.chat.room.*
 import org.chewing.v1.implementation.chat.sequence.ChatFinder
-import org.chewing.v1.repository.chat.GroupChatRoomMemberRepository
 import org.chewing.v1.repository.chat.ChatRoomRepository
+import org.chewing.v1.repository.chat.GroupChatRoomMemberRepository
 import org.chewing.v1.repository.chat.PersonalChatRoomMemberRepository
 import org.chewing.v1.service.chat.RoomService
 import org.junit.jupiter.api.Test
@@ -129,7 +129,6 @@ class RoomServiceTest {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
         }
 
-
         verify(personalChatRoomMemberRepository, times(5)).updateFavorite(chatRoomId, userId, true)
         assert(exception.errorCode == ErrorCode.CHATROOM_FAVORITE_FAILED)
     }
@@ -164,7 +163,6 @@ class RoomServiceTest {
         val exception = assertThrows<ConflictException>() {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
         }
-
 
         verify(groupChatRoomMemberRepository, times(5)).updateFavorite(chatRoomId, userId, true)
         assert(exception.errorCode == ErrorCode.CHATROOM_FAVORITE_FAILED)
@@ -265,11 +263,9 @@ class RoomServiceTest {
             TestDataFactory.createChatRoomMemberInfo(chatRoomId2, friendId, 4, true)
         )
 
-
         whenever(personalChatRoomMemberRepository.reads(userId)).thenReturn(personalChatRoomMembers)
         whenever(groupChatRoomMemberRepository.reads(userId)).thenReturn(emptyList())
         whenever(chatRoomRepository.readChatRooms(listOf(chatRoomId2, chatRoomId1))).thenReturn(chatRooms)
-
 
         val result = roomService.getChatRooms(userId)
 
@@ -277,7 +273,7 @@ class RoomServiceTest {
     }
 
     @Test
-    fun `채팅방 가져오기 - 실패`(){
+    fun `채팅방 가져오기 - 실패`() {
         val chatRoomId = "testChatRoomId"
         whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(null)
 
@@ -289,7 +285,7 @@ class RoomServiceTest {
     }
 
     @Test
-    fun `채팅방 가져오기 - 성공`(){
+    fun `채팅방 가져오기 - 성공`() {
         val chatRoomId = "testChatRoomId"
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
         whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
@@ -442,7 +438,7 @@ class RoomServiceTest {
     }
 
     @Test
-    fun `개인 채팅방 나를 제외한 맴버 가져오기`(){
+    fun `개인 채팅방 나를 제외한 맴버 가져오기`() {
         val chatRoomId = "testChatRoomId"
         val userId = "testUserId"
         val friendId = "testFriendId"
@@ -459,7 +455,7 @@ class RoomServiceTest {
     }
 
     @Test
-    fun `그룹 채팅방 맴버 가져오기`(){
+    fun `그룹 채팅방 맴버 가져오기`() {
         val chatRoomId = "testChatRoomId"
         val userId = "testUserId"
         val friendId = "testFriendId"

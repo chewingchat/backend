@@ -1,7 +1,7 @@
 package org.chewing.v1.facade
 
-import org.chewing.v1.implementation.feed.feed.FeedAggregator
 import org.chewing.v1.implementation.feed.comment.CommentAggregator
+import org.chewing.v1.implementation.feed.feed.FeedAggregator
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.UserCommentedInfo
 import org.chewing.v1.model.feed.Feed
@@ -33,7 +33,7 @@ class FeedFacade(
 
     fun commentFeed(userId: String, feedId: String, comment: String, target: FeedTarget) {
         feedCommentService.comment(userId, feedId, comment, target)
-        notificationService.handleCommentNotification(userId, feedId,comment)
+        notificationService.handleCommentNotification(userId, feedId, comment)
     }
 
     fun getOwnedFeed(userId: String, feedId: String): Pair<Feed, Boolean> {

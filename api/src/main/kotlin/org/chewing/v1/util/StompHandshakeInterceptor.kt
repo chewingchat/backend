@@ -50,5 +50,4 @@ class StompHandshakeInterceptor(
     ) {
         logger.info { "afterHandshake" }
     }
-
 }

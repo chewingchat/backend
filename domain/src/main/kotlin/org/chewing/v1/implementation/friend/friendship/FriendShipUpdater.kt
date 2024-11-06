@@ -2,9 +2,7 @@ package org.chewing.v1.implementation.friend.friendship
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.repository.friend.FriendShipRepository
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

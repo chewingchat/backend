@@ -4,17 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.error.AuthorizationException
 import org.chewing.v1.error.ConflictException
-import org.chewing.v1.support.TestExceptionController
-import org.chewing.v1.support.TestRequest
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.facade.AccountFacade
-import org.chewing.v1.facade.MainFacade
 import org.chewing.v1.response.ErrorResponse
-import org.chewing.v1.service.auth.AuthService
+import org.chewing.v1.support.TestExceptionController
 import org.chewing.v1.support.TestExceptionService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,10 +21,8 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
 
 @WebMvcTest(TestExceptionController::class)
 @Import(TestSecurityConfig::class, GlobalExceptionHandler::class) // GlobalExceptionHandler 포함
@@ -90,8 +83,6 @@ class GlobalExceptionHandlerTest(
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.VARIABLE_WRONG.code))
             .andExpect(jsonPath("$.data.message").value(ErrorResponse.from(ErrorCode.VARIABLE_WRONG).message))
     }
-
-
 
     @Test
     fun `AuthorizationException 처리 확인`() {

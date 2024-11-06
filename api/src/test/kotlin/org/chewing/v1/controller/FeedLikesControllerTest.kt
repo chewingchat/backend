@@ -1,33 +1,36 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.feed.FeedLikesController
 import org.chewing.v1.service.feed.FeedLikesService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.kotlin.mock
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@WebMvcTest(FeedLikesController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class FeedLikesControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class FeedLikesControllerTest : RestDocsTest() {
+
     private lateinit var feedLikesService: FeedLikesService
+    private lateinit var objectMapper: ObjectMapper
+    private lateinit var feedLikesController: FeedLikesController
+
+    @BeforeEach
+    fun setUp() {
+        feedLikesService = mock()
+        feedLikesController = FeedLikesController(feedLikesService)
+        mockMvc = mockController(feedLikesController)
+        objectMapper = objectMapper()
+    }
 
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isCreated)
@@ -46,13 +49,13 @@ class FeedLikesControllerTest(
     fun `addFeedLikes`() {
         val userId = "testUserId"
         val requestBody = mapOf(
-            "feedId" to "testFeedId"
+            "feedId" to "testFeedId",
         )
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/feed/likes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -62,13 +65,13 @@ class FeedLikesControllerTest(
     fun `deleteFeedLikes`() {
         val userId = "testUserId"
         val requestBody = mapOf(
-            "feedId" to "testFeedId"
+            "feedId" to "testFeedId",
         )
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/feed/likes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         )
         performCommonSuccessResponse(result)
     }

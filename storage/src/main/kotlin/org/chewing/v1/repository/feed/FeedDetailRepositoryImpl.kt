@@ -14,7 +14,6 @@ internal class FeedDetailRepositoryImpl(
         return feedDetailJpaRepository.findAllByFeedIdOrderByFeedIndex(feedId).map { it.toFeedDetail() }
     }
 
-
     override fun readsFirstIndex(feedIds: List<String>): List<FeedDetail> {
         val feedDetails = feedDetailJpaRepository.findByFeedIdInAndFeedIndex(feedIds, 0)
         return feedDetails.map { it.toFeedDetail() }

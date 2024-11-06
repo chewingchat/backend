@@ -92,7 +92,6 @@ class SearchFacadeTest {
         val messageId = "messageId20"
         val time = LocalDateTime.now()
 
-
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
         val keyword = friendShip.friendName.firstName
         val roomInfo = TestDataFactory.createRoom(chatRoomId, userId, friendId, false)
@@ -166,5 +165,4 @@ class SearchFacadeTest {
         assert(search.friends[0].isFavorite == friendShip.isFavorite)
         assert(search.friends[0].type == friendShip.type)
     }
-
 }

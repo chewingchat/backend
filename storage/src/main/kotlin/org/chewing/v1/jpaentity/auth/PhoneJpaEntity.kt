@@ -1,13 +1,11 @@
 package org.chewing.v1.jpaentity.auth
 
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.auth.PhoneNumber
+import org.chewing.v1.model.contact.Phone
 import java.time.LocalDateTime
 import java.util.*
 
@@ -23,8 +21,7 @@ internal class PhoneJpaEntity(
     private var expiredAt: LocalDateTime = LocalDateTime.now().plusMinutes(5),
 
     private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
-    ) : BaseEntity(
-) {
+) : BaseEntity() {
     companion object {
         fun generate(phoneNumber: PhoneNumber): PhoneJpaEntity {
             return PhoneJpaEntity(

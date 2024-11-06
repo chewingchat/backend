@@ -1,7 +1,6 @@
 package org.chewing.v1.model.chat.message
 
 import org.chewing.v1.model.chat.log.ChatLogType
-import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.room.ChatNumber
 import java.time.LocalDateTime
 

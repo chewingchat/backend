@@ -1,21 +1,20 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.search.SearchController
 import org.chewing.v1.facade.SearchFacade
 import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.service.search.SearchService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -24,20 +23,22 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@WebMvcTest(SearchController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class SearchControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class SearchControllerTest : RestDocsTest() {
     private lateinit var searchFacade: SearchFacade
-
-    @MockBean
     private lateinit var searchService: SearchService
+    private lateinit var searchController: SearchController
+    private lateinit var objectMapper: ObjectMapper
+
+    @BeforeEach
+    fun setUp() {
+        searchFacade = mock()
+        searchService = mock()
+        searchController = SearchController(searchFacade, searchService)
+        mockMvc = mockController(searchController)
+        objectMapper = objectMapper()
+    }
 
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(status().isCreated)
@@ -45,19 +46,18 @@ class SearchControllerTest(
             .andExpect(jsonPath("$.data.message").value("생성 완료"))
     }
 
-
     @Test
     fun `검색 키워드 추가`() {
         val userId = "userId"
         val keyword = "keyword"
         val requestBody = mapOf(
-            "keyword" to keyword
+            "keyword" to keyword,
         )
         val result = mockMvc.perform(
             post("/api/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -71,7 +71,7 @@ class SearchControllerTest(
         whenever(searchService.getSearchKeywords(userId)).thenReturn(listOf(userSearch1, userSearch2))
         val result = mockMvc.perform(
             get("/api/search/recent")
-                .requestAttr("userId", userId)
+                .requestAttr("userId", userId),
         )
         result.andExpect(status().isOk)
             .andExpect(jsonPath("$.status").value(200))
@@ -80,7 +80,7 @@ class SearchControllerTest(
     }
 
     @Test
-    fun `키워드로 검색`(){
+    fun `키워드로 검색`() {
         val userId = "userId"
         val keyword = "keyword"
         val chatRoom = TestDataFactory.createChatRoom()
@@ -93,7 +93,7 @@ class SearchControllerTest(
         val result = mockMvc.perform(
             get("/api/search")
                 .requestAttr("userId", userId)
-                .param("keyword", keyword)
+                .param("keyword", keyword),
         )
 
         result.andExpect(status().isOk)
@@ -117,8 +117,5 @@ class SearchControllerTest(
             .andExpect(jsonPath("$.data.friends[0].firstName").value(friendShip.friendName.firstName))
             .andExpect(jsonPath("$.data.friends[0].lastName").value(friendShip.friendName.lastName))
             .andExpect(jsonPath("$.data.friends[0].favorite").value(friendShip.isFavorite))
-
-
     }
-
 }

@@ -6,9 +6,9 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.external.ExternalChatNotificationClient
 import org.chewing.v1.external.ExternalPushNotificationClient
 import org.chewing.v1.external.ExternalSessionClient
-import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.notification.NotificationGenerator
 import org.chewing.v1.implementation.notification.NotificationSender
+import org.chewing.v1.implementation.session.SessionProvider
 import org.chewing.v1.implementation.user.user.UserReader
 import org.chewing.v1.model.notification.Notification
 import org.chewing.v1.repository.user.PushNotificationRepository

@@ -76,7 +76,7 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 TTS 변환 실패(유저를 찾을 수 없음)`(){
+    fun `유저 TTS 변환 실패(유저를 찾을 수 없음)`() {
         val media = MediaProvider.buildTTSContent()
         val userId = "userId"
         val user = UserProvider.buildNormal(userId)
@@ -86,9 +86,8 @@ class UserRepositoryTest2 {
         assert(result == null)
     }
 
-
     @Test
-    fun `유저 이름 변환 실패(유저를 찾을 수 없음)`(){
+    fun `유저 이름 변환 실패(유저를 찾을 수 없음)`() {
         val userId = "userId"
         val user = UserProvider.buildNormal(userId)
         val userName = UserProvider.buildNewUserName()
@@ -99,7 +98,7 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 연락처 변환 실패(유저를 찾을 수 없음)`(){
+    fun `유저 연락처 변환 실패(유저를 찾을 수 없음)`() {
         val userId = "userId"
         val user = UserProvider.buildNormal(userId)
         val contact = EmailProvider.buildNormal()
@@ -110,7 +109,7 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 접근권한 변환 실패(유저를 찾을 수 없음)`(){
+    fun `유저 접근권한 변환 실패(유저를 찾을 수 없음)`() {
         val userId = "userId"
         val user = UserProvider.buildNormal(userId)
         val userContent = UserProvider.buildNewUserContent()
@@ -131,4 +130,3 @@ class UserRepositoryTest2 {
         assert(result == null)
     }
 }
-

@@ -1,9 +1,9 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.auth.PhoneJpaRepository
 import org.chewing.v1.repository.auth.PhoneRepositoryImpl
+import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.PhoneProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

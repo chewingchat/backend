@@ -3,8 +3,8 @@ package org.chewing.v1.repository
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jpaentity.friend.FriendShipId
 import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.repository.friend.FriendShipRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.UserProvider
@@ -58,7 +58,6 @@ class FriendShipRepositoryTest : JpaContextTest() {
 
         jpaDataGenerator.friendShipEntityData(userId, friendId, AccessStatus.ACCESS)
         friendShipRepositoryImpl.block(userId, friendId)
-
 
         val entity = friendShipJpaRepository.findById(FriendShipId(userId, friendId))
 
@@ -126,7 +125,6 @@ class FriendShipRepositoryTest : JpaContextTest() {
 
         jpaDataGenerator.friendShipEntityData(userId, friendId, AccessStatus.ACCESS)
         jpaDataGenerator.friendShipEntityData(userId, friendId2, AccessStatus.BLOCK)
-
 
         val friendShips = friendShipRepositoryImpl.readsAccess(userId, AccessStatus.ACCESS, FriendSortCriteria.NAME)
 

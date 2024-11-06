@@ -1,22 +1,20 @@
 package org.chewing.v1.repository
 
-import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.auth.EmailJpaRepository
 import org.chewing.v1.repository.auth.EmailRepositoryImpl
-import org.junit.jupiter.api.Test
 import org.chewing.v1.repository.support.EmailProvider
+import org.chewing.v1.repository.support.JpaDataGenerator
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-internal class EmailRepositoryTest(
-) : JpaContextTest() {
+internal class EmailRepositoryTest() : JpaContextTest() {
 
     @Autowired
     private lateinit var emailJpaRepository: EmailJpaRepository
 
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
-
 
     private val emailRepositoryImpl: EmailRepositoryImpl by lazy {
         EmailRepositoryImpl(emailJpaRepository)

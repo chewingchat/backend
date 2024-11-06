@@ -1,7 +1,5 @@
 package org.chewing.v1.implementation.auth
 
-import org.chewing.v1.error.ConflictException
-import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.external.ExternalAuthClient
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
