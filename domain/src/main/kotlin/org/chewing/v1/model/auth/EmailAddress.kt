@@ -2,7 +2,7 @@ package org.chewing.v1.model.auth
 
 class EmailAddress private constructor(
     val address: String
-): Credential() {
+) : Credential() {
     companion object {
         fun of(
             email: String

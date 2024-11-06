@@ -3,8 +3,8 @@ package org.chewing.v1.repository
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedDetailJpaRepository
 import org.chewing.v1.repository.feed.FeedDetailRepositoryImpl
-import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.JpaDataGenerator
+import org.chewing.v1.repository.support.MediaProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 

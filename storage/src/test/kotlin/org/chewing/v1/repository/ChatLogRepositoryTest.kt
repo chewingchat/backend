@@ -40,7 +40,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.type == ChatLogType.NORMAL)
     }
 
@@ -56,7 +56,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.type == ChatLogType.LEAVE)
     }
 
@@ -72,7 +72,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.type == ChatLogType.INVITE)
     }
 
@@ -88,7 +88,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.medias[0].url == chatMessage.medias[0].url)
         assert(chatLog.type == ChatLogType.FILE)
     }
@@ -107,7 +107,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.type == ChatLogType.REPLY)
         assert(chatLog.parentMessageId == parentMessageId)
@@ -118,7 +118,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `폭탄 채팅 읽기 - 존재함`(){
+    fun `폭탄 채팅 읽기 - 존재함`() {
         val messageId = "testMessageId16"
         val chatRoomId = "testRoomId16"
         val chatMessage = ChatMessageProvider.buildBombMessage(messageId, chatRoomId)
@@ -130,13 +130,13 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.type == ChatLogType.BOMB)
-        assert(chatLog.expiredAt.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.expiredAt.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.expiredAt.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.expiredAt.truncatedTo(ChronoUnit.MILLIS)))
     }
 
     @Test
-    fun `채팅로그 리스트 읽기`(){
+    fun `채팅로그 리스트 읽기`() {
         val chatRoomId = "testRoomId6"
         val chatMessage1 = ChatMessageProvider.buildNormalMessage("testMessageId6", chatRoomId)
         val chatMessage2 = ChatMessageProvider.buildLeaveMessage("testMessageId7", chatRoomId)
@@ -157,9 +157,8 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLogs[4] is ChatReplyLog)
     }
 
-
     @Test
-    fun `일반 채팅로그 삭제`(){
+    fun `일반 채팅로그 삭제`() {
         val messageId = "testMessageId11"
         val chatRoomId = "testRoomId7"
         val chatMessage = ChatMessageProvider.buildNormalMessage(messageId, chatRoomId)
@@ -170,7 +169,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `채팅방 나감 채팅로그 삭제`(){
+    fun `채팅방 나감 채팅로그 삭제`() {
         val messageId = "testMessageId12"
         val chatRoomId = "testRoomId8"
         val chatMessage = ChatMessageProvider.buildLeaveMessage(messageId, chatRoomId)
@@ -181,7 +180,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `채팅방 초대 채팅로그 삭제`(){
+    fun `채팅방 초대 채팅로그 삭제`() {
         val messageId = "testMessageId13"
         val chatRoomId = "testRoomId9"
         val chatMessage = ChatMessageProvider.buildInviteMessage(messageId, chatRoomId)
@@ -192,7 +191,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `파일 채팅로그 삭제`(){
+    fun `파일 채팅로그 삭제`() {
         val messageId = "testMessageId14"
         val chatRoomId = "testRoomId10"
         val chatMessage = ChatMessageProvider.buildFileMessage(messageId, chatRoomId)
@@ -203,7 +202,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `답장 채팅로그 삭제`(){
+    fun `답장 채팅로그 삭제`() {
         val messageId = "testMessageId15"
         val chatRoomId = "testRoomId11"
         val parentMessageId = "testParentMessageId"
@@ -216,7 +215,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `채팅로그 추가`(){
+    fun `채팅로그 추가`() {
         val chatMessage = ChatMessageProvider.buildNormalMessage("testMessageId16", "testRoomId12")
         chatLogRepositoryImpl.appendChatLog(chatMessage)
         val chatLog = chatLogRepositoryImpl.readChatMessage("testMessageId16") as ChatNormalLog
@@ -226,14 +225,14 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)));
+        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
         assert(chatLog.type == ChatLogType.NORMAL)
     }
 
     @Test
-    fun `마지막 메시지 조회`(){
+    fun `마지막 메시지 조회`() {
         val chatRoomId = "testRoomId13"
-        val chatRoomId2  = "testRoomId14"
+        val chatRoomId2 = "testRoomId14"
         val chatRoomId3 = "testRoomId15"
         val chatMessage1 = ChatMessageProvider.buildNormalMessage("testMessageId17", chatRoomId)
         val chatMessage2 = ChatMessageProvider.buildNormalMessage("testMessageId18", chatRoomId2)

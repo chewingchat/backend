@@ -68,5 +68,4 @@ class FriendShipRepositoryTest2 {
         val result = friendShipRepositoryImpl.updateName(userId, friendId, newName)
         assert(result == null)
     }
-
 }

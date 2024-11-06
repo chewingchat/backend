@@ -32,7 +32,7 @@ internal class FeedRepositoryImpl(
     }
 
     override fun update(feedId: String, target: FeedTarget): String? {
-        return feedJpaRepository.findById(feedId).map{
+        return feedJpaRepository.findById(feedId).map {
             when (target) {
                 FeedTarget.LIKES -> it.likes()
                 FeedTarget.UNLIKES -> it.unLikes()

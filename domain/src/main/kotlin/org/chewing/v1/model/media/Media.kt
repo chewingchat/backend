@@ -2,7 +2,6 @@ package org.chewing.v1.model.media
 
 import java.util.*
 
-
 class Media private constructor(
     val category: FileCategory,
     val url: String,
@@ -22,5 +21,4 @@ class Media private constructor(
             return Media(category, imagePath, type, index)
         }
     }
-
 }

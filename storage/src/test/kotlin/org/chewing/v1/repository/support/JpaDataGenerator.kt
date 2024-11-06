@@ -37,7 +37,6 @@ import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
 import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.jparepository.user.UserStatusJpaRepository
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
@@ -55,6 +54,7 @@ import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import org.chewing.v1.model.token.RefreshToken
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserEmoticonPackInfo
 import org.chewing.v1.model.user.UserStatus
@@ -63,8 +63,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 @Component
-class JpaDataGenerator(
-) {
+class JpaDataGenerator() {
     @Autowired
     private lateinit var emailJpaRepository: EmailJpaRepository
 
@@ -301,13 +300,15 @@ class JpaDataGenerator(
     }
 
     fun groupChatRoomMemberEntityDataList(chatRoomId: String, userIds: List<String>, number: ChatNumber) {
-        groupChatRoomMemberJpaRepository.saveAll(userIds.map {
-            GroupChatRoomMemberJpaEntity.generate(
-                it,
-                chatRoomId,
-                number
-            )
-        })
+        groupChatRoomMemberJpaRepository.saveAll(
+            userIds.map {
+                GroupChatRoomMemberJpaEntity.generate(
+                    it,
+                    chatRoomId,
+                    number
+                )
+            }
+        )
     }
 
     fun personalChatRoomMemberEntityData(userId: String, friendId: String, chatRoomId: String, number: ChatNumber) {

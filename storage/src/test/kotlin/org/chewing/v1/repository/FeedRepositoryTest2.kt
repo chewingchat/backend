@@ -14,10 +14,10 @@ class FeedRepositoryTest2 {
     private var feedRepositoryImpl: FeedRepositoryImpl = FeedRepositoryImpl(feedJpaRepository)
 
     @Test
-    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`(){
+    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`() {
         val feedId = "feedId"
         whenever(feedJpaRepository.findById(feedId)).thenReturn(Optional.empty())
-        val result = feedRepositoryImpl.update(feedId,FeedTarget.UNHIDE)
+        val result = feedRepositoryImpl.update(feedId, FeedTarget.UNHIDE)
         assert(result == null)
     }
 }

@@ -7,7 +7,7 @@ import org.chewing.v1.repository.feed.FeedLikesRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-internal class FeedLikesRepositoryTest:JpaContextTest() {
+internal class FeedLikesRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var feedLikesJpaRepository: FeedLikesJpaRepository
 
@@ -30,7 +30,8 @@ internal class FeedLikesRepositoryTest:JpaContextTest() {
         feedLikesRepositoryImpl.likes(feedId, userId)
         feedLikesRepositoryImpl.unlikes(feedId, userId)
         val result = feedLikesJpaRepository.findById(FeedLikeId(userId, feedId))
-        assert(!result.isPresent)    }
+        assert(!result.isPresent)
+    }
 
     @Test
     fun `좋아요를 확인해야 한다`() {

@@ -46,7 +46,6 @@ internal class GroupChatRoomMemberRepositoryImpl(
         }
     }
 
-
     override fun updateRead(userId: String, number: ChatNumber) {
         groupChatRoomMemberJpaRepository.findById(ChatRoomMemberId(number.chatRoomId, userId)).ifPresent {
             it.updateRead(number)

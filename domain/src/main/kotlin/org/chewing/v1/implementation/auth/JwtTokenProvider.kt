@@ -60,21 +60,20 @@ class JwtTokenProvider(
         try {
             val claims = getClaimsFromToken(token)
             if (claims.expiration.before(Date())) {
-                throw AuthorizationException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
+                throw AuthorizationException(ErrorCode.TOKEN_EXPIRED) // 엑세스 토큰 만료 예외 발생
             }
         } catch (e: ExpiredJwtException) {
-            throw AuthorizationException(ErrorCode.TOKEN_EXPIRED)  // 엑세스 토큰 만료 예외 발생
+            throw AuthorizationException(ErrorCode.TOKEN_EXPIRED) // 엑세스 토큰 만료 예외 발생
         } catch (e: JwtException) {
-            throw AuthorizationException(ErrorCode.INVALID_TOKEN)  // JWT 관련 일반 예외 발생
+            throw AuthorizationException(ErrorCode.INVALID_TOKEN) // JWT 관련 일반 예외 발생
         }
     }
 
     // 리프레시 토큰 유효성 검사 추가
     fun validateRefreshToken(refreshToken: String) {
         val cleanedToken = refreshToken.removePrefix("Bearer ").trim()
-        validateToken(cleanedToken)  // 동일한 유효성 검사 메서드 사용
+        validateToken(cleanedToken) // 동일한 유효성 검사 메서드 사용
     }
-
 
     // 토큰에서 사용자 ID 추출
     fun getUserIdFromToken(token: String): String {

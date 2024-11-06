@@ -1,9 +1,8 @@
 package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import java.util.*
-
 import org.chewing.v1.model.user.UserStatus
+import java.util.*
 
 @Entity
 @Table(
@@ -45,5 +44,4 @@ internal class UserStatusJpaEntity(
     fun updateSelectedTrue() {
         this.selected = true
     }
-
 }

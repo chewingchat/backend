@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 
-class ChatSequenceRepositoryTest : MongoContextTest()  {
+class ChatSequenceRepositoryTest : MongoContextTest() {
     @Autowired
     private lateinit var mongoTemplate: MongoTemplate
     @Autowired
@@ -33,7 +33,7 @@ class ChatSequenceRepositoryTest : MongoContextTest()  {
     }
 
     @Test
-    fun `채팅방 목록 시퀀스 번호 읽기 - 모두 처음 인경우`(){
+    fun `채팅방 목록 시퀀스 번호 읽기 - 모두 처음 인경우`() {
         val chatRoomIds = listOf("testRoomId3", "testRoomId4", "testRoomId5")
         val result = chatSequenceRepositoryImpl.readCurrentSeqNumbers(chatRoomIds)
         assert(result.size == 3)
@@ -43,7 +43,7 @@ class ChatSequenceRepositoryTest : MongoContextTest()  {
     }
 
     @Test
-    fun `채팅방 목록 시퀀스 번호 읽기 - 시퀀스가 있는 경우`(){
+    fun `채팅방 목록 시퀀스 번호 읽기 - 시퀀스가 있는 경우`() {
         val chatRoomIds = listOf("testRoomId6", "testRoomId7", "testRoomId8")
         mongoDataGenerator.insertSeqNumber("testRoomId6", 1)
         mongoDataGenerator.insertSeqNumber("testRoomId7", 1)
@@ -71,7 +71,7 @@ class ChatSequenceRepositoryTest : MongoContextTest()  {
     }
 
     @Test
-    fun `채팅방 목록 시퀀스 번호 증가 - 모두 처음 인경우`(){
+    fun `채팅방 목록 시퀀스 번호 증가 - 모두 처음 인경우`() {
         val chatRoomIds = listOf("testRoomId10", "testRoomId11", "testRoomId12")
         val result = chatSequenceRepositoryImpl.updateSequenceIncrements(chatRoomIds)
         assert(result.size == 3)
@@ -81,7 +81,7 @@ class ChatSequenceRepositoryTest : MongoContextTest()  {
     }
 
     @Test
-    fun `채팅방 목록 시퀀스 번호 증가 - 시퀀스가 있는 경우`(){
+    fun `채팅방 목록 시퀀스 번호 증가 - 시퀀스가 있는 경우`() {
         val chatRoomIds = listOf("testRoomId13", "testRoomId14", "testRoomId15")
         mongoDataGenerator.insertSeqNumber("testRoomId13", 1)
         mongoDataGenerator.insertSeqNumber("testRoomId14", 1)

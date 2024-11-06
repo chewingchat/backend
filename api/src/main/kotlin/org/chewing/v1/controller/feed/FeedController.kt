@@ -1,9 +1,9 @@
 package org.chewing.v1.controller.feed
 
 import org.chewing.v1.dto.request.feed.FeedRequest
+import org.chewing.v1.dto.response.feed.FeedsResponse
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
 import org.chewing.v1.dto.response.feed.OwnedFeedResponse
-import org.chewing.v1.dto.response.feed.FeedsResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
@@ -29,7 +29,7 @@ class FeedController(
         @PathVariable("friendId") targetUserId: String
     ): SuccessResponseEntity<FeedsResponse> {
         val feeds = feedService.getOwnedFeeds(targetUserId, FeedStatus.NOT_HIDDEN)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }
 
@@ -38,7 +38,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<FeedsResponse> {
         val feeds = feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }
 
@@ -48,7 +48,7 @@ class FeedController(
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FriendFeedResponse> {
         val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(FriendFeedResponse.of(feed, isLiked))
     }
 
@@ -58,7 +58,7 @@ class FeedController(
         @PathVariable("feedId") feedId: String,
     ): SuccessResponseEntity<OwnedFeedResponse> {
         val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(OwnedFeedResponse.of(feed, isLiked))
     }
 
@@ -67,7 +67,7 @@ class FeedController(
         @RequestAttribute("userId") userId: String
     ): SuccessResponseEntity<FeedsResponse> {
         val feeds = feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(FeedsResponse.of(feeds))
     }
 
@@ -76,8 +76,8 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: List<FeedRequest.Hide>
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        feedService.changeHide(userId, request.map { it.toFeedId() },FeedTarget.HIDE)
-        //성공 응답 200 반환
+        feedService.changeHide(userId, request.map { it.toFeedId() }, FeedTarget.HIDE)
+        // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -86,8 +86,8 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: List<FeedRequest.Hide>
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        feedService.changeHide(userId, request.map { it.toFeedId() },FeedTarget.UNHIDE)
-        //성공 응답 200 반환
+        feedService.changeHide(userId, request.map { it.toFeedId() }, FeedTarget.UNHIDE)
+        // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -97,7 +97,7 @@ class FeedController(
         @RequestBody request: List<FeedRequest.Delete>
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedFacade.removesFeed(userId, request.map { it.toFeedId() })
-        //삭제 완료 응답 200 반환
+        // 삭제 완료 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -109,7 +109,7 @@ class FeedController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         feedService.make(userId, convertFiles, topic, FileCategory.FEED)
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 }

@@ -10,7 +10,7 @@ class ChatDeleteMessage private constructor(
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
     override val type: MessageType = MessageType.DELETE
-): ChatMessage() {
+) : ChatMessage() {
 
     companion object {
         fun of(

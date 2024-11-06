@@ -103,7 +103,7 @@ class FeedFacadeTest {
     }
 
     @Test
-    fun `피드 댓글의 소유자가 친구가 아닌 경우 제외 되어야 함`(){
+    fun `피드 댓글의 소유자가 친구가 아닌 경우 제외 되어야 함`() {
         val userId = "123"
         val feedId = "1"
         val commentId = "1"
@@ -119,7 +119,7 @@ class FeedFacadeTest {
     }
 
     @Test
-    fun `소유자가 작성한 댓글을 가져와야함`(){
+    fun `소유자가 작성한 댓글을 가져와야함`() {
         val userId = "userId"
         val commentId = "commentId"
         val feedId = "feedId"
@@ -143,7 +143,7 @@ class FeedFacadeTest {
     }
 
     @Test
-    fun `소유자가 작성한 댓글을 가져와야함 - 친구가 아닌 경우`(){
+    fun `소유자가 작성한 댓글을 가져와야함 - 친구가 아닌 경우`() {
         val userId = "userId"
         val commentId = "commentId"
         val feedId = "feedId"

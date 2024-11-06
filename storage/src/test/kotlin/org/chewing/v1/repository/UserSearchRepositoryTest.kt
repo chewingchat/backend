@@ -7,7 +7,6 @@ import org.chewing.v1.repository.user.UserSearchRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-
 class UserSearchRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var userSearchJpaRepository: UserSearchJpaRepository

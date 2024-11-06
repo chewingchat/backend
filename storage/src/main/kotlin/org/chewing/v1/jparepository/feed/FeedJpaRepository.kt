@@ -10,4 +10,5 @@ internal interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun findAllByUserIdAndHideFalseOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>
     fun findAllByUserIdOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>
     fun deleteAllByUserId(userId: String)
-    fun findAllByFeedIdInOrderByCreatedAtAsc(feedIds: List<String>): List<FeedJpaEntity>}
+    fun findAllByFeedIdInOrderByCreatedAtAsc(feedIds: List<String>): List<FeedJpaEntity>
+}

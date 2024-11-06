@@ -1,36 +1,38 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.friend.FriendController
 import org.chewing.v1.facade.FriendFacade
 import org.chewing.v1.service.friend.FriendShipService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.mockito.kotlin.mock
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@WebMvcTest(FriendController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class FriendControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class FriendControllerTest : RestDocsTest() {
     private lateinit var friendFacade: FriendFacade
-    @MockBean
     private lateinit var friendShipService: FriendShipService
+    private lateinit var friendController: FriendController
+    private lateinit var objectMapper: ObjectMapper
+
+    @BeforeEach
+    fun setUp() {
+        friendFacade = mock()
+        friendShipService = mock()
+        friendController = FriendController(friendFacade, friendShipService)
+        mockMvc = mockController(friendController)
+        objectMapper = objectMapper()
+    }
 
     private fun performCommonSuccessCreateResponse(result: ResultActions) {
         result.andExpect(MockMvcResultMatchers.status().isCreated)
@@ -50,14 +52,14 @@ class FriendControllerTest(
         val requestBody = mapOf(
             "email" to "test@example.com",
             "firstName" to "testFirstName",
-            "lastName" to "testLastName"
+            "lastName" to "testLastName",
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/friend/email")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -69,14 +71,14 @@ class FriendControllerTest(
             "phoneNumber" to "01012345678",
             "countryCode" to "82",
             "firstName" to "testFirstName",
-            "lastName" to "testLastName"
+            "lastName" to "testLastName",
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/friend/phone")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -86,14 +88,14 @@ class FriendControllerTest(
     fun changeFavorite() {
         val requestBody = mapOf(
             "friendId" to "testFriendId",
-            "favorite" to true
+            "favorite" to true,
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.put("/api/friend/favorite")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -102,14 +104,14 @@ class FriendControllerTest(
     @DisplayName("친구 차단")
     fun blockFriend() {
         val requestBody = mapOf(
-            "friendId" to "testFriendId"
+            "friendId" to "testFriendId",
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/friend/block")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -118,14 +120,14 @@ class FriendControllerTest(
     @DisplayName("친구 삭제")
     fun deleteFriend() {
         val requestBody = mapOf(
-            "friendId" to "testFriendId"
+            "friendId" to "testFriendId",
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/friend")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -136,14 +138,14 @@ class FriendControllerTest(
         val requestBody = mapOf(
             "friendId" to "testFriendId",
             "firstName" to "testFirstName",
-            "lastName" to "testLastName"
+            "lastName" to "testLastName",
         )
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.put("/api/friend/name")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId")
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }

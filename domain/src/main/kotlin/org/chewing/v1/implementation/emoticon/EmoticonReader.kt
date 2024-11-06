@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class EmoticonReader(
     private val emoticonRepository: EmoticonRepository
 ) {
-   fun readsPack(emoticonPackIds: List<String>): List<EmoticonPackInfo> {
+    fun readsPack(emoticonPackIds: List<String>): List<EmoticonPackInfo> {
         return emoticonRepository.readEmoticonPacks(emoticonPackIds)
     }
 

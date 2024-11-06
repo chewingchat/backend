@@ -8,7 +8,7 @@ class CommentInfo private constructor(
     val createAt: LocalDateTime,
     val userId: String,
     val feedId: String
-){
+) {
     companion object {
         fun of(
             commentId: String,

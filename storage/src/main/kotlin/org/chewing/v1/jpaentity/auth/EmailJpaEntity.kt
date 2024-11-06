@@ -1,6 +1,6 @@
 package org.chewing.v1.jpaentity.auth
 
-import jakarta.persistence.*;
+import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.contact.Email

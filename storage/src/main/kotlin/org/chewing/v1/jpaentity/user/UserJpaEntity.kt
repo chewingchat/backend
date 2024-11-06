@@ -2,16 +2,16 @@ package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.user.User
-import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.Email
 import org.chewing.v1.model.contact.Phone
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.user.AccessStatus
+import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserAccount
+import org.chewing.v1.model.user.UserName
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
 

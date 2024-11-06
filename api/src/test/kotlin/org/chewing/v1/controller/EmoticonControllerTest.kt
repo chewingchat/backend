@@ -1,34 +1,37 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.emoticon.EmoticonController
 import org.chewing.v1.service.emoticon.EmoticonService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(EmoticonController::class)
 @Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class EmoticonControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class EmoticonControllerTest : RestDocsTest() {
     private lateinit var emoticonService: EmoticonService
+    private lateinit var emoticonController: EmoticonController
+    private lateinit var objectMapper: ObjectMapper
+
+    @BeforeEach
+    fun setUp() {
+        emoticonService = mock()
+        emoticonController = EmoticonController(emoticonService)
+        mockMvc = mockController(emoticonController)
+        objectMapper = objectMapper()
+    }
+
     @Test
     fun `소유 하고 있는 이모티콘 팩 목록 가져오기`() {
         val userId = "userId"
@@ -39,11 +42,10 @@ class EmoticonControllerTest(
 
         whenever(emoticonService.fetchUserEmoticonPacks(userId)).thenReturn(listOf(emoticonPack))
 
-
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/emoticon/list")
                 .contentType(MediaType.APPLICATION_JSON)
-                .requestAttr("userId", userId)
+                .requestAttr("userId", userId),
 
         ).andExpect(status().isOk)
             .andExpect(jsonPath("$.status").value(200))

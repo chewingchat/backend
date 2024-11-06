@@ -23,7 +23,6 @@ internal class ScheduleRepositoryImpl(
         scheduleJpaRepository.deleteAllByUserId(userId)
     }
 
-
     override fun reads(userId: String, type: ScheduleType, isOwned: Boolean): List<Schedule> {
         val startDateTime = LocalDateTime.of(type.year, type.month, 1, 0, 0)
         val endDateTime = startDateTime

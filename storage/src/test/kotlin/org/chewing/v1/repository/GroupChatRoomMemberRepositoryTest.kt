@@ -9,7 +9,6 @@ import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-
 internal class GroupChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Autowired
@@ -32,7 +31,6 @@ internal class GroupChatRoomMemberRepositoryTest : JpaContextTest() {
         jpaDataGenerator.groupChatRoomMemberEntityDataList(chatRoomId, listOf(userId, friendId, friendId2), number)
         val chatRoomMemberInfos = chatRoomMemberRepositoryImpl.readFriends(chatRoomId, userId)
         assert(chatRoomMemberInfos.size == 2)
-
     }
 
     @Test
@@ -43,7 +41,6 @@ internal class GroupChatRoomMemberRepositoryTest : JpaContextTest() {
         chatRoomMemberRepositoryImpl.appends(chatRoomId, userIds, number)
         assert(groupChatRoomMemberJpaRepository.findByIdChatRoomIdIn(listOf(chatRoomId)).size == 2)
     }
-
 
     @Test
     fun `채팅방에서 좋아요 변경 처리`() {

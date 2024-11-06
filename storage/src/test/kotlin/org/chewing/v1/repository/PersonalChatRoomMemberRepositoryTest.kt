@@ -129,7 +129,7 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `채팅방에서 유저 아이디 찾기`(){
+    fun `채팅방에서 유저 아이디 찾기`() {
         val userId = "userId8"
         val friendId = "friendId8"
         val chatRoomId = "chatRoomId8"

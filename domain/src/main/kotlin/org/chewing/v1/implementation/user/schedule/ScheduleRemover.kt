@@ -10,7 +10,7 @@ class ScheduleRemover(
     fun remove(scheduleId: String) {
         scheduleRepository.remove(scheduleId)
     }
-    fun removeUsers(userId:String){
+    fun removeUsers(userId: String) {
         scheduleRepository.removeUsers(userId)
     }
 }

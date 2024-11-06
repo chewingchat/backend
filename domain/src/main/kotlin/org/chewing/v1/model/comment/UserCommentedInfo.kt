@@ -1,7 +1,6 @@
 package org.chewing.v1.model.comment
 
 import org.chewing.v1.model.feed.Feed
-import org.chewing.v1.model.friend.Friend
 import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.user.User
 

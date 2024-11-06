@@ -2,11 +2,10 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
-import org.chewing.v1.repository.support.PushTokenProvider
 import org.chewing.v1.repository.support.JpaDataGenerator
+import org.chewing.v1.repository.support.PushTokenProvider
 import org.chewing.v1.repository.support.UserProvider
 import org.chewing.v1.repository.user.PushNotificationRepositoryImpl
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 

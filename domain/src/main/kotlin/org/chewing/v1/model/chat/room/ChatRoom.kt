@@ -1,12 +1,9 @@
 package org.chewing.v1.model.chat.room
 
-import org.chewing.v1.error.ConflictException
-import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.model.chat.member.ChatRoomMember
 import org.chewing.v1.model.chat.message.*
 import java.time.LocalDateTime
-
 
 data class ChatRoom(
     val chatRoomId: String,
@@ -111,6 +108,5 @@ data class ChatRoom(
                 }
             }
         }
-
     }
 }

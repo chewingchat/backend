@@ -4,8 +4,8 @@ import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatRoomInfo
-import org.chewing.v1.repository.chat.GroupChatRoomMemberRepository
 import org.chewing.v1.repository.chat.ChatRoomRepository
+import org.chewing.v1.repository.chat.GroupChatRoomMemberRepository
 import org.chewing.v1.repository.chat.PersonalChatRoomMemberRepository
 import org.springframework.stereotype.Component
 
@@ -20,7 +20,7 @@ class ChatRoomReader(
     }
 
     fun readChatRoom(chatRoomId: String): ChatRoomInfo {
-        return chatRoomRepository.readChatRoom(chatRoomId)?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
+        return chatRoomRepository.readChatRoom(chatRoomId) ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
     }
 
     fun readPersonalChatRoomId(userId: String, friendId: String): String? {
@@ -32,7 +32,7 @@ class ChatRoomReader(
     }
 
     fun readPersonalFriend(chatRoomId: String, userId: String): ChatRoomMemberInfo {
-        return personalChatRoomMemberRepository.readFriend(chatRoomId, userId)?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
+        return personalChatRoomMemberRepository.readFriend(chatRoomId, userId) ?: throw NotFoundException(ErrorCode.CHATROOM_NOT_FOUND)
     }
     fun readOwnedChatRoomMembers(userId: String): List<ChatRoomMemberInfo> {
         val groupChatRoomMembers = groupChatRoomMemberRepository.reads(userId)

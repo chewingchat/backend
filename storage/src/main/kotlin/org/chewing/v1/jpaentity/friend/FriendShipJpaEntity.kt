@@ -2,11 +2,10 @@ package org.chewing.v1.jpaentity.friend
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
+import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.UserName
-import org.chewing.v1.model.friend.FriendShip
 import org.hibernate.annotations.DynamicInsert
-
 
 @DynamicInsert
 @Entity

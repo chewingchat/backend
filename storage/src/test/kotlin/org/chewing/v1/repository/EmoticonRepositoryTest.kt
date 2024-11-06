@@ -50,5 +50,4 @@ class EmoticonRepositoryTest : JpaContextTest() {
         val result = emotionRepositoryImpl.readEmoticons(listOf(emoticonPackId))
         assert(result.size == 10)
     }
-
 }

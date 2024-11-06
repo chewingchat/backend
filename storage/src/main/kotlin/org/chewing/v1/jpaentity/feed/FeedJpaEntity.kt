@@ -8,7 +8,8 @@ import java.util.*
 
 @DynamicInsert
 @Entity
-@Table(name = "feed", schema = "chewing",
+@Table(
+    name = "feed", schema = "chewing",
     indexes = [Index(name = "idx_feed_hide", columnList = "hide")]
 )
 internal class FeedJpaEntity(
@@ -65,14 +66,14 @@ internal class FeedJpaEntity(
         return feedId
     }
     fun toFeedInfo(): FeedInfo {
-        return FeedInfo.
-        of(
-            feedId = feedId,
-            topic = feedTopic,
-            likes = likes,
-            comments = comments,
-            uploadAt = createdAt,
-            userId = userId,
-        )
+        return FeedInfo
+            .of(
+                feedId = feedId,
+                topic = feedTopic,
+                likes = likes,
+                comments = comments,
+                uploadAt = createdAt,
+                userId = userId,
+            )
     }
 }

@@ -16,7 +16,6 @@ class ChatFinder(
 //        return (chatSequenceReader.readCurrent(chatRoomId).sequenceNumber / PAGE_SIZE)
 //    }
 
-
     fun findCurrentNumbers(chatRoomIds: List<String>): List<ChatNumber> {
         val sequenceNumbers = chatSequenceReader.readSeqNumbers(chatRoomIds)
         return sequenceNumbers.map {

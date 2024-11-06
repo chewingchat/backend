@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/announcement")
 class AnnouncementController(
-    private val announcementService: AnnouncementService
+    private val announcementService: AnnouncementService,
 ) {
 
     @GetMapping("/list")

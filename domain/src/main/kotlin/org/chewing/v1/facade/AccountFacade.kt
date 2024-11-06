@@ -30,7 +30,9 @@ class AccountFacade(
     }
 
     fun changeCredential(
-        userId: String, credential: Credential, verificationCode: String
+        userId: String,
+        credential: Credential,
+        verificationCode: String
     ) {
         val contact = authService.verify(credential, verificationCode)
         userService.updateUserContact(userId, contact)
@@ -55,5 +57,4 @@ class AccountFacade(
 
         return Account.of(userAccount, email, phone)
     }
-
 }

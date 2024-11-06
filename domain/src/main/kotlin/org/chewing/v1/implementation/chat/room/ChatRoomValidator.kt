@@ -10,7 +10,7 @@ class ChatRoomValidator(
     private val chatRoomRepository: ChatRoomRepository
 ) {
     fun validateGroupChatRoom(chatRoomId: String) {
-        if(!chatRoomRepository.isGroupChatRoom(chatRoomId)) {
+        if (!chatRoomRepository.isGroupChatRoom(chatRoomId)) {
             throw ConflictException(ErrorCode.CHATROOM_IS_NOT_GROUP)
         }
     }

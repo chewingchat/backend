@@ -13,5 +13,3 @@ data class LogInfoResponse(
         }
     }
 }
-
-

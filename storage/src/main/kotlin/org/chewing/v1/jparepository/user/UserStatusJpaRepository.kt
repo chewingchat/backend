@@ -2,7 +2,6 @@ package org.chewing.v1.jparepository.user
 
 import org.chewing.v1.jpaentity.user.UserStatusJpaEntity
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.Optional
 

@@ -1,16 +1,19 @@
 package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.Schedule
+import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
 @Table(
-    name = "schedule", indexes = [Index(name = "idx_start_at", columnList = "startAt"),
-        Index(name = "idx_end_at", columnList = "endAt")]
+    name = "schedule",
+    indexes = [
+        Index(name = "idx_start_at", columnList = "startAt"),
+        Index(name = "idx_end_at", columnList = "endAt")
+    ]
 )
 internal class ScheduleJpaEntity(
     @Id

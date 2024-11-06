@@ -7,7 +7,6 @@ import org.chewing.v1.repository.user.UserStatusRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-
 class UserStatusRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var userStatusJpaRepository: UserStatusJpaRepository
@@ -18,7 +17,6 @@ class UserStatusRepositoryTest : JpaContextTest() {
     private val userStatusRepositoryImpl: UserStatusRepositoryImpl by lazy {
         UserStatusRepositoryImpl(userStatusJpaRepository)
     }
-
 
     @Test
     fun `유저 아이디로 읽기`() {
@@ -57,7 +55,6 @@ class UserStatusRepositoryTest : JpaContextTest() {
         val result = userStatusJpaRepository.findBySelectedTrueAndUserId(userId)
         assert(result.isEmpty)
     }
-
 
     @Test
     fun `선택된 상태 변경 - 선택된 상태가 있음 처리`() {

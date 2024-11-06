@@ -1,6 +1,5 @@
 package org.chewing.v1
 
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.*
 import org.chewing.v1.model.chat.log.*
@@ -30,6 +29,7 @@ import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.model.user.*
+import org.chewing.v1.model.user.AccessStatus
 import java.io.ByteArrayInputStream
 import java.time.LocalDateTime
 
@@ -272,7 +272,6 @@ object TestDataFactory {
             ChatLogType.BOMB
         )
     }
-
 
     fun createChatFileLog(
         messageId: String,

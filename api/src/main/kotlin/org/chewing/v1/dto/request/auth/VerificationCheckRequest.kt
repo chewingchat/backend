@@ -7,7 +7,7 @@ class VerificationCheckRequest {
     data class Email(
         val email: String,
         val verificationCode: String
-    ){
+    ) {
         fun toEmailAddress(): EmailAddress {
             return EmailAddress.of(email)
         }
@@ -20,7 +20,7 @@ class VerificationCheckRequest {
         val phoneNumber: String,
         val countryCode: String,
         val verificationCode: String
-    ){
+    ) {
         fun toPhoneNumber(): PhoneNumber {
             return PhoneNumber.of(phoneNumber, countryCode)
         }

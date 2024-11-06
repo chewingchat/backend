@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 internal class UserSearchRepositoryImpl(
     private val userSearchJpaRepository: UserSearchJpaRepository
-): UserSearchRepository {
+) : UserSearchRepository {
     override fun appendHistory(userId: String, keyword: String) {
         userSearchJpaRepository.save(UserSearchJpaEntity.fromFriendSearch(userId, keyword))
     }
