@@ -2,11 +2,12 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.auth.LoggedInJpaRepository
-import org.chewing.v1.repository.auth.LoggedInRepositoryImpl
+import org.chewing.v1.repository.jpa.auth.LoggedInRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.RefreshTokenProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class LoggedInRepositoryImplTest : JpaContextTest() {
     @Autowired
@@ -15,14 +16,14 @@ class LoggedInRepositoryImplTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val loggedInRepositoryImpl: LoggedInRepositoryImpl by lazy {
-        LoggedInRepositoryImpl(loggedInJpaRepository)
-    }
+    @Autowired
+    private lateinit var loggedInRepositoryImpl: LoggedInRepositoryImpl
 
     @Test
     fun `로그인 정보를 삭제해야 한다`() {
         val refreshToken = RefreshTokenProvider.buildNormal()
-        jpaDataGenerator.loggedInEntityData(refreshToken)
+        val userId = generateUserId()
+        jpaDataGenerator.loggedInEntityData(refreshToken, userId)
         loggedInRepositoryImpl.remove(refreshToken.token)
 
         val result = loggedInJpaRepository.findByRefreshToken(refreshToken.token)
@@ -32,7 +33,9 @@ class LoggedInRepositoryImplTest : JpaContextTest() {
     @Test
     fun `로그인 정보를 수정 해야한다`() {
         val refreshToken = RefreshTokenProvider.buildNormal()
-        jpaDataGenerator.loggedInEntityData(refreshToken)
+        val userId = generateUserId()
+
+        jpaDataGenerator.loggedInEntityData(refreshToken, userId)
 
         val newRefreshToken = RefreshTokenProvider.buildNew()
 
@@ -46,9 +49,10 @@ class LoggedInRepositoryImplTest : JpaContextTest() {
 
     @Test
     fun `로그인 정보를 추가해야 한다`() {
+        val userId = generateUserId()
         val refreshToken = RefreshTokenProvider.buildNormal()
-        loggedInRepositoryImpl.append(refreshToken, "userId")
 
+        loggedInRepositoryImpl.append(refreshToken, userId)
         val result = loggedInJpaRepository.findByRefreshToken(refreshToken.token)
         assert(result.isPresent)
         assert(result.get().toRefreshToken().token == refreshToken.token)
@@ -56,11 +60,14 @@ class LoggedInRepositoryImplTest : JpaContextTest() {
 
     @Test
     fun `리프레시 토큰을 조회해야 한다`() {
+        val userId = generateUserId()
         val refreshToken = RefreshTokenProvider.buildNormal()
-        jpaDataGenerator.loggedInEntityData(refreshToken)
+        jpaDataGenerator.loggedInEntityData(refreshToken, userId)
 
-        val result = loggedInRepositoryImpl.read(refreshToken.token, "userId")
+        val result = loggedInRepositoryImpl.read(refreshToken.token, userId)
         assert(result != null)
         assert(result!!.token == refreshToken.token)
     }
+
+    private fun generateUserId() = UUID.randomUUID().toString()
 }

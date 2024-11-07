@@ -1,4 +1,4 @@
-package org.chewing.v1.repository.chat
+package org.chewing.v1.repository.mongo.chat
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -7,6 +7,7 @@ import org.chewing.v1.model.chat.message.*
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.mongoentity.*
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
+import org.chewing.v1.repository.chat.ChatLogRepository
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -26,9 +27,7 @@ internal class ChatLogRepositoryImpl(
         val messageEntities = chatLogMongoRepository.findByRoomIdAndPageSortedBySeqNumber(chatRoomId, page)
         return messageEntities.map { it.toChatLog() }
     }
-    override fun readChatMessage(messageId: String): ChatLog? {
-        return chatLogMongoRepository.findById(messageId).map { it.toChatLog() }.orElse(null)
-    }
+    override fun readChatMessage(messageId: String): ChatLog? = chatLogMongoRepository.findById(messageId).map { it.toChatLog() }.orElse(null)
 
     override fun readLatestMessages(numbers: List<ChatNumber>): List<ChatLog> {
         // MongoDB에서 chatRoomId와 seqNumber로 메시지 조회
@@ -51,8 +50,8 @@ internal class ChatLogRepositoryImpl(
     override fun appendChatLog(chatMessage: ChatMessage) {
         chatLogMongoRepository.save(
             ChatMessageMongoEntity.fromChatMessage(chatMessage) ?: throw ConflictException(
-                ErrorCode.WRONG_VALIDATE_CODE
-            )
+                ErrorCode.WRONG_VALIDATE_CODE,
+            ),
         )
 
         // MongoDB에서 친구의 마지막 읽은 메시지 시퀀스를 조회

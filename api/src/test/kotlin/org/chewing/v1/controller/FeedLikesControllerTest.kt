@@ -2,21 +2,16 @@ package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.feed.FeedLikesController
 import org.chewing.v1.service.feed.FeedLikesService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class FeedLikesControllerTest : RestDocsTest() {
 
@@ -30,18 +25,6 @@ class FeedLikesControllerTest : RestDocsTest() {
         feedLikesController = FeedLikesController(feedLikesService)
         mockMvc = mockController(feedLikesController)
         objectMapper = objectMapper()
-    }
-
-    private fun performCommonSuccessCreateResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(201))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("생성 완료"))
-    }
-
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
     }
 
     @Test

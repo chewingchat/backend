@@ -4,18 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.SecurityConfig
-import org.chewing.v1.config.WebSocketConfig
+import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.implementation.session.SessionProvider
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Import
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
@@ -32,15 +28,17 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebSocketConfig::class, SecurityConfig::class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-class ExternalChatNotificationClientTest(
-    @Autowired private val jwtTokenProvider: JwtTokenProvider,
-    @Autowired private val externalChatNotificationClient: ExternalChatNotificationClient,
-    @Autowired private val sessionProvider: SessionProvider
-) {
+class ExternalChatNotificationClientTest : IntegrationTest() {
+
+    @Autowired
+    private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @Autowired
+    private lateinit var externalChatNotificationClient: ExternalChatNotificationClient
+
+    @Autowired
+    private lateinit var sessionProvider: SessionProvider
 
     @LocalServerPort
     private var port: Int = 0
@@ -65,9 +63,10 @@ class ExternalChatNotificationClientTest(
 
         // CompletableFuture 사용
         val futureSession = stompClient.connectAsync(
-            url, headers,
+            url,
+            headers,
             object : StompSessionHandlerAdapter() {
-            }
+            },
         )
         return futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
     }
@@ -83,9 +82,7 @@ class ExternalChatNotificationClientTest(
         session.subscribe(
             "/user/queue/chat",
             object : StompFrameHandler {
-                override fun getPayloadType(headers: StompHeaders): Type {
-                    return ByteArray::class.java
-                }
+                override fun getPayloadType(headers: StompHeaders): Type = ByteArray::class.java
 
                 override fun handleFrame(headers: StompHeaders, payload: Any?) {
                     val message = String(payload as ByteArray, StandardCharsets.UTF_8)
@@ -93,7 +90,7 @@ class ExternalChatNotificationClientTest(
                     chatMessages.add(chatMessage)
                     latch.countDown()
                 }
-            }
+            },
         )
     }
 
@@ -132,7 +129,7 @@ class ExternalChatNotificationClientTest(
         val bombMessage = TestDataFactory.createBombMessage(testMessageId6, testChatRoomId6)
         val leaveMessage = TestDataFactory.createLeaveMessage(testMessageId8, testChatRoomId8)
 
-        sleep(1000)
+        sleep(100)
         // 메시지 전송
         externalChatNotificationClient.sendMessage(normalMessage, userId)
         externalChatNotificationClient.sendMessage(inviteMessage, userId)

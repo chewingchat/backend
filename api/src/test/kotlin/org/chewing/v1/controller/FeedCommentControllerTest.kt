@@ -3,7 +3,6 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.feed.FeedCommentController
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.service.feed.FeedCommentService
@@ -12,17 +11,14 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.format.DateTimeFormatter
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class FeedCommentControllerTest : RestDocsTest() {
     private lateinit var feedCommentService: FeedCommentService
@@ -37,18 +33,6 @@ class FeedCommentControllerTest : RestDocsTest() {
         feedCommentController = FeedCommentController(feedCommentService, feedFacade)
         mockMvc = mockController(feedCommentController)
         objectMapper = objectMapper()
-    }
-
-    private fun performCommonSuccessCreateResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(201))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("생성 완료"))
-    }
-
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
     }
 
     @Test

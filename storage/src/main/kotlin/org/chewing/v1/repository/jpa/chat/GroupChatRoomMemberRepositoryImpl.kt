@@ -1,21 +1,21 @@
-package org.chewing.v1.repository.chat
+package org.chewing.v1.repository.jpa.chat
 
 import org.chewing.v1.jpaentity.chat.ChatRoomMemberId
 import org.chewing.v1.jpaentity.chat.GroupChatRoomMemberJpaEntity
 import org.chewing.v1.jparepository.chat.GroupChatRoomMemberJpaRepository
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
 import org.chewing.v1.model.chat.room.ChatNumber
+import org.chewing.v1.repository.chat.GroupChatRoomMemberRepository
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 internal class GroupChatRoomMemberRepositoryImpl(
-    private val groupChatRoomMemberJpaRepository: GroupChatRoomMemberJpaRepository
+    private val groupChatRoomMemberJpaRepository: GroupChatRoomMemberJpaRepository,
 ) : GroupChatRoomMemberRepository {
 
-    override fun readFriends(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> {
-        return groupChatRoomMemberJpaRepository.findAllByIdChatRoomIdAndIdUserIdNot(chatRoomId, userId).map {
-            it.toRoomMember()
-        }
+    override fun readFriends(chatRoomId: String, userId: String): List<ChatRoomMemberInfo> = groupChatRoomMemberJpaRepository.findAllByIdChatRoomIdAndIdUserIdNot(chatRoomId, userId).map {
+        it.toRoomMember()
     }
 
     override fun reads(userId: String): List<ChatRoomMemberInfo> {
@@ -32,9 +32,11 @@ internal class GroupChatRoomMemberRepositoryImpl(
     override fun updateFavorite(chatRoomId: String, userId: String, isFavorite: Boolean) {
         groupChatRoomMemberJpaRepository.findById(ChatRoomMemberId(chatRoomId, userId)).ifPresent {
             it.updateFavorite(isFavorite)
+            groupChatRoomMemberJpaRepository.save(it)
         }
     }
 
+    @Transactional
     override fun removes(chatRoomIds: List<String>, userId: String) {
         val chatRoomMemberIds = chatRoomIds.map { ChatRoomMemberId(it, userId) }
         groupChatRoomMemberJpaRepository.deleteAllById(chatRoomMemberIds)
@@ -49,6 +51,7 @@ internal class GroupChatRoomMemberRepositoryImpl(
     override fun updateRead(userId: String, number: ChatNumber) {
         groupChatRoomMemberJpaRepository.findById(ChatRoomMemberId(number.chatRoomId, userId)).ifPresent {
             it.updateRead(number)
+            groupChatRoomMemberJpaRepository.save(it)
         }
     }
 

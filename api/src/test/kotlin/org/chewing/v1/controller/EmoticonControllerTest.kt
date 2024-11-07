@@ -3,21 +3,18 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.emoticon.EmoticonController
 import org.chewing.v1.service.emoticon.EmoticonService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class EmoticonControllerTest : RestDocsTest() {
     private lateinit var emoticonService: EmoticonService

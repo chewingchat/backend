@@ -3,25 +3,22 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.chat.ChatRoomController
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.service.chat.RoomService
+import org.chewing.v1.util.StringToChatRoomSortCriteriaConverter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.format.DateTimeFormatter
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class ChatRoomControllerTest : RestDocsTest() {
 
@@ -35,20 +32,17 @@ class ChatRoomControllerTest : RestDocsTest() {
         chatRoomFacade = mock()
         roomService = mock()
         chatRoomController = ChatRoomController(chatRoomFacade, roomService)
-        mockMvc = mockController(chatRoomController)
+        mockMvc = mockControllerWithCustomConverter(
+            chatRoomController,
+            StringToChatRoomSortCriteriaConverter(),
+        )
         objectMapper = objectMapper()
-    }
-
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(status().isOk)
-            .andExpect(jsonPath("$.status").value(200))
-            .andExpect(jsonPath("$.data.message").value("성공"))
     }
 
     @Test
     fun `채팅방 리스트 가져오기`() {
         val userId = "userId"
-        val sort = "DATE"
+        val sort = "date"
         val chatRoom = TestDataFactory.createChatRoom()
         val formatLatestMessageTime =
             chatRoom.latestMessageTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))

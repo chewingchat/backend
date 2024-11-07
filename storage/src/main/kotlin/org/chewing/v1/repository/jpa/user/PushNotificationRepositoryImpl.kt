@@ -1,15 +1,18 @@
-package org.chewing.v1.repository.user
+package org.chewing.v1.repository.jpa.user
 
 import org.chewing.v1.jpaentity.user.PushNotificationJpaEntity
 import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.user.User
+import org.chewing.v1.repository.user.PushNotificationRepository
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 internal class PushNotificationRepositoryImpl(
-    private val pushNotificationJpaRepository: PushNotificationJpaRepository
+    private val pushNotificationJpaRepository: PushNotificationJpaRepository,
 ) : PushNotificationRepository {
+    @Transactional
     override fun remove(device: PushToken.Device) {
         pushNotificationJpaRepository.deleteByDeviceIdAndProvider(device.deviceId, device.provider)
     }

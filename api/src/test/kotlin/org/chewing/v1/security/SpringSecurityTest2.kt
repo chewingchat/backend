@@ -2,8 +2,7 @@ package org.chewing.v1.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.SecurityConfig
-import org.chewing.v1.config.WebConfig
+import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.model.auth.LoginInfo
@@ -13,28 +12,27 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebConfig::class, SecurityConfig::class)
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
-class SpringSecurityTest2(
+class SpringSecurityTest2 : IntegrationTest() {
+
     @Autowired
-    private val mockMvc: MockMvc,
+    private lateinit var mockMvc: MockMvc
+
     @Autowired
-    private val objectMapper: ObjectMapper,
-    @Autowired private val jwtTokenProvider: JwtTokenProvider,
-    @Autowired private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
-) {
+    private lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @Autowired
+    private lateinit var jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
 
     @MockBean
     private lateinit var authService: AuthService
@@ -47,12 +45,12 @@ class SpringSecurityTest2(
     fun sendPhoneVerification() {
         val requestBody = mapOf(
             "countryCode" to "82",
-            "phoneNumber" to "010-1234-5678"
+            "phoneNumber" to "010-1234-5678",
         )
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/phone/create/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         ).andExpect(status().isOk)
     }
 
@@ -60,12 +58,12 @@ class SpringSecurityTest2(
     @DisplayName("이메일 인증번호 전송 - 인증 없이 통과해야함")
     fun sendEmailVerification() {
         val requestBody = mapOf(
-            "email" to "test@Example.com"
+            "email" to "test@Example.com",
         )
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/email/create/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         ).andExpect(status().isOk)
     }
 
@@ -82,14 +80,14 @@ class SpringSecurityTest2(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "IOS"
+            "provider" to "IOS",
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/phone/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
 
         )
             .andExpect(status().isOk)
@@ -106,14 +104,14 @@ class SpringSecurityTest2(
             "verificationCode" to "123456",
             "appToken" to "testToken",
             "deviceId" to "testDeviceId",
-            "provider" to "ANDROID"
+            "provider" to "ANDROID",
         )
         whenever(accountFacade.loginAndCreateUser(any(), any(), any(), any()))
             .thenReturn(loginInfo)
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/auth/email/create/verify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody)),
         )
             .andExpect(status().isOk)
     }
@@ -124,7 +122,7 @@ class SpringSecurityTest2(
         mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/auth/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer token")
+                .header("Authorization", "Bearer token"),
         ).andExpect(status().isOk)
     }
 
@@ -137,7 +135,7 @@ class SpringSecurityTest2(
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer token")
+                .header("Authorization", "Bearer token"),
         )
             .andExpect(status().isOk)
     }

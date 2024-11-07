@@ -3,14 +3,15 @@ package org.chewing.v1.repository
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.model.user.AccessStatus
+import org.chewing.v1.repository.jpa.user.UserRepositoryImpl
 import org.chewing.v1.repository.support.EmailProvider
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.PhoneProvider
 import org.chewing.v1.repository.support.UserProvider
-import org.chewing.v1.repository.user.UserRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class UserRepositoryTest : JpaContextTest() {
     @Autowired
@@ -19,9 +20,8 @@ class UserRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val userRepositoryImpl: UserRepositoryImpl by lazy {
-        UserRepositoryImpl(userJpaRepository)
-    }
+    @Autowired
+    private lateinit var userRepositoryImpl: UserRepositoryImpl
 
     @Test
     fun `유저 아이디로 읽기`() {
@@ -180,7 +180,7 @@ class UserRepositoryTest : JpaContextTest() {
     fun `연락처가 다른 유저 소유 있는지 확인`() {
         val phone = PhoneProvider.buildNormal()
         jpaDataGenerator.userEntityPhoneData(phone)
-        val newUserId = "newUserId"
+        val newUserId = generateUserId()
 
         val result = userRepositoryImpl.checkContactIsUsedByElse(phone, newUserId)
 
@@ -192,7 +192,7 @@ class UserRepositoryTest : JpaContextTest() {
         val email = EmailProvider.buildNormal()
         jpaDataGenerator.userEntityEmailData(email)
 
-        val newUserId = "newUserId"
+        val newUserId = generateUserId()
 
         val result = userRepositoryImpl.checkContactIsUsedByElse(email, newUserId)
 
@@ -236,4 +236,6 @@ class UserRepositoryTest : JpaContextTest() {
 
         assert(result.size == 2)
     }
+
+    private fun generateUserId(): String = UUID.randomUUID().toString()
 }

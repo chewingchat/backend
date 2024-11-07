@@ -2,7 +2,6 @@ package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.user.UserController
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.service.user.UserService
@@ -12,15 +11,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class UserControllerTest : RestDocsTest() {
 
@@ -35,12 +30,6 @@ class UserControllerTest : RestDocsTest() {
         val userController = UserController(userService, accountFacade)
         mockMvc = mockController(userController)
         objectMapper = objectMapper()
-    }
-
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
     }
 
     @Test

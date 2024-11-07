@@ -3,7 +3,6 @@ package org.chewing.v1.controller
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.RestDocsUtils
 import org.chewing.v1.TestDataFactory.createAnnouncement
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.announcement.AnnouncementController
 import org.chewing.v1.service.announcement.AnnouncementService
 import org.junit.jupiter.api.BeforeEach
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.restdocs.payload.PayloadDocumentation
@@ -20,7 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.format.DateTimeFormatter
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class AnnouncementControllerTest : RestDocsTest() {
 

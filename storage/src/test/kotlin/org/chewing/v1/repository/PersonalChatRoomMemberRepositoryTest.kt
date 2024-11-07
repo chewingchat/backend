@@ -4,10 +4,11 @@ import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jpaentity.chat.ChatRoomMemberId
 import org.chewing.v1.jparepository.chat.PersonalChatRoomMemberJpaRepository
 import org.chewing.v1.model.chat.room.ChatNumber
-import org.chewing.v1.repository.chat.PersonalChatRoomMemberRepositoryImpl
+import org.chewing.v1.repository.jpa.chat.PersonalChatRoomMemberRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
     @Autowired
@@ -16,15 +17,14 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val chatRoomMemberRepositoryImpl: PersonalChatRoomMemberRepositoryImpl by lazy {
-        PersonalChatRoomMemberRepositoryImpl(personalChatRoomMemberJpaRepository)
-    }
+    @Autowired
+    private lateinit var chatRoomMemberRepositoryImpl: PersonalChatRoomMemberRepositoryImpl
 
     @Test
     fun `채팅방 상대방 정보를 가져와야함`() {
-        val chatRoomId = "chatRoomId"
-        val userId = "userId1"
-        val friendId = "friendId1"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, number)
         val chatRoomMemberInfo = chatRoomMemberRepositoryImpl.readFriend(chatRoomId, userId)
@@ -38,9 +38,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방 상대방 정보를 추가해야함 - 기존에 없음`() {
-        val chatRoomId = "chatRoomId2"
-        val userId = "userId2"
-        val friendId = "friendId2"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
 
         // friendId2가 userId2의 채팅방에 속해있지 않은 상태
@@ -57,9 +57,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방 상대방 정보를 추가해야함 - 기존에 있음`() {
-        val chatRoomId = "chatRoomId3"
-        val userId = "userId3"
-        val friendId = "friendId3"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         val newNumber = ChatNumber.of(chatRoomId, 2, 2)
 
@@ -79,9 +79,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방을 삭제함`() {
-        val chatRoomId = "chatRoomId4"
-        val userId = "userId4"
-        val friendId = "friendId4"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, number)
         chatRoomMemberRepositoryImpl.removes(listOf(chatRoomId), userId)
@@ -91,9 +91,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방의 모든 유저 가져오기`() {
-        val chatRoomId = "chatRoomId5"
-        val userId = "userId5"
-        val friendId = "friendId5"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(friendId, userId, chatRoomId, number)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, number)
@@ -103,9 +103,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방에서 좋아요 변경 처리`() {
-        val chatRoomId = "chatRoomId6"
-        val userId = "userId6"
-        val friendId = "friendId6"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, number)
         chatRoomMemberRepositoryImpl.updateFavorite(chatRoomId, userId, true)
@@ -116,9 +116,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방에서 유저 읽음 처리`() {
-        val chatRoomId = "chatRoomId7"
-        val userId = "userId7"
-        val friendId = "friendId7"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
+        val friendId = generateUserId()
         val preChatNumber = ChatNumber.of(chatRoomId, 1, 0)
         val chatNumber = ChatNumber.of(chatRoomId, 50, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, preChatNumber)
@@ -130,9 +130,9 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방에서 유저 아이디 찾기`() {
-        val userId = "userId8"
-        val friendId = "friendId8"
-        val chatRoomId = "chatRoomId8"
+        val userId = generateUserId()
+        val friendId = generateUserId()
+        val chatRoomId = generateChatRoomId()
         val number = ChatNumber.of(chatRoomId, 1, 1)
         jpaDataGenerator.personalChatRoomMemberEntityData(userId, friendId, chatRoomId, number)
         val result = chatRoomMemberRepositoryImpl.readIdIfExist(userId, friendId)
@@ -141,9 +141,13 @@ internal class PersonalChatRoomMemberRepositoryTest : JpaContextTest() {
 
     @Test
     fun `채팅방 상대방 정보를 가져와야함 - 없음`() {
-        val chatRoomId = "chatRoomId9"
-        val userId = "userId9"
+        val chatRoomId = generateChatRoomId()
+        val userId = generateUserId()
         val chatRoomMemberInfo = chatRoomMemberRepositoryImpl.readFriend(chatRoomId, userId)
         assert(chatRoomMemberInfo == null)
     }
+
+    private fun generateUserId() = UUID.randomUUID().toString()
+    private fun generateUserIds() = listOf(generateUserId(), generateUserId())
+    private fun generateChatRoomId() = UUID.randomUUID().toString()
 }

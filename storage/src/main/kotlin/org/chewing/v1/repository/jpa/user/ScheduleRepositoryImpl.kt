@@ -1,24 +1,28 @@
-package org.chewing.v1.repository.user
+package org.chewing.v1.repository.jpa.user
 
 import org.chewing.v1.jpaentity.user.ScheduleJpaEntity
 import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.model.schedule.*
+import org.chewing.v1.repository.user.ScheduleRepository
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAdjusters
 
 @Repository
 internal class ScheduleRepositoryImpl(
-    private val scheduleJpaRepository: ScheduleJpaRepository
+    private val scheduleJpaRepository: ScheduleJpaRepository,
 ) : ScheduleRepository {
     override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, userId: String) {
         scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, userId))
     }
 
+    @Transactional
     override fun remove(scheduleId: String) {
         scheduleJpaRepository.deleteById(scheduleId)
     }
 
+    @Transactional
     override fun removeUsers(userId: String) {
         scheduleJpaRepository.deleteAllByUserId(userId)
     }
