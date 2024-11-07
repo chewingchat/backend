@@ -1,10 +1,7 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.config.SecurityConfig
-import org.chewing.v1.config.WebConfig
-import org.chewing.v1.config.WebSocketConfig
+import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.dto.request.chat.message.*
-import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.junit.jupiter.api.*
 import org.mockito.kotlin.any
@@ -12,10 +9,7 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Import
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
@@ -26,22 +20,17 @@ import org.springframework.web.socket.messaging.WebSocketStompClient
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-class ChatControllerTest(
-    @Autowired private val jwtTokenProvider: JwtTokenProvider,
-) {
+class ChatControllerTest : IntegrationTest() {
 
-    @MockBean
-    private lateinit var chatFacade: ChatFacade
+    @Autowired
+    private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @LocalServerPort
     private var port: Int = 0
 
     private val userId = "testUserId"
-    private val token = jwtTokenProvider.createAccessToken(userId)
+    private lateinit var token: String
     private lateinit var session: StompSession
 
     private val stompClient: WebSocketStompClient by lazy {
@@ -58,15 +47,17 @@ class ChatControllerTest(
 
         // CompletableFuture 사용
         val futureSession = stompClient.connectAsync(
-            url, headers,
+            url,
+            headers,
             object : StompSessionHandlerAdapter() {
-            }
+            },
         )
         return futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
     }
 
     @BeforeAll
     fun setup() {
+        token = jwtTokenProvider.createAccessToken(userId)
         session = connectStompSession()
     }
 

@@ -1,7 +1,8 @@
-package org.chewing.v1.repository.chat
+package org.chewing.v1.repository.mongo.chat
 
 import org.chewing.v1.model.chat.room.ChatSequenceNumber
 import org.chewing.v1.mongoentity.ChatSequenceMongoEntity
+import org.chewing.v1.repository.chat.ChatSequenceRepository
 import org.springframework.data.mongodb.core.BulkOperations
 import org.springframework.data.mongodb.core.FindAndModifyOptions
 import org.springframework.data.mongodb.core.MongoTemplate

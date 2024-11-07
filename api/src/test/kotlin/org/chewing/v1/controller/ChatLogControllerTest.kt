@@ -3,21 +3,18 @@ package org.chewing.v1.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.chat.ChatLogController
 import org.chewing.v1.service.chat.ChatLogService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.time.format.DateTimeFormatter
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class ChatLogControllerTest : RestDocsTest() {
     private lateinit var chatLogService: ChatLogService

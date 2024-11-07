@@ -2,10 +2,11 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.announcement.AnnouncementJpaRepository
-import org.chewing.v1.repository.announcement.AnnouncementRepositoryImpl
+import org.chewing.v1.repository.jpa.announcement.AnnouncementRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class AnnouncementRepositoryTest : JpaContextTest() {
     @Autowired
@@ -14,9 +15,8 @@ class AnnouncementRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val announcementRepositoryImpl: AnnouncementRepositoryImpl by lazy {
-        AnnouncementRepositoryImpl(announcementJpaRepository)
-    }
+    @Autowired
+    private lateinit var announcementRepositoryImpl: AnnouncementRepositoryImpl
 
     @Test
     fun `공지사항 조회에 성공해야 한다`() {
@@ -33,7 +33,9 @@ class AnnouncementRepositoryTest : JpaContextTest() {
     fun `공지사항 조회에 실패해야 한다`() {
         jpaDataGenerator.announcementEntityData()
 
-        val result = announcementRepositoryImpl.read("wrongId")
+        val wrongId = generateAnnouncementId()
+
+        val result = announcementRepositoryImpl.read(wrongId)
 
         assert(result == null)
     }
@@ -48,4 +50,6 @@ class AnnouncementRepositoryTest : JpaContextTest() {
         val createdAtList = result.map { it.uploadAt }
         assert(createdAtList == createdAtList.sorted())
     }
+
+    private fun generateAnnouncementId(): String = UUID.randomUUID().toString()
 }

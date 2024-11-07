@@ -2,11 +2,12 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedDetailJpaRepository
-import org.chewing.v1.repository.feed.FeedDetailRepositoryImpl
+import org.chewing.v1.repository.jpa.feed.FeedDetailRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.chewing.v1.repository.support.MediaProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class FeedDetailRepositoryTest : JpaContextTest() {
     @Autowired
@@ -15,13 +16,12 @@ class FeedDetailRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val feedDetailRepositoryImpl: FeedDetailRepositoryImpl by lazy {
-        FeedDetailRepositoryImpl(feedDetailJpaRepository)
-    }
+    @Autowired
+    private lateinit var feedDetailRepositoryImpl: FeedDetailRepositoryImpl
 
     @Test
     fun `피드 상세를 추가해야 한다`() {
-        val feedId = "feedId"
+        val feedId = generateFeedId()
         val medias = MediaProvider.buildFeedContents()
         feedDetailRepositoryImpl.append(medias, feedId)
         val result = feedDetailJpaRepository.findAllByFeedIdOrderByFeedIndex(feedId)
@@ -31,7 +31,7 @@ class FeedDetailRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 상세를 Index 기준으로 순서대로 조회해야 한다`() {
-        val feedId = "feedId2"
+        val feedId = generateFeedId()
         val feedDetails = jpaDataGenerator.feedDetailEntityDataAsc(feedId)
         val result = feedDetailRepositoryImpl.read(feedId)
         assert(result.isNotEmpty())
@@ -43,9 +43,10 @@ class FeedDetailRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 상세를 Index 기준으로 첫번째만 조회해야 한다`() {
-        val feedIds = listOf("feedId3", "feedId4")
-        jpaDataGenerator.feedDetailEntityDataAsc("feedId3")
-        jpaDataGenerator.feedDetailEntityDataAsc("feedId4")
+        val feedIds = generateFeedIdList()
+        feedIds.forEach { feedId ->
+            jpaDataGenerator.feedDetailEntityDataAsc(feedId)
+        }
         val result = feedDetailRepositoryImpl.readsFirstIndex(feedIds)
         assert(result.isNotEmpty())
         assert(result.size == feedIds.size)
@@ -56,13 +57,17 @@ class FeedDetailRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 상세를 삭제해야 한다`() {
-        val feedIds = listOf("feedId5", "feedId6")
-        val feedDetails = jpaDataGenerator.feedDetailEntityDataAsc("feedId5")
-        val feedDetails2 = jpaDataGenerator.feedDetailEntityDataAsc("feedId6")
+        val feedIds = generateFeedIdList()
+        val feedDetails = feedIds.map { feedId ->
+            jpaDataGenerator.feedDetailEntityDataAsc(feedId)
+        }.flatten()
         val result = feedDetailRepositoryImpl.removes(feedIds)
         assert(result.isNotEmpty())
-        assert(result.size == feedDetails.size + feedDetails2.size)
+        assert(result.size == feedDetails.size)
         val result2 = feedDetailJpaRepository.findAllByFeedIdIn(feedIds)
         assert(result2.isEmpty())
     }
+
+    private fun generateFeedId() = UUID.randomUUID().toString()
+    private fun generateFeedIdList() = listOf(generateFeedId(), generateFeedId())
 }

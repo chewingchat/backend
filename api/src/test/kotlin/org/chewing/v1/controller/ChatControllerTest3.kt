@@ -1,16 +1,12 @@
 package org.chewing.v1.controller
 
-import org.chewing.v1.config.SecurityConfig
-import org.chewing.v1.config.WebConfig
-import org.chewing.v1.config.WebSocketConfig
+import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Import
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.test.context.ActiveProfiles
@@ -19,12 +15,11 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
 import java.util.concurrent.TimeUnit
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebSocketConfig::class, WebConfig::class, SecurityConfig::class)
 @ActiveProfiles("test")
-class ChatControllerTest3(
-    @Autowired private val jwtTokenProvider: JwtTokenProvider,
-) {
+class ChatControllerTest3 : IntegrationTest() {
+
+    @Autowired
+    private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @LocalServerPort
     private var port: Int = 0

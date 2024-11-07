@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory.createJwtToken
 import org.chewing.v1.TestDataFactory.createUser
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.auth.AuthController
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.model.auth.LoginInfo
@@ -17,14 +16,11 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
 class AuthControllerTest : RestDocsTest() {
     private lateinit var authController: AuthController
@@ -39,12 +35,6 @@ class AuthControllerTest : RestDocsTest() {
         authController = AuthController(authService, accountFacade)
         mockMvc = mockController(authController)
         objectMapper = objectMapper()
-    }
-
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
     }
 
     @Test
