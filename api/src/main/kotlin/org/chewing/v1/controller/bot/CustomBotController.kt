@@ -1,6 +1,5 @@
 package org.chewing.v1.controller.bot
 
-
 import org.chewing.v1.dto.request.ai.ChatGPTRequest
 import org.chewing.v1.dto.response.ai.ChatGPTResponse
 import org.springframework.beans.factory.annotation.Value

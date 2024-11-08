@@ -7,9 +7,7 @@ import org.chewing.v1.model.auth.LoginInfo
 import org.chewing.v1.model.contact.Contact
 import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.user.User
-
 import org.springframework.stereotype.Service
-
 
 @Service
 class AuthService(

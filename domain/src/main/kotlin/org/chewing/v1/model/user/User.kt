@@ -2,7 +2,6 @@ package org.chewing.v1.model.user
 
 import org.chewing.v1.model.media.Media
 
-
 class User private constructor(
     val userId: String,
     val name: UserName,

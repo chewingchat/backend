@@ -4,10 +4,10 @@ import org.chewing.v1.model.chat.room.ChatRoom
 import java.time.format.DateTimeFormatter
 
 data class ChatRoomResponse(
-    val chatRoomId: String,   // 채팅방 ID
-    val favorite: Boolean,    // 즐겨찾기 여부
+    val chatRoomId: String, // 채팅방 ID
+    val favorite: Boolean, // 즐겨찾기 여부
     val groupChatRoom: Boolean, // 그룹 채팅 여부
-    val latestMessage: String,  // 마지막 메시지
+    val latestMessage: String, // 마지막 메시지
     val latestMessageTime: String, // 마지막 메시지 시간
     val totalUnReadMessage: Int, // 읽지 않은 메시지 개수
     val latestPage: Int,

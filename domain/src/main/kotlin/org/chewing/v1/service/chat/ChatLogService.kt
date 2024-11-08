@@ -1,8 +1,8 @@
 package org.chewing.v1.service.chat
 
 import org.chewing.v1.implementation.chat.message.ChatAppender
-import org.chewing.v1.implementation.chat.message.ChatReader
 import org.chewing.v1.implementation.chat.message.ChatGenerator
+import org.chewing.v1.implementation.chat.message.ChatReader
 import org.chewing.v1.implementation.chat.message.ChatRemover
 import org.chewing.v1.implementation.chat.sequence.ChatFinder
 import org.chewing.v1.implementation.media.FileHandler
@@ -12,7 +12,6 @@ import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-
 
 @Service
 class ChatLogService(

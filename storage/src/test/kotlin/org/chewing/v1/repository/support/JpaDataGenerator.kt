@@ -37,7 +37,6 @@ import org.chewing.v1.jparepository.user.PushNotificationJpaRepository
 import org.chewing.v1.jparepository.user.ScheduleJpaRepository
 import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.jparepository.user.UserStatusJpaRepository
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
@@ -55,6 +54,7 @@ import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
 import org.chewing.v1.model.token.RefreshToken
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserEmoticonPackInfo
 import org.chewing.v1.model.user.UserStatus
@@ -63,8 +63,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 @Component
-class JpaDataGenerator(
-) {
+class JpaDataGenerator {
     @Autowired
     private lateinit var emailJpaRepository: EmailJpaRepository
 
@@ -131,8 +130,8 @@ class JpaDataGenerator(
         return phone.toPhone()
     }
 
-    fun loggedInEntityData(refreshToken: RefreshToken) {
-        val loggedIn = LoggedInJpaEntity.generate(refreshToken, "userId")
+    fun loggedInEntityData(refreshToken: RefreshToken, userId: String) {
+        val loggedIn = LoggedInJpaEntity.generate(refreshToken, userId)
         loggedInJpaRepository.save(loggedIn)
     }
 
@@ -173,7 +172,7 @@ class JpaDataGenerator(
             val statusEntity = UserStatusJpaEntity.generate(
                 it.userId,
                 it.message,
-                it.emoji
+                it.emoji,
             )
             userStatusJpaRepository.save(statusEntity)
             return statusEntity.toUserStatus()
@@ -181,26 +180,22 @@ class JpaDataGenerator(
     }
 
     fun userSelectedStatusData(userId: String): UserStatus {
-        UserStatusProvider.buildSelected(userId).let {
-            val statusEntity = UserStatusJpaEntity.generate(
-                it.userId,
-                it.message,
-                it.emoji
-            )
-            statusEntity.updateSelectedTrue()
-            userStatusJpaRepository.save(statusEntity)
-            return statusEntity.toUserStatus()
-        }
+        val statusEntity = UserStatusJpaEntity.generate(
+            userId,
+            "message",
+            "emoji",
+        )
+        statusEntity.updateSelectedTrue()
+        userStatusJpaRepository.save(statusEntity)
+        return statusEntity.toUserStatus()
     }
 
     fun userStatusDataList(userId: String) {
         (1..10).map {
-            UserStatusProvider.buildNotSelected(userId)
-        }.map { userStatus ->
             UserStatusJpaEntity.generate(
-                userStatus.userId,
-                userStatus.message,
-                userStatus.emoji
+                userId,
+                "message",
+                "emoji",
             )
         }.forEach { statusEntity ->
             userStatusJpaRepository.save(statusEntity)
@@ -215,14 +210,13 @@ class JpaDataGenerator(
             PushNotificationJpaEntity.generate(
                 appToken,
                 device,
-                user
-            )
+                user,
+            ),
         ).toPushToken()
     }
 
-    fun feedEntityData(userId: String): FeedInfo {
-        return feedJpaRepository.save(FeedJpaEntity.generate("topic", userId)).toFeedInfo()
-    }
+    fun feedEntityData(userId: String): FeedInfo =
+        feedJpaRepository.save(FeedJpaEntity.generate("topic", userId)).toFeedInfo()
 
     fun feedEntityDataList(userId: String): List<FeedInfo> {
         val feedJpaEntityList = (1..10).map {
@@ -248,9 +242,8 @@ class JpaDataGenerator(
         }
     }
 
-    fun feedCommentEntityData(userId: String, feedId: String): CommentInfo {
-        return commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, "comment")).toCommentInfo()
-    }
+    fun feedCommentEntityData(userId: String, feedId: String): CommentInfo =
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, "comment")).toCommentInfo()
 
     fun friendShipEntityData(userId: String, friendId: String, access: AccessStatus) {
         val friendName = UserProvider.buildFriendName()
@@ -301,13 +294,15 @@ class JpaDataGenerator(
     }
 
     fun groupChatRoomMemberEntityDataList(chatRoomId: String, userIds: List<String>, number: ChatNumber) {
-        groupChatRoomMemberJpaRepository.saveAll(userIds.map {
-            GroupChatRoomMemberJpaEntity.generate(
-                it,
-                chatRoomId,
-                number
-            )
-        })
+        groupChatRoomMemberJpaRepository.saveAll(
+            userIds.map {
+                GroupChatRoomMemberJpaEntity.generate(
+                    it,
+                    chatRoomId,
+                    number,
+                )
+            },
+        )
     }
 
     fun personalChatRoomMemberEntityData(userId: String, friendId: String, chatRoomId: String, number: ChatNumber) {
@@ -316,8 +311,8 @@ class JpaDataGenerator(
                 userId,
                 friendId,
                 chatRoomId,
-                number
-            )
+                number,
+            ),
         )
     }
 }

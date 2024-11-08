@@ -1,7 +1,6 @@
-package org.chewing.v1.response;
+package org.chewing.v1.response
 
 import org.chewing.v1.error.ErrorCode
-
 
 data class ErrorResponse(
     val errorCode: String,

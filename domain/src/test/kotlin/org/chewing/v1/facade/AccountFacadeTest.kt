@@ -50,7 +50,6 @@ class AccountFacadeTest {
         assertDoesNotThrow {
             accountFacade.changeCredential(userId, emailAddress, "123")
         }
-
     }
 
     @Test

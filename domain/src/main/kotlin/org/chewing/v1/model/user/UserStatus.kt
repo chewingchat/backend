@@ -10,15 +10,11 @@ class UserStatus private constructor(
     companion object {
         fun of(
             statusId: String,
+            userId: String,
             statusMessage: String,
             emoji: String,
-            userId: String,
-            isSelected: Boolean
-        ): UserStatus {
-            return UserStatus(statusId, statusMessage, emoji, userId, isSelected)
-        }
-        fun default(userId: String): UserStatus {
-            return UserStatus("none", "none", "none", userId, true)
-        }
+            isSelected: Boolean,
+        ): UserStatus = UserStatus(statusId, statusMessage, emoji, userId, isSelected)
+        fun default(userId: String): UserStatus = UserStatus("none", "none", "none", userId, true)
     }
 }

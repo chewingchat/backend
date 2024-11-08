@@ -1,7 +1,6 @@
 package org.chewing.v1.jpaentity.emoticon
 
 import jakarta.persistence.*
-import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonInfo
 import java.util.*
 

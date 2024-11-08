@@ -2,8 +2,8 @@ package org.chewing.v1.facade
 
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.main.MainAggregator
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.friend.FriendSortCriteria
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.service.friend.FriendShipService
 import org.chewing.v1.service.user.UserService
 import org.chewing.v1.service.user.UserStatusService

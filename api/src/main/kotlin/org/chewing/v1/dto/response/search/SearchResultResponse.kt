@@ -1,7 +1,6 @@
 package org.chewing.v1.dto.response.search
 
 import org.chewing.v1.dto.response.chat.ChatRoomResponse
-import org.chewing.v1.dto.response.friend.FriendInfoResponse
 import org.chewing.v1.dto.response.friend.FriendShipResponse
 import org.chewing.v1.model.search.Search
 

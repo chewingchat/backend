@@ -30,6 +30,4 @@ class TestSecurityConfig {
     fun jwtAuthenticationEntryPoint(): JwtAuthenticationEntryPoint {
         return mock()
     }
-
-
 }

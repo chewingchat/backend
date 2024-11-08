@@ -1,6 +1,5 @@
 package org.chewing.v1.model.emoticon
 
-
 class EmoticonPackInfo private constructor(
     val id: String,
     val name: String,

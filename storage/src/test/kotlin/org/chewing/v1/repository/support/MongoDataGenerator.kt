@@ -1,6 +1,5 @@
 package org.chewing.v1.repository.support
 
-import org.chewing.v1.jparepository.auth.EmailJpaRepository
 import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.mongoentity.ChatMessageMongoEntity
 import org.chewing.v1.mongoentity.ChatSequenceMongoEntity

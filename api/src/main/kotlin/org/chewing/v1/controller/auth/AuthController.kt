@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/auth")
 class AuthController(
     private val authService: AuthService,
-    private val accountFacade: AccountFacade
+    private val accountFacade: AccountFacade,
 ) {
 
     @PostMapping("/phone/create/send")
@@ -62,7 +62,7 @@ class AuthController(
     @PostMapping("/phone/update/send")
     fun sendPhoneVerification(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationRequest.Phone
+        @RequestBody request: VerificationRequest.Phone,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         authService.createCredentialNotUsed(userId, request.toPhoneNumber())
         return ResponseHelper.successOnly()
@@ -71,7 +71,7 @@ class AuthController(
     @PostMapping("/email/update/send")
     fun sendEmailVerification(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationRequest.Email
+        @RequestBody request: VerificationRequest.Email,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         authService.createCredentialNotUsed(userId, request.toEmailAddress())
         return ResponseHelper.successOnly()
@@ -80,7 +80,7 @@ class AuthController(
     @PostMapping("/phone/update/verify")
     fun changePhone(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationCheckRequest.Phone
+        @RequestBody request: VerificationCheckRequest.Phone,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         accountFacade.changeCredential(userId, request.toPhoneNumber(), request.toVerificationCode())
         return ResponseHelper.successOnly()
@@ -89,12 +89,11 @@ class AuthController(
     @PostMapping("/email/update/verify")
     fun changeEmail(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: VerificationCheckRequest.Email
+        @RequestBody request: VerificationCheckRequest.Email,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         accountFacade.changeCredential(userId, request.toEmailAddress(), request.toVerificationCode())
         return ResponseHelper.successOnly()
     }
-
 
     @DeleteMapping("/logout")
     fun logout(

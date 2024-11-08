@@ -1,7 +1,5 @@
 package org.chewing.v1.model.auth
 
-import org.chewing.v1.model.contact.ContactType
-
 class PhoneNumber(
     val countryCode: String,
     val number: String

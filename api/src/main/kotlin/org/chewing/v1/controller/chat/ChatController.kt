@@ -69,7 +69,7 @@ class ChatController(
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         chatFacade.processFiles(convertFiles, userId, chatRoomId)
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 }

@@ -1,17 +1,16 @@
 package org.chewing.v1.implementation.auth
 
 import org.chewing.v1.error.*
-import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Contact
+import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.model.token.RefreshToken
 import org.chewing.v1.repository.auth.EmailRepository
 import org.chewing.v1.repository.auth.LoggedInRepository
 import org.chewing.v1.repository.auth.PhoneRepository
 import org.springframework.stereotype.Component
-
 
 @Component
 class AuthReader(

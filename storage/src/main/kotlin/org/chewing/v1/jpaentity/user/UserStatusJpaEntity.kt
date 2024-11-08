@@ -1,15 +1,14 @@
 package org.chewing.v1.jpaentity.user
 
 import jakarta.persistence.*
-import java.util.*
-
 import org.chewing.v1.model.user.UserStatus
+import java.util.*
 
 @Entity
 @Table(
     name = "user_status",
     schema = "chewing",
-    indexes = [Index(name = "idx_user_status_selected", columnList = "selected")]
+    indexes = [Index(name = "user_status_idx_user_status_selected", columnList = "selected")],
 )
 internal class UserStatusJpaEntity(
     @Id
@@ -21,22 +20,18 @@ internal class UserStatusJpaEntity(
 
     private val userId: String,
 
-    private var selected: Boolean
+    private var selected: Boolean,
 ) {
     companion object {
-        fun generate(userId: String, message: String, emoji: String): UserStatusJpaEntity {
-            return UserStatusJpaEntity(
-                message = message,
-                emoji = emoji,
-                userId = userId,
-                selected = false
-            )
-        }
+        fun generate(userId: String, message: String, emoji: String): UserStatusJpaEntity = UserStatusJpaEntity(
+            message = message,
+            emoji = emoji,
+            userId = userId,
+            selected = false,
+        )
     }
 
-    fun toUserStatus(): UserStatus {
-        return UserStatus.of(statusId, message, userId, emoji, selected)
-    }
+    fun toUserStatus(): UserStatus = UserStatus.of(statusId, userId, message, emoji, selected)
 
     fun updateSelectedFalse() {
         this.selected = false
@@ -45,5 +40,4 @@ internal class UserStatusJpaEntity(
     fun updateSelectedTrue() {
         this.selected = true
     }
-
 }

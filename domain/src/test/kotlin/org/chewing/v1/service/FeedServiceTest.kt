@@ -213,7 +213,6 @@ class FeedServiceTest {
 
         feedService.changeHide(userId, listOf(feedId1, feedId2), FeedTarget.HIDE)
 
-
         verify(feedRepository, times(5)).update(feedId1, FeedTarget.HIDE)
         verify(feedRepository, times(5)).update(feedId2, FeedTarget.HIDE)
     }
@@ -227,10 +226,8 @@ class FeedServiceTest {
 
         whenever(fileHandler.handleNewFiles(userId, listOf(fileData), FileCategory.FEED)).thenReturn(listOf(media))
 
-
         assertDoesNotThrow {
             feedService.make(userId, listOf(fileData), topic, FileCategory.FEED)
         }
     }
-
 }

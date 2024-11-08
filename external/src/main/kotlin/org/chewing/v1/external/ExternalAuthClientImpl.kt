@@ -5,7 +5,7 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.springframework.stereotype.Component
 
 @Component
-class ExternalAuthClientImpl: ExternalAuthClient {
+class ExternalAuthClientImpl : ExternalAuthClient {
     override fun sendEmail(emailAddress: EmailAddress, verificationCode: String) {
         println("Sending email to $emailAddress")
     }

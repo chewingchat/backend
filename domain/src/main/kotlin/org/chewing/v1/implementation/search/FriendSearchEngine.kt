@@ -4,8 +4,7 @@ import org.chewing.v1.model.friend.FriendShip
 import org.springframework.stereotype.Component
 
 @Component
-class FriendSearchEngine(
-) {
+class FriendSearchEngine() {
     fun search(friendShips: List<FriendShip>, keyword: String): List<FriendShip> {
         return personalized(friendShips, cleanKeyword(keyword))
     }

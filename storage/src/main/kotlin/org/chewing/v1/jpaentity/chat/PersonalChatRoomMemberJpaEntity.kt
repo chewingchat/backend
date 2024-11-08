@@ -9,9 +9,9 @@ import org.chewing.v1.model.chat.room.ChatNumber
     name = "personal_chat_room_member",
     schema = "chewing",
     indexes = [
-        Index(name = "idx_user_id", columnList = "user_id"),
-        Index(name = "idx_chat_room_id", columnList = "chat_room_id"),
-    ]
+        Index(name = "personal_chat_room_member_idx_user_id", columnList = "user_id"),
+        Index(name = "personal_chat_room_member_idx_chat_room_id", columnList = "chat_room_id"),
+    ],
 )
 internal class PersonalChatRoomMemberJpaEntity(
     @EmbeddedId
@@ -28,38 +28,32 @@ internal class PersonalChatRoomMemberJpaEntity(
             userId: String,
             friendId: String,
             chatRoomId: String,
-            number: ChatNumber
-        ): PersonalChatRoomMemberJpaEntity {
-            return PersonalChatRoomMemberJpaEntity(
-                id = ChatRoomMemberId(chatRoomId, userId),
-                friendId = friendId,
-                favorite = false,
-                startSeqNumber = number.sequenceNumber,
-                readSeqNumber = number.sequenceNumber
-            )
-        }
+            number: ChatNumber,
+        ): PersonalChatRoomMemberJpaEntity = PersonalChatRoomMemberJpaEntity(
+            id = ChatRoomMemberId(chatRoomId, userId),
+            friendId = friendId,
+            favorite = false,
+            startSeqNumber = number.sequenceNumber,
+            readSeqNumber = number.sequenceNumber,
+        )
     }
 
     // ChatFriendEntity -> ChatFriend 변환 메서드
-    fun toRoomOwned(): ChatRoomMemberInfo {
-        return ChatRoomMemberInfo.of(
-            memberId = this.id.userId,
-            chatRoomId = this.id.chatRoomId,
-            readSeqNumber = this.readSeqNumber,
-            favorite = this.favorite,
-            startSeqNumber = this.startSeqNumber
-        )
-    }
+    fun toRoomOwned(): ChatRoomMemberInfo = ChatRoomMemberInfo.of(
+        memberId = this.id.userId,
+        chatRoomId = this.id.chatRoomId,
+        readSeqNumber = this.readSeqNumber,
+        favorite = this.favorite,
+        startSeqNumber = this.startSeqNumber,
+    )
 
-    fun toRoomFriend(): ChatRoomMemberInfo {
-        return ChatRoomMemberInfo.of(
-            memberId = this.friendId,
-            chatRoomId = this.id.chatRoomId,
-            readSeqNumber = this.readSeqNumber,
-            favorite = this.favorite,
-            startSeqNumber = this.startSeqNumber
-        )
-    }
+    fun toRoomFriend(): ChatRoomMemberInfo = ChatRoomMemberInfo.of(
+        memberId = this.friendId,
+        chatRoomId = this.id.chatRoomId,
+        readSeqNumber = this.readSeqNumber,
+        favorite = this.favorite,
+        startSeqNumber = this.startSeqNumber,
+    )
 
     fun updateFavorite(favorite: Boolean) {
         this.favorite = favorite
@@ -68,7 +62,5 @@ internal class PersonalChatRoomMemberJpaEntity(
         this.readSeqNumber = number.sequenceNumber
     }
 
-    fun chatRoomId(): String {
-        return id.chatRoomId
-    }
+    fun chatRoomId(): String = id.chatRoomId
 }

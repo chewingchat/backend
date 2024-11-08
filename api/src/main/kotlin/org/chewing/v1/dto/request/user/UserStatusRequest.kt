@@ -2,7 +2,7 @@ package org.chewing.v1.dto.request.user
 
 class UserStatusRequest {
     data class Update(
-        val statusId : String = ""
+        val statusId: String = ""
     )
     data class Add(
         val emoji: String = "",

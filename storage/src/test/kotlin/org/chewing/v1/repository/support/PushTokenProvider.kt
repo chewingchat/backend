@@ -12,5 +12,4 @@ object PushTokenProvider {
     fun buildAppTokenNormal(): String {
         return "appToken"
     }
-
 }

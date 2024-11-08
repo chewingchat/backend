@@ -57,7 +57,6 @@ class ChatFacadeTest {
         verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
     }
 
-
     @Test
     fun `삭제 처리`() {
         val messageId = "messageId"

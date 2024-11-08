@@ -4,7 +4,6 @@ import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.contact.Contact
-import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.user.*
@@ -52,8 +51,7 @@ class UserService(
         fileHandler.handleOldFile(oldMedia)
     }
 
-
-    //사용자의 통합된 정보를 가져옴
+    // 사용자의 통합된 정보를 가져옴
     fun getAccessUser(userId: String): User {
         val user = userReader.read(userId)
         userValidator.isUserAccess(user)

@@ -9,7 +9,6 @@ import org.chewing.v1.implementation.user.user.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.repository.user.PushNotificationRepository
 import org.chewing.v1.repository.user.UserRepository
-import org.chewing.v1.repository.user.UserSearchRepository
 import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -33,7 +32,6 @@ class UserServiceTest {
     private val userService =
         UserService(userReader, fileHandler, userUpdater, userValidator, userRemover, userAppender)
 
-
     @Test
     fun `유저 계정 정보를 가져와야함`() {
         val userId = "userId"
@@ -41,7 +39,6 @@ class UserServiceTest {
         val phoneId = "phoneId"
         val userAccount = TestDataFactory.createUserAccount(emailId, phoneId)
         whenever(userRepository.readAccount(userId)).thenReturn(userAccount)
-
 
         val result = assertDoesNotThrow {
             userService.getUserAccount(userId)

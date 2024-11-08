@@ -211,8 +211,7 @@ class AuthServiceTest {
         val emailAddress = TestDataFactory.createEmailAddress()
         val email = TestDataFactory.createEmail(verificationCode)
         whenever(emailRepository.read(emailAddress)).thenReturn(email)
-        whenever(userRepository.checkContactIsUsedByElse(email,userId)).thenReturn(true)
-
+        whenever(userRepository.checkContactIsUsedByElse(email, userId)).thenReturn(true)
 
         val exception = assertThrows<ConflictException> {
             authService.createCredentialNotUsed(userId, emailAddress)
@@ -228,7 +227,7 @@ class AuthServiceTest {
         val phoneNumber = TestDataFactory.createPhoneNumber()
         val phone = TestDataFactory.createPhone(verificationCode)
         whenever(phoneRepository.read(phoneNumber)).thenReturn(phone)
-        whenever(userRepository.checkContactIsUsedByElse(phone,userId)).thenReturn(true)
+        whenever(userRepository.checkContactIsUsedByElse(phone, userId)).thenReturn(true)
 
         val exception = assertThrows<ConflictException> {
             authService.createCredentialNotUsed(userId, phoneNumber)
@@ -244,9 +243,8 @@ class AuthServiceTest {
         val phoneNumber = TestDataFactory.createPhoneNumber()
         val phone = TestDataFactory.createPhone(verificationCode)
         whenever(phoneRepository.read(phoneNumber)).thenReturn(phone)
-        whenever(userRepository.checkContactIsUsedByElse(phone,userId)).thenReturn(false)
+        whenever(userRepository.checkContactIsUsedByElse(phone, userId)).thenReturn(false)
         whenever(phoneRepository.appendIfNotExists(phoneNumber)).thenReturn(verificationCode)
-
 
         assertDoesNotThrow {
             authService.createCredentialNotUsed(userId, phoneNumber)
@@ -260,7 +258,7 @@ class AuthServiceTest {
         val emailAddress = TestDataFactory.createEmailAddress()
         val email = TestDataFactory.createEmail(verificationCode)
         whenever(emailRepository.read(emailAddress)).thenReturn(email)
-        whenever(userRepository.checkContactIsUsedByElse(email,userId)).thenReturn(false)
+        whenever(userRepository.checkContactIsUsedByElse(email, userId)).thenReturn(false)
         whenever(emailRepository.appendIfNotExists(emailAddress)).thenReturn(verificationCode)
 
         assertDoesNotThrow {

@@ -9,10 +9,10 @@ class ChatRoomRemover(
     private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository,
     private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository
 ) {
-    fun removeGroups(chatRoomIds: List<String>, userId: String){
+    fun removeGroups(chatRoomIds: List<String>, userId: String) {
         return groupChatRoomMemberRepository.removes(chatRoomIds, userId)
     }
-    fun removePersonals(chatRoomIds: List<String>, userId: String){
+    fun removePersonals(chatRoomIds: List<String>, userId: String) {
         return personalChatRoomMemberRepository.removes(chatRoomIds, userId)
     }
 }

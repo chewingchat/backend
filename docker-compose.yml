@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  service:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - mongo
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: live
+      STORAGE_DATABASE_CORE_DB_HOST: mysql
+      STORAGE_DATABASE_CORE_DB_PORT: 3306
+      STORAGE_DATABASE_CORE_DB_NAME: ${STORAGE_DATABASE_CORE_DB_NAME}
+      STORAGE_DATABASE_CORE_DB_USERNAME: ${STORAGE_DATABASE_CORE_DB_USERNAME}
+      STORAGE_DATABASE_CORE_DB_PASSWORD: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
+      STORAGE_DATABASE_MONGO_DB_HOST: mongo
+      STORAGE_DATABASE_MONGO_DB_PORT: 27017
+      STORAGE_DATABASE_MONGO_DB_NAME: ${STORAGE_DATABASE_MONGO_DB_NAME}
+      STORAGE_DATABASE_MONGO_DB_USER: ${STORAGE_DATABASE_MONGO_DB_USER}
+      STORAGE_DATABASE_MONGO_DB_PASSWORD: ${STORAGE_DATABASE_MONGO_DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_MODEL: ${OPENAI_API_MODEL}
+      OPENAI_API_URL: ${OPENAI_API_URL}
+      FCM_API_URL: ${FCM_API_URL}
+    networks:
+      - chewing_network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
+      MYSQL_DATABASE: ${STORAGE_DATABASE_CORE_DB_NAME}
+      TZ: Asia/Seoul
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data/mysql-data:/var/lib/mysql
+    networks:
+      - chewing_network
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      TZ: Asia/Seoul
+      MONGO_INITDB_ROOT_USERNAME: ${STORAGE_DATABASE_MONGO_DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${STORAGE_DATABASE_MONGO_DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${STORAGE_DATABASE_MONGO_DB_NAME}
+    volumes:
+      - ./data/mongo-data:/data
+    networks:
+      - chewing_network
+
+networks:
+  chewing_network:
+    driver: bridge

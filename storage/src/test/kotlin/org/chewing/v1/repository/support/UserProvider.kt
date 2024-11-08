@@ -1,9 +1,9 @@
 package org.chewing.v1.repository.support
 
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserContent
 import org.chewing.v1.model.user.UserName
@@ -34,7 +34,6 @@ object UserProvider {
     fun buildFriendName(): UserName {
         return UserName.of("friendFirstName", "friendLastName")
     }
-
 
     fun buildNewUserName(): UserName {
         return UserName.of("newFirstName", "newLastName")

@@ -314,7 +314,6 @@ class ChatRoomFacadeTest {
         assert(result[0].latestMessageTime > result[1].latestMessageTime)
     }
 
-
     @Test
     fun `채티방 목록을 가져와야함 - 안 읽은 메시지를 한 순, 갖다면 최근 메시지 순으로`() {
         val userId = "userId"
@@ -332,17 +331,17 @@ class ChatRoomFacadeTest {
         // 안읽은 메시지가 없고 최근 대화가 있음
         val chatRoomInfo = TestDataFactory.createRoom(chatRoomId, userId, friendId, false)
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
-        val latestChatLog = TestDataFactory.createChatNormalLog(messageId, chatRoomId, userId, chatNumber,time2)
+        val latestChatLog = TestDataFactory.createChatNormalLog(messageId, chatRoomId, userId, chatNumber, time2)
 
         // 안읽은 메시지가 있고 엤날 대화가 있음
         val chatRoomInfo2 = TestDataFactory.createRoom(chatRoomId2, userId, friendId, true)
         val chatNumber2 = TestDataFactory.create100SeqChatNumber(chatRoomId2)
-        val latestChatLog2 = TestDataFactory.createChatNormalLog(messageId2, chatRoomId2, userId, chatNumber2,time)
+        val latestChatLog2 = TestDataFactory.createChatNormalLog(messageId2, chatRoomId2, userId, chatNumber2, time)
 
         // 안읽은 메시지가 있고 최근 대화가 있음
         val chatRoomInfo3 = TestDataFactory.createRoom(chatRoomId3, userId, friendId, true)
         val chatNumber3 = TestDataFactory.create100SeqChatNumber(chatRoomId3)
-        val latestChatLog3 = TestDataFactory.createChatNormalLog(messageId3, chatRoomId3, userId, chatNumber3,time2)
+        val latestChatLog3 = TestDataFactory.createChatNormalLog(messageId3, chatRoomId3, userId, chatNumber3, time2)
 
         whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo2, chatRoomInfo, chatRoomInfo3))
         whenever(chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId, chatRoomId3))).thenReturn(
@@ -365,5 +364,4 @@ class ChatRoomFacadeTest {
         assert(!result[2].favorite)
         assert(result[0].latestMessageTime > result[1].latestMessageTime)
     }
-
 }
