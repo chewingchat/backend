@@ -13,7 +13,7 @@ data class UserResponse(
 ) {
     companion object {
         fun of(
-            user : User,
+            user: User,
             userStatus: UserStatus
         ): UserResponse {
             return UserResponse(

@@ -12,7 +12,7 @@ class ChatBombMessage private constructor(
     override val type: MessageType = MessageType.BOMB,
     val text: String,
     val expiredAt: LocalDateTime
-): ChatMessage() {
+) : ChatMessage() {
     companion object {
         fun of(
             messageId: String,

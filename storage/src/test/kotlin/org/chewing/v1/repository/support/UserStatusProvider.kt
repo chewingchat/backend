@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 object UserStatusProvider {
 
-    fun buildSelected(userId: String): UserStatus {
-        return UserStatus.of("statusId", "message", "emoji", userId, true)
-    }
-    fun buildNotSelected(userId: String): UserStatus {
-        return UserStatus.of("statusId", "message", "emoji", userId, false)
-    }
+    fun buildSelected(userId: String): UserStatus = UserStatus.of("statusId", userId, "message", "emoji", true)
+
+    fun buildNotSelected(userId: String): UserStatus = UserStatus.of("statusId", userId, "message", "emoji", false)
 }

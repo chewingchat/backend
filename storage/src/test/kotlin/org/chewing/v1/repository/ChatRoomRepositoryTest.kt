@@ -2,7 +2,7 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.chat.ChatRoomJpaRepository
-import org.chewing.v1.repository.chat.ChatRoomRepositoryImpl
+import org.chewing.v1.repository.jpa.chat.ChatRoomRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,9 +15,8 @@ internal class ChatRoomRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val chatRoomRepositoryImpl: ChatRoomRepositoryImpl by lazy {
-        ChatRoomRepositoryImpl(chatRoomJpaRepository)
-    }
+    @Autowired
+    private lateinit var chatRoomRepositoryImpl: ChatRoomRepositoryImpl
 
     @Test
     fun `그룹 채팅방을 추가해야 한다`() {

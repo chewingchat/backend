@@ -22,7 +22,7 @@ class EmoticonServiceTest() {
     private val emoticonService = EmoticonService(emoticonReader, userEmoticonReader, emoticonAggregator)
 
     @Test
-    fun `유저가 가진 이모티콘 팩 리스트 가져오기`(){
+    fun `유저가 가진 이모티콘 팩 리스트 가져오기`() {
         val userId = "userId"
         val emoticonId = "emoticonId"
         val emoticonId2 = "emoticonId2"
@@ -54,7 +54,7 @@ class EmoticonServiceTest() {
     }
 
     @Test
-    fun `유저가 가진 이모티콘 팩 리스트 가져오기 - 이모티콘이 없다면 빈 리시트 반환`(){
+    fun `유저가 가진 이모티콘 팩 리스트 가져오기 - 이모티콘이 없다면 빈 리시트 반환`() {
         val userId = "userId"
         val emoticonId = "emoticonId"
         val emoticonId2 = "emoticonId2"

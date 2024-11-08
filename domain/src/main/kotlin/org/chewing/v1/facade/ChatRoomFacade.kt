@@ -4,8 +4,8 @@ import org.chewing.v1.implementation.chat.room.ChatRoomAggregator
 import org.chewing.v1.implementation.chat.room.ChatRoomSortEngine
 import org.chewing.v1.model.chat.room.ChatRoom
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
-import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.chat.ChatLogService
+import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.notification.NotificationService
 import org.springframework.stereotype.Service
 

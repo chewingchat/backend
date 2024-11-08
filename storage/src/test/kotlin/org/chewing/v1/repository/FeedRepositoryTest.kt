@@ -4,10 +4,11 @@ import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.repository.feed.FeedRepositoryImpl
+import org.chewing.v1.repository.jpa.feed.FeedRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 internal class FeedRepositoryTest : JpaContextTest() {
     @Autowired
@@ -16,13 +17,12 @@ internal class FeedRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val feedRepositoryImpl: FeedRepositoryImpl by lazy {
-        FeedRepositoryImpl(feedJpaRepository)
-    }
+    @Autowired
+    private lateinit var feedRepositoryImpl: FeedRepositoryImpl
 
     @Test
     fun `피드를 추가해야 한다`() {
-        val userId = "userId"
+        val userId = generateUserId()
         val topic = "topic"
         val result = feedRepositoryImpl.append(userId, topic)
         assert(result.isNotEmpty())
@@ -30,7 +30,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드를 조회해야 한다`() {
-        val userId = "userId2"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         val result = feedRepositoryImpl.read(feedInfo.feedId)
         assert(result != null)
@@ -39,7 +39,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드목록을 조회해야 한다`() {
-        val userId = "userId3"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         val result = feedRepositoryImpl.reads(feedInfoList.map { it.feedId })
         assert(result.isNotEmpty())
@@ -49,7 +49,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드를 삭제해야 한다`() {
-        val userId = "userId5"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.removes(feedInfoList.map { it.feedId })
         val result = feedJpaRepository.findAllById(feedInfoList.map { it.feedId })
@@ -58,7 +58,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `소유자의 피드를 삭제해야 한다`() {
-        val userId = "userId6"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.removesOwned(userId)
         val result = feedJpaRepository.findAllById(feedInfoList.map { it.feedId })
@@ -67,7 +67,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 좋아요를 추가해야 한다`() {
-        val userId = "userId7"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.LIKES)
         val result = feedRepositoryImpl.read(feedInfo.feedId)
@@ -76,7 +76,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 좋아요를 취소해야 한다`() {
-        val userId = "userId8"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.LIKES)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.UNLIKES)
@@ -86,7 +86,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 댓글을 추가해야 한다`() {
-        val userId = "userId9"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.COMMENTS)
         val result = feedJpaRepository.findById(feedInfo.feedId).orElse(null).toFeedInfo()
@@ -95,7 +95,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 댓글을 취소해야 한다`() {
-        val userId = "userId10"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.COMMENTS)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.UNCOMMENTS)
@@ -105,7 +105,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 숨김을 해제해야 한다`() {
-        val userId = "userId11"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.HIDE)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.UNHIDE)
@@ -116,7 +116,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `피드 숨김을 해야 한다`() {
-        val userId = "userId12"
+        val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.HIDE)
         val result = feedJpaRepository.findAllByUserIdAndHideTrueOrderByCreatedAtAsc(userId)
@@ -126,7 +126,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `소유자의 모든 피드를 조회해야 한다`() {
-        val userId = "userId13"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         val result = feedRepositoryImpl.readsOwned(userId, FeedStatus.ALL)
         assert(result.isNotEmpty())
@@ -135,7 +135,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `소유자의 숨김 피드를 조회해야 한다`() {
-        val userId = "userId14"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.update(feedInfoList[0].feedId, FeedTarget.HIDE)
         val result = feedRepositoryImpl.readsOwned(userId, FeedStatus.HIDDEN)
@@ -145,11 +145,13 @@ internal class FeedRepositoryTest : JpaContextTest() {
 
     @Test
     fun `소유자의 숨김하지 않은 피드를 조회해야 한다`() {
-        val userId = "userId15"
+        val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.update(feedInfoList[0].feedId, FeedTarget.HIDE)
         val result = feedRepositoryImpl.readsOwned(userId, FeedStatus.NOT_HIDDEN)
         assert(result.isNotEmpty())
         assert(result.size == feedInfoList.size - 1)
     }
+
+    private fun generateUserId() = UUID.randomUUID().toString()
 }

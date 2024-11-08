@@ -17,9 +17,9 @@ class AnnouncementServiceTest {
     private val announcementService = AnnouncementService(announcementReader)
 
     @Test
-    fun `공지사항 목록 읽기 테스트`(){
+    fun `공지사항 목록 읽기 테스트`() {
         val announcementId1 = "announcementId1"
-        val announcementId2= "announcementId2"
+        val announcementId2 = "announcementId2"
         val announcement1 = TestDataFactory.createAnnouncement(announcementId1)
         val announcement2 = TestDataFactory.createAnnouncement(announcementId2)
 
@@ -33,7 +33,7 @@ class AnnouncementServiceTest {
     }
 
     @Test
-    fun `공지사항 세부 읽기 테스트 - 성공`(){
+    fun `공지사항 세부 읽기 테스트 - 성공`() {
         val announcementId = "announcementId"
         val announcement = TestDataFactory.createAnnouncement(announcementId)
 
@@ -45,7 +45,7 @@ class AnnouncementServiceTest {
     }
 
     @Test
-    fun `공지사항 세부 읽기 테스트 - 실패`(){
+    fun `공지사항 세부 읽기 테스트 - 실패`() {
         val announcementId = "announcementId"
 
         whenever(announcementRepository.read(announcementId)).thenReturn(null)

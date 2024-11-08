@@ -4,18 +4,13 @@ import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.contact.Phone
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import java.util.UUID
 
 @Component
 object PhoneProvider {
-    fun buildNormalPhoneNumber(): PhoneNumber {
-        return PhoneNumber.of("normal", "normal")
-    }
+    fun buildNormalPhoneNumber(number: String): PhoneNumber = PhoneNumber.of("normal", number)
 
-    fun buildWrongPhoneNumber(): PhoneNumber {
-        return PhoneNumber.of("wrong", "wrong")
-    }
+    fun buildWrongPhoneNumber(): PhoneNumber = PhoneNumber.of("wrong", "wrong")
 
-    fun buildNormal(): Phone {
-        return Phone.of("normal", "normal", "normal", "normal", LocalDateTime.now())
-    }
+    fun buildNormal(): Phone = Phone.of(UUID.randomUUID().toString(), "normal", "normal", "normal", LocalDateTime.now())
 }

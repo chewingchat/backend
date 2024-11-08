@@ -2,7 +2,7 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.repository.feed.FeedRepositoryImpl
+import org.chewing.v1.repository.jpa.feed.FeedRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -14,10 +14,12 @@ class FeedRepositoryTest2 {
     private var feedRepositoryImpl: FeedRepositoryImpl = FeedRepositoryImpl(feedJpaRepository)
 
     @Test
-    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`(){
-        val feedId = "feedId"
+    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`() {
+        val feedId = generateFeedId()
         whenever(feedJpaRepository.findById(feedId)).thenReturn(Optional.empty())
-        val result = feedRepositoryImpl.update(feedId,FeedTarget.UNHIDE)
+        val result = feedRepositoryImpl.update(feedId, FeedTarget.UNHIDE)
         assert(result == null)
     }
+
+    private fun generateFeedId() = UUID.randomUUID().toString()
 }

@@ -13,5 +13,4 @@ data class TokenResponse(
     }
 }
 
-
 // model의 JWTTOken받아서 TokenResponse로 변환

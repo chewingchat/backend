@@ -1,6 +1,5 @@
 package org.chewing.v1
 
-import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
 import org.chewing.v1.model.chat.log.*
@@ -27,6 +26,7 @@ import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.search.Search
 import org.chewing.v1.model.token.RefreshToken
+import org.chewing.v1.model.user.AccessStatus
 import org.chewing.v1.model.user.User
 import org.chewing.v1.model.user.UserName
 import org.chewing.v1.model.user.UserStatus
@@ -53,7 +53,6 @@ object TestDataFactory {
             AccessStatus.ACCESS
         )
     }
-
 
     fun createUserStatus(): UserStatus {
         return UserStatus.of("testStatusId", "testMessage", "testEmoji", "testUserId", true)
@@ -400,8 +399,8 @@ object TestDataFactory {
     }
 
     fun createSearch(
-        chatRooms : List<ChatRoom>,
-        friends : List<FriendShip>
+        chatRooms: List<ChatRoom>,
+        friends: List<FriendShip>
     ): Search {
         return Search.of(
             chatRooms,

@@ -6,7 +6,6 @@ import org.springframework.messaging.simp.SimpMessageType
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
 
-
 @Component
 class ExternalChatNotificationClientImpl(
     private val messagingTemplate: SimpMessagingTemplate

@@ -6,8 +6,7 @@ import org.chewing.v1.model.media.FileData
 import org.springframework.stereotype.Component
 
 @Component
-class FileValidator(
-) {
+class FileValidator() {
     fun validateFilesNameCorrect(files: List<FileData>) {
         files.forEachIndexed { index, file ->
             val expectedFileName = "$index."

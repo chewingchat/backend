@@ -2,8 +2,8 @@ package org.chewing.v1.implementation.feed.feed
 
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.repository.feed.FeedDetailRepository
 import org.chewing.v1.repository.feed.FeedRepository
@@ -15,7 +15,7 @@ class FeedReader(
     private val feedDetailRepository: FeedDetailRepository
 ) {
     fun readInfo(feedId: String): FeedInfo {
-        return feedRepository.read(feedId)?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
+        return feedRepository.read(feedId) ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
 
     fun readsOwnedInfo(userId: String, feedStatus: FeedStatus): List<FeedInfo> {

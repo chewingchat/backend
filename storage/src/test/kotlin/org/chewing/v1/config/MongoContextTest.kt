@@ -6,7 +6,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestPropertySource
 
 @DataMongoTest
 @ContextConfiguration(classes = [DbTestApplication::class])

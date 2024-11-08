@@ -3,7 +3,6 @@ package org.chewing.v1.model.contact
 import org.chewing.v1.model.auth.ValidationCode
 import java.time.LocalDateTime
 
-
 class Email private constructor(
     val emailId: String,
     val emailAddress: String,

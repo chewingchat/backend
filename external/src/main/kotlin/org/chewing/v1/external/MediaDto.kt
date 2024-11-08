@@ -1,9 +1,8 @@
 package org.chewing.v1.external
 
-import org.chewing.v1.model.media.Media
-
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.chewing.v1.model.media.Media
 
 data class MediaDto @JsonCreator constructor(
     @JsonProperty("fileType") val fileType: String,

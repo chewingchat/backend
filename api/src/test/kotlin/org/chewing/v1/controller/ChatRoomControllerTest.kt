@@ -1,46 +1,42 @@
 package org.chewing.v1.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
-import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.controller.chat.ChatRoomController
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.service.chat.RoomService
+import org.chewing.v1.util.StringToChatRoomSortCriteriaConverter
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.format.DateTimeFormatter
 
-@WebMvcTest(ChatRoomController::class)
-@Import(TestSecurityConfig::class)
 @ActiveProfiles("test")
-class ChatRoomControllerTest(
-    @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val objectMapper: ObjectMapper,
-) {
-    @MockBean
+class ChatRoomControllerTest : RestDocsTest() {
+
     private lateinit var chatRoomFacade: ChatRoomFacade
-
-    @MockBean
     private lateinit var roomService: RoomService
+    private lateinit var chatRoomController: ChatRoomController
+    private lateinit var objectMapper: ObjectMapper
 
-    private fun performCommonSuccessResponse(result: ResultActions) {
-        result.andExpect(status().isOk)
-            .andExpect(jsonPath("$.status").value(200))
-            .andExpect(jsonPath("$.data.message").value("성공"))
+    @BeforeEach
+    fun setUp() {
+        chatRoomFacade = mock()
+        roomService = mock()
+        chatRoomController = ChatRoomController(chatRoomFacade, roomService)
+        mockMvc = mockControllerWithCustomConverter(
+            chatRoomController,
+            StringToChatRoomSortCriteriaConverter(),
+        )
+        objectMapper = objectMapper()
     }
 
     @Test
@@ -57,7 +53,7 @@ class ChatRoomControllerTest(
             post("/api/chatRoom/list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .param("sort", sort)
+                .param("sort", sort),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.status").value(200))
@@ -83,7 +79,7 @@ class ChatRoomControllerTest(
             post("/api/chatRoom/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds)))
+                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds))),
         )
         performCommonSuccessResponse(result)
     }
@@ -97,7 +93,7 @@ class ChatRoomControllerTest(
             post("/api/chatRoom/delete/group")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds)))
+                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds))),
         )
         performCommonSuccessResponse(result)
     }
@@ -113,7 +109,7 @@ class ChatRoomControllerTest(
             post("/api/chatRoom/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("friendId" to friendId)))
+                .content(objectMapper.writeValueAsString(mapOf("friendId" to friendId))),
         ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.status").value(201))
             .andExpect(jsonPath("$.data.chatRoomId").value("chatRoomId"))
@@ -130,7 +126,7 @@ class ChatRoomControllerTest(
             post("/api/chatRoom/create/group")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("friendIds" to friendIds)))
+                .content(objectMapper.writeValueAsString(mapOf("friendIds" to friendIds))),
         ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.status").value(201))
             .andExpect(jsonPath("$.data.chatRoomId").value("chatRoomId"))
@@ -147,8 +143,8 @@ class ChatRoomControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
                 .content(
-                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "friendId" to friendId))
-                )
+                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "friendId" to friendId)),
+                ),
         )
         performCommonSuccessResponse(result)
     }
@@ -164,10 +160,9 @@ class ChatRoomControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
                 .content(
-                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "favorite" to favorite))
-                )
+                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "favorite" to favorite)),
+                ),
         )
         performCommonSuccessResponse(result)
     }
-
 }

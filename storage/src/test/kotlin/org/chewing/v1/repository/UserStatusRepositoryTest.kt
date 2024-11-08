@@ -2,12 +2,11 @@ package org.chewing.v1.repository
 
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.user.UserStatusJpaRepository
+import org.chewing.v1.repository.jpa.user.UserStatusRepositoryImpl
 import org.chewing.v1.repository.support.JpaDataGenerator
-import org.chewing.v1.repository.user.UserStatusRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-
-
+import java.util.UUID
 class UserStatusRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var userStatusJpaRepository: UserStatusJpaRepository
@@ -15,22 +14,21 @@ class UserStatusRepositoryTest : JpaContextTest() {
     @Autowired
     private lateinit var jpaDataGenerator: JpaDataGenerator
 
-    private val userStatusRepositoryImpl: UserStatusRepositoryImpl by lazy {
-        UserStatusRepositoryImpl(userStatusJpaRepository)
-    }
-
+    @Autowired
+    private lateinit var userStatusRepositoryImpl: UserStatusRepositoryImpl
 
     @Test
     fun `유저 아이디로 읽기`() {
-        val userId = "userId"
+        val userId = generateUserId()
         jpaDataGenerator.userStatusDataList(userId)
         val result = userStatusRepositoryImpl.reads(userId)
         assert(result.isNotEmpty())
+        assert(result.all { it.userId == userId })
     }
 
     @Test
     fun `추가 하기`() {
-        val userId = "userId2"
+        val userId = generateUserId()
         val userStatus = jpaDataGenerator.userStatusData(userId)
         userStatusRepositoryImpl.append(userStatus.userId, userStatus.message, userStatus.emoji)
         val result = userStatusJpaRepository.findById(userStatus.statusId).get().toUserStatus()
@@ -39,7 +37,7 @@ class UserStatusRepositoryTest : JpaContextTest() {
 
     @Test
     fun `선택된 상태 읽기`() {
-        val userId = "userId3"
+        val userId = generateUserId()
         jpaDataGenerator.userStatusDataList(userId)
         val status = jpaDataGenerator.userSelectedStatusData(userId)
         val result = userStatusRepositoryImpl.readSelected(userId)
@@ -50,7 +48,7 @@ class UserStatusRepositoryTest : JpaContextTest() {
 
     @Test
     fun `선택된 상태 변경 - 아무 것도 없음 처리`() {
-        val userId = "userId4"
+        val userId = generateUserId()
         jpaDataGenerator.userStatusDataList(userId)
         jpaDataGenerator.userSelectedStatusData(userId)
         userStatusRepositoryImpl.updateSelectedStatusFalse(userId)
@@ -58,10 +56,9 @@ class UserStatusRepositoryTest : JpaContextTest() {
         assert(result.isEmpty)
     }
 
-
     @Test
     fun `선택된 상태 변경 - 선택된 상태가 있음 처리`() {
-        val userId = "userId5"
+        val userId = generateUserId()
         val newUserStatus = jpaDataGenerator.userStatusData(userId)
         userStatusRepositoryImpl.updateSelectedStatusTrue(userId, newUserStatus.statusId)
         val result = userStatusJpaRepository.findBySelectedTrueAndUserId(userId).get().toUserStatus()
@@ -70,7 +67,7 @@ class UserStatusRepositoryTest : JpaContextTest() {
 
     @Test
     fun `유저가 가지고 있는 모든 상태 설정 삭제`() {
-        val userId = "userId6"
+        val userId = generateUserId()
         jpaDataGenerator.userStatusDataList(userId)
         userStatusRepositoryImpl.removeAllByUserId(userId)
         val result = userStatusJpaRepository.findAllByUserId(userId)
@@ -79,7 +76,7 @@ class UserStatusRepositoryTest : JpaContextTest() {
 
     @Test
     fun `statusIds로 삭제`() {
-        val userId = "userId7"
+        val userId = generateUserId()
         val userStatus = jpaDataGenerator.userStatusData(userId)
         val userStatus2 = jpaDataGenerator.userStatusData(userId)
         userStatusRepositoryImpl.removes(listOf(userStatus.statusId, userStatus2.statusId))
@@ -91,8 +88,8 @@ class UserStatusRepositoryTest : JpaContextTest() {
 
     @Test
     fun `여러 유저의 선택된 상태 읽기`() {
-        val userId = "userId8"
-        val userId2 = "userId9"
+        val userId = generateUserId()
+        val userId2 = generateUserId()
         jpaDataGenerator.userStatusDataList(userId)
         jpaDataGenerator.userStatusDataList(userId2)
         jpaDataGenerator.userSelectedStatusData(userId)
@@ -100,4 +97,6 @@ class UserStatusRepositoryTest : JpaContextTest() {
         val result = userStatusRepositoryImpl.readSelectedUsers(listOf(userId, userId2))
         assert(result.size == 2)
     }
+
+    private fun generateUserId(): String = UUID.randomUUID().toString()
 }

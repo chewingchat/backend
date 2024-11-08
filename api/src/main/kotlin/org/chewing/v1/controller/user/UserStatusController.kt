@@ -41,7 +41,6 @@ class UserStatusController(
         return ResponseHelper.successCreateOnly()
     }
 
-
     @PutMapping("/select")
     fun changeProfileSelectedStatus(
         @RequestAttribute("userId") userId: String,

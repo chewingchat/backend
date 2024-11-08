@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.SessionConnectedEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
 
-
 private val logger = KotlinLogging.logger { }
 
 @Component
@@ -36,4 +35,3 @@ class WebSocketEventListener(
         logger.info("세션 해제됨: userId=$userId, sessionId=$sessionId")
     }
 }
-

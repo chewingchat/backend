@@ -2,8 +2,6 @@ package org.chewing.v1.jpaentity.emoticon
 
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
-import org.chewing.v1.model.emoticon.Emoticon
-import org.chewing.v1.model.emoticon.EmoticonPack
 import org.chewing.v1.model.emoticon.EmoticonPackInfo
 import org.hibernate.annotations.DynamicInsert
 import java.util.*
@@ -19,7 +17,7 @@ internal class EmoticonPackJpaEntity(
 
     private val packName: String,
 ) : BaseEntity() {
-    companion object{
+    companion object {
         fun of(
             packUrl: String,
             packName: String

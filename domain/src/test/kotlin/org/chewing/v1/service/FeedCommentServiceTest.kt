@@ -34,9 +34,8 @@ class FeedCommentServiceTest {
     private val commentHandler = CommentHandler(commentProcessor, asyncJobExecutor)
     private val feedCommentService = FeedCommentService(commentReader, commentHandler, commentRemover, commentValidator)
 
-
     @Test
-    fun `댓글 삭제 한번에 성공`(){
+    fun `댓글 삭제 한번에 성공`() {
         // given
         val userId = "userId"
         val commentId1 = "commentId1"
@@ -53,7 +52,6 @@ class FeedCommentServiceTest {
         whenever(commentRepository.remove(commentId1)).thenReturn(feedId)
         whenever(commentRepository.remove(commentId2)).thenReturn(feedId)
 
-
         assertDoesNotThrow {
             feedCommentService.remove(userId, commentIds, target)
         }
@@ -64,7 +62,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 삭제 실패 - 삭제하려는 것과 삭제 대상이 크기가 다름`(){
+    fun `댓글 삭제 실패 - 삭제하려는 것과 삭제 대상이 크기가 다름`() {
         val userId = "userId"
         val commentId1 = "commentId1"
         val commentId2 = "commentId2"
@@ -85,7 +83,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 삭제 실패 - 삭제하려는 댓글 소유자가 아님`(){
+    fun `댓글 삭제 실패 - 삭제하려는 댓글 소유자가 아님`() {
         val userId = "userId"
         val commentId1 = "commentId1"
         val commentId2 = "commentId2"
@@ -107,7 +105,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 삭제 실패 - 낙관적 락 retry만큼 실패`()   {
+    fun `댓글 삭제 실패 - 낙관적 락 retry만큼 실패`() {
         val userId = "userId"
         val commentId1 = "commentId1"
         val commentId2 = "commentId2"
@@ -132,7 +130,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 삭제 여러번에 성공`(){
+    fun `댓글 삭제 여러번에 성공`() {
         // given
         val feedIds = listOf("feedId1", "feedId2")
 
@@ -142,7 +140,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 한번에 추가 성공`(){
+    fun `댓글 한번에 추가 성공`() {
         // given
         val userId = "userId"
         val feedId = "feedId"
@@ -157,7 +155,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `댓글 추가 실패 - 낙관적락`(){
+    fun `댓글 추가 실패 - 낙관적락`() {
         val userId = "userId"
         val feedId = "feedId"
         val comment = "comment"
@@ -174,7 +172,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `내가 작성한 댓글 가져오기`(){
+    fun `내가 작성한 댓글 가져오기`() {
         val userId = "userId"
         val commentId = "commentId"
         val feedId = "feedId"
@@ -186,7 +184,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    fun `피드의 댓글 가져오기`(){
+    fun `피드의 댓글 가져오기`() {
         val feedId = "feedId"
         val commentId = "commentId"
         val userId = "userId"

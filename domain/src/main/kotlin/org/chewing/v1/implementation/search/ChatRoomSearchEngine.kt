@@ -1,7 +1,6 @@
 package org.chewing.v1.implementation.search
 
 import org.chewing.v1.model.chat.room.Room
-import org.chewing.v1.model.friend.FriendShip
 import org.springframework.stereotype.Component
 
 @Component

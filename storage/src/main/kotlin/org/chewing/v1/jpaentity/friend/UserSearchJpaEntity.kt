@@ -3,7 +3,6 @@ package org.chewing.v1.jpaentity.friend
 import jakarta.persistence.*
 import org.chewing.v1.jpaentity.common.BaseEntity
 import org.chewing.v1.model.friend.UserSearch
-import org.chewing.v1.model.user.User
 import org.hibernate.annotations.DynamicInsert
 import java.util.UUID
 
@@ -15,7 +14,7 @@ internal class UserSearchJpaEntity(
     private val searchId: String = UUID.randomUUID().toString(),
     private val searchText: String,
     private val userId: String,
-): BaseEntity() {
+) : BaseEntity() {
     fun toFriendSearch(): UserSearch {
         return UserSearch.of(
             keyword = searchText,

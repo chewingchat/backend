@@ -2,7 +2,6 @@ package org.chewing.v1.repository.chat
 
 import org.chewing.v1.model.chat.room.ChatSequenceNumber
 
-
 interface ChatSequenceRepository {
     // 채팅방의 시퀀스 정보를 조회하는 메서드
     fun readCurrent(chatRoomId: String): ChatSequenceNumber

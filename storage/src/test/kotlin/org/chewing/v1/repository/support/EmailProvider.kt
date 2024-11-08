@@ -4,19 +4,12 @@ import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.contact.Email
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import java.util.UUID
 
 @Component
 object EmailProvider {
-    fun buildNormalAddress(): EmailAddress {
-        return EmailAddress.of("normal")
-    }
-    fun buildWrongEmailAddress(): EmailAddress {
-        return EmailAddress.of("wrong")
-    }
-    fun buildNormal(): Email {
-        return Email.of("normal", "normal", "normal", LocalDateTime.now())
-    }
-    fun buildNew(): Email {
-        return Email.of("new", "new", "new", LocalDateTime.now())
-    }
+    fun buildNormalAddress(emailAddress: String): EmailAddress = EmailAddress.of(emailAddress)
+    fun buildWrongEmailAddress(): EmailAddress = EmailAddress.of("wrong")
+    fun buildNormal(): Email = Email.of(UUID.randomUUID().toString(), "normal", "normal", LocalDateTime.now())
+    fun buildNew(): Email = Email.of(UUID.randomUUID().toString(), "new", "new", LocalDateTime.now())
 }

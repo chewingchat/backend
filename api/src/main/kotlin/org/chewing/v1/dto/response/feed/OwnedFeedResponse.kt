@@ -9,7 +9,7 @@ data class OwnedFeedResponse(
     val uploadTime: String,
     val topic: String,
     val comments: Int,
-    val isLiked: Boolean,
+    val liked: Boolean,
     val details: List<FeedDetailResponse>
 ) {
     companion object {
@@ -24,7 +24,7 @@ data class OwnedFeedResponse(
                 uploadTime = formattedUploadTime,
                 topic = feed.feed.topic,
                 comments = feed.feed.comments,
-                isLiked = isLiked,
+                liked = isLiked,
                 details = feed.feedDetails.map { FeedDetailResponse.of(it) }
             )
         }

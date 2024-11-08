@@ -1,11 +1,8 @@
 package org.chewing.v1.model.schedule
 
-import java.time.Month
-import java.time.Year
-
 class ScheduleType private constructor(
-     val year: Int,
-     val month: Int,
+    val year: Int,
+    val month: Int,
 ) {
     companion object {
         fun of(

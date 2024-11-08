@@ -29,7 +29,7 @@ class FeedCommentController(
             request.toComment(),
             FeedTarget.COMMENTS
         )
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 
@@ -43,7 +43,7 @@ class FeedCommentController(
             request.map { it.toCommentId() },
             FeedTarget.UNCOMMENTS
         )
-        //삭제 완료 응답 200 반환
+        // 삭제 완료 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -53,7 +53,7 @@ class FeedCommentController(
         @PathVariable("feedId") feedId: String
     ): SuccessResponseEntity<FeedFriendCommentedResponse> {
         val friendComment = feedFacade.getFeedComment(userId, feedId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(FeedFriendCommentedResponse.of(friendComment))
     }
 
@@ -62,7 +62,7 @@ class FeedCommentController(
         @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<MyCommentResponse> {
         val myCommentedInfo = feedFacade.getUserCommented(userId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.success(MyCommentResponse.of(myCommentedInfo))
     }
 }

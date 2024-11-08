@@ -18,7 +18,7 @@ class CommentProcessor(
         commentAppender.appendComment(userId, comment, feedId)
     }
 
-    //존재 하는 댓글에 대해서만 업데이트 진행
+    // 존재 하는 댓글에 대해서만 업데이트 진행
     @Transactional
     fun processUnComment(commentId: String, updateType: FeedTarget) {
         commentRemover.remove(commentId)?.let {

@@ -22,7 +22,7 @@ class FriendController(
         @RequestBody request: FriendRequest.AddWithEmail
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toEmail())
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 
@@ -32,7 +32,7 @@ class FriendController(
         @RequestBody request: FriendRequest.AddWithPhone
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toPhoneNumber())
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
     }
 
@@ -43,7 +43,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = request
         friendShipService.changeFriendFavorite(userId, friendId, favorite)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
     @DeleteMapping("")
@@ -53,7 +53,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
         friendShipService.removeFriendShip(userId, friendId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -64,7 +64,7 @@ class FriendController(
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
         friendShipService.blockFriendShip(userId, friendId)
-        //성공 응답 200 반환
+        // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
 
@@ -74,7 +74,7 @@ class FriendController(
         @RequestBody request: FriendRequest.UpdateName
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         friendShipService.changeFriendName(userId, request.toFriendId(), request.toFriendName())
-        //생성 완료 응답 201 반환
+        // 생성 완료 응답 201 반환
         return ResponseHelper.successOnly()
     }
 }

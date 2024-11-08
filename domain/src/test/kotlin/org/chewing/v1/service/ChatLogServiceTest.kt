@@ -128,7 +128,7 @@ class ChatLogServiceTest {
         val time = LocalDateTime.now()
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
         val parentChatNumber = TestDataFactory.createChatNumber(chatRoomId)
-        val parentChatLog = TestDataFactory.createChatNormalLog(parentMessageId, chatRoomId, userId, parentChatNumber,time)
+        val parentChatLog = TestDataFactory.createChatNormalLog(parentMessageId, chatRoomId, userId, parentChatNumber, time)
 
         whenever(
             chatSequenceRepository.updateSequenceIncrement(chatRoomId)
@@ -306,7 +306,7 @@ class ChatLogServiceTest {
         val seqNumbers = listOf(TestDataFactory.createChatSequenceNumber(chatRoomIds[0]))
         val chatNumbers = listOf(TestDataFactory.createChatNumber(chatRoomIds[0]))
         val time = LocalDateTime.now()
-        val chatNormalLog = TestDataFactory.createChatNormalLog("messageId", chatRoomIds[0], "userId", chatNumbers[0],time)
+        val chatNormalLog = TestDataFactory.createChatNormalLog("messageId", chatRoomIds[0], "userId", chatNumbers[0], time)
         whenever(
             chatSequenceRepository.readCurrentSeqNumbers(chatRoomIds)
         ).thenReturn(seqNumbers)

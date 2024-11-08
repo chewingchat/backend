@@ -3,9 +3,7 @@ package org.chewing.v1.mongoentity
 import org.chewing.v1.model.chat.log.ChatInviteLog
 import org.chewing.v1.model.chat.log.ChatLog
 import org.chewing.v1.model.chat.log.ChatLogType
-import org.chewing.v1.model.chat.message.MessageType
 import org.chewing.v1.model.chat.message.ChatInviteMessage
-import org.chewing.v1.model.chat.message.ChatMessage
 import org.chewing.v1.model.chat.room.ChatNumber
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime

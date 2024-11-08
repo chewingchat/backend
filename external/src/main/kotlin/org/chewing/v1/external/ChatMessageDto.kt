@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import java.time.format.DateTimeFormatter
 import org.chewing.v1.model.chat.message.*
+import java.time.format.DateTimeFormatter
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,

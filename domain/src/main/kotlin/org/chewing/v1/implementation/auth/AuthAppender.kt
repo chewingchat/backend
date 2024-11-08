@@ -4,8 +4,8 @@ import org.chewing.v1.model.auth.Credential
 import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.token.RefreshToken
-import org.chewing.v1.repository.auth.LoggedInRepository
 import org.chewing.v1.repository.auth.EmailRepository
+import org.chewing.v1.repository.auth.LoggedInRepository
 import org.chewing.v1.repository.auth.PhoneRepository
 import org.springframework.stereotype.Component
 
@@ -19,9 +19,8 @@ class AuthAppender(
         loggedInRepository.append(newRefreshToken, userId)
     }
 
-
     fun makeCredential(credential: Credential): String {
-        return when(credential) {
+        return when (credential) {
             is EmailAddress -> emailRepository.appendIfNotExists(credential)
             is PhoneNumber -> phoneRepository.appendIfNotExists(credential)
         }

@@ -9,7 +9,8 @@ class AsyncJobExecutor(
 ) {
 
     fun <T> executeAsyncJobs(
-        items: List<T>, action: suspend (T) -> Unit
+        items: List<T>,
+        action: suspend (T) -> Unit
     ) = runBlocking {
         val jobs = items.map { item ->
             ioScope.async {

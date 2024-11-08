@@ -1,15 +1,10 @@
 package org.chewing.v1.implementation.media
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
 import org.chewing.v1.util.AsyncJobExecutor
-import org.chewing.v1.util.IoScope
 import org.springframework.stereotype.Component
 
 @Component
@@ -41,7 +36,6 @@ class FileHandler(
             fileRemover.removeFile(media)
         }
     }
-
 
     fun handleOldFiles(medias: List<Media>) {
         asyncJobExecutor.executeAsyncJobs(medias) { media ->

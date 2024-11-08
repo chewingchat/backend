@@ -16,13 +16,12 @@ class FriendShipService(
 ) {
 
     fun getAccessFriendShips(userId: String, sort: FriendSortCriteria): List<FriendShip> {
-        return friendShipReader.readsAccess(userId,sort)
+        return friendShipReader.readsAccess(userId, sort)
     }
 
     fun getAccessFriendShipsIn(friendIds: List<String>, userId: String): List<FriendShip> {
         return friendShipReader.readsAccessIdIn(friendIds, userId)
     }
-
 
     fun creatFriendShip(userId: String, userName: UserName, friendId: String, friendName: UserName) {
         friendShipValidator.validateCreationAllowed(userId, friendId)

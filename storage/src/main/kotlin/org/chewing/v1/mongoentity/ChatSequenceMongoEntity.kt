@@ -8,4 +8,4 @@ data class ChatSequenceMongoEntity(
     @Id
     val chatRoomId: String,
     var seqNumber: Int
-) {}
+)

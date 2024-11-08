@@ -1,11 +1,11 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.jparepository.user.UserJpaRepository
+import org.chewing.v1.repository.jpa.user.UserRepositoryImpl
 import org.chewing.v1.repository.support.EmailProvider
 import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.PhoneProvider
 import org.chewing.v1.repository.support.UserProvider
-import org.chewing.v1.repository.user.UserRepositoryImpl
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -18,7 +18,7 @@ class UserRepositoryTest2 {
 
     @Test
     fun `유저 아이디로 읽기 - 실패(유저를 찾을 수 없음)`() {
-        val userId = "userId"
+        val userId = generateUserId()
         whenever(userJpaRepository.findById(userId)).thenReturn(Optional.empty())
 
         val result = userRepositoryImpl.read(userId)
@@ -46,7 +46,7 @@ class UserRepositoryTest2 {
 
     @Test
     fun `유저 삭제 - 실패(유저를 찾을 수 없음)`() {
-        val userId = "userId"
+        val userId = generateUserId()
         whenever(userJpaRepository.findById(userId)).thenReturn(Optional.empty())
 
         val result = userRepositoryImpl.remove(userId)
@@ -56,7 +56,7 @@ class UserRepositoryTest2 {
     @Test
     fun `유저 이미지 변환 - 실패(유저를 찾을 수 없음)`() {
         val media = MediaProvider.buildProfileContent()
-        val userId = "userId"
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
@@ -67,7 +67,7 @@ class UserRepositoryTest2 {
     @Test
     fun `유저 배경사진 변환 실패(유저를 찾을 수 없음)`() {
         val media = MediaProvider.buildBackgroundContent()
-        val userId = "userId"
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
@@ -76,9 +76,9 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 TTS 변환 실패(유저를 찾을 수 없음)`(){
+    fun `유저 TTS 변환 실패(유저를 찾을 수 없음)`() {
         val media = MediaProvider.buildTTSContent()
-        val userId = "userId"
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
@@ -86,10 +86,9 @@ class UserRepositoryTest2 {
         assert(result == null)
     }
 
-
     @Test
-    fun `유저 이름 변환 실패(유저를 찾을 수 없음)`(){
-        val userId = "userId"
+    fun `유저 이름 변환 실패(유저를 찾을 수 없음)`() {
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val userName = UserProvider.buildNewUserName()
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
@@ -99,8 +98,8 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 연락처 변환 실패(유저를 찾을 수 없음)`(){
-        val userId = "userId"
+    fun `유저 연락처 변환 실패(유저를 찾을 수 없음)`() {
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val contact = EmailProvider.buildNormal()
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
@@ -110,8 +109,8 @@ class UserRepositoryTest2 {
     }
 
     @Test
-    fun `유저 접근권한 변환 실패(유저를 찾을 수 없음)`(){
-        val userId = "userId"
+    fun `유저 접근권한 변환 실패(유저를 찾을 수 없음)`() {
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val userContent = UserProvider.buildNewUserContent()
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
@@ -122,13 +121,14 @@ class UserRepositoryTest2 {
 
     @Test
     fun `유저 생일 변환 실패(유저를 찾을 수 없음)`() {
-        val userId = "userId"
+        val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
-        val birth = "birth"
+        val birth = generateUserId()
         whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
 
         val result = userRepositoryImpl.updateBirth(userId, birth)
         assert(result == null)
     }
-}
 
+    private fun generateUserId(): String = UUID.randomUUID().toString()
+}

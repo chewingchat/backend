@@ -1,8 +1,8 @@
 package org.chewing.v1.dto.request.auth
 
 import org.chewing.v1.model.auth.EmailAddress
-import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.auth.PhoneNumber
+import org.chewing.v1.model.auth.PushToken
 
 class LoginRequest {
     data class Email(
@@ -11,7 +11,7 @@ class LoginRequest {
         val deviceId: String,
         val provider: String,
         val appToken: String
-    ){
+    ) {
         fun toDevice(): PushToken.Device {
             return PushToken.Device.of(deviceId, PushToken.Provider.valueOf(provider.uppercase()))
         }

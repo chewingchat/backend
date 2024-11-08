@@ -7,8 +7,7 @@ import org.chewing.v1.model.user.User
 import org.springframework.stereotype.Component
 
 @Component
-class UserValidator(
-) {
+class UserValidator() {
     fun isUserAccess(user: User) {
         if (user.status != AccessStatus.ACCESS) {
             throw ConflictException(ErrorCode.USER_NOT_ACCESS)

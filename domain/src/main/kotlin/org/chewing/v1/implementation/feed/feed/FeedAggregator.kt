@@ -1,14 +1,13 @@
 package org.chewing.v1.implementation.feed.feed
 
-import org.chewing.v1.model.user.User
 import org.chewing.v1.model.comment.Comment
 import org.chewing.v1.model.comment.CommentInfo
 import org.chewing.v1.model.friend.FriendShip
+import org.chewing.v1.model.user.User
 import org.springframework.stereotype.Component
 
 @Component
-class FeedAggregator(
-) {
+class FeedAggregator() {
     fun aggregates(commentsInfo: List<CommentInfo>, friendsInfo: List<FriendShip>, users: List<User>): List<Comment> {
         // 친구 정보와 사용자 정보를 사전 형태로 변환
         val friendsMap = friendsInfo.associateBy { it.friendId }
