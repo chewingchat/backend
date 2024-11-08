@@ -35,6 +35,7 @@ bin/
 /nbdist/
 /.nb-gradle/
 data
+.env
 ### VS Code ###
 .vscode/
 
