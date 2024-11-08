@@ -2,9 +2,7 @@ package org.chewing.v1.jparepository.feed
 
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
 
-@Repository
 internal interface FeedJpaRepository : JpaRepository<FeedJpaEntity, String> {
     fun findAllByUserIdAndHideTrueOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>
     fun findAllByUserIdAndHideFalseOrderByCreatedAtAsc(userId: String): List<FeedJpaEntity>

@@ -20,3 +20,15 @@ openai:
   api:
     url: local-url
     key: local-key
+
+---
+spring:
+  config:
+    activate:
+      on-profile: live
+
+openai:
+  model: ${OPENAI_API_MODEL}
+  api:
+    url: ${OPENAI_API_URL}
+    key: ${OPENAI_API_KEY}
