@@ -11,15 +11,6 @@ dependencies {
     testImplementation(project(":tests:api-docs"))
 }
 
-tasks {
-    bootJar {
-        enabled = true
-    }
-    jar {
-        enabled = false
-    }
-}
-
 val snippetsDir by extra { file("build/generated-snippets") }
 
 tasks {
@@ -28,23 +19,18 @@ tasks {
     test {
         outputs.dir(snippetsDir)
         useJUnitPlatform()
+        finalizedBy(asciidoctor)
     }
 
     asciidoctor {
-        dependsOn(test) // 3
-        baseDirFollowsSourceDir() // 4
+        baseDirFollowsSourceDir()
         doLast {
             copy {
                 from(outputDir)
                 into(resultDir)
             }
-        } // 5
-    }
-
-    val copyDocs by registering(Copy::class) {
-        dependsOn(asciidoctor)
-        from(asciidoctor.get().outputDir)
-        into(file(resultDir))
+        }
+        finalizedBy(bootJar)
     }
 
     jar {
@@ -53,6 +39,5 @@ tasks {
 
     bootJar {
         enabled = true
-        dependsOn(copyDocs)
     }
 }

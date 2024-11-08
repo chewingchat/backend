@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  service:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080"
+    depends_on:
+      - mysql
+      - mongo
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: live
+      STORAGE_DATABASE_CORE_DB_HOST: mysql
+      STORAGE_DATABASE_CORE_DB_PORT: 3306
+      STORAGE_DATABASE_CORE_DB_NAME: chewing
+      STORAGE_DATABASE_CORE_DB_USERNAME: root
+      STORAGE_DATABASE_CORE_DB_PASSWORD: root
+      STORAGE_DATABASE_MONGO_DB_HOST: mongo
+      STORAGE_DATABASE_MONGO_DB_PORT: 27017
+      STORAGE_DATABASE_MONGO_DB_NAME: chewing
+      STORAGE_DATABASE_MONGO_DB_USER: root
+      STORAGE_DATABASE_MONGO_DB_PASSWORD: root
+      JWT_SECRET: mysecretkey12345asdfvasdfvhjaaaaaaaaaaaaaaaaaaaaaaaaaslfdjasdlkr231243123412
+      OPENAI_API_KEY: sk-12341234123412341234123412341234
+      OPENAI_API_MODEL: gpt-3.5-turbo
+      OPENAI_API_URL: https://api.openai.com
+      FCM_API_URL: https://fcm.googleapis.com
+    networks:
+      - chewing_network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chewing
+      TZ: Asia/Seoul
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data/mysql-data:/var/lib/mysql
+    networks:
+      - chewing_network
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      TZ: Asia/Seoul
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: chewing
+    volumes:
+      - ./data/mongo-data:/data
+    networks:
+      - chewing_network
+
+networks:
+  chewing_network:
+    driver: bridge
