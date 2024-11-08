@@ -39,7 +39,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        # dev 브랜치에서 빌드 단계 실행 
+        # dev 브랜치에서 빌드 단계 실행
         if: github.ref == 'refs/heads/dev'
         run: ./gradlew clean build
 
@@ -57,7 +57,7 @@ jobs:
       - name: Push Docker Image to Docker Hub
         if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 푸시
         run: docker push yhkim052556/chewingrepository:latest
-        
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
