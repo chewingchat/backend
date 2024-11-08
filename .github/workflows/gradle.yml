@@ -71,7 +71,6 @@ jobs:
           port: 8080  # SSH가 8080 포트에서 실행 중인 경우  /  8080번 방화벽 뚫어서 업뎃
           script: |
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin # 도커계정정보 등록
-            docker pull yhkim052556/chewingrepository:latest
-            docker stop spring-app || true
-            docker rm spring-app || true
-            docker run -d --name spring-app -p 8080:8080 yhkim052556/chewingrepository:latest
+            docker compose pull  # 최신 이미지를 가져옴
+            docker compose down  # 기존 서비스 종료
+            docker compose up -d  # 새로운 컨테이너 생성 및 시작
