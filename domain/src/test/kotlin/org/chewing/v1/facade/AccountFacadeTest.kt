@@ -1,5 +1,10 @@
 package org.chewing.v1.facade
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.service.auth.AuthService
@@ -8,15 +13,12 @@ import org.chewing.v1.service.user.UserService
 import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class AccountFacadeTest {
-    private val authService: AuthService = mock()
-    private val userService: UserService = mock()
-    private val userStatusService: UserStatusService = mock()
-    private val scheduleService: ScheduleService = mock()
+    private val authService: AuthService = mockk()
+    private val userService: UserService = mockk()
+    private val userStatusService: UserStatusService = mockk()
+    private val scheduleService: ScheduleService = mockk()
 
     private val accountFacade = AccountFacade(authService, userService, userStatusService, scheduleService)
 
@@ -29,9 +31,9 @@ class AccountFacadeTest {
         val loginInfo = TestDataFactory.createLoginInfo(user)
         val device = TestDataFactory.createDevice()
 
-        whenever(authService.verify(any(), any())).thenReturn(email)
-        whenever(userService.createUser(any(), any(), any())).thenReturn(user)
-        whenever(authService.createLoginInfo(any())).thenReturn(loginInfo)
+        every { authService.verify(any(), any()) } returns email
+        every { userService.createUser(any(), any(), any()) } returns user
+        every { authService.createLoginInfo(any()) } returns loginInfo
 
         val result = assertDoesNotThrow {
             accountFacade.loginAndCreateUser(emailAddress, "123", "testAppToken", device)
@@ -45,20 +47,23 @@ class AccountFacadeTest {
         val email = TestDataFactory.createEmail("123")
         val emailAddress = TestDataFactory.createEmailAddress()
 
-        whenever(authService.verify(any(), any())).thenReturn(email)
+        every { authService.verify(any(), any()) } returns email
+        every { userService.updateUserContact(any(), any()) } just Runs
 
-        assertDoesNotThrow {
-            accountFacade.changeCredential(userId, emailAddress, "123")
-        }
+        accountFacade.changeCredential(userId, emailAddress, "123")
     }
 
     @Test
     fun `계정 삭제`() {
         val userId = "123"
 
-        assertDoesNotThrow {
-            accountFacade.deleteAccount(userId)
-        }
+        every { userService.deleteUser(any()) } just Runs
+        every { userStatusService.deleteAllUserStatuses(any()) } just Runs
+        every { scheduleService.deleteUsers(any()) } just Runs
+
+        accountFacade.deleteAccount(userId)
+
+        verify { userService.deleteUser(userId) }
     }
 
     @Test
@@ -68,8 +73,8 @@ class AccountFacadeTest {
         val userAccount = TestDataFactory.createUserAccount(emailId, null)
         val email = TestDataFactory.createEmail("123")
 
-        whenever(userService.getUserAccount(any())).thenReturn(userAccount)
-        whenever(authService.getContactById(userAccount.emailId!!, ContactType.EMAIL)).thenReturn(email)
+        every { userService.getUserAccount(any()) } returns userAccount
+        every { authService.getContactById(userAccount.emailId!!, ContactType.EMAIL) } returns email
 
         val result = assertDoesNotThrow {
             accountFacade.getAccount(userId)
@@ -87,8 +92,8 @@ class AccountFacadeTest {
         val userAccount = TestDataFactory.createUserAccount(null, phoneId)
         val phone = TestDataFactory.createPhone("123")
 
-        whenever(userService.getUserAccount(any())).thenReturn(userAccount)
-        whenever(authService.getContactById(userAccount.phoneId!!, ContactType.PHONE)).thenReturn(phone)
+        every { userService.getUserAccount(any()) } returns userAccount
+        every { authService.getContactById(userAccount.phoneId!!, ContactType.PHONE) } returns phone
 
         val result = assertDoesNotThrow {
             accountFacade.getAccount(userId)

@@ -1,16 +1,17 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.controller.user.UserController
+import org.chewing.v1.dto.request.user.UserRequest
 import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
@@ -21,15 +22,13 @@ class UserControllerTest : RestDocsTest() {
 
     private lateinit var userService: UserService
     private lateinit var accountFacade: AccountFacade
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        userService = mock()
-        accountFacade = mock()
+        userService = mockk()
+        accountFacade = mockk()
         val userController = UserController(userService, accountFacade)
         mockMvc = mockController(userController)
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -41,6 +40,8 @@ class UserControllerTest : RestDocsTest() {
             MediaType.IMAGE_JPEG_VALUE,
             "Test content".toByteArray(),
         )
+
+        every { userService.updateFile(any(), any(), any()) } just Runs
 
         // When: 파일 업로드 요청을 보냄
         val result = mockMvc.perform(
@@ -58,15 +59,18 @@ class UserControllerTest : RestDocsTest() {
     @DisplayName("사용자 엑세싱")
     fun makeAccess() {
         // Given: 사용자 엑세스 요청
-        val requestBody = mapOf(
-            "firstName" to "testFirstName",
-            "lastName" to "testLastName",
-            "birth" to "2021-01-01",
+        val requestBody = UserRequest.UpdateProfile(
+            firstName = "testFirstName",
+            lastName = "testLastName",
+            birth = "2021-01-01",
         )
+
+        every { userService.makeAccess(any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/user/access")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
         performCommonSuccessResponse(result)
@@ -75,14 +79,17 @@ class UserControllerTest : RestDocsTest() {
     @Test
     @DisplayName("사용자 이름 변경")
     fun updateName() {
-        val requestBody = mapOf(
-            "firstName" to "testFirstName",
-            "lastName" to "testLastName",
+        val requestBody = UserRequest.UpdateName(
+            firstName = "testFirstName",
+            lastName = "testLastName",
         )
+
+        every { userService.updateName(any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.put("/api/user/name")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
         performCommonSuccessResponse(result)
@@ -91,24 +98,28 @@ class UserControllerTest : RestDocsTest() {
     @Test
     @DisplayName("사용자 삭제")
     fun deleteUser() {
+        every { accountFacade.deleteAccount(any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/user")
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
-        verify(accountFacade).deleteAccount(any())
         performCommonSuccessResponse(result)
     }
 
     @Test
     @DisplayName("사용자 생일 변경")
     fun changeBirth() {
-        val requestBody = mapOf(
-            "birth" to "2021-01-01",
+        val requestBody = UserRequest.UpdateBirth(
+            birth = "2021-01-01",
         )
+
+        every { userService.updateBirth(any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.put("/api/user/birth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
         performCommonSuccessResponse(result)

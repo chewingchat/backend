@@ -1,5 +1,9 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -13,13 +17,11 @@ import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class UserServiceTest {
-    private val userRepository: UserRepository = mock()
-    private val pushNotificationRepository: PushNotificationRepository = mock()
-    private val fileHandler: FileHandler = mock()
+    private val userRepository: UserRepository = mockk()
+    private val pushNotificationRepository: PushNotificationRepository = mockk()
+    private val fileHandler: FileHandler = mockk()
 
     private val userReader =
         UserReader(userRepository, pushNotificationRepository)
@@ -38,7 +40,8 @@ class UserServiceTest {
         val emailId = "emailId"
         val phoneId = "phoneId"
         val userAccount = TestDataFactory.createUserAccount(emailId, phoneId)
-        whenever(userRepository.readAccount(userId)).thenReturn(userAccount)
+
+        every { userRepository.readAccount(userId) } returns userAccount
 
         val result = assertDoesNotThrow {
             userService.getUserAccount(userId)
@@ -50,7 +53,8 @@ class UserServiceTest {
     @Test
     fun `유저 계정 정보가 없어야함`() {
         val userId = "userId"
-        whenever(userRepository.readAccount(userId)).thenReturn(null)
+
+        every { userRepository.readAccount(userId) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.getUserAccount(userId)
@@ -68,7 +72,9 @@ class UserServiceTest {
         val device = TestDataFactory.createDevice()
         val user = TestDataFactory.createUser(userId)
 
-        whenever(userRepository.append(contact)).thenReturn(user)
+        every { userRepository.append(contact) } returns user
+        every { pushNotificationRepository.remove(device) } just Runs
+        every { pushNotificationRepository.append(device, appToken, user) } just Runs
 
         val result = assertDoesNotThrow {
             userService.createUser(contact, appToken, device)
@@ -82,7 +88,7 @@ class UserServiceTest {
         val userId = "userId"
         val userContent = TestDataFactory.createUserContent()
 
-        whenever(userRepository.updateAccess(userId, userContent)).thenReturn(userId)
+        every { userRepository.updateAccess(userId, userContent) } returns userId
 
         assertDoesNotThrow {
             userService.makeAccess(userId, userContent)
@@ -94,7 +100,7 @@ class UserServiceTest {
         val userId = "userId"
         val userContent = TestDataFactory.createUserContent()
 
-        whenever(userRepository.updateAccess(userId, userContent)).thenReturn(null)
+        every { userRepository.updateAccess(userId, userContent) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.makeAccess(userId, userContent)
@@ -107,7 +113,8 @@ class UserServiceTest {
     fun `생일을 업데이트 해야함`() {
         val userId = "userId"
         val birth = "1990-01-01"
-        whenever(userRepository.updateBirth(userId, birth)).thenReturn(userId)
+
+        every { userRepository.updateBirth(userId, birth) } returns userId
 
         assertDoesNotThrow {
             userService.updateBirth(userId, birth)
@@ -118,7 +125,8 @@ class UserServiceTest {
     fun `생일 업데이트 실패 - 유저가 없음`() {
         val userId = "userId"
         val birth = "1990-01-01"
-        whenever(userRepository.updateBirth(userId, birth)).thenReturn(null)
+
+        every { userRepository.updateBirth(userId, birth) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.updateBirth(userId, birth)
@@ -131,7 +139,8 @@ class UserServiceTest {
     fun `유저의 이름을 업데이트 해야함`() {
         val userId = "userId"
         val userName = TestDataFactory.createUserName()
-        whenever(userRepository.updateName(userId, userName)).thenReturn(userId)
+
+        every { userRepository.updateName(userId, userName) } returns userId
 
         assertDoesNotThrow {
             userService.updateName(userId, userName)
@@ -142,7 +151,8 @@ class UserServiceTest {
     fun `유저의 이름 업데이트 실패 - 유저가 없음`() {
         val userId = "userId"
         val userName = TestDataFactory.createUserName()
-        whenever(userRepository.updateName(userId, userName)).thenReturn(null)
+
+        every { userRepository.updateName(userId, userName) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.updateName(userId, userName)
@@ -156,7 +166,8 @@ class UserServiceTest {
         val userId = "userId"
         val verificationCode = "1234"
         val contact = TestDataFactory.createPhone(verificationCode)
-        whenever(userRepository.updateContact(userId, contact)).thenReturn(userId)
+
+        every { userRepository.updateContact(userId, contact) } returns userId
 
         assertDoesNotThrow {
             userService.updateUserContact(userId, contact)
@@ -168,7 +179,8 @@ class UserServiceTest {
         val userId = "userId"
         val verificationCode = "1234"
         val contact = TestDataFactory.createEmail(verificationCode)
-        whenever(userRepository.updateContact(userId, contact)).thenReturn(userId)
+
+        every { userRepository.updateContact(userId, contact) } returns userId
 
         assertDoesNotThrow {
             userService.updateUserContact(userId, contact)
@@ -180,7 +192,8 @@ class UserServiceTest {
         val userId = "userId"
         val verificationCode = "1234"
         val contact = TestDataFactory.createPhone(verificationCode)
-        whenever(userRepository.updateContact(userId, contact)).thenReturn(null)
+
+        every { userRepository.updateContact(userId, contact) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.updateUserContact(userId, contact)
@@ -194,7 +207,8 @@ class UserServiceTest {
         val userId = "userId"
         val verificationCode = "1234"
         val contact = TestDataFactory.createEmail(verificationCode)
-        whenever(userRepository.updateContact(userId, contact)).thenReturn(null)
+
+        every { userRepository.updateContact(userId, contact) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.updateUserContact(userId, contact)
@@ -207,7 +221,8 @@ class UserServiceTest {
     fun `유저의 통합된 정보를 가져와야함`() {
         val userId = "userId"
         val user = TestDataFactory.createUser(userId)
-        whenever(userRepository.read(userId)).thenReturn(user)
+
+        every { userRepository.read(userId) } returns user
 
         val result = assertDoesNotThrow {
             userService.getAccessUser(userId)
@@ -219,7 +234,8 @@ class UserServiceTest {
     @Test
     fun `유저의 통합된 정보를 가져오는데 유저가 없음`() {
         val userId = "userId"
-        whenever(userRepository.read(userId)).thenReturn(null)
+
+        every { userRepository.read(userId) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.getAccessUser(userId)
@@ -232,7 +248,8 @@ class UserServiceTest {
     fun `유저의 통합던 정보를 가져오는 활성화된 유저가 아님`() {
         val userId = "userId"
         val user = TestDataFactory.createNotAccessUser()
-        whenever(userRepository.read(userId)).thenReturn(user)
+
+        every { userRepository.read(userId) } returns user
 
         val result = assertThrows<ConflictException> {
             userService.getAccessUser(userId)
@@ -246,8 +263,10 @@ class UserServiceTest {
         val userId = "userId"
         val fileData = TestDataFactory.createFileData()
         val media = TestDataFactory.createProfileMedia()
-        whenever(userRepository.updateMedia(userId, media)).thenReturn(media)
-        whenever(fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
+
+        every { userRepository.updateMedia(userId, media) } returns media
+        every { fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE) } returns media
+        every { fileHandler.handleOldFile(any()) } just Runs
 
         assertDoesNotThrow {
             userService.updateFile(fileData, userId, FileCategory.PROFILE)
@@ -259,8 +278,9 @@ class UserServiceTest {
         val userId = "userId"
         val fileData = TestDataFactory.createFileData()
         val media = TestDataFactory.createProfileMedia()
-        whenever(userRepository.updateMedia(userId, media)).thenReturn(null)
-        whenever(fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE)).thenReturn(media)
+
+        every { userRepository.updateMedia(userId, media) } returns null
+        every { fileHandler.handleNewFile(userId, fileData, FileCategory.PROFILE) } returns media
 
         val result = assertThrows<NotFoundException> {
             userService.updateFile(fileData, userId, FileCategory.PROFILE)
@@ -273,7 +293,9 @@ class UserServiceTest {
     fun `유저를 삭제함`() {
         val userId = "userId"
         val user = TestDataFactory.createUser(userId)
-        whenever(userRepository.remove(userId)).thenReturn(user)
+
+        every { userRepository.remove(userId) } returns user
+        every { fileHandler.handleOldFiles(any()) } just Runs
 
         assertDoesNotThrow {
             userService.deleteUser(userId)
@@ -283,7 +305,7 @@ class UserServiceTest {
     @Test
     fun `유저를 삭제할때 유저가 없음`() {
         val userId = "userId"
-        whenever(userRepository.remove(userId)).thenReturn(null)
+        every { userRepository.remove(userId) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.deleteUser(userId)
@@ -297,7 +319,8 @@ class UserServiceTest {
         val userId = "userId"
 
         val users = listOf(TestDataFactory.createUser(userId))
-        whenever(userRepository.reads(listOf(userId))).thenReturn(users)
+
+        every { userRepository.reads(listOf(userId)) } returns users
 
         val result = assertDoesNotThrow {
             userService.getUsers(listOf(userId))
@@ -311,7 +334,8 @@ class UserServiceTest {
         val contact = TestDataFactory.createPhone("1234")
         val userId = "userId"
         val user = TestDataFactory.createUser(userId)
-        whenever(userRepository.readByContact(contact)).thenReturn(user)
+
+        every { userRepository.readByContact(contact) } returns user
 
         val result = assertDoesNotThrow {
             userService.getUserByContact(contact)
@@ -323,7 +347,8 @@ class UserServiceTest {
     @Test
     fun `유저의 연락처로 유저를 가져올때 유저가 없음`() {
         val contact = TestDataFactory.createPhone("1234")
-        whenever(userRepository.readByContact(contact)).thenReturn(null)
+
+        every { userRepository.readByContact(contact) } returns null
 
         val result = assertThrows<NotFoundException> {
             userService.getUserByContact(contact)

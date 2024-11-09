@@ -4,11 +4,11 @@ import org.chewing.v1.model.auth.EmailAddress
 import org.chewing.v1.model.auth.PhoneNumber
 import org.chewing.v1.model.user.UserName
 
-class FriendRequest() {
+class FriendRequest {
     data class AddWithEmail(
         val email: String,
         val firstName: String,
-        val lastName: String
+        val lastName: String,
     ) {
         fun toUserName(): UserName = UserName.of(firstName, lastName)
         fun toEmail(): EmailAddress = EmailAddress.of(email)
@@ -17,7 +17,7 @@ class FriendRequest() {
     data class UpdateName(
         val friendId: String,
         val firstName: String,
-        val lastName: String
+        val lastName: String,
     ) {
         fun toFriendName(): UserName = UserName.of(firstName, lastName)
         fun toFriendId(): String = friendId
@@ -25,15 +25,15 @@ class FriendRequest() {
 
     data class UpdateFavorite(
         val friendId: String,
-        val favorite: Boolean
+        val favorite: Boolean,
     )
 
     data class Delete(
-        val friendId: String = ""
+        val friendId: String,
     )
 
     data class Block(
-        val friendId: String = ""
+        val friendId: String,
     )
 
     data class AddWithPhone(
@@ -42,11 +42,7 @@ class FriendRequest() {
         val firstName: String,
         val lastName: String,
     ) {
-        fun toUserName(): UserName {
-            return UserName.of(firstName, lastName)
-        }
-        fun toPhoneNumber(): PhoneNumber {
-            return PhoneNumber.of(countryCode, phoneNumber)
-        }
+        fun toUserName(): UserName = UserName.of(firstName, lastName)
+        fun toPhoneNumber(): PhoneNumber = PhoneNumber.of(countryCode, phoneNumber)
     }
 }

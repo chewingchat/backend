@@ -1,5 +1,11 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.coJustRun
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
@@ -14,16 +20,12 @@ import org.chewing.v1.util.AsyncJobExecutor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.dao.OptimisticLockingFailureException
 
 class FeedCommentServiceTest {
 
-    private val commentRepository: CommentRepository = mock()
-    private val feedUpdater: FeedUpdater = mock()
+    private val commentRepository: CommentRepository = mockk()
+    private val feedUpdater: FeedUpdater = mockk()
     private val commentReader = CommentReader(commentRepository)
     private val commentRemover = CommentRemover(commentRepository)
     private val commentValidator = CommentValidator(commentRepository)
@@ -45,20 +47,22 @@ class FeedCommentServiceTest {
         val target = FeedTarget.UNCOMMENTS
         val comments = listOf(
             TestDataFactory.createCommentInfo(userId, commentId1, feedId),
-            TestDataFactory.createCommentInfo(userId, commentId2, feedId)
+            TestDataFactory.createCommentInfo(userId, commentId2, feedId),
         )
 
-        whenever(commentRepository.readsIn(commentIds)).thenReturn(comments)
-        whenever(commentRepository.remove(commentId1)).thenReturn(feedId)
-        whenever(commentRepository.remove(commentId2)).thenReturn(feedId)
+        every { commentRepository.readsIn(commentIds) } returns comments
+        every { commentRepository.remove(commentId1) } returns feedId
+        every { commentRepository.remove(commentId2) } returns feedId
+
+        coJustRun { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
 
         assertDoesNotThrow {
             feedCommentService.remove(userId, commentIds, target)
         }
 
-        verify(commentRepository, times(1)).remove(commentId1)
-        verify(commentRepository, times(1)).remove(commentId2)
-        verify(feedUpdater, times(2)).update(feedId, FeedTarget.UNCOMMENTS)
+        verify(exactly = 1) { commentRepository.remove(commentId1) }
+        verify(exactly = 1) { commentRepository.remove(commentId2) }
+        verify(exactly = 2) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
     }
 
     @Test
@@ -70,12 +74,12 @@ class FeedCommentServiceTest {
         val commentIds = listOf(commentId1, commentId2)
         val target = FeedTarget.UNCOMMENTS
         val comments = listOf(
-            TestDataFactory.createCommentInfo(userId, commentId1, feedId)
+            TestDataFactory.createCommentInfo(userId, commentId1, feedId),
         )
 
-        whenever(commentRepository.readsIn(commentIds)).thenReturn(comments)
+        every { commentRepository.readsIn(commentIds) } returns comments
 
-        val result = assertThrows<ConflictException>() {
+        val result = assertThrows<ConflictException> {
             feedCommentService.remove(userId, commentIds, target)
         }
 
@@ -92,12 +96,12 @@ class FeedCommentServiceTest {
         val target = FeedTarget.UNCOMMENTS
         val comments = listOf(
             TestDataFactory.createCommentInfo("otherUserId", commentId1, feedId),
-            TestDataFactory.createCommentInfo("otherUserId", commentId2, feedId)
+            TestDataFactory.createCommentInfo("otherUserId", commentId2, feedId),
         )
 
-        whenever(commentRepository.readsIn(commentIds)).thenReturn(comments)
+        every { commentRepository.readsIn(commentIds) } returns comments
 
-        val result = assertThrows<ConflictException>() {
+        val result = assertThrows<ConflictException> {
             feedCommentService.remove(userId, commentIds, target)
         }
 
@@ -114,25 +118,27 @@ class FeedCommentServiceTest {
         val target = FeedTarget.UNCOMMENTS
         val comments = listOf(
             TestDataFactory.createCommentInfo(userId, commentId1, feedId),
-            TestDataFactory.createCommentInfo(userId, commentId2, feedId)
+            TestDataFactory.createCommentInfo(userId, commentId2, feedId),
         )
 
-        whenever(commentRepository.readsIn(commentIds)).thenReturn(comments)
-        whenever(commentRepository.remove(commentId1)).thenReturn(feedId)
-        whenever(commentRepository.remove(commentId2)).thenReturn(feedId)
-        whenever(feedUpdater.update(feedId, FeedTarget.UNCOMMENTS)).thenThrow(OptimisticLockingFailureException(""))
+        every { commentRepository.readsIn(commentIds) } returns comments
+        every { commentRepository.remove(commentId1) } returns feedId
+        every { commentRepository.remove(commentId2) } returns feedId
+        every { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) } throws OptimisticLockingFailureException("")
 
         feedCommentService.remove(userId, commentIds, target)
 
-        verify(commentRepository, times(5)).remove(commentId1)
-        verify(commentRepository, times(5)).remove(commentId2)
-        verify(feedUpdater, times(10)).update(feedId, FeedTarget.UNCOMMENTS)
+        verify(exactly = 5) { commentRepository.remove(commentId1) }
+        verify(exactly = 5) { commentRepository.remove(commentId2) }
+        verify(exactly = 10) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
     }
 
     @Test
     fun `댓글 삭제 여러번에 성공`() {
         // given
         val feedIds = listOf("feedId1", "feedId2")
+
+        every { commentRepository.removes(feedIds) } just Runs
 
         assertDoesNotThrow {
             feedCommentService.removes(feedIds)
@@ -147,11 +153,14 @@ class FeedCommentServiceTest {
         val comment = "comment"
         val target = FeedTarget.COMMENTS
 
+        coJustRun { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
+        coJustRun { commentRepository.append(userId, feedId, comment) }
+
         assertDoesNotThrow {
             feedCommentService.comment(userId, feedId, comment, target)
         }
 
-        verify(feedUpdater, times(1)).update(feedId, FeedTarget.COMMENTS)
+        verify(exactly = 1) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
     }
 
     @Test
@@ -161,14 +170,15 @@ class FeedCommentServiceTest {
         val comment = "comment"
         val target = FeedTarget.COMMENTS
 
-        whenever(feedUpdater.update(feedId, FeedTarget.COMMENTS)).thenThrow(OptimisticLockingFailureException(""))
+        every { feedUpdater.update(feedId, FeedTarget.COMMENTS) }.throws(OptimisticLockingFailureException(""))
 
-        val result = assertThrows<ConflictException>() {
+        val result = assertThrows<ConflictException> {
             feedCommentService.comment(userId, feedId, comment, target)
         }
 
         assert(result.errorCode == ErrorCode.FEED_COMMENT_FAILED)
-        verify(feedUpdater, times(5)).update(feedId, FeedTarget.COMMENTS)
+
+        verify(exactly = 5) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
     }
 
     @Test
@@ -178,7 +188,7 @@ class FeedCommentServiceTest {
         val feedId = "feedId"
         val comment = TestDataFactory.createCommentInfo(userId, commentId, feedId)
 
-        whenever(commentRepository.readsOwned(userId)).thenReturn(listOf(comment))
+        every { commentRepository.readsOwned(userId) } returns listOf(comment)
 
         assert(feedCommentService.getOwnedComment(userId).size == 1)
     }
@@ -190,7 +200,7 @@ class FeedCommentServiceTest {
         val userId = "userId"
         val comment = TestDataFactory.createCommentInfo(userId, commentId, feedId)
 
-        whenever(commentRepository.reads(feedId)).thenReturn(listOf(comment))
+        every { commentRepository.reads(feedId) } returns listOf(comment)
 
         assert(feedCommentService.getComment(feedId).size == 1)
     }

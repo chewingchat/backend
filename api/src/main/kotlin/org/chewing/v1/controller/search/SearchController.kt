@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/search")
 class SearchController(
     private val searchFacade: SearchFacade,
-    private val searchService: SearchService
+    private val searchService: SearchService,
 ) {
     @GetMapping("")
     fun search(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("keyword") keyword: String
+        @RequestParam("keyword") keyword: String,
     ): SuccessResponseEntity<SearchResultResponse> {
         val search = searchFacade.search(userId, keyword)
         // 성공 응답 200 반환
@@ -29,7 +29,7 @@ class SearchController(
     @PostMapping("")
     fun addSearchKeyword(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendSearchRequest
+        @RequestBody request: FriendSearchRequest,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         searchService.createSearchKeyword(userId, request.keyword)
         // 성공 응답 200 반환
@@ -38,7 +38,7 @@ class SearchController(
 
     @GetMapping("/recent")
     fun getSearchHistory(
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<SearchHistoriesResponse> {
         val searchKeywords = searchService.getSearchKeywords(userId)
         // 성공 응답 200 반환

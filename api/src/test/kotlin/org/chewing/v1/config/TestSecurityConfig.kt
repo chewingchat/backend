@@ -1,8 +1,8 @@
 package org.chewing.v1.config
 
+import io.mockk.mockk
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.security.JwtAuthenticationEntryPoint
-import org.mockito.kotlin.mock
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -22,12 +22,8 @@ class TestSecurityConfig {
     }
 
     @Bean
-    fun jwtTokenProvider(): JwtTokenProvider {
-        return mock()
-    }
+    fun jwtTokenProvider(): JwtTokenProvider = mockk()
 
     @Bean
-    fun jwtAuthenticationEntryPoint(): JwtAuthenticationEntryPoint {
-        return mock()
-    }
+    fun jwtAuthenticationEntryPoint(): JwtAuthenticationEntryPoint = mockk()
 }

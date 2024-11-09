@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service
 class ScheduleService(
     private val scheduleAppender: ScheduleAppender,
     private val scheduleRemover: ScheduleRemover,
-    private val scheduleReader: ScheduleReader
+    private val scheduleReader: ScheduleReader,
 ) {
     fun create(userId: String, scheduleTime: ScheduleTime, scheduleContent: ScheduleContent) {
         scheduleAppender.append(scheduleTime, scheduleContent, userId)
     }
 
-    fun remove(scheduleId: String) {
+    fun delete(scheduleId: String) {
         scheduleRemover.remove(scheduleId)
     }
 
@@ -24,7 +24,5 @@ class ScheduleService(
         scheduleRemover.removeUsers(userId)
     }
 
-    fun fetches(userId: String, type: ScheduleType, isOwned: Boolean): List<Schedule> {
-        return scheduleReader.reads(userId, type, isOwned)
-    }
+    fun fetches(userId: String, type: ScheduleType, isOwned: Boolean): List<Schedule> = scheduleReader.reads(userId, type, isOwned)
 }

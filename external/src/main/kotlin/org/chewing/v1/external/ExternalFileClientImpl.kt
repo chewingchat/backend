@@ -7,11 +7,9 @@ import org.springframework.stereotype.Component
 @Component
 class ExternalFileClientImpl : ExternalFileClient {
 
-    override fun uploadFile(file: FileData, media: Media): String {
-        return "1"
+    override fun uploadFile(file: FileData, media: Media) {
     }
 
-    override fun removeFile(media: Media): String {
-        return "1"
+    override fun removeFile(media: Media) {
     }
 }

@@ -1,7 +1,7 @@
 package org.chewing.v1.external
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.IntegrationTest
@@ -23,7 +23,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
 import java.lang.Thread.sleep
 import java.lang.reflect.Type
-import java.nio.charset.StandardCharsets
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -45,13 +44,16 @@ class ExternalChatNotificationClientTest : IntegrationTest() {
     private lateinit var latch: CountDownLatch
     private lateinit var session: StompSession
     private val userId = "testUserId"
-    private val objectMapper = ObjectMapper()
     private lateinit var token: String
     private val chatMessages: ConcurrentLinkedQueue<ChatMessageDto> = ConcurrentLinkedQueue()
 
     private val stompClient: WebSocketStompClient by lazy {
+        val objectMapper = jacksonObjectMapper().registerModule(KotlinModule())
+        val converter = MappingJackson2MessageConverter().apply {
+            this.objectMapper = objectMapper
+        }
         WebSocketStompClient(StandardWebSocketClient()).apply {
-            messageConverter = MappingJackson2MessageConverter()
+            messageConverter = converter
         }
     }
 
@@ -82,12 +84,11 @@ class ExternalChatNotificationClientTest : IntegrationTest() {
         session.subscribe(
             "/user/queue/chat",
             object : StompFrameHandler {
-                override fun getPayloadType(headers: StompHeaders): Type = ByteArray::class.java
+                override fun getPayloadType(headers: StompHeaders): Type = ChatMessageDto::class.java
 
                 override fun handleFrame(headers: StompHeaders, payload: Any?) {
-                    val message = String(payload as ByteArray, StandardCharsets.UTF_8)
-                    val chatMessage = objectMapper.readValue<ChatMessageDto>(message)
-                    chatMessages.add(chatMessage)
+                    val message = (payload as ChatMessageDto)
+                    chatMessages.add(message)
                     latch.countDown()
                 }
             },

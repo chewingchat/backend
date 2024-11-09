@@ -1,5 +1,11 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.coJustRun
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
@@ -10,15 +16,11 @@ import org.chewing.v1.service.feed.FeedLikesService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.dao.OptimisticLockingFailureException
 
 class FeedLikesServiceTest {
-    private val feedLikesRepository: FeedLikesRepository = mock()
-    private val feedUpdater: FeedUpdater = mock()
+    private val feedLikesRepository: FeedLikesRepository = mockk()
+    private val feedUpdater: FeedUpdater = mockk()
 
     private val feedLikeAppender = FeedLikeAppender(feedLikesRepository)
     private val feedLikeChecker = FeedLikeChecker(feedLikesRepository)
@@ -34,7 +36,9 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.LIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(false)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns false
+        coJustRun { feedUpdater.update(feedId, feedTarget) }
+        coJustRun { feedLikesRepository.likes(feedId, userId) }
 
         feedLikeService.like(feedId, userId, feedTarget)
     }
@@ -45,7 +49,7 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.LIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(true)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns true
 
         val exception = assertThrows<ConflictException> {
             feedLikeService.like(feedId, userId, feedTarget)
@@ -60,14 +64,15 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.LIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(false)
-        whenever(feedUpdater.update(feedId, feedTarget)).thenThrow(OptimisticLockingFailureException(""))
+        every { feedLikesRepository.checkLike(feedId, userId) } returns false
+        coJustRun { feedLikesRepository.likes(feedId, userId) }
+        every { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
 
         val result = assertThrows<ConflictException> {
             feedLikeService.like(feedId, userId, feedTarget)
         }
 
-        verify(feedUpdater, times(5)).update(feedId, feedTarget)
+        verify(exactly = 5) { feedUpdater.update(feedId, feedTarget) }
 
         assert(result.errorCode == ErrorCode.FEED_LIKED_FAILED)
     }
@@ -78,7 +83,9 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.UNLIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(true)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns true
+        coJustRun { feedUpdater.update(feedId, feedTarget) }
+        coJustRun { feedLikesRepository.unlikes(feedId, userId) }
 
         feedLikeService.unlike(feedId, userId, feedTarget)
     }
@@ -89,7 +96,7 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.UNLIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(false)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns false
 
         val exception = assertThrows<ConflictException> {
             feedLikeService.unlike(feedId, userId, feedTarget)
@@ -104,14 +111,15 @@ class FeedLikesServiceTest {
         val feedId = "feedId"
         val feedTarget = FeedTarget.UNLIKES
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(true)
-        whenever(feedUpdater.update(feedId, feedTarget)).thenThrow(OptimisticLockingFailureException(""))
+        every { feedLikesRepository.checkLike(feedId, userId) } returns true
+        coJustRun { feedLikesRepository.unlikes(feedId, userId) }
+        every { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
 
         val result = assertThrows<ConflictException> {
             feedLikeService.unlike(feedId, userId, feedTarget)
         }
 
-        verify(feedUpdater, times(5)).update(feedId, feedTarget)
+        verify(exactly = 5) { feedUpdater.update(feedId, feedTarget) }
 
         assert(result.errorCode == ErrorCode.FEED_UNLIKED_FAILED)
     }
@@ -121,7 +129,7 @@ class FeedLikesServiceTest {
         val userId = "userId"
         val feedId = "feedId"
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(true)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns true
 
         val result = feedLikeService.checkLike(feedId, userId)
 
@@ -133,7 +141,7 @@ class FeedLikesServiceTest {
         val userId = "userId"
         val feedId = "feedId"
 
-        whenever(feedLikesRepository.checkLike(feedId, userId)).thenReturn(false)
+        every { feedLikesRepository.checkLike(feedId, userId) } returns false
 
         val result = feedLikeService.checkLike(feedId, userId)
 
@@ -143,7 +151,7 @@ class FeedLikesServiceTest {
     @Test
     fun `모든 좋아요 삭제`() {
         val feedId = "feedId"
-
+        every { feedLikesRepository.unlikeAll(listOf(feedId)) } just Runs
         assertDoesNotThrow {
             feedLikeService.unlikes(listOf(feedId))
         }

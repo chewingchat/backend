@@ -42,7 +42,7 @@ internal class ChatLogRepositoryImpl(
      * 바로 메시지 삭제 할게용
      * 이떄 실제 삭제는 하지않고, type을 delete로 업데이트만 할게용
      */
-    override fun removeMessage(messageId: String) {
+    override fun removeLog(messageId: String) {
         // 메시지 ID로 MongoDB에서 메시지 조회
         chatLogMongoRepository.updateMessageTypeToDelete(messageId)
     }

@@ -1,5 +1,10 @@
 package org.chewing.v1.facade
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.feed.comment.CommentAggregator
 import org.chewing.v1.implementation.feed.feed.FeedAggregator
@@ -12,18 +17,14 @@ import org.chewing.v1.service.friend.FriendShipService
 import org.chewing.v1.service.notification.NotificationService
 import org.chewing.v1.service.user.UserService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 class FeedFacadeTest {
-    private val feedService: FeedService = mock()
-    private val feedCommentService: FeedCommentService = mock()
-    private val feedLikeService: FeedLikesService = mock()
-    private val friendShipService: FriendShipService = mock()
-    private val userService: UserService = mock()
-    private val notificationService: NotificationService = mock()
+    private val feedService: FeedService = mockk()
+    private val feedCommentService: FeedCommentService = mockk()
+    private val feedLikeService: FeedLikesService = mockk()
+    private val friendShipService: FriendShipService = mockk()
+    private val userService: UserService = mockk()
+    private val notificationService: NotificationService = mockk()
     private val feedAggregator: FeedAggregator = FeedAggregator()
     private val commentAggregator: CommentAggregator = CommentAggregator()
 
@@ -35,7 +36,7 @@ class FeedFacadeTest {
         userService,
         feedAggregator,
         commentAggregator,
-        notificationService
+        notificationService,
     )
 
     @Test
@@ -43,11 +44,17 @@ class FeedFacadeTest {
         val userId = "123"
         val feedIds = listOf("1", "2", "3")
 
+        every { feedService.removes(userId, feedIds) } just Runs
+        every { feedCommentService.removes(feedIds) } just Runs
+        every { feedLikeService.unlikes(feedIds) } just Runs
+
         feedFacade.removesFeed(userId, feedIds)
 
-        verify(feedService).removes(userId, feedIds)
-        verify(feedCommentService).removes(feedIds)
-        verify(feedLikeService).unlikes(feedIds)
+        verify {
+            feedService.removes(userId, feedIds)
+            feedCommentService.removes(feedIds)
+            feedLikeService.unlikes(feedIds)
+        }
     }
 
     @Test
@@ -57,11 +64,17 @@ class FeedFacadeTest {
         val comment = "댓글"
         val target = FeedTarget.COMMENTS
 
+        every { feedCommentService.comment(userId, feedId, comment, target) } just Runs
+        every { notificationService.handleCommentNotification(userId, feedId, comment) } just Runs
+
         feedFacade.commentFeed(userId, feedId, comment, target)
 
         // 피드 댓글을 달고, 댓글 알림을 처리해야 함
-        verify(feedCommentService).comment(userId, feedId, comment, target)
-        verify(notificationService).handleCommentNotification(userId, feedId, comment)
+
+        verify {
+            feedCommentService.comment(userId, feedId, comment, target)
+            notificationService.handleCommentNotification(userId, feedId, comment)
+        }
     }
 
     @Test
@@ -69,14 +82,15 @@ class FeedFacadeTest {
         val userId = "123"
         val feedId = "1"
         val feed = TestDataFactory.createFeed(feedId, userId)
+        val favorite = true
 
-        whenever(feedService.getFeed(feedId)).thenReturn(feed)
-        whenever(feedLikeService.checkLike(feedId, userId)).thenReturn(true)
+        every { feedService.getFeed(feedId) } returns feed
+        every { feedLikeService.checkLike(feedId, userId) } returns favorite
 
         val result = feedFacade.getOwnedFeed(userId, feedId)
 
         assert(result.first == feed)
-        assert(result.second)
+        assert(favorite == result.second)
     }
 
     @Test
@@ -88,9 +102,9 @@ class FeedFacadeTest {
         val friendShip = TestDataFactory.createFriendShip(userId, AccessStatus.ACCESS)
         val user = TestDataFactory.createUser(friendShip.friendId)
 
-        whenever(feedCommentService.getComment(feedId)).thenReturn(listOf(comment))
-        whenever(friendShipService.getAccessFriendShipsIn(listOf(userId), userId)).thenReturn(listOf(friendShip))
-        whenever(userService.getUsers(listOf(friendShip.friendId))).thenReturn(listOf(user))
+        every { feedCommentService.getComment(feedId) } returns listOf(comment)
+        every { friendShipService.getAccessFriendShipsIn(listOf(userId), userId) } returns listOf(friendShip)
+        every { userService.getUsers(listOf(friendShip.friendId)) } returns listOf(user)
 
         val result = feedFacade.getFeedComment(userId, feedId)
 
@@ -109,9 +123,9 @@ class FeedFacadeTest {
         val commentId = "1"
         val comment = TestDataFactory.createCommentInfo(userId, commentId, feedId)
 
-        whenever(feedCommentService.getComment(feedId)).thenReturn(listOf(comment))
-        whenever(friendShipService.getAccessFriendShipsIn(listOf(userId), userId)).thenReturn(listOf())
-        whenever(userService.getUsers(any())).thenReturn(listOf())
+        every { feedCommentService.getComment(feedId) } returns listOf(comment)
+        every { friendShipService.getAccessFriendShipsIn(listOf(userId), userId) } returns listOf()
+        every { userService.getUsers(any()) } returns listOf()
 
         val result = feedFacade.getFeedComment(userId, feedId)
 
@@ -129,10 +143,10 @@ class FeedFacadeTest {
         val feed = TestDataFactory.createFeed(feedId, userId)
         val user = TestDataFactory.createUser(friendShip.friendId)
 
-        whenever(feedCommentService.getOwnedComment(userId)).thenReturn(listOf(comment))
-        whenever(feedService.getFeeds(listOf(feedId))).thenReturn(listOf(feed))
-        whenever(friendShipService.getAccessFriendShipsIn(listOf(userId), userId)).thenReturn(listOf(friendShip))
-        whenever(userService.getUsers(listOf(friendShip.friendId))).thenReturn(listOf(user))
+        every { feedCommentService.getOwnedComment(userId) } returns listOf(comment)
+        every { feedService.getFeeds(listOf(feedId)) } returns listOf(feed)
+        every { friendShipService.getAccessFriendShipsIn(listOf(userId), userId) } returns listOf(friendShip)
+        every { userService.getUsers(listOf(friendShip.friendId)) } returns listOf(user)
 
         val result = feedFacade.getUserCommented(userId)
 
@@ -148,14 +162,13 @@ class FeedFacadeTest {
         val commentId = "commentId"
         val feedId = "feedId"
 
-        val friendShip = TestDataFactory.createFriendShip(userId, AccessStatus.ACCESS)
         val comment = TestDataFactory.createCommentInfo(userId, commentId, feedId)
         val feed = TestDataFactory.createFeed(feedId, userId)
 
-        whenever(feedCommentService.getOwnedComment(userId)).thenReturn(listOf(comment))
-        whenever(feedService.getFeeds(listOf(feedId))).thenReturn(listOf(feed))
-        whenever(friendShipService.getAccessFriendShipsIn(listOf(userId), userId)).thenReturn(listOf())
-        whenever(userService.getUsers(listOf(friendShip.friendId))).thenReturn(listOf())
+        every { feedCommentService.getOwnedComment(userId) } returns listOf(comment)
+        every { feedService.getFeeds(listOf(feedId)) } returns listOf(feed)
+        every { friendShipService.getAccessFriendShipsIn(listOf(userId), userId) } returns listOf()
+        every { userService.getUsers(any()) } returns listOf()
 
         val result = feedFacade.getUserCommented(userId)
 
