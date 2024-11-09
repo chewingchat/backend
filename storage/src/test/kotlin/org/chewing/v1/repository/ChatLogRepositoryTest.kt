@@ -167,7 +167,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildNormalMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -178,7 +178,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildLeaveMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -189,7 +189,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildInviteMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -200,7 +200,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildFileMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -213,7 +213,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val parentLog = ChatMessageProvider.buildNormalLog(parentMessageId, chatRoomId)
         val chatMessage = ChatMessageProvider.buildReplyMessage(messageId, chatRoomId, parentLog)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }

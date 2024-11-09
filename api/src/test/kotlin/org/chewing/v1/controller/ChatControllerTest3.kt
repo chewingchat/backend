@@ -1,7 +1,6 @@
 package org.chewing.v1.controller
 
 import org.chewing.v1.config.IntegrationTest
-import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

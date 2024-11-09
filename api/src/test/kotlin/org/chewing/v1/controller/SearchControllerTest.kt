@@ -1,16 +1,18 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.search.SearchController
+import org.chewing.v1.dto.request.friend.FriendSearchRequest
 import org.chewing.v1.facade.SearchFacade
 import org.chewing.v1.model.friend.UserSearch
 import org.chewing.v1.service.search.SearchService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -25,29 +27,28 @@ class SearchControllerTest : RestDocsTest() {
     private lateinit var searchFacade: SearchFacade
     private lateinit var searchService: SearchService
     private lateinit var searchController: SearchController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        searchFacade = mock()
-        searchService = mock()
+        searchFacade = mockk()
+        searchService = mockk()
         searchController = SearchController(searchFacade, searchService)
         mockMvc = mockController(searchController)
-        objectMapper = objectMapper()
     }
 
     @Test
     fun `검색 키워드 추가`() {
         val userId = "userId"
         val keyword = "keyword"
-        val requestBody = mapOf(
-            "keyword" to keyword,
+        val requestBody = FriendSearchRequest(
+            keyword = keyword,
         )
+        every { searchService.createSearchKeyword(userId, keyword) } just Runs
         val result = mockMvc.perform(
             post("/api/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -58,7 +59,8 @@ class SearchControllerTest : RestDocsTest() {
         val time = LocalDateTime.now()
         val userSearch1 = UserSearch.of("keyword1", time)
         val userSearch2 = UserSearch.of("keyword2", time)
-        whenever(searchService.getSearchKeywords(userId)).thenReturn(listOf(userSearch1, userSearch2))
+
+        every { searchService.getSearchKeywords(userId) } returns listOf(userSearch1, userSearch2)
         val result = mockMvc.perform(
             get("/api/search/recent")
                 .requestAttr("userId", userId),
@@ -78,7 +80,7 @@ class SearchControllerTest : RestDocsTest() {
         val search = TestDataFactory.createSearch(listOf(chatRoom), listOf(friendShip))
         val latestMessageTime = chatRoom.latestMessageTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
 
-        whenever(searchFacade.search(userId, keyword)).thenReturn(search)
+        every { searchFacade.search(userId, keyword) } returns search
 
         val result = mockMvc.perform(
             get("/api/search")

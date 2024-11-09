@@ -1,12 +1,15 @@
 package org.chewing.v1.controller
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.controller.chat.ChatController
 import org.chewing.v1.facade.ChatFacade
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
@@ -19,7 +22,7 @@ class ChatControllerTest2 : RestDocsTest() {
 
     @BeforeEach
     fun setUp() {
-        chatFacade = mock()
+        chatFacade = mockk()
         chatController = ChatController(chatFacade)
         mockMvc = mockController(chatController)
     }
@@ -39,6 +42,8 @@ class ChatControllerTest2 : RestDocsTest() {
             MediaType.IMAGE_JPEG_VALUE,
             "Test content".toByteArray(),
         )
+
+        every { chatFacade.processFiles(any(), any(), any()) } just Runs
 
         // When: 파일 업로드 요청을 보냄
         val result = mockMvc.perform(

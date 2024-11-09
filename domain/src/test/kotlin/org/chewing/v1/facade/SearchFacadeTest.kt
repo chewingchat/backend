@@ -1,5 +1,7 @@
 package org.chewing.v1.facade
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.chat.room.ChatRoomAggregator
 import org.chewing.v1.implementation.search.ChatRoomSearchEngine
@@ -10,15 +12,13 @@ import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.friend.FriendShipService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.time.LocalDateTime
 
 class SearchFacadeTest {
 
-    private val friendShipService: FriendShipService = mock()
-    private val roomService: RoomService = mock()
-    private val chatLogService: ChatLogService = mock()
+    private val friendShipService: FriendShipService = mockk()
+    private val roomService: RoomService = mockk()
+    private val chatLogService: ChatLogService = mockk()
     private val chatRoomAggregator: ChatRoomAggregator = ChatRoomAggregator()
     private val friendSearchEngine: FriendSearchEngine = FriendSearchEngine()
     private val chatRoomSearchEngine = ChatRoomSearchEngine()
@@ -29,7 +29,7 @@ class SearchFacadeTest {
         chatLogService,
         chatRoomAggregator,
         friendSearchEngine,
-        chatRoomSearchEngine
+        chatRoomSearchEngine,
     )
 
     @Test
@@ -40,10 +40,9 @@ class SearchFacadeTest {
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
         val keyword = "keyword"
 
-        whenever(friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)).thenReturn(listOf(friendShip))
-
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf())
-        whenever(chatLogService.getLatestChat(listOf())).thenReturn(listOf())
+        every { friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME) } returns listOf(friendShip)
+        every { roomService.getChatRooms(userId) } returns listOf()
+        every { chatLogService.getLatestChat(listOf()) } returns listOf()
 
         val search = searchFacade.search(userId, keyword)
 
@@ -55,24 +54,13 @@ class SearchFacadeTest {
     fun `검색 결과를 가져와야 함 - 성공 키워드에 맞는 이름이 있음 - 채팅방은 존재 하지 않음`() {
         val userId = "userId10"
         val friendId = "friendId10"
-        val chatRoomId = "chatRoomId10"
-        val messageId = "messageId10"
-        val time = LocalDateTime.now()
 
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
         val keyword = friendShip.friendName.firstName
-        val roomInfo = TestDataFactory.createRoom(chatRoomId, userId, userId, false)
-        val chatLog = TestDataFactory.createChatNormalLog(
-            messageId,
-            chatRoomId,
-            userId,
-            TestDataFactory.createChatNumber(chatRoomId),
-            time
-        )
 
-        whenever(friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)).thenReturn(listOf(friendShip))
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(roomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(listOf(chatLog))
+        every { friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME) } returns listOf(friendShip)
+        every { roomService.getChatRooms(userId) } returns listOf()
+        every { chatLogService.getLatestChat(listOf()) } returns listOf()
 
         val search = searchFacade.search(userId, keyword)
 
@@ -100,12 +88,12 @@ class SearchFacadeTest {
             chatRoomId,
             userId,
             TestDataFactory.createChatNumber(chatRoomId),
-            time
+            time,
         )
 
-        whenever(friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)).thenReturn(listOf(friendShip))
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(roomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(listOf(chatLog))
+        every { friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME) } returns listOf(friendShip)
+        every { roomService.getChatRooms(userId) } returns listOf(roomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(chatLog)
 
         val search = searchFacade.search(userId, keyword)
 
@@ -141,12 +129,12 @@ class SearchFacadeTest {
             chatRoomId,
             userId,
             TestDataFactory.createChatNumber(chatRoomId),
-            time
+            time,
         )
 
-        whenever(friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)).thenReturn(listOf(friendShip))
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(roomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(listOf(chatLog))
+        every { friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME) } returns listOf(friendShip)
+        every { roomService.getChatRooms(userId) } returns listOf(roomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(chatLog)
 
         val search = searchFacade.search(userId, keyword)
 

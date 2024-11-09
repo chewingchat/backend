@@ -1,5 +1,9 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.user.status.UserStatusAppender
 import org.chewing.v1.implementation.user.status.UserStatusReader
@@ -9,12 +13,10 @@ import org.chewing.v1.repository.user.UserStatusRepository
 import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class UserStatusServiceTest {
 
-    private val userStatusRepository: UserStatusRepository = mock()
+    private val userStatusRepository: UserStatusRepository = mockk()
 
     private val userStatusReader: UserStatusReader = UserStatusReader(userStatusRepository)
     private val userStatusUpdater: UserStatusUpdater = UserStatusUpdater(userStatusRepository)
@@ -28,6 +30,9 @@ class UserStatusServiceTest {
         val userId = "userId"
         val statusId = "statusId"
 
+        every { userStatusRepository.updateSelectedStatusFalse(userId) } just Runs
+        every { userStatusRepository.updateSelectedStatusTrue(userId, statusId) } just Runs
+
         assertDoesNotThrow {
             userStatusService.selectUserStatus(userId, statusId)
         }
@@ -37,17 +42,10 @@ class UserStatusServiceTest {
     fun `유저의 상태를 선택 해제`() {
         val userId = "userId"
 
-        assertDoesNotThrow {
-            userStatusService.changeSelectUserStatus(userId)
-        }
-    }
-
-    @Test
-    fun `유저의 상태들을 삭제`() {
-        val userId = "userId"
+        every { userStatusRepository.updateSelectedStatusFalse(userId) } just Runs
 
         assertDoesNotThrow {
-            userStatusService.changeSelectUserStatus(userId)
+            userStatusService.deleteSelectUserStatus(userId)
         }
     }
 
@@ -56,6 +54,8 @@ class UserStatusServiceTest {
         val userId = "userId"
         val statusMessage = "statusMessage"
         val emoji = "emoji"
+
+        every { userStatusRepository.append(userId, statusMessage, emoji) } just Runs
 
         assertDoesNotThrow {
             userStatusService.createUserStatus(userId, statusMessage, emoji)
@@ -66,7 +66,8 @@ class UserStatusServiceTest {
     fun `유저의 모든 상태를 가져온다`() {
         val userId = "userId"
         val userStatus = TestDataFactory.createUserStatus(userId)
-        whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
+
+        every { userStatusRepository.reads(userId) } returns listOf(userStatus)
 
         val result = assertDoesNotThrow {
             userStatusService.getUserStatuses(userId)
@@ -80,7 +81,8 @@ class UserStatusServiceTest {
         val userId = "userId"
         val userIds = listOf(userId)
         val userStatus = TestDataFactory.createUserStatus(userId)
-        whenever(userStatusRepository.readSelectedUsers(userIds)).thenReturn(listOf(userStatus))
+
+        every { userStatusRepository.readSelectedUsers(userIds) } returns listOf(userStatus)
 
         val result = assertDoesNotThrow {
             userStatusService.getSelectedStatuses(userIds)
@@ -92,8 +94,8 @@ class UserStatusServiceTest {
     @Test
     fun `유저의 모든 상태 목록을 삭제한다`() {
         val userId = "userId"
-        val userStatus = TestDataFactory.createUserStatus(userId)
-        whenever(userStatusRepository.reads(userId)).thenReturn(listOf(userStatus))
+
+        every { userStatusRepository.removeAllByUserId(userId) } just Runs
 
         assertDoesNotThrow {
             userStatusService.deleteAllUserStatuses(userId)
@@ -103,6 +105,8 @@ class UserStatusServiceTest {
     @Test
     fun `유저의 상태들을 삭제한다`() {
         val statusesId = listOf("statusId")
+        every { userStatusRepository.removes(statusesId) } just Runs
+
         assertDoesNotThrow {
             userStatusService.deleteUserStatuses(statusesId)
         }
@@ -112,7 +116,8 @@ class UserStatusServiceTest {
     fun `선택한 상태를 가져온다 - 선택 없음이 아님`() {
         val userId = "userId"
         val userStatus = TestDataFactory.createUserStatus(userId)
-        whenever(userStatusRepository.readSelected(userId)).thenReturn(userStatus)
+
+        every { userStatusRepository.readSelected(userId) } returns userStatus
 
         val result = assertDoesNotThrow {
             userStatusService.getSelectedStatus(userId)
@@ -125,7 +130,8 @@ class UserStatusServiceTest {
     fun `선택한 상태를 가져온다 - 선택 없음`() {
         val userId = "userId"
         val userStatus = TestDataFactory.createDefaultUserStatus()
-        whenever(userStatusRepository.readSelected(userId)).thenReturn(userStatus)
+
+        every { userStatusRepository.readSelected(userId) } returns userStatus
 
         val result = assertDoesNotThrow {
             userStatusService.getSelectedStatus(userId)

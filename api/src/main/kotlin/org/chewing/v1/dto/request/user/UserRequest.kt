@@ -6,13 +6,13 @@ import org.chewing.v1.model.user.UserName
 class UserRequest {
     data class UpdateName(
         val firstName: String,
-        val lastName: String
+        val lastName: String,
     ) {
         fun toUserName(): UserName = UserName.of(firstName, lastName)
     }
 
     data class UpdateBirth(
-        val birth: String = ""
+        val birth: String,
     ) {
         fun toBirth(): String = birth
     }

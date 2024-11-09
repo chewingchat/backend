@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class ChatRemover(
-    private val chatLogRepository: ChatLogRepository
+    private val chatLogRepository: ChatLogRepository,
 ) {
     fun removeChatLog(messageId: String) {
-        chatLogRepository.removeMessage(messageId)
+        chatLogRepository.removeLog(messageId)
     }
 }

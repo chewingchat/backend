@@ -1,5 +1,10 @@
 package org.chewing.v1.facade
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.chat.room.ChatRoomAggregator
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
@@ -7,15 +12,12 @@ import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.notification.NotificationService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.time.LocalDateTime
 
 class ChatRoomFacadeTest {
-    private val chatLogService: ChatLogService = mock()
-    private val roomService: RoomService = mock()
-    private val notificationService: NotificationService = mock()
+    private val chatLogService: ChatLogService = mockk()
+    private val roomService: RoomService = mockk()
+    private val notificationService: NotificationService = mockk()
     private val chatRoomAggregator = ChatRoomAggregator()
 
     private val chatRoomFacade = ChatRoomFacade(chatLogService, roomService, chatRoomAggregator, notificationService)
@@ -31,19 +33,15 @@ class ChatRoomFacadeTest {
         val chatRoomMemberInfo =
             TestDataFactory.createChatRoomMemberInfo(chatRoomId, userId, chatMessage.number.sequenceNumber, false)
 
-        whenever(chatLogService.leaveMessages(chatRoomIds, userId)).thenReturn(listOf(chatMessage))
-        whenever(roomService.activateChatRoom(chatRoomId, userId, chatMessage.number)).thenReturn(chatRoomInfo)
-        whenever(
-            roomService.getChatRoomFriends(
-                chatRoomId,
-                userId,
-                chatRoomInfo
-            )
-        ).thenReturn(listOf(chatRoomMemberInfo))
+        every { roomService.deleteGroupChatRooms(any(), any()) } just Runs
+        every { chatLogService.leaveMessages(any(), any()) } returns listOf(chatMessage)
+        every { roomService.activateChatRoom(any(), any(), any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatRoomFacade.leavesChatRoom(chatRoomIds, userId)
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(userId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(userId), userId) }
     }
 
     @Test
@@ -53,13 +51,14 @@ class ChatRoomFacadeTest {
         val newRoomId = "newRoomId"
         val chatMessage = TestDataFactory.createInviteMessage(newRoomId, userId)
 
-        whenever(roomService.createGroupChatRoom(userId, friendIds)).thenReturn(newRoomId)
-        whenever(chatLogService.inviteMessages(friendIds, newRoomId, userId)).thenReturn(chatMessage)
+        every { roomService.createGroupChatRoom(any(), any()) } returns newRoomId
+        every { chatLogService.inviteMessages(any(), any(), any()) } returns chatMessage
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         val result = chatRoomFacade.createGroupChatRoom(userId, friendIds)
 
         assert(result == newRoomId)
-        verify(notificationService).handleMessagesNotification(chatMessage, friendIds, userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, friendIds, userId) }
     }
 
     @Test
@@ -76,12 +75,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatNormalLog(messageId, chatRoomId, userId, chatNumber, time)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -102,12 +97,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatFileLog(messageId, chatRoomId, userId, chatNumber)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -129,12 +120,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatInviteLog(messageId, chatRoomId, userId, chatNumber)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -156,12 +143,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatBombLog(messageId, chatRoomId, userId, chatNumber)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -183,12 +166,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatReplyLog(messageId, chatRoomId, userId, chatNumber)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -210,12 +189,8 @@ class ChatRoomFacadeTest {
         val chatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val latestChatLog = TestDataFactory.createChatLeaveLog(messageId, chatRoomId, userId, chatNumber)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId)) } returns listOf(latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -246,13 +221,8 @@ class ChatRoomFacadeTest {
         val latestChatLog2 =
             TestDataFactory.createChatNormalLog(messageId2, chatRoomId2, userId, chatNumber2, time2)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo2, chatRoomInfo))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId))).thenReturn(
-            listOf(
-                latestChatLog2,
-                latestChatLog
-            )
-        )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo2, chatRoomInfo)
+        every { chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId)) } returns listOf(latestChatLog2, latestChatLog)
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
 
@@ -292,13 +262,11 @@ class ChatRoomFacadeTest {
         val chatNumber3 = TestDataFactory.createChatNumber(chatRoomId3)
         val latestChatLog3 = TestDataFactory.createChatNormalLog(messageId3, chatRoomId3, userId, chatNumber3, time2)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo2, chatRoomInfo, chatRoomInfo3))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId, chatRoomId3))).thenReturn(
-            listOf(
-                latestChatLog2,
-                latestChatLog,
-                latestChatLog3
-            )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo2, chatRoomInfo, chatRoomInfo3)
+        every { chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId, chatRoomId3)) } returns listOf(
+            latestChatLog2,
+            latestChatLog,
+            latestChatLog3,
         )
 
         val result = chatRoomFacade.getChatRooms(userId, sort)
@@ -343,13 +311,11 @@ class ChatRoomFacadeTest {
         val chatNumber3 = TestDataFactory.create100SeqChatNumber(chatRoomId3)
         val latestChatLog3 = TestDataFactory.createChatNormalLog(messageId3, chatRoomId3, userId, chatNumber3, time2)
 
-        whenever(roomService.getChatRooms(userId)).thenReturn(listOf(chatRoomInfo2, chatRoomInfo, chatRoomInfo3))
-        whenever(chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId, chatRoomId3))).thenReturn(
-            listOf(
-                latestChatLog2,
-                latestChatLog,
-                latestChatLog3
-            )
+        every { roomService.getChatRooms(userId) } returns listOf(chatRoomInfo2, chatRoomInfo, chatRoomInfo3)
+        every { chatLogService.getLatestChat(listOf(chatRoomId2, chatRoomId, chatRoomId3)) } returns listOf(
+            latestChatLog2,
+            latestChatLog,
+            latestChatLog3,
         )
 
         val result = chatRoomFacade.getChatRooms(userId, sort)

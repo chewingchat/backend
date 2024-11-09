@@ -1,16 +1,17 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory.createPrivateSchedule
 import org.chewing.v1.TestDataFactory.createPublicSchedule
 import org.chewing.v1.controller.user.UserScheduleController
+import org.chewing.v1.dto.request.user.ScheduleRequest
 import org.chewing.v1.service.user.ScheduleService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -22,14 +23,12 @@ class UserScheduleControllerTest : RestDocsTest() {
 
     private lateinit var scheduleService: ScheduleService
     private lateinit var userScheduleController: UserScheduleController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        scheduleService = mock()
+        scheduleService = mockk()
         userScheduleController = UserScheduleController(scheduleService)
         mockMvc = mockController(userScheduleController)
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -43,7 +42,7 @@ class UserScheduleControllerTest : RestDocsTest() {
         val notificationTime = schedules[0].time.notificationAt.format(formatter)
 
         // When
-        whenever(scheduleService.fetches(any(), any(), any())).thenReturn(schedules)
+        every { scheduleService.fetches(any(), any(), any()) } returns schedules
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +67,9 @@ class UserScheduleControllerTest : RestDocsTest() {
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.schedules[0].location").value(schedules[0].content.location),
             )
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private),
+            )
     }
 
     @Test
@@ -82,7 +83,7 @@ class UserScheduleControllerTest : RestDocsTest() {
         val notificationTime = schedules[0].time.notificationAt.format(formatter)
 
         // When
-        whenever(scheduleService.fetches(any(), any(), any())).thenReturn(schedules)
+        every { scheduleService.fetches(any(), any(), any()) } returns schedules
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/schedule/friend/testFriendId")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,18 +108,23 @@ class UserScheduleControllerTest : RestDocsTest() {
             .andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.schedules[0].location").value(schedules[0].content.location),
             )
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.schedules[0].private").value(schedules[0].content.private),
+            )
     }
 
     @Test
     fun deleteSchedule() {
-        val scheduleId = "testScheduleId"
+        val requestBody = ScheduleRequest.Delete(
+            scheduleId = "testScheduleId",
+        )
 
+        every { scheduleService.delete(any()) } just Runs
         // When
         mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mapOf("scheduleId" to scheduleId)))
+                .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
             .andExpect(MockMvcResultMatchers.status().isCreated)
@@ -126,21 +132,24 @@ class UserScheduleControllerTest : RestDocsTest() {
     }
 
     @Test
-    fun addSchedule() {
-        val requestBody = mapOf(
-            "title" to "testTitle",
-            "memo" to "testMemo",
-            "startTime" to "2021-01-01 00:00:00",
-            "endTime" to "2021-01-01 00:00:00",
-            "notificationTime" to "2021-01-01 00:00:00",
-            "location" to "testLocation",
+    fun createSchedule() {
+        val requestBody = ScheduleRequest.Add(
+            title = "testTitle",
+            startTime = "2021-01-01 00:00:00",
+            endTime = "2021-01-01 00:00:00",
+            notificationTime = "2021-01-01 00:00:00",
+            memo = "testMemo",
+            location = "testLocation",
+            private = false,
         )
+
+        every { scheduleService.create(any(), any(), any()) } just Runs
 
         // When
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"), // userId 전달
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

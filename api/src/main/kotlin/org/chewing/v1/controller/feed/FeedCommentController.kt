@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/feed")
 class FeedCommentController(
     private val feedCommentService: FeedCommentService,
-    private val feedFacade: FeedFacade
+    private val feedFacade: FeedFacade,
 ) {
     @PostMapping("/comment")
     fun addFeedComment(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: CommentRequest.AddCommentRequest
+        @RequestBody request: CommentRequest.Add,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         feedFacade.commentFeed(
             userId,
             request.toFeedId(),
             request.toComment(),
-            FeedTarget.COMMENTS
+            FeedTarget.COMMENTS,
         )
         // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()
@@ -36,12 +36,12 @@ class FeedCommentController(
     @DeleteMapping("/comment")
     fun deleteFeedComment(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: List<CommentRequest.DeleteCommentRequest>
+        @RequestBody request: List<CommentRequest.Delete>,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedCommentService.remove(
             userId,
             request.map { it.toCommentId() },
-            FeedTarget.UNCOMMENTS
+            FeedTarget.UNCOMMENTS,
         )
         // 삭제 완료 응답 200 반환
         return ResponseHelper.successOnly()
@@ -50,7 +50,7 @@ class FeedCommentController(
     @GetMapping("/{feedId}/comment")
     fun getFeedComments(
         @RequestAttribute("userId") userId: String,
-        @PathVariable("feedId") feedId: String
+        @PathVariable("feedId") feedId: String,
     ): SuccessResponseEntity<FeedFriendCommentedResponse> {
         val friendComment = feedFacade.getFeedComment(userId, feedId)
         // 성공 응답 200 반환
