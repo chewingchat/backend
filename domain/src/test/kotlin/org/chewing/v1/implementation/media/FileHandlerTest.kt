@@ -28,7 +28,7 @@ class FileHandlerTest {
 
     private val fileAppender = FileAppender(externalFileClient)
     private val fileRemover = FileRemover(externalFileClient)
-    private val fileGenerator = FileGenerator()
+    private val fileGenerator = FileGenerator(mediaUrl = "testUrl")
     private val fileValidator = FileValidator()
 
     private val fileHandler = FileHandler(fileAppender, fileRemover, fileGenerator, fileValidator, asyncJobExecutor)
