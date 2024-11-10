@@ -19,44 +19,30 @@ class GlobalExceptionHandler {
     private val logger = KotlinLogging.logger {}
 
     private fun handleException(e: Exception, errorCode: ErrorCode, status: HttpStatus): ErrorResponseEntity {
-        logger.info { "${errorCode.code}: ${e.message}" }
+        logger.info { "ErrorCode: ${errorCode.code}, Message: ${errorCode.message}, Class: ${e.stackTrace.first().className}" }
         return ResponseHelper.error(status, ErrorResponse.from(errorCode))
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
-    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ErrorResponseEntity {
-        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
-    }
+    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ErrorResponseEntity = handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-    fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ErrorResponseEntity {
-        return handleException(e, ErrorCode.PATH_WRONG, HttpStatus.BAD_REQUEST)
-    }
+    fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ErrorResponseEntity = handleException(e, ErrorCode.PATH_WRONG, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponseEntity {
-        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
-    }
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponseEntity = handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(AuthorizationException::class)
-    protected fun handleAuthorizationException(e: AuthorizationException): ErrorResponseEntity {
-        return handleException(e, e.errorCode, HttpStatus.UNAUTHORIZED)
-    }
+    protected fun handleAuthorizationException(e: AuthorizationException): ErrorResponseEntity = handleException(e, e.errorCode, HttpStatus.UNAUTHORIZED)
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    protected fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ErrorResponseEntity {
-        return handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
-    }
+    protected fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ErrorResponseEntity = handleException(e, ErrorCode.VARIABLE_WRONG, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(NotFoundException::class)
-    protected fun handleNotFoundException(e: NotFoundException): ErrorResponseEntity {
-        return handleException(e, e.errorCode, HttpStatus.NOT_FOUND)
-    }
+    protected fun handleNotFoundException(e: NotFoundException): ErrorResponseEntity = handleException(e, e.errorCode, HttpStatus.NOT_FOUND)
 
     @ExceptionHandler(ConflictException::class)
-    protected fun handleConflictException(e: ConflictException): ErrorResponseEntity {
-        return handleException(e, e.errorCode, HttpStatus.CONFLICT)
-    }
+    protected fun handleConflictException(e: ConflictException): ErrorResponseEntity = handleException(e, e.errorCode, HttpStatus.CONFLICT)
 
     // Optional: 처리되지 않은 예외를 위한 핸들러 추가
     @ExceptionHandler(Exception::class)

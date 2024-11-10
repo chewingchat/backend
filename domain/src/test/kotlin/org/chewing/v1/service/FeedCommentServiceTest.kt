@@ -1,7 +1,9 @@
 package org.chewing.v1.service
 
 import io.mockk.Runs
+import io.mockk.coEvery
 import io.mockk.coJustRun
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -11,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.implementation.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.comment.*
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.model.feed.FeedTarget
@@ -33,7 +36,8 @@ class FeedCommentServiceTest {
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private val commentProcessor = CommentProcessor(commentRemover, commentAppender, feedUpdater)
     private val asyncJobExecutor = AsyncJobExecutor(ioScope)
-    private val commentHandler = CommentHandler(commentProcessor, asyncJobExecutor)
+    private val optimisticLockHandler: OptimisticLockHandler = OptimisticLockHandler()
+    private val commentHandler = CommentHandler(commentProcessor, asyncJobExecutor, optimisticLockHandler)
     private val feedCommentService = FeedCommentService(commentReader, commentHandler, commentRemover, commentValidator)
 
     @Test
@@ -62,7 +66,7 @@ class FeedCommentServiceTest {
 
         verify(exactly = 1) { commentRepository.remove(commentId1) }
         verify(exactly = 1) { commentRepository.remove(commentId2) }
-        verify(exactly = 2) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
+        coVerify(exactly = 2) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
     }
 
     @Test
@@ -124,13 +128,13 @@ class FeedCommentServiceTest {
         every { commentRepository.readsIn(commentIds) } returns comments
         every { commentRepository.remove(commentId1) } returns feedId
         every { commentRepository.remove(commentId2) } returns feedId
-        every { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) } throws OptimisticLockingFailureException("")
+        coEvery { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) } throws OptimisticLockingFailureException("")
 
         feedCommentService.remove(userId, commentIds, target)
 
         verify(exactly = 5) { commentRepository.remove(commentId1) }
         verify(exactly = 5) { commentRepository.remove(commentId2) }
-        verify(exactly = 10) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
+        coVerify(exactly = 10) { feedUpdater.update(feedId, FeedTarget.UNCOMMENTS) }
     }
 
     @Test
@@ -160,7 +164,7 @@ class FeedCommentServiceTest {
             feedCommentService.comment(userId, feedId, comment, target)
         }
 
-        verify(exactly = 1) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
+        coVerify(exactly = 1) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
     }
 
     @Test
@@ -170,7 +174,7 @@ class FeedCommentServiceTest {
         val comment = "comment"
         val target = FeedTarget.COMMENTS
 
-        every { feedUpdater.update(feedId, FeedTarget.COMMENTS) }.throws(OptimisticLockingFailureException(""))
+        coEvery { feedUpdater.update(feedId, FeedTarget.COMMENTS) }.throws(OptimisticLockingFailureException(""))
 
         val result = assertThrows<ConflictException> {
             feedCommentService.comment(userId, feedId, comment, target)
@@ -178,7 +182,7 @@ class FeedCommentServiceTest {
 
         assert(result.errorCode == ErrorCode.FEED_COMMENT_FAILED)
 
-        verify(exactly = 5) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
+        coVerify(exactly = 5) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
     }
 
     @Test

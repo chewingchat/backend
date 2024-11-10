@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class FeedUpdater(
     private val feedRepository: FeedRepository,
 ) {
-    fun update(feedId: String, target: FeedTarget) {
+    suspend fun update(feedId: String, target: FeedTarget) {
         feedRepository.update(feedId, target) ?: throw NotFoundException(ErrorCode.FEED_NOT_FOUND)
     }
 }

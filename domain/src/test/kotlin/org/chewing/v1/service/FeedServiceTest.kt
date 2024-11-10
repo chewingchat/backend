@@ -1,16 +1,18 @@
 package org.chewing.v1.service
 
 import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.implementation.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.feed.*
 import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.model.feed.FeedStatus
@@ -38,7 +40,8 @@ class FeedServiceTest {
     private val feedUpdater: FeedUpdater = FeedUpdater(feedRepository)
     private val feedEnricher: FeedEnricher = FeedEnricher()
     private val feedRemover: FeedRemover = FeedRemover(feedRepository, feedDetailRepository)
-    private val feedHandler: FeedHandler = FeedHandler(feedUpdater, asyncJobExecutor)
+    private val optimisticLockHandler: OptimisticLockHandler = OptimisticLockHandler()
+    private val feedHandler: FeedHandler = FeedHandler(feedUpdater, asyncJobExecutor, optimisticLockHandler)
     private val feedService: FeedService =
         FeedService(feedReader, feedHandler, feedAppender, feedValidator, fileHandler, feedEnricher, feedRemover)
 
@@ -181,8 +184,8 @@ class FeedServiceTest {
 
         every { feedRepository.reads(listOf(feedId1)) } returns listOf(feed1)
         every { feedRepository.reads(listOf(feedId2)) } returns listOf(feed2)
-        every { feedRepository.update(feedId1, FeedTarget.UNHIDE) } returns feedId1
-        every { feedRepository.update(feedId2, FeedTarget.HIDE) } returns feedId2
+        coEvery { feedRepository.update(feedId1, FeedTarget.UNHIDE) } returns feedId1
+        coEvery { feedRepository.update(feedId2, FeedTarget.HIDE) } returns feedId2
 
         assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId1), FeedTarget.UNHIDE) }
         assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId2), FeedTarget.HIDE) }
@@ -214,13 +217,13 @@ class FeedServiceTest {
         val feed2 = TestDataFactory.createFeedInfo(feedId2, userId)
 
         every { feedRepository.reads(listOf(feedId1, feedId2)) } returns listOf(feed1, feed2)
-        every { feedRepository.update(feedId1, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
-        every { feedRepository.update(feedId2, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
+        coEvery { feedRepository.update(feedId1, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
+        coEvery { feedRepository.update(feedId2, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
 
         feedService.changeHide(userId, listOf(feedId1, feedId2), FeedTarget.HIDE)
 
-        verify(exactly = 5) { feedRepository.update(feedId1, FeedTarget.HIDE) }
-        verify(exactly = 5) { feedRepository.update(feedId2, FeedTarget.HIDE) }
+        coVerify(exactly = 5) { feedRepository.update(feedId1, FeedTarget.HIDE) }
+        coVerify(exactly = 5) { feedRepository.update(feedId2, FeedTarget.HIDE) }
     }
 
     @Test

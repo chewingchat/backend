@@ -25,11 +25,7 @@ class FeedCommentService(
         commentHandler.handleComment(userId, feedId, comment, target)
     }
 
-    fun getOwnedComment(userId: String): List<CommentInfo> {
-        return commentReader.readsOwned(userId)
-    }
+    fun getOwnedComment(userId: String): List<CommentInfo> = commentReader.readsOwned(userId)
 
-    fun getComment(feedId: String): List<CommentInfo> {
-        return commentReader.reads(feedId)
-    }
+    fun getComment(feedId: String): List<CommentInfo> = commentReader.reads(feedId)
 }

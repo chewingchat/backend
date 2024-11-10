@@ -13,5 +13,5 @@ interface FeedRepository {
     fun removes(feedIds: List<String>)
     fun removesOwned(userId: String)
     fun append(userId: String, topic: String): String
-    fun update(feedId: String, target: FeedTarget): String?
+    suspend fun update(feedId: String, target: FeedTarget): String?
 }
