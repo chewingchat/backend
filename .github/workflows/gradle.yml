@@ -71,6 +71,17 @@ jobs:
           port: 8080  # SSH가 8080 포트에서 실행 중인 경우  /  8080번 방화벽 뚫어서 업뎃
           script: |
             cd /root  # docker-compose.yml 파일이 위치한 경로
+            export STORAGE_DATABASE_CORE_DB_NAME=${{ secrets.STORAGE_DATABASE_CORE_DB_NAME }}
+            export STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}
+            export STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }}
+            export STORAGE_DATABASE_MONGO_DB_NAME=${{ secrets.STORAGE_DATABASE_MONGO_DB_NAME }}
+            export STORAGE_DATABASE_MONGO_DB_USER=${{ secrets.STORAGE_DATABASE_MONGO_DB_USER }}
+            export STORAGE_DATABASE_MONGO_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_MONGO_DB_PASSWORD }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            export OPENAI_API_MODEL=${{ secrets.OPENAI_API_MODEL }}
+            export OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}
+            export FCM_API_URL=${{ secrets.FCM_API_URL }}
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin # 도커계정정보 등록
             docker compose pull  # 최신 이미지를 가져옴
             docker compose down  # 기존 서비스 종료
