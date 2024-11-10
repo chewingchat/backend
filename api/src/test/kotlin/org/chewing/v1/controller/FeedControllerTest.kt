@@ -1,17 +1,19 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory.createFeed
 import org.chewing.v1.controller.feed.FeedController
+import org.chewing.v1.dto.request.feed.FeedRequest
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.service.feed.FeedService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
@@ -24,15 +26,13 @@ class FeedControllerTest : RestDocsTest() {
     private lateinit var feedService: FeedService
     private lateinit var feedFacade: FeedFacade
     private lateinit var feedController: FeedController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        feedFacade = mock()
-        feedService = mock()
+        feedFacade = mockk()
+        feedService = mockk()
         feedController = FeedController(feedService, feedFacade)
         mockMvc = mockController(feedController)
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -41,8 +41,7 @@ class FeedControllerTest : RestDocsTest() {
         val testFriendId = "testFriendId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getOwnedFeeds(testFriendId, FeedStatus.NOT_HIDDEN))
-            .thenReturn(listOf(feed))
+        every { feedService.getOwnedFeeds(testFriendId, FeedStatus.NOT_HIDDEN) } returns listOf(feed)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/friend/$testFriendId/feed/list")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -66,8 +65,7 @@ class FeedControllerTest : RestDocsTest() {
     fun `getOwnedFeeds`() {
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN))
-            .thenReturn(listOf(feed))
+        every { feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN) } returns listOf(feed)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/my/feed/list")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,8 +91,7 @@ class FeedControllerTest : RestDocsTest() {
         val userId = "testUserId"
         val feed = createFeed()
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-        whenever(feedFacade.getOwnedFeed(userId, testFeedId))
-            .thenReturn(Pair(feed, true))
+        every { feedFacade.getOwnedFeed(userId, testFeedId) } returns Pair(feed, true)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/friend/feed/$testFeedId/detail")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -126,8 +123,7 @@ class FeedControllerTest : RestDocsTest() {
         val testFeedId = "testFeedId"
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedFacade.getOwnedFeed(userId, testFeedId))
-            .thenReturn(Pair(feed, true))
+        every { feedFacade.getOwnedFeed(userId, testFeedId) } returns Pair(feed, true)
         val uploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/my/feed/$testFeedId/detail")
@@ -161,8 +157,7 @@ class FeedControllerTest : RestDocsTest() {
     fun `getHiddenFeeds`() {
         val userId = "testUserId"
         val feed = createFeed()
-        whenever(feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN))
-            .thenReturn(listOf(feed))
+        every { feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN) } returns listOf(feed)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/feed/hide")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -186,18 +181,19 @@ class FeedControllerTest : RestDocsTest() {
     fun `deleteFeeds`() {
         val userId = "testUserId"
         val requestBody = listOf(
-            mapOf(
-                "feedId" to "testFeedId",
+            FeedRequest.Delete(
+                feedId = "testFeedId",
             ),
-            mapOf(
-                "feedId" to "testFeedId2",
+            FeedRequest.Delete(
+                feedId = "testFeedId2",
             ),
         )
+        every { feedFacade.removesFeed(userId, requestBody.map { it.toFeedId() }) } just Runs
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/feed")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }
@@ -218,6 +214,8 @@ class FeedControllerTest : RestDocsTest() {
             "Test content".toByteArray(),
         )
 
+        every { feedService.make(any(), any(), any(), any()) } just Runs
+
         // When: 파일 업로드 요청을 보냄
         val result = mockMvc.perform(
             MockMvcRequestBuilders.multipart("/api/feed")
@@ -236,18 +234,20 @@ class FeedControllerTest : RestDocsTest() {
     fun `hideFeeds`() {
         val userId = "testUserId"
         val requestBody = listOf(
-            mapOf(
-                "feedId" to "testFeedId",
+            FeedRequest.Hide(
+                feedId = "testFeedId",
             ),
-            mapOf(
-                "feedId" to "testFeedId2",
+            FeedRequest.Hide(
+                feedId = "testFeedId2",
             ),
         )
+        every { feedService.changeHide(any(), any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/feed/hide")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }
@@ -257,18 +257,20 @@ class FeedControllerTest : RestDocsTest() {
     fun `unHideFeeds`() {
         val userId = "testUserId"
         val requestBody = listOf(
-            mapOf(
-                "feedId" to "testFeedId",
+            FeedRequest.Hide(
+                feedId = "testFeedId",
             ),
-            mapOf(
-                "feedId" to "testFeedId2",
+            FeedRequest.Hide(
+                feedId = "testFeedId2",
             ),
         )
+        every { feedService.changeHide(any(), any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/feed/hide")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }

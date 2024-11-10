@@ -1,5 +1,9 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.user.schedule.ScheduleAppender
 import org.chewing.v1.implementation.user.schedule.ScheduleReader
@@ -9,11 +13,9 @@ import org.chewing.v1.repository.user.ScheduleRepository
 import org.chewing.v1.service.user.ScheduleService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class ScheduleServiceTest {
-    private val scheduleRepository: ScheduleRepository = mock()
+    private val scheduleRepository: ScheduleRepository = mockk()
 
     private val scheduleAppender = ScheduleAppender(scheduleRepository)
     private val scheduleReader = ScheduleReader(scheduleRepository)
@@ -26,6 +28,8 @@ class ScheduleServiceTest {
         val scheduleTime = TestDataFactory.createScheduledTime()
         val scheduleContent = TestDataFactory.createScheduleContent()
 
+        every { scheduleRepository.append(scheduleTime, scheduleContent, userId) } just Runs
+
         assertDoesNotThrow {
             scheduleService.create(userId, scheduleTime, scheduleContent)
         }
@@ -35,14 +39,18 @@ class ScheduleServiceTest {
     fun `스케줄 삭제`() {
         val scheduleId = "scheduleId"
 
+        every { scheduleRepository.remove(scheduleId) } just Runs
+
         assertDoesNotThrow {
-            scheduleService.remove(scheduleId)
+            scheduleService.delete(scheduleId)
         }
     }
 
     @Test
     fun `유저 스케줄 삭제`() {
         val userId = "userId"
+
+        every { scheduleRepository.removeUsers(userId) } just Runs
 
         assertDoesNotThrow {
             scheduleService.deleteUsers(userId)
@@ -55,7 +63,7 @@ class ScheduleServiceTest {
         val type = ScheduleType.of(2021, 1)
         val schedule = TestDataFactory.createSchedule()
 
-        whenever(scheduleRepository.reads(userId, type, true)).thenReturn(listOf(schedule))
+        every { scheduleRepository.reads(userId, type, true) }.returns(listOf(schedule))
 
         val result = assertDoesNotThrow {
             scheduleService.fetches(userId, type, true)

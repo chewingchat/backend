@@ -1,19 +1,17 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory.createFriend
 import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.controller.main.MainController
 import org.chewing.v1.facade.MainFacade
-import org.chewing.v1.model.friend.FriendSortCriteria
 import org.chewing.v1.util.StringToFriendSortCriteriaConverter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -24,17 +22,15 @@ class MainControllerTest : RestDocsTest() {
 
     private lateinit var mainFacade: MainFacade
     private lateinit var mainController: MainController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        mainFacade = mock()
+        mainFacade = mockk()
         mainController = MainController(mainFacade)
         mockMvc = mockControllerWithCustomConverter(
             mainController,
             StringToFriendSortCriteriaConverter(),
         )
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -43,7 +39,7 @@ class MainControllerTest : RestDocsTest() {
         val user = createUser()
         val friends = listOf(createFriend())
         val status = createUserStatus()
-        whenever(mainFacade.getMainPage("testUserId", FriendSortCriteria.NAME)).thenReturn(
+        every { mainFacade.getMainPage(any(), any()) }.returns(
             Triple(
                 user,
                 status,

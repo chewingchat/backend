@@ -15,31 +15,6 @@ plugins {
 
 java.sourceCompatibility = JavaVersion.valueOf("VERSION_${property("javaVersion")}")
 
-tasks {
-    testCodeCoverageReport {
-
-        dependsOn(test)
-
-        reports {
-            xml.required.set(true)
-            html.required.set(true)
-        }
-
-        classDirectories.setFrom(
-            files(
-                classDirectories.files.map {
-                    fileTree(it) {
-                        exclude(
-                            "**/ChewingApplicationKt.class",
-                            "**/ChewingApplicationKt\$*.class",
-                        )
-                    }
-                },
-            ),
-        )
-    }
-}
-
 dependencies {
     jacocoAggregation(project(":common"))
     jacocoAggregation(project(":api"))
@@ -79,13 +54,13 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("io.github.microutils:kotlin-logging:3.0.5")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
         kapt("org.springframework.boot:spring-boot-configuration-processor")
         // 추가
         implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
         implementation("io.jsonwebtoken:jjwt-impl:0.11.5") // for Jackson JSON Processor
         //
-        testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
 
@@ -94,6 +69,7 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         // 코루틴
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
     }
 
     tasks {
@@ -122,6 +98,30 @@ subprojects {
 }
 
 tasks {
+
+    test {
+        finalizedBy(testCodeCoverageReport)
+    }
+
+    testCodeCoverageReport {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+        classDirectories.setFrom(
+            files(
+                classDirectories.files.map {
+                    fileTree(it) {
+                        exclude(
+                            "**/ChewingApplicationKt.class",
+                            "**/ChewingApplicationKt\$*.class",
+                        )
+                    }
+                },
+            ),
+        )
+    }
+
     bootJar {
         enabled = false
     }

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class ExternalPushNotificationClientImpl(
-    private val fcmClient: FcmClient
+    private val fcmClient: FcmClient,
 ) : ExternalPushNotificationClient {
     private val logger = KotlinLogging.logger {}
 
     @Throws(JsonParseException::class, JsonProcessingException::class)
-    override fun sendFcmNotification(notification: Notification) {
+    override suspend fun sendFcmNotification(notification: Notification) {
         try {
             fcmClient.sendMessage(FcmMessageDto.from(notification))
         } catch (e: Exception) {

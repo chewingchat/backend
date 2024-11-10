@@ -7,11 +7,9 @@ import java.time.format.DateTimeFormatter
 
 class ScheduleRequest {
     data class Delete(
-        val scheduleId: String = ""
+        val scheduleId: String,
     ) {
-        fun toScheduleId(): String {
-            return scheduleId
-        }
+        fun toScheduleId(): String = scheduleId
     }
 
     data class Add(
@@ -21,11 +19,9 @@ class ScheduleRequest {
         val notificationTime: String,
         val memo: String,
         val location: String,
-        val private: Boolean
+        val private: Boolean,
     ) {
-        fun toScheduleContent(): ScheduleContent {
-            return ScheduleContent.of(title, memo, location, private)
-        }
+        fun toScheduleContent(): ScheduleContent = ScheduleContent.of(title, memo, location, private)
 
         fun toScheduleTime(): ScheduleTime {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")

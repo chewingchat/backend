@@ -1,10 +1,18 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.error.NotFoundException
+import org.chewing.v1.implementation.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.feed.*
 import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.model.feed.FeedStatus
@@ -17,16 +25,12 @@ import org.chewing.v1.util.AsyncJobExecutor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.dao.OptimisticLockingFailureException
 
 class FeedServiceTest {
-    private val feedRepository: FeedRepository = mock()
-    private val feedDetailRepository: FeedDetailRepository = mock()
-    private val fileHandler: FileHandler = mock()
+    private val feedRepository: FeedRepository = mockk()
+    private val feedDetailRepository: FeedDetailRepository = mockk()
+    private val fileHandler: FileHandler = mockk()
 
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private val asyncJobExecutor = AsyncJobExecutor(ioScope)
@@ -36,7 +40,8 @@ class FeedServiceTest {
     private val feedUpdater: FeedUpdater = FeedUpdater(feedRepository)
     private val feedEnricher: FeedEnricher = FeedEnricher()
     private val feedRemover: FeedRemover = FeedRemover(feedRepository, feedDetailRepository)
-    private val feedHandler: FeedHandler = FeedHandler(feedUpdater, asyncJobExecutor)
+    private val optimisticLockHandler: OptimisticLockHandler = OptimisticLockHandler()
+    private val feedHandler: FeedHandler = FeedHandler(feedUpdater, asyncJobExecutor, optimisticLockHandler)
     private val feedService: FeedService =
         FeedService(feedReader, feedHandler, feedAppender, feedValidator, fileHandler, feedEnricher, feedRemover)
 
@@ -48,8 +53,8 @@ class FeedServiceTest {
         val feed = TestDataFactory.createFeedInfo(feedId, userId)
         val feedDetail = TestDataFactory.createFeedDetail(feedId, feedDetailId, 0)
 
-        whenever(feedRepository.read(feedId)).thenReturn(feed)
-        whenever(feedDetailRepository.read(feedId)).thenReturn(listOf(feedDetail))
+        every { feedRepository.read(feedId) } returns feed
+        every { feedDetailRepository.read(feedId) } returns listOf(feedDetail)
 
         val result = feedService.getFeed(feedId)
 
@@ -58,6 +63,19 @@ class FeedServiceTest {
         assert(result.feedDetails[0].feedDetailId == feedDetailId)
         assert(result.feedDetails[0].feedId == feedId)
         assert(result.feed.userId == userId)
+    }
+
+    @Test
+    fun `피드를 가져온다 - 피드가 존재 하지 않음`() {
+        val feedId = "feedId"
+
+        every { feedRepository.read(feedId) } returns null
+
+        val exception = assertThrows<NotFoundException> {
+            feedService.getFeed(feedId)
+        }
+
+        assert(exception.errorCode == ErrorCode.FEED_NOT_FOUND)
     }
 
     @Test
@@ -76,14 +94,12 @@ class FeedServiceTest {
         val feedDetail3 = TestDataFactory.createFeedDetail(feedId2, feedDetailId3, 0)
         val feedDetail4 = TestDataFactory.createFeedDetail(feedId2, feedDetailId4, 1)
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
-        whenever(feedDetailRepository.readsFirstIndex(listOf(feedId1, feedId2))).thenReturn(
-            listOf(
-                feedDetail1,
-                feedDetail2,
-                feedDetail3,
-                feedDetail4
-            )
+        every { feedRepository.reads(listOf(feedId1, feedId2)) } returns listOf(feed1, feed2)
+        every { feedDetailRepository.readsFirstIndex(listOf(feedId1, feedId2)) } returns listOf(
+            feedDetail1,
+            feedDetail2,
+            feedDetail3,
+            feedDetail4,
         )
 
         val result = feedService.getFeeds(listOf(feedId1, feedId2))
@@ -111,12 +127,10 @@ class FeedServiceTest {
         val feedDetail1 = TestDataFactory.createFeedDetail(feedId1, feedDetailId1, 0)
         val feedDetail2 = TestDataFactory.createFeedDetail(feedId2, feedDetailId2, 1)
 
-        whenever(feedRepository.readsOwned(userId, FeedStatus.NOT_HIDDEN)).thenReturn(listOf(feed1, feed2))
-        whenever(feedDetailRepository.readsFirstIndex(listOf(feedId1, feedId2))).thenReturn(
-            listOf(
-                feedDetail1,
-                feedDetail2,
-            )
+        every { feedRepository.readsOwned(userId, FeedStatus.NOT_HIDDEN) } returns listOf(feed1, feed2)
+        every { feedDetailRepository.readsFirstIndex(listOf(feedId1, feedId2)) } returns listOf(
+            feedDetail1,
+            feedDetail2,
         )
 
         val result = feedService.getOwnedFeeds(userId, FeedStatus.NOT_HIDDEN)
@@ -133,14 +147,16 @@ class FeedServiceTest {
     @Test
     fun `피드들을 삭제에 성공한다`() {
         val userId = "userId"
-        val feedId1 = "feedId1"
-        val feedId2 = "feedId2"
-        val feed1 = TestDataFactory.createFeedInfo(feedId1, userId)
-        val feed2 = TestDataFactory.createFeedInfo(feedId2, userId)
+        val feedIds = listOf("feedId1", "feedId2")
+        val feed1 = TestDataFactory.createFeedInfo(feedIds[0], userId)
+        val feed2 = TestDataFactory.createFeedInfo(feedIds[1], userId)
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
+        every { feedRepository.reads(feedIds) } returns listOf(feed1, feed2)
+        every { feedRepository.removes(feedIds) } just Runs
+        every { feedDetailRepository.removes(feedIds) } returns listOf()
+        every { fileHandler.handleOldFiles(any()) } just Runs
 
-        assertDoesNotThrow { feedService.removes(userId, listOf(feedId1, feedId2)) }
+        assertDoesNotThrow { feedService.removes(userId, feedIds) }
     }
 
     @Test
@@ -151,7 +167,7 @@ class FeedServiceTest {
         val feed1 = TestDataFactory.createFeedInfo(feedId1, userId)
         val feed2 = TestDataFactory.createFeedInfo(feedId2, "anotherUserId")
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
+        every { feedRepository.reads(listOf(feedId1, feedId2)) } returns listOf(feed1, feed2)
 
         assertThrows<ConflictException> {
             feedService.removes(userId, listOf(feedId1, feedId2))
@@ -166,10 +182,13 @@ class FeedServiceTest {
         val feed1 = TestDataFactory.createFeedInfo(feedId1, userId)
         val feed2 = TestDataFactory.createFeedInfo(feedId2, userId)
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
+        every { feedRepository.reads(listOf(feedId1)) } returns listOf(feed1)
+        every { feedRepository.reads(listOf(feedId2)) } returns listOf(feed2)
+        coEvery { feedRepository.update(feedId1, FeedTarget.UNHIDE) } returns feedId1
+        coEvery { feedRepository.update(feedId2, FeedTarget.HIDE) } returns feedId2
 
-        assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId1, feedId2), FeedTarget.UNHIDE) }
-        assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId1, feedId2), FeedTarget.HIDE) }
+        assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId1), FeedTarget.UNHIDE) }
+        assertDoesNotThrow { feedService.changeHide(userId, listOf(feedId2), FeedTarget.HIDE) }
     }
 
     @Test
@@ -180,9 +199,9 @@ class FeedServiceTest {
         val feed1 = TestDataFactory.createFeedInfo(feedId1, userId)
         val feed2 = TestDataFactory.createFeedInfo(feedId2, userId)
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
+        every { feedRepository.reads(listOf(feedId1, feedId2)) } returns listOf(feed1, feed2)
 
-        val exception = assertThrows<ConflictException>() {
+        val exception = assertThrows<ConflictException> {
             feedService.changeHide("anotherUserId", listOf(feedId1, feedId2), FeedTarget.HIDE)
         }
 
@@ -197,34 +216,27 @@ class FeedServiceTest {
         val feed1 = TestDataFactory.createFeedInfo(feedId1, userId)
         val feed2 = TestDataFactory.createFeedInfo(feedId2, userId)
 
-        whenever(feedRepository.reads(listOf(feedId1, feedId2))).thenReturn(listOf(feed1, feed2))
-        whenever(
-            feedRepository.update(
-                feedId1,
-                FeedTarget.HIDE
-            )
-        ).thenThrow(OptimisticLockingFailureException::class.java)
-        whenever(
-            feedRepository.update(
-                feedId2,
-                FeedTarget.HIDE
-            )
-        ).thenThrow(OptimisticLockingFailureException::class.java)
+        every { feedRepository.reads(listOf(feedId1, feedId2)) } returns listOf(feed1, feed2)
+        coEvery { feedRepository.update(feedId1, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
+        coEvery { feedRepository.update(feedId2, FeedTarget.HIDE) } throws OptimisticLockingFailureException("")
 
         feedService.changeHide(userId, listOf(feedId1, feedId2), FeedTarget.HIDE)
 
-        verify(feedRepository, times(5)).update(feedId1, FeedTarget.HIDE)
-        verify(feedRepository, times(5)).update(feedId2, FeedTarget.HIDE)
+        coVerify(exactly = 5) { feedRepository.update(feedId1, FeedTarget.HIDE) }
+        coVerify(exactly = 5) { feedRepository.update(feedId2, FeedTarget.HIDE) }
     }
 
     @Test
     fun `피드를 추가한다`() {
         val userId = "userId"
         val topic = "topic"
+        val feedId = "feedId"
         val fileData = TestDataFactory.createFileData()
         val media = TestDataFactory.createProfileMedia()
 
-        whenever(fileHandler.handleNewFiles(userId, listOf(fileData), FileCategory.FEED)).thenReturn(listOf(media))
+        every { feedRepository.append(userId, topic) } returns feedId
+        every { feedDetailRepository.append(listOf(media), feedId) } just Runs
+        every { fileHandler.handleNewFiles(userId, listOf(fileData), FileCategory.FEED) } returns listOf(media)
 
         assertDoesNotThrow {
             feedService.make(userId, listOf(fileData), topic, FileCategory.FEED)

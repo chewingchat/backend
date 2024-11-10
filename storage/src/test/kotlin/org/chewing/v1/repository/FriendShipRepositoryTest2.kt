@@ -1,16 +1,16 @@
 package org.chewing.v1.repository
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.jpaentity.friend.FriendShipId
 import org.chewing.v1.jparepository.friend.FriendShipJpaRepository
 import org.chewing.v1.repository.jpa.friend.FriendShipRepositoryImpl
 import org.chewing.v1.repository.support.UserProvider
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.util.*
 
 class FriendShipRepositoryTest2 {
-    private val friendShipJpaRepository: FriendShipJpaRepository = mock()
+    private val friendShipJpaRepository: FriendShipJpaRepository = mockk()
 
     private var friendShipRepositoryImpl: FriendShipRepositoryImpl = FriendShipRepositoryImpl(friendShipJpaRepository)
 
@@ -18,7 +18,7 @@ class FriendShipRepositoryTest2 {
     fun `친구 삭제 -  실패(친구 관계가 존재하지 않음)`() {
         val userId = generateUserId()
         val friendId = generateUserId()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.remove(userId, friendId)
         assert(result == null)
     }
@@ -27,7 +27,7 @@ class FriendShipRepositoryTest2 {
     fun `친구 차단 -  실패(친구 관계가 존재하지 않음)`() {
         val userId = generateUserId()
         val friendId = generateUserId()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.block(userId, friendId)
         assert(result == null)
     }
@@ -36,7 +36,7 @@ class FriendShipRepositoryTest2 {
     fun `친구 차단 해제 -  실패(친구 관계가 존재하지 않음)`() {
         val userId = generateUserId()
         val friendId = generateUserId()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.blocked(userId, friendId)
         assert(result == null)
     }
@@ -45,7 +45,7 @@ class FriendShipRepositoryTest2 {
     fun `친구 관계 읽기 -  실패(친구 관계가 존재하지 않음)`() {
         val userId = generateUserId()
         val friendId = generateUserId()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.read(userId, friendId)
         assert(result == null)
     }
@@ -54,7 +54,7 @@ class FriendShipRepositoryTest2 {
     fun `친구 즐겨 찾기 - 실패(친구 관계가 존재하지 않음)`() {
         val userId = generateUserId()
         val friendId = generateUserId()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.updateFavorite(userId, friendId, true)
         assert(result == null)
     }
@@ -64,7 +64,7 @@ class FriendShipRepositoryTest2 {
         val userId = generateUserId()
         val friendId = generateUserId()
         val newName = UserProvider.buildFriendName()
-        whenever(friendShipJpaRepository.findById(FriendShipId(userId, friendId))).thenReturn(Optional.empty())
+        every { friendShipJpaRepository.findById(FriendShipId(userId, friendId)) } returns Optional.empty()
         val result = friendShipRepositoryImpl.updateName(userId, friendId, newName)
         assert(result == null)
     }

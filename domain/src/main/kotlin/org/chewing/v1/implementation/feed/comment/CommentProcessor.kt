@@ -13,14 +13,14 @@ class CommentProcessor(
 ) {
 
     @Transactional
-    fun processComment(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
+    suspend fun processComment(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
         feedUpdater.update(feedId, updateType)
-        commentAppender.appendComment(userId, comment, feedId)
+        commentAppender.appendComment(userId, feedId, comment)
     }
 
     // 존재 하는 댓글에 대해서만 업데이트 진행
     @Transactional
-    fun processUnComment(commentId: String, updateType: FeedTarget) {
+    suspend fun processUnComment(commentId: String, updateType: FeedTarget) {
         commentRemover.remove(commentId)?.let {
             feedUpdater.update(it, updateType)
         }

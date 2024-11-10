@@ -62,7 +62,7 @@ abstract class RestDocsTest {
         return builder.build()
     }
 
-    protected fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+    private fun objectMapper(): ObjectMapper = jacksonObjectMapper()
         .findAndRegisterModules()
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
@@ -78,4 +78,6 @@ abstract class RestDocsTest {
             .andExpect(jsonPath("$.status").value(201))
             .andExpect(jsonPath("$.data.message").value("생성 완료"))
     }
+
+    protected fun jsonBody(obj: Any): String = objectMapper().writeValueAsString(obj)
 }

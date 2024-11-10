@@ -1,14 +1,13 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.emoticon.EmoticonController
 import org.chewing.v1.service.emoticon.EmoticonService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -19,14 +18,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class EmoticonControllerTest : RestDocsTest() {
     private lateinit var emoticonService: EmoticonService
     private lateinit var emoticonController: EmoticonController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        emoticonService = mock()
+        emoticonService = mockk()
         emoticonController = EmoticonController(emoticonService)
         mockMvc = mockController(emoticonController)
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -37,7 +34,7 @@ class EmoticonControllerTest : RestDocsTest() {
         val emoticon = TestDataFactory.createEmoticon(emoticonId)
         val emoticonPack = TestDataFactory.createEmoticonPack(emoticonPackId, listOf(emoticon))
 
-        whenever(emoticonService.fetchUserEmoticonPacks(userId)).thenReturn(listOf(emoticonPack))
+        every { emoticonService.fetchUserEmoticonPacks(userId) } returns listOf(emoticonPack)
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/emoticon/list")

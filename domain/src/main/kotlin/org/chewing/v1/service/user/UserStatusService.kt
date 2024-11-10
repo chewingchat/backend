@@ -12,26 +12,20 @@ class UserStatusService(
     private val userStatusReader: UserStatusReader,
     private val userStatusUpdater: UserStatusUpdater,
     private val userStatusRemover: UserStatusRemover,
-    private val userStatusAppender: UserStatusAppender
+    private val userStatusAppender: UserStatusAppender,
 
 ) {
-    fun getUserStatuses(userId: String): List<UserStatus> {
-        return userStatusReader.reads(userId)
-    }
+    fun getUserStatuses(userId: String): List<UserStatus> = userStatusReader.reads(userId)
 
-    fun getSelectedStatuses(userIds: List<String>): List<UserStatus> {
-        return userStatusReader.readsSelected(userIds)
-    }
+    fun getSelectedStatuses(userIds: List<String>): List<UserStatus> = userStatusReader.readsSelected(userIds)
 
-    fun getSelectedStatus(userId: String): UserStatus {
-        return userStatusReader.readSelected(userId)
-    }
+    fun getSelectedStatus(userId: String): UserStatus = userStatusReader.readSelected(userId)
 
     fun selectUserStatus(userId: String, statusId: String) {
         userStatusUpdater.updateSelectedTrue(userId, statusId)
     }
 
-    fun changeSelectUserStatus(userId: String) {
+    fun deleteSelectUserStatus(userId: String) {
         userStatusUpdater.updateDeselected(userId)
     }
 

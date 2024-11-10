@@ -1,5 +1,7 @@
 package org.chewing.v1.repository.jpa.feed
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
@@ -27,18 +29,23 @@ internal class FeedRepositoryImpl(
         FeedStatus.ALL -> feedJpaRepository.findAllByUserIdOrderByCreatedAtAsc(userId).map { it.toFeedInfo() }
     }
 
-    override fun update(feedId: String, target: FeedTarget): String? = feedJpaRepository.findById(feedId).map {
-        when (target) {
-            FeedTarget.LIKES -> it.likes()
-            FeedTarget.UNLIKES -> it.unLikes()
-            FeedTarget.COMMENTS -> it.comments()
-            FeedTarget.UNCOMMENTS -> it.unComments()
-            FeedTarget.HIDE -> it.hide()
-            FeedTarget.UNHIDE -> it.unHide()
+    override suspend fun update(feedId: String, target: FeedTarget): String? =
+        withContext(Dispatchers.IO) {
+            feedJpaRepository.findById(feedId).orElse(null)
+        }?.let {
+            when (target) {
+                FeedTarget.LIKES -> it.likes()
+                FeedTarget.UNLIKES -> it.unLikes()
+                FeedTarget.COMMENTS -> it.comments()
+                FeedTarget.UNCOMMENTS -> it.unComments()
+                FeedTarget.HIDE -> it.hide()
+                FeedTarget.UNHIDE -> it.unHide()
+            }
+            withContext(Dispatchers.IO) {
+                feedJpaRepository.save(it)
+            }
+            feedId
         }
-        feedJpaRepository.save(it)
-        feedId
-    }.orElse(null)
 
     @Transactional
     override fun removes(feedIds: List<String>) {

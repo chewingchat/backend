@@ -1,6 +1,7 @@
 package org.chewing.v1.util
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.config.TestSecurityConfig
 import org.chewing.v1.error.AuthorizationException
@@ -12,9 +13,6 @@ import org.chewing.v1.support.TestExceptionController
 import org.chewing.v1.support.TestExceptionService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -29,14 +27,12 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
 
     private lateinit var testExceptionService: TestExceptionService
     private lateinit var testExceptionController: TestExceptionController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        testExceptionService = mock()
+        testExceptionService = mockk()
         testExceptionController = TestExceptionController(testExceptionService)
         mockMvc = mockControllerWithAdvice(testExceptionController, GlobalExceptionHandler())
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -48,7 +44,7 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)), // 'test' 파라미터 누락
+                .content(jsonBody(requestBody)), // 'test' 파라미터 누락
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -81,7 +77,7 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue") // 'test' 파라미터 포함
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -94,13 +90,13 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        whenever(testExceptionService.testException())
-            .thenThrow(AuthorizationException(ErrorCode.EXPIRED_VALIDATE_CODE))
+        every { testExceptionService.testException() } throws AuthorizationException(ErrorCode.EXPIRED_VALIDATE_CODE)
+
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isUnauthorized)
             .andExpect(jsonPath("$.status").value(HttpStatus.UNAUTHORIZED.value()))
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.EXPIRED_VALIDATE_CODE.code))
@@ -112,13 +108,13 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        whenever(testExceptionService.testException())
-            .thenThrow(NotFoundException(ErrorCode.USER_NOT_FOUND))
+        every { testExceptionService.testException() } throws NotFoundException(ErrorCode.USER_NOT_FOUND)
+
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isNotFound)
             .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.USER_NOT_FOUND.code))
@@ -130,13 +126,13 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        whenever(testExceptionService.testException())
-            .thenThrow(ConflictException(ErrorCode.FILE_DELETE_FAILED))
+        every { testExceptionService.testException() } throws ConflictException(ErrorCode.FILE_DELETE_FAILED)
+
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isConflict)
             .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.FILE_DELETE_FAILED.code))
@@ -152,7 +148,7 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
             MockMvcRequestBuilders.get("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -165,19 +161,18 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        whenever(testExceptionService.testException())
-            .thenThrow(IllegalArgumentException("잘못된 인자"))
+
+        every { testExceptionService.testException() } throws IllegalArgumentException("잘못된 인자")
+
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.VARIABLE_WRONG.code))
             .andExpect(jsonPath("$.data.message").value(ErrorResponse.from(ErrorCode.VARIABLE_WRONG).message))
-
-        verify(testExceptionService).testException()
     }
 
     @Test
@@ -185,13 +180,14 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        whenever(testExceptionService.testException())
-            .thenThrow(RuntimeException("서버 오류"))
+
+        every { testExceptionService.testException() } throws RuntimeException("서버 오류")
+
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("test", "testValue")
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isInternalServerError)
             .andExpect(jsonPath("$.status").value(HttpStatus.INTERNAL_SERVER_ERROR.value()))
             .andExpect(jsonPath("$.data.errorCode").value(ErrorCode.INTERNAL_SERVER_ERROR.code))

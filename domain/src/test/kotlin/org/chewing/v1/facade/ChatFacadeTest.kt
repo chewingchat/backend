@@ -1,20 +1,21 @@
 package org.chewing.v1.facade
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.service.notification.NotificationService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.time.LocalDateTime
 
 class ChatFacadeTest {
-    private val chatLogService: ChatLogService = mock()
-    private val roomService: RoomService = mock()
-    private val notificationService: NotificationService = mock()
+    private val chatLogService: ChatLogService = mockk()
+    private val roomService: RoomService = mockk()
+    private val notificationService: NotificationService = mockk()
 
     private val chatFacade = ChatFacade(chatLogService, roomService, notificationService)
 
@@ -28,13 +29,15 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.uploadFiles(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        every { chatLogService.uploadFiles(any(), any(), any()) } returns chatMessage
+        every { roomService.activateChatRoom(any(), any(), any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatFacade.processFiles(listOf(), userId, chatRoomId)
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 
     @Test
@@ -47,14 +50,15 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.readMessage(any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoom(any())).thenReturn(chatRoomInfo)
-
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
-
+        every { chatLogService.readMessage(any(), any()) } returns chatMessage
+        every { roomService.getChatRoom(any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
+        every { roomService.updateReadChatRoom(any(), any(), any()) } just Runs
         chatFacade.processRead(chatRoomId, userId)
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 
     @Test
@@ -67,13 +71,15 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.deleteMessage(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.getChatRoom(any())).thenReturn(chatRoomInfo)
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        every { chatLogService.deleteMessage(any(), any(), any()) } returns chatMessage
+        every { roomService.getChatRoom(any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatFacade.processDelete(chatRoomId, userId, messageId)
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 
     @Test
@@ -87,13 +93,15 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.replyMessage(any(), any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        every { chatLogService.replyMessage(any(), any(), any(), any()) } returns chatMessage
+        every { roomService.activateChatRoom(any(), any(), any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatFacade.processReply(chatRoomId, userId, parentMessageId, "text")
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 
     @Test
@@ -106,13 +114,15 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.bombingMessage(any(), any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        every { chatLogService.bombingMessage(any(), any(), any(), any()) } returns chatMessage
+        every { roomService.activateChatRoom(any(), any(), any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatFacade.processBombing(chatRoomId, userId, "text", LocalDateTime.now())
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 
     @Test
@@ -125,12 +135,14 @@ class ChatFacadeTest {
         val chatRoomMemberInfo = TestDataFactory.createChatRoomMemberInfo(userId, chatRoomId, 1, false)
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatLogService.chatNormalMessage(any(), any(), any())).thenReturn(chatMessage)
-        whenever(roomService.activateChatRoom(any(), any(), any())).thenReturn(chatRoomInfo)
-        whenever(roomService.getChatRoomFriends(any(), any(), any())).thenReturn(listOf(chatRoomMemberInfo))
+        every { chatLogService.chatNormalMessage(any(), any(), any()) } returns chatMessage
+        every { roomService.activateChatRoom(any(), any(), any()) } returns chatRoomInfo
+        every { roomService.getChatRoomFriends(any(), any(), any()) } returns listOf(chatRoomMemberInfo)
+        every { notificationService.handleOwnedMessageNotification(any()) } just Runs
+        every { notificationService.handleMessagesNotification(any(), any(), any()) } just Runs
 
         chatFacade.processCommon(chatRoomId, userId, "text")
 
-        verify(notificationService).handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId)
+        verify { notificationService.handleMessagesNotification(chatMessage, listOf(chatRoomMemberInfo.memberId), userId) }
     }
 }

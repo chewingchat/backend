@@ -28,6 +28,7 @@ services:
       OPENAI_API_MODEL: ${OPENAI_API_MODEL}
       OPENAI_API_URL: ${OPENAI_API_URL}
       FCM_API_URL: ${FCM_API_URL}
+      MEDIA_URL: ${MEDIA_URL}
     networks:
       - chewing_network
 

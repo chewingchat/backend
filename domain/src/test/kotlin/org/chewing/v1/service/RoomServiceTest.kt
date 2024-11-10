@@ -1,5 +1,11 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.coJustRun
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -13,14 +19,13 @@ import org.chewing.v1.service.chat.RoomService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.*
 import org.springframework.dao.OptimisticLockingFailureException
 
 class RoomServiceTest {
-    private val chatRoomRepository: ChatRoomRepository = mock()
-    private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository = mock()
-    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository = mock()
-    private val chatFinder: ChatFinder = mock()
+    private val chatRoomRepository: ChatRoomRepository = mockk()
+    private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository = mockk()
+    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository = mockk()
+    private val chatFinder: ChatFinder = mockk()
 
     private val chatRoomReader: ChatRoomReader =
         ChatRoomReader(chatRoomRepository, groupChatRoomMemberRepository, personalChatRoomMemberRepository)
@@ -41,7 +46,7 @@ class RoomServiceTest {
         chatRoomAppender,
         chatRoomHandler,
         chatRoomValidator,
-        chatFinder
+        chatFinder,
     )
 
     @Test
@@ -50,10 +55,12 @@ class RoomServiceTest {
         val chatRoomIds = listOf("1", "2", "3")
         val userId = "1"
 
+        every { personalChatRoomMemberRepository.removes(chatRoomIds, userId) } just Runs
+
         // when
         roomService.deleteChatRoom(chatRoomIds, userId)
 
-        verify(personalChatRoomMemberRepository).removes(chatRoomIds, userId)
+        verify { personalChatRoomMemberRepository.removes(chatRoomIds, userId) }
     }
 
     @Test
@@ -62,22 +69,11 @@ class RoomServiceTest {
         val chatRoomIds = listOf("1", "2", "3")
         val userId = "1"
 
+        every { groupChatRoomMemberRepository.removes(chatRoomIds, userId) } just Runs
         // when
         roomService.deleteGroupChatRooms(chatRoomIds, userId)
 
-        verify(groupChatRoomMemberRepository).removes(chatRoomIds, userId)
-    }
-
-    @Test
-    fun `채팅방 그룹 삭제`() {
-        // given
-        val chatRoomIds = listOf("1", "2", "3")
-        val userId = "1"
-
-        // when
-        roomService.deleteGroupChatRooms(chatRoomIds, userId)
-
-        verify(groupChatRoomMemberRepository).removes(chatRoomIds, userId)
+        verify { groupChatRoomMemberRepository.removes(chatRoomIds, userId) }
     }
 
     @Test
@@ -87,8 +83,9 @@ class RoomServiceTest {
         val friendId = "testFriendId"
         val chatRoomId = "testChatRoomId"
 
-        whenever(personalChatRoomMemberRepository.readIdIfExist(userId, friendId)).thenReturn(null)
-        whenever(chatRoomAppender.append(false)).thenReturn(chatRoomId)
+        every { personalChatRoomMemberRepository.readIdIfExist(userId, friendId) } returns null
+        every { chatRoomRepository.appendChatRoom(false) } returns chatRoomId
+        every { personalChatRoomMemberRepository.appendIfNotExist(chatRoomId, userId, friendId, any()) } just Runs
 
         // when
         val result = roomService.createChatRoom(userId, friendId)
@@ -104,8 +101,9 @@ class RoomServiceTest {
         val chatRoomId = "testChatRoomId"
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(personalChatRoomMemberRepository.readIdIfExist(userId, friendId)).thenReturn(chatRoomId)
-        whenever(chatFinder.findCurrentNumber(chatRoomId)).thenReturn(number)
+        every { personalChatRoomMemberRepository.readIdIfExist(userId, friendId) } returns chatRoomId
+        every { chatFinder.findCurrentNumber(chatRoomId) } returns number
+        every { personalChatRoomMemberRepository.appendIfNotExist(chatRoomId, userId, friendId, number) } just Runs
         // when
         val result = roomService.createChatRoom(userId, friendId)
 
@@ -119,17 +117,22 @@ class RoomServiceTest {
         val userId = "testUserId"
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
-        whenever(personalChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true)).thenThrow(
-            OptimisticLockingFailureException::class.java
-        )
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        every {
+            personalChatRoomMemberRepository.updateFavorite(
+                chatRoomId,
+                userId,
+                true,
+            )
+        } throws OptimisticLockingFailureException("")
 
         // when
-        val exception = assertThrows<ConflictException>() {
+        val exception = assertThrows<ConflictException> {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
         }
 
-        verify(personalChatRoomMemberRepository, times(5)).updateFavorite(chatRoomId, userId, true)
+        verify(exactly = 5) { personalChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true) }
+
         assert(exception.errorCode == ErrorCode.CHATROOM_FAVORITE_FAILED)
     }
 
@@ -140,7 +143,8 @@ class RoomServiceTest {
         val userId = "testUserId"
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        coJustRun { personalChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true) }
 
         assertDoesNotThrow {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
@@ -154,17 +158,21 @@ class RoomServiceTest {
         val userId = "testUserId"
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
-        whenever(groupChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true)).thenThrow(
-            OptimisticLockingFailureException::class.java
-        )
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        every {
+            groupChatRoomMemberRepository.updateFavorite(
+                chatRoomId,
+                userId,
+                true,
+            )
+        } throws OptimisticLockingFailureException("")
 
         // when
-        val exception = assertThrows<ConflictException>() {
+        val exception = assertThrows<ConflictException> {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
         }
 
-        verify(groupChatRoomMemberRepository, times(5)).updateFavorite(chatRoomId, userId, true)
+        verify(exactly = 5) { groupChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true) }
         assert(exception.errorCode == ErrorCode.CHATROOM_FAVORITE_FAILED)
     }
 
@@ -175,7 +183,8 @@ class RoomServiceTest {
         val userId = "testUserId"
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        coJustRun { groupChatRoomMemberRepository.updateFavorite(chatRoomId, userId, true) }
 
         assertDoesNotThrow {
             roomService.favoriteChatRoom(chatRoomId, userId, true)
@@ -190,12 +199,13 @@ class RoomServiceTest {
         val chatRoomId = "testChatRoomId"
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomAppender.append(true)).thenReturn(chatRoomId)
-        whenever(chatFinder.findCurrentNumber(chatRoomId)).thenReturn(number)
+        every { chatRoomRepository.appendChatRoom(true) } returns chatRoomId
+        every { chatFinder.findCurrentNumber(chatRoomId) } returns number
+        every { groupChatRoomMemberRepository.appends(chatRoomId, friendIds, number) } just Runs
         // when
         val result = roomService.createGroupChatRoom(userId, friendIds)
 
-        verify(groupChatRoomMemberRepository).appends(chatRoomId, friendIds, number)
+        verify { groupChatRoomMemberRepository.appends(chatRoomId, friendIds, number) }
         assert(result == chatRoomId)
     }
 
@@ -207,7 +217,7 @@ class RoomServiceTest {
         val chatRoomId2 = "testChatRoomId2"
         val chatRooms = listOf(
             TestDataFactory.createChatRoomInfo(chatRoomId1),
-            TestDataFactory.createGroupChatRoomInfo(chatRoomId2)
+            TestDataFactory.createGroupChatRoomInfo(chatRoomId2),
         )
         val personalChatRoomMembers = listOf(
             TestDataFactory.createChatRoomMemberInfo(chatRoomId1, userId, 1, true),
@@ -215,12 +225,12 @@ class RoomServiceTest {
         )
         val groupChatRoomMembers = listOf(
             TestDataFactory.createChatRoomMemberInfo(chatRoomId2, userId, 5, true),
-            TestDataFactory.createChatRoomMemberInfo(chatRoomId2, friendId, 6, true)
+            TestDataFactory.createChatRoomMemberInfo(chatRoomId2, friendId, 6, true),
         )
 
-        whenever(personalChatRoomMemberRepository.reads(userId)).thenReturn(personalChatRoomMembers)
-        whenever(groupChatRoomMemberRepository.reads(userId)).thenReturn(groupChatRoomMembers)
-        whenever(chatRoomRepository.readChatRooms(listOf(chatRoomId2, chatRoomId1))).thenReturn(chatRooms)
+        every { chatRoomRepository.readChatRooms(listOf(chatRoomId2, chatRoomId1)) } returns chatRooms
+        every { personalChatRoomMemberRepository.reads(userId) } returns personalChatRoomMembers
+        every { groupChatRoomMemberRepository.reads(userId) } returns groupChatRoomMembers
 
         val result = roomService.getChatRooms(userId)
 
@@ -255,17 +265,17 @@ class RoomServiceTest {
         val chatRoomId2 = "testChatRoomId2"
         val chatRooms = listOf(
             TestDataFactory.createChatRoomInfo(chatRoomId1),
-            TestDataFactory.createGroupChatRoomInfo(chatRoomId2)
+            TestDataFactory.createGroupChatRoomInfo(chatRoomId2),
         )
         val personalChatRoomMembers = listOf(
             TestDataFactory.createChatRoomMemberInfo(chatRoomId2, userId, 2, false),
             TestDataFactory.createChatRoomMemberInfo(chatRoomId1, friendId, 3, true),
-            TestDataFactory.createChatRoomMemberInfo(chatRoomId2, friendId, 4, true)
+            TestDataFactory.createChatRoomMemberInfo(chatRoomId2, friendId, 4, true),
         )
 
-        whenever(personalChatRoomMemberRepository.reads(userId)).thenReturn(personalChatRoomMembers)
-        whenever(groupChatRoomMemberRepository.reads(userId)).thenReturn(emptyList())
-        whenever(chatRoomRepository.readChatRooms(listOf(chatRoomId2, chatRoomId1))).thenReturn(chatRooms)
+        every { personalChatRoomMemberRepository.reads(userId) } returns personalChatRoomMembers
+        every { groupChatRoomMemberRepository.reads(userId) } returns emptyList()
+        every { chatRoomRepository.readChatRooms(listOf(chatRoomId2, chatRoomId1)) } returns chatRooms
 
         val result = roomService.getChatRooms(userId)
 
@@ -275,7 +285,8 @@ class RoomServiceTest {
     @Test
     fun `채팅방 가져오기 - 실패`() {
         val chatRoomId = "testChatRoomId"
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(null)
+
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns null
 
         val exception = assertThrows<NotFoundException> {
             roomService.getChatRoom(chatRoomId)
@@ -288,7 +299,8 @@ class RoomServiceTest {
     fun `채팅방 가져오기 - 성공`() {
         val chatRoomId = "testChatRoomId"
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
 
         val result = roomService.getChatRoom(chatRoomId)
 
@@ -303,8 +315,9 @@ class RoomServiceTest {
         val userId = "testUserId"
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.isGroupChatRoom(chatRoomId)).thenReturn(true)
-        whenever(chatFinder.findCurrentNumber(chatRoomId)).thenReturn(number)
+        every { chatRoomRepository.isGroupChatRoom(chatRoomId) } returns true
+        every { chatFinder.findCurrentNumber(chatRoomId) } returns number
+        every { groupChatRoomMemberRepository.append(chatRoomId, friendId, number) } just Runs
 
         assertDoesNotThrow {
             roomService.inviteChatRoom(chatRoomId, friendId, userId)
@@ -318,7 +331,7 @@ class RoomServiceTest {
         val friendId = "testFriendId"
         val userId = "testUserId"
 
-        whenever(chatRoomRepository.isGroupChatRoom(chatRoomId)).thenReturn(false)
+        every { chatRoomRepository.isGroupChatRoom(chatRoomId) } returns false
 
         // when
         val exception = assertThrows<ConflictException> {
@@ -336,13 +349,14 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        coJustRun { personalChatRoomMemberRepository.updateRead(userId, number) }
 
         assertDoesNotThrow {
             roomService.updateReadChatRoom(chatRoomId, userId, number)
         }
 
-        verify(personalChatRoomMemberRepository).updateRead(userId, number)
+        verify { personalChatRoomMemberRepository.updateRead(userId, number) }
     }
 
     @Test
@@ -353,13 +367,14 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        coJustRun { groupChatRoomMemberRepository.updateRead(userId, number) }
 
         assertDoesNotThrow {
             roomService.updateReadChatRoom(chatRoomId, userId, number)
         }
 
-        verify(groupChatRoomMemberRepository).updateRead(userId, number)
+        verify { groupChatRoomMemberRepository.updateRead(userId, number) }
     }
 
     @Test
@@ -370,17 +385,12 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
-        whenever(
-            groupChatRoomMemberRepository.updateRead(
-                userId,
-                number
-            )
-        ).thenThrow(OptimisticLockingFailureException::class.java)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        every { groupChatRoomMemberRepository.updateRead(userId, number) } throws OptimisticLockingFailureException("")
 
         roomService.updateReadChatRoom(chatRoomId, userId, number)
 
-        verify(groupChatRoomMemberRepository, times(5)).updateRead(userId, number)
+        verify(exactly = 5) { groupChatRoomMemberRepository.updateRead(userId, number) }
     }
 
     @Test
@@ -391,14 +401,17 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
-        whenever(personalChatRoomMemberRepository.updateRead(userId, number)).thenThrow(
-            OptimisticLockingFailureException::class.java
-        )
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        every {
+            personalChatRoomMemberRepository.updateRead(
+                userId,
+                number,
+            )
+        } throws OptimisticLockingFailureException("")
 
         roomService.updateReadChatRoom(chatRoomId, userId, number)
 
-        verify(personalChatRoomMemberRepository, times(5)).updateRead(userId, number)
+        verify(exactly = 5) { personalChatRoomMemberRepository.updateRead(userId, number) }
     }
 
     @Test
@@ -409,10 +422,14 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
-        whenever(personalChatRoomMemberRepository.readFriend(chatRoomId, userId)).thenReturn(
-            TestDataFactory.createChatRoomMemberInfo(chatRoomId, userId, 1, true)
-        )
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
+        every {
+            personalChatRoomMemberRepository.readFriend(
+                chatRoomId,
+                userId,
+            )
+        } returns TestDataFactory.createChatRoomMemberInfo(chatRoomId, userId, 1, true)
+        every { personalChatRoomMemberRepository.appendIfNotExist(any(), any(), any(), any()) } just Runs
 
         // when
         val result = roomService.activateChatRoom(chatRoomId, userId, number)
@@ -428,12 +445,12 @@ class RoomServiceTest {
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
         val number = TestDataFactory.createChatNumber(chatRoomId)
 
-        whenever(chatRoomRepository.readChatRoom(chatRoomId)).thenReturn(chatRoomInfo)
+        every { chatRoomRepository.readChatRoom(chatRoomId) } returns chatRoomInfo
 
         // when
         val result = roomService.activateChatRoom(chatRoomId, userId, number)
 
-        verify(personalChatRoomMemberRepository, never()).appendIfNotExist(any(), any(), any(), any())
+        verify(exactly = 0) { personalChatRoomMemberRepository.appendIfNotExist(any(), any(), any(), any()) }
         assert(result.chatRoomId == chatRoomId)
     }
 
@@ -444,9 +461,12 @@ class RoomServiceTest {
         val friendId = "testFriendId"
         val chatRoomInfo = TestDataFactory.createChatRoomInfo(chatRoomId)
 
-        whenever(personalChatRoomMemberRepository.readFriend(chatRoomId, userId)).thenReturn(
-            TestDataFactory.createChatRoomMemberInfo(chatRoomId, friendId, 1, true)
-        )
+        every {
+            personalChatRoomMemberRepository.readFriend(
+                chatRoomId,
+                userId,
+            )
+        } returns TestDataFactory.createChatRoomMemberInfo(chatRoomId, friendId, 1, true)
 
         val result = roomService.getChatRoomFriends(chatRoomId, userId, chatRoomInfo)
 
@@ -461,10 +481,8 @@ class RoomServiceTest {
         val friendId = "testFriendId"
         val chatRoomInfo = TestDataFactory.createGroupChatRoomInfo(chatRoomId)
 
-        whenever(groupChatRoomMemberRepository.readFriends(chatRoomId, userId)).thenReturn(
-            listOf(
-                TestDataFactory.createChatRoomMemberInfo(chatRoomId, friendId, 1, true)
-            )
+        every { groupChatRoomMemberRepository.readFriends(chatRoomId, userId) } returns listOf(
+            TestDataFactory.createChatRoomMemberInfo(chatRoomId, friendId, 1, true),
         )
 
         val result = roomService.getChatRoomFriends(chatRoomId, userId, chatRoomInfo)

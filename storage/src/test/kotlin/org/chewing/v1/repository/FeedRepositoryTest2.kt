@@ -1,22 +1,23 @@
 package org.chewing.v1.repository
 
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.jpa.feed.FeedRepositoryImpl
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.util.*
 
 class FeedRepositoryTest2 {
-    private val feedJpaRepository: FeedJpaRepository = mock()
+    private val feedJpaRepository: FeedJpaRepository = mockk()
 
     private var feedRepositoryImpl: FeedRepositoryImpl = FeedRepositoryImpl(feedJpaRepository)
 
     @Test
-    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`() {
+    fun `피드 업데이트 - 실패(피드가 존재하지 않음)`() = runBlocking {
         val feedId = generateFeedId()
-        whenever(feedJpaRepository.findById(feedId)).thenReturn(Optional.empty())
+        every { feedJpaRepository.findById(feedId) }.returns(Optional.empty())
         val result = feedRepositoryImpl.update(feedId, FeedTarget.UNHIDE)
         assert(result == null)
     }

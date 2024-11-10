@@ -1,13 +1,16 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.controller.feed.FeedLikesController
+import org.chewing.v1.dto.request.feed.LikesRequest
 import org.chewing.v1.service.feed.FeedLikesService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -16,29 +19,29 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 class FeedLikesControllerTest : RestDocsTest() {
 
     private lateinit var feedLikesService: FeedLikesService
-    private lateinit var objectMapper: ObjectMapper
     private lateinit var feedLikesController: FeedLikesController
 
     @BeforeEach
     fun setUp() {
-        feedLikesService = mock()
+        feedLikesService = mockk()
         feedLikesController = FeedLikesController(feedLikesService)
         mockMvc = mockController(feedLikesController)
-        objectMapper = objectMapper()
     }
 
     @Test
     @DisplayName("피드 좋아요 추가")
     fun `addFeedLikes`() {
         val userId = "testUserId"
-        val requestBody = mapOf(
-            "feedId" to "testFeedId",
+        val requestBody = LikesRequest.Add(
+            feedId = "testFeedId",
         )
+        every { feedLikesService.like(any(), any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/feed/likes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -47,14 +50,15 @@ class FeedLikesControllerTest : RestDocsTest() {
     @DisplayName("피드 좋아요 취소")
     fun `deleteFeedLikes`() {
         val userId = "testUserId"
-        val requestBody = mapOf(
-            "feedId" to "testFeedId",
+        val requestBody = LikesRequest.Delete(
+            feedId = "testFeedId",
         )
+        every { feedLikesService.unlike(any(), any(), any()) } just Runs
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/feed/likes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(requestBody)),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }

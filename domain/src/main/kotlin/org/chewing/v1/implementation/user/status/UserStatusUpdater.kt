@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class UserStatusUpdater(
-    private val statusRepository: UserStatusRepository
+    private val statusRepository: UserStatusRepository,
 ) {
     @Transactional
     fun updateSelectedTrue(userId: String, statusId: String) {
@@ -14,7 +14,6 @@ class UserStatusUpdater(
         statusRepository.updateSelectedStatusTrue(userId, statusId)
     }
 
-    @Transactional
     fun updateDeselected(userId: String) {
         statusRepository.updateSelectedStatusFalse(userId)
     }

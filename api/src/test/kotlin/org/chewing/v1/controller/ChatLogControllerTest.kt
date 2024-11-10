@@ -1,14 +1,13 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.chat.ChatLogController
 import org.chewing.v1.service.chat.ChatLogService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -19,14 +18,12 @@ import java.time.format.DateTimeFormatter
 class ChatLogControllerTest : RestDocsTest() {
     private lateinit var chatLogService: ChatLogService
     private lateinit var chatLogController: ChatLogController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        chatLogService = mock()
+        chatLogService = mockk()
         chatLogController = ChatLogController(chatLogService)
         mockMvc = mockController(chatLogController)
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -47,15 +44,13 @@ class ChatLogControllerTest : RestDocsTest() {
         val chatBombLog = TestDataFactory.createBombLog(messageId5, chatRoomId, userId)
         val chatNormalLog = TestDataFactory.createNormalLog(messageId6, chatRoomId, userId)
 
-        whenever(chatLogService.getChatLog(chatRoomId, page)).thenReturn(
-            listOf(
-                chatFileLog,
-                chatReplyLog,
-                chatLeaveLog,
-                chatInviteLog,
-                chatBombLog,
-                chatNormalLog,
-            ),
+        every { chatLogService.getChatLog(chatRoomId, page) } returns listOf(
+            chatFileLog,
+            chatReplyLog,
+            chatLeaveLog,
+            chatInviteLog,
+            chatBombLog,
+            chatNormalLog,
         )
         val result = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/chatRooms/$chatRoomId/log")

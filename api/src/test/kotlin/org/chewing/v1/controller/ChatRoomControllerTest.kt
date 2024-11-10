@@ -1,17 +1,19 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.chat.ChatRoomController
+import org.chewing.v1.dto.request.chat.ChatRoomRequest
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.service.chat.RoomService
 import org.chewing.v1.util.StringToChatRoomSortCriteriaConverter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -25,18 +27,16 @@ class ChatRoomControllerTest : RestDocsTest() {
     private lateinit var chatRoomFacade: ChatRoomFacade
     private lateinit var roomService: RoomService
     private lateinit var chatRoomController: ChatRoomController
-    private lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
     fun setUp() {
-        chatRoomFacade = mock()
-        roomService = mock()
+        chatRoomFacade = mockk()
+        roomService = mockk()
         chatRoomController = ChatRoomController(chatRoomFacade, roomService)
         mockMvc = mockControllerWithCustomConverter(
             chatRoomController,
             StringToChatRoomSortCriteriaConverter(),
         )
-        objectMapper = objectMapper()
     }
 
     @Test
@@ -47,7 +47,7 @@ class ChatRoomControllerTest : RestDocsTest() {
         val formatLatestMessageTime =
             chatRoom.latestMessageTime.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
 
-        whenever(chatRoomFacade.getChatRooms(userId, ChatRoomSortCriteria.DATE)).thenReturn(listOf(chatRoom))
+        every { chatRoomFacade.getChatRooms(userId, ChatRoomSortCriteria.DATE) } returns listOf(chatRoom)
 
         mockMvc.perform(
             post("/api/chatRoom/list")
@@ -73,13 +73,20 @@ class ChatRoomControllerTest : RestDocsTest() {
     @Test
     fun `채팅방 삭제`() {
         val chatRoomIds = listOf("chatRoomId")
+
+        val requestBody = ChatRoomRequest.Delete(
+            chatRoomIds = chatRoomIds,
+        )
+
         val userId = "userId"
+
+        every { roomService.deleteChatRoom(any(), any()) } just Runs
 
         val result = mockMvc.perform(
             post("/api/chatRoom/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds))),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }
@@ -87,13 +94,20 @@ class ChatRoomControllerTest : RestDocsTest() {
     @Test
     fun `그룹 채팅방 삭제`() {
         val chatRoomIds = listOf("chatRoomId")
+
+        val requestBody = ChatRoomRequest.Delete(
+            chatRoomIds = chatRoomIds,
+        )
+
         val userId = "userId"
+
+        every { chatRoomFacade.leavesChatRoom(any(), any()) } just Runs
 
         val result = mockMvc.perform(
             post("/api/chatRoom/delete/group")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("chatRoomIds" to chatRoomIds))),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }
@@ -103,13 +117,17 @@ class ChatRoomControllerTest : RestDocsTest() {
         val userId = "userId"
         val friendId = "friendId"
 
-        whenever(roomService.createChatRoom(userId, friendId)).thenReturn("chatRoomId")
+        val requestBody = ChatRoomRequest.Create(
+            friendId = friendId,
+        )
+
+        every { roomService.createChatRoom(userId, friendId) } returns "chatRoomId"
 
         mockMvc.perform(
             post("/api/chatRoom/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("friendId" to friendId))),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.status").value(201))
             .andExpect(jsonPath("$.data.chatRoomId").value("chatRoomId"))
@@ -120,13 +138,17 @@ class ChatRoomControllerTest : RestDocsTest() {
         val userId = "userId"
         val friendIds = listOf("friendId")
 
-        whenever(chatRoomFacade.createGroupChatRoom(userId, friendIds)).thenReturn("chatRoomId")
+        val requestBody = ChatRoomRequest.CreateGroup(
+            friendIds = friendIds,
+        )
+
+        every { chatRoomFacade.createGroupChatRoom(any(), any()) } returns "chatRoomId"
 
         mockMvc.perform(
             post("/api/chatRoom/create/group")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(objectMapper.writeValueAsString(mapOf("friendIds" to friendIds))),
+                .content(jsonBody(requestBody)),
         ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.status").value(201))
             .andExpect(jsonPath("$.data.chatRoomId").value("chatRoomId"))
@@ -138,13 +160,18 @@ class ChatRoomControllerTest : RestDocsTest() {
         val chatRoomId = "chatRoomId"
         val friendId = "friendId"
 
+        val requestBody = ChatRoomRequest.Invite(
+            chatRoomId = chatRoomId,
+            friendId = friendId,
+        )
+
+        every { chatRoomFacade.inviteChatRoom(any(), any(), any()) } just Runs
+
         val result = mockMvc.perform(
             post("/api/chatRoom/invite")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(
-                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "friendId" to friendId)),
-                ),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }
@@ -155,13 +182,18 @@ class ChatRoomControllerTest : RestDocsTest() {
         val chatRoomId = "chatRoomId"
         val favorite = true
 
+        val requestBody = ChatRoomRequest.Favorite(
+            chatRoomId = chatRoomId,
+            favorite = favorite,
+        )
+
+        every { roomService.favoriteChatRoom(userId, chatRoomId, favorite) } just Runs
+
         val result = mockMvc.perform(
             post("/api/chatRoom/favorite")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", userId)
-                .content(
-                    objectMapper.writeValueAsString(mapOf("chatRoomId" to chatRoomId, "favorite" to favorite)),
-                ),
+                .content(jsonBody(requestBody)),
         )
         performCommonSuccessResponse(result)
     }

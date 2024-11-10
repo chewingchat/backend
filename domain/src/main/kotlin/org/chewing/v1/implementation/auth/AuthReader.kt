@@ -16,26 +16,20 @@ import org.springframework.stereotype.Component
 class AuthReader(
     private val phoneRepository: PhoneRepository,
     private val emailRepository: EmailRepository,
-    private val loggedInRepository: LoggedInRepository
+    private val loggedInRepository: LoggedInRepository,
 ) {
-    fun readContact(targetContact: Credential): Contact {
-        return when (targetContact) {
-            is EmailAddress -> emailRepository.read(targetContact)
-                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
+    fun readContact(targetContact: Credential): Contact = when (targetContact) {
+        is EmailAddress -> emailRepository.read(targetContact)
+            ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
 
-            is PhoneNumber -> phoneRepository.read(targetContact)
-                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
-        }
+        is PhoneNumber -> phoneRepository.read(targetContact)
+            ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
     }
 
-    fun readRefreshToken(refreshToken: String, userId: String): RefreshToken {
-        return loggedInRepository.read(refreshToken, userId) ?: throw AuthorizationException(ErrorCode.INVALID_TOKEN)
-    }
+    fun readRefreshToken(refreshToken: String, userId: String): RefreshToken = loggedInRepository.read(refreshToken, userId) ?: throw AuthorizationException(ErrorCode.INVALID_TOKEN)
 
-    fun readContactById(id: String, contactType: ContactType): Contact? {
-        return when (contactType) {
-            ContactType.EMAIL -> emailRepository.readById(id)
-            ContactType.PHONE -> phoneRepository.readById(id)
-        }
+    fun readContactById(contactId: String, contactType: ContactType): Contact? = when (contactType) {
+        ContactType.EMAIL -> emailRepository.readById(contactId)
+        ContactType.PHONE -> phoneRepository.readById(contactId)
     }
 }
