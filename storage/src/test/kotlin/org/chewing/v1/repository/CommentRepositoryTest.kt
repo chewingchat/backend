@@ -1,5 +1,6 @@
 package org.chewing.v1.repository
 
+import kotlinx.coroutines.runBlocking
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedCommentJpaRepository
 import org.chewing.v1.repository.jpa.user.CommentRepositoryImpl
@@ -19,7 +20,7 @@ internal class CommentRepositoryTest : JpaContextTest() {
     private lateinit var commentRepositoryImpl: CommentRepositoryImpl
 
     @Test
-    fun `댓글을 추가해야 한다`() {
+    fun `댓글을 추가해야 한다`() = runBlocking {
         val userId = generateUserId()
         val feedId = generateFeedId()
         val comment = "comment"
@@ -29,7 +30,7 @@ internal class CommentRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `댓글을 조회해야 한다`() {
+    fun `댓글을 조회해야 한다`() = runBlocking {
         val userId = generateUserId()
         val feedId = generateFeedId()
         val comments = jpaDataGenerator.feedCommentEntityDataList(userId, feedId)

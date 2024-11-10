@@ -1,5 +1,7 @@
 package org.chewing.v1.repository.jpa.feed
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.chewing.v1.jpaentity.user.FeedLikeId
 import org.chewing.v1.jpaentity.user.UserFeedLikesJpaEntity
 import org.chewing.v1.jparepository.feed.FeedLikesJpaRepository
@@ -11,14 +13,18 @@ import org.springframework.transaction.annotation.Transactional
 internal class FeedLikesRepositoryImpl(
     private val feedLikesRepository: FeedLikesJpaRepository,
 ) : FeedLikesRepository {
-    override fun likes(feedId: String, userId: String) {
+    override suspend fun likes(feedId: String, userId: String) {
         val userFeedJpaEntity = UserFeedLikesJpaEntity.fromUserFeed(userId, feedId)
-        feedLikesRepository.save(userFeedJpaEntity)
+        withContext(Dispatchers.IO) {
+            feedLikesRepository.save(userFeedJpaEntity)
+        }
     }
 
     @Transactional
-    override fun unlikes(feedId: String, userId: String) {
-        feedLikesRepository.deleteById(FeedLikeId(userId, feedId))
+    override suspend fun unlikes(feedId: String, userId: String) {
+        withContext(Dispatchers.IO) {
+            feedLikesRepository.deleteById(FeedLikeId(userId, feedId))
+        }
     }
 
     @Transactional

@@ -6,7 +6,7 @@ import java.util.stream.Stream
 
 enum class ErrorCode(
     val code: String,
-    val message: String
+    val message: String,
 ) {
     // Auth errors
     WRONG_VALIDATE_CODE("AUTH_1", "인증 번호가 틀렸습니다."),
@@ -62,6 +62,8 @@ enum class ErrorCode(
     CHATLOG_NOT_FOUND("CHATLOG_1", "채팅 로그를 찾을 수 없음."),
 
     ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_1", "공지사항을 찾을 수 없음."),
+
+    INVALID_TYPE("INVALID_1", "잘못된 타입입니다."),
     ;
 
     companion object {

@@ -7,7 +7,7 @@ class Phone private constructor(
     val phoneId: String,
     val countryCode: String,
     val number: String,
-    val validationCode: ValidationCode,
+    override val validationCode: ValidationCode,
 ) : Contact() {
     companion object {
         fun of(
@@ -16,16 +16,14 @@ class Phone private constructor(
             number: String,
             authorizedNumber: String,
             expiredTime: LocalDateTime,
-        ): Phone {
-            return Phone(
-                phoneId = phoneId,
-                countryCode = country,
-                number = number,
-                validationCode = ValidationCode.of(
-                    authorizedNumber,
-                    expiredTime
-                ),
-            )
-        }
+        ): Phone = Phone(
+            phoneId = phoneId,
+            countryCode = country,
+            number = number,
+            validationCode = ValidationCode.of(
+                authorizedNumber,
+                expiredTime,
+            ),
+        )
     }
 }

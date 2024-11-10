@@ -9,17 +9,17 @@ import org.springframework.transaction.annotation.Transactional
 class FeedLikeProcessor(
     private val feedLikeAppender: FeedLikeAppender,
     private val feedLikeRemover: FeedLikeRemover,
-    private val feedUpdater: FeedUpdater
+    private val feedUpdater: FeedUpdater,
 ) {
 
     @Transactional
-    fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
+    suspend fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
         feedLikeAppender.appendLikes(feedId, userId)
         feedUpdater.update(feedId, target)
     }
 
     @Transactional
-    fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
+    suspend fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
         feedLikeRemover.removeLikes(feedId, userId)
         feedUpdater.update(feedId, target)
     }

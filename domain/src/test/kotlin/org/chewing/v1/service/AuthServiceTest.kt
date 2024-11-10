@@ -11,6 +11,7 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.external.ExternalAuthClient
 import org.chewing.v1.implementation.auth.*
+import org.chewing.v1.model.contact.ContactType
 import org.chewing.v1.repository.auth.EmailRepository
 import org.chewing.v1.repository.auth.LoggedInRepository
 import org.chewing.v1.repository.auth.PhoneRepository
@@ -51,7 +52,7 @@ class AuthServiceTest {
     )
 
     @Test
-    fun `이메일_인증_생성`() {
+    fun `이메일 인증 생성`() {
         val emailAddress = TestDataFactory.createEmailAddress()
         val verificationCode = "1234"
 
@@ -259,7 +260,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun `전화번호 변경을 위한 생성시 기존에 다른사람이 사용하지 않아야 함`() {
+    fun `전화번호 변경을 위한 생성시 기존의 사용자가 나인 경우 성공`() {
         val userId = "1234"
         val verificationCode = "1234"
         val phoneNumber = TestDataFactory.createPhoneNumber()
@@ -276,7 +277,7 @@ class AuthServiceTest {
     }
 
     @Test
-    fun `이메일 변경을 위한 생성시 기존에 다른사람이 사용하지 않아야 함`() {
+    fun `이메일 변경을 위한 생성시 기존의 사용자가 나인 경우 성공`() {
         val userId = "1234"
         val verificationCode = "1234"
         val emailAddress = TestDataFactory.createEmailAddress()
@@ -290,5 +291,111 @@ class AuthServiceTest {
         assertDoesNotThrow {
             authService.createCredentialNotUsed(userId, emailAddress)
         }
+    }
+
+    @Test
+    fun `전화번호 변경을 위한 생성시 기존의 사용자가 존재하지 않음`() {
+        val userId = "1234"
+        val verificationCode = "1234"
+        val phoneNumber = TestDataFactory.createPhoneNumber()
+
+        every { phoneRepository.read(phoneNumber) } returns null
+        every { phoneRepository.appendIfNotExists(phoneNumber) } returns verificationCode
+        every { externalAuthClient.sendSms(phoneNumber, verificationCode) } just Runs
+
+        assertDoesNotThrow {
+            authService.createCredentialNotUsed(userId, phoneNumber)
+        }
+    }
+
+    @Test
+    fun `이메일 변경을 위한 생성시 기존의 사용자가 존재 하지 않음`() {
+        val userId = "1234"
+        val verificationCode = "1234"
+        val emailAddress = TestDataFactory.createEmailAddress()
+
+        every { emailRepository.read(emailAddress) } returns null
+        every { emailRepository.appendIfNotExists(emailAddress) } returns verificationCode
+        every { externalAuthClient.sendEmail(emailAddress, verificationCode) } just Runs
+
+        assertDoesNotThrow {
+            authService.createCredentialNotUsed(userId, emailAddress)
+        }
+    }
+
+    @Test
+    fun `이메일 정보를 id를 통해 가져와야함`() {
+        val contactId = "1234"
+        val contactType = ContactType.EMAIL
+        val testVerifyCode = "1234"
+        val email = TestDataFactory.createEmail(testVerifyCode)
+
+        every { emailRepository.readById(contactId) } returns email
+
+        val result = authService.getContactById(contactId, contactType)
+
+        assert(result == email)
+    }
+
+    @Test
+    fun `이메일 정보를 id를 통해 가져와야함 - 정보가 존재하지 않음`() {
+        val contactId = "1234"
+        val contactType = ContactType.EMAIL
+
+        every { emailRepository.readById(contactId) } returns null
+
+        val result = authService.getContactById(contactId, contactType)
+
+        assert(result == null)
+    }
+
+    @Test
+    fun `전화번호 정보를 id를 통해 가져와야함`() {
+        val contactId = "1234"
+        val contactType = ContactType.PHONE
+        val testVerifyCode = "1234"
+        val phone = TestDataFactory.createPhone(testVerifyCode)
+
+        every { phoneRepository.readById(contactId) } returns phone
+
+        val result = authService.getContactById(contactId, contactType)
+
+        assert(result == phone)
+    }
+
+    @Test
+    fun `전화번호 정보를 id를 통해 가져와야함 - 정보가 존재하지 않음`() {
+        val contactId = "1234"
+        val contactType = ContactType.PHONE
+
+        every { phoneRepository.readById(contactId) } returns null
+
+        val result = authService.getContactById(contactId, contactType)
+
+        assert(result == null)
+    }
+
+    @Test
+    fun `이메일 정보를 이메일로 가져와야함`() {
+        val emailAddress = TestDataFactory.createEmailAddress()
+        val email = TestDataFactory.createEmail("1234")
+
+        every { emailRepository.read(emailAddress) } returns email
+
+        val result = authService.getContact(emailAddress)
+
+        assert(result == email)
+    }
+
+    @Test
+    fun `전화번호 정보를 전화번호로 가져와야함`() {
+        val phoneNumber = TestDataFactory.createPhoneNumber()
+        val phone = TestDataFactory.createPhone("1234")
+
+        every { phoneRepository.read(phoneNumber) } returns phone
+
+        val result = authService.getContact(phoneNumber)
+
+        assert(result == phone)
     }
 }

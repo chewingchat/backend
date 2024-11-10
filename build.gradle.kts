@@ -69,6 +69,7 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         // 코루틴
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
     }
 
     tasks {
