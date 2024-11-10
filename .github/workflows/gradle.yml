@@ -82,6 +82,6 @@ jobs:
             export OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}
             export FCM_API_URL=${{ secrets.FCM_API_URL }}
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin # 도커계정정보 등록
-            docker compose pull  # 최신 이미지를 가져옴
-            docker compose down  # 기존 서비스 종료
-            docker compose up -d  # 새로운 컨테이너 생성 및 시작
+            docker-compose pull  # 최신 이미지를 가져옴
+            docker-compose down  # 기존 서비스 종료
+            docker-compose up -d  # 새로운 컨테이너 생성 및 시작
