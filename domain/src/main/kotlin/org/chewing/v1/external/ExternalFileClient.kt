@@ -4,6 +4,6 @@ import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 
 interface ExternalFileClient {
-    fun uploadFile(file: FileData, media: Media)
-    fun removeFile(media: Media)
+    suspend fun uploadFile(file: FileData, media: Media)
+    suspend fun removeFile(media: Media)
 }

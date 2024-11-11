@@ -1,0 +1,32 @@
+spring.config.activate.on-profile: test
+
+ncp:
+  storage:
+    region: kr-standard
+    endpoint: https://kr.object.ncloudstorage.com
+    accessKey: test-access-key
+    secretKey: test-secret-key
+    bucketName: test-bucket-name
+
+---
+spring.config.activate.on-profile: local
+
+ncp:
+  storage:
+    region: kr-standard
+    endpoint: https://kr.object.ncloudstorage.com
+    accessKey: ${NCP_ACCESS_KEY}
+    secretKey: ${NCP_SECRET_KEY}
+    bucketName: ${NCP_BUCKET_NAME}
+
+
+---
+spring.config.activate.on-profile: live
+
+ncp:
+  storage:
+    region: kr-standard
+    endpoint: https://kr.object.ncloudstorage.com
+    accessKey: ${NCP_ACCESS_KEY}
+    secretKey: ${NCP_SECRET_KEY}
+    bucketName: ${NCP_BUCKET_NAME}

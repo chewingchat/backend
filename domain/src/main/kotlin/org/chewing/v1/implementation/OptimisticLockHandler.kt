@@ -1,16 +1,15 @@
 package org.chewing.v1.implementation
 
-import kotlinx.coroutines.delay
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component
 
 @Component
 class OptimisticLockHandler {
-    suspend fun <T> retryOnOptimisticLock(
+    fun <T> retryOnOptimisticLock(
         maxRetry: Int = 5,
         initialDelay: Long = 100L,
         maxDelay: Long = 800L,
-        action: suspend () -> T,
+        action: () -> T,
     ): T? {
         var retryCount = 0
         var delayTime = initialDelay
@@ -20,7 +19,7 @@ class OptimisticLockHandler {
                 return action()
             } catch (ex: OptimisticLockingFailureException) {
                 retryCount++
-                delay(delayTime)
+                Thread.sleep(delayTime)
                 delayTime = (delayTime * 2).coerceAtMost(maxDelay)
             }
         }

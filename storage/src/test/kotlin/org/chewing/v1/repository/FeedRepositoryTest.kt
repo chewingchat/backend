@@ -1,6 +1,5 @@
 package org.chewing.v1.repository
 
-import kotlinx.coroutines.runBlocking
 import org.chewing.v1.config.JpaContextTest
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedStatus
@@ -67,7 +66,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 좋아요를 추가해야 한다`() = runBlocking {
+    fun `피드 좋아요를 추가해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.LIKES)
@@ -76,7 +75,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 좋아요를 취소해야 한다`() = runBlocking {
+    fun `피드 좋아요를 취소해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.LIKES)
@@ -86,7 +85,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 댓글을 추가해야 한다`() = runBlocking {
+    fun `피드 댓글을 추가해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.COMMENTS)
@@ -95,7 +94,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 댓글을 취소해야 한다`() = runBlocking {
+    fun `피드 댓글을 취소해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.COMMENTS)
@@ -105,7 +104,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 숨김을 해제해야 한다`() = runBlocking {
+    fun `피드 숨김을 해제해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.HIDE)
@@ -116,7 +115,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `피드 숨김을 해야 한다`() = runBlocking {
+    fun `피드 숨김을 해야 한다`() {
         val userId = generateUserId()
         val feedInfo = jpaDataGenerator.feedEntityData(userId)
         feedRepositoryImpl.update(feedInfo.feedId, FeedTarget.HIDE)
@@ -135,7 +134,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `소유자의 숨김 피드를 조회해야 한다`() = runBlocking {
+    fun `소유자의 숨김 피드를 조회해야 한다`() {
         val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.update(feedInfoList[0].feedId, FeedTarget.HIDE)
@@ -145,7 +144,7 @@ internal class FeedRepositoryTest : JpaContextTest() {
     }
 
     @Test
-    fun `소유자의 숨김하지 않은 피드를 조회해야 한다`() = runBlocking {
+    fun `소유자의 숨김하지 않은 피드를 조회해야 한다`() {
         val userId = generateUserId()
         val feedInfoList = jpaDataGenerator.feedEntityDataList(userId)
         feedRepositoryImpl.update(feedInfoList[0].feedId, FeedTarget.HIDE)

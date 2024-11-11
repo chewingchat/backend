@@ -6,19 +6,20 @@ import org.springframework.stereotype.Component
 
 @Component
 class FileGenerator(
-    @Value("\${media.url}") private val mediaUrl: String,
+    @Value("\${ncp.storage.endpoint}") private val baseUrl: String,
+    @Value("\${ncp.storage.bucketName}") private val bucketName: String,
 ) {
     fun generateMedias(
         files: List<FileData>,
         userId: String,
         category: FileCategory,
     ): List<Pair<FileData, Media>> = files.map { file ->
-        Pair(file, Media.upload(mediaUrl, category, userId, file.name, file.contentType))
+        Pair(file, Media.upload(baseUrl, bucketName, category, userId, file.name, file.contentType))
     }
 
     fun generateMedia(
         file: FileData,
         userId: String,
         category: FileCategory,
-    ): Media = Media.upload(mediaUrl, category, userId, file.name, file.contentType)
+    ): Media = Media.upload(baseUrl, bucketName, category, userId, file.name, file.contentType)
 }

@@ -1,7 +1,6 @@
 package org.chewing.v1.repository.jpa.feed
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import jakarta.transaction.Transactional
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
 import org.chewing.v1.model.feed.FeedInfo
@@ -9,15 +8,16 @@ import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.feed.FeedRepository
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 internal class FeedRepositoryImpl(
     private val feedJpaRepository: FeedJpaRepository,
 ) : FeedRepository {
-    override fun read(feedId: String): FeedInfo? = feedJpaRepository.findById(feedId).map { it.toFeedInfo() }.orElse(null)
+    override fun read(feedId: String): FeedInfo? =
+        feedJpaRepository.findById(feedId).map { it.toFeedInfo() }.orElse(null)
 
-    override fun reads(feedIds: List<String>): List<FeedInfo> = feedJpaRepository.findAllByFeedIdInOrderByCreatedAtAsc(feedIds.map { it }).map { it.toFeedInfo() }
+    override fun reads(feedIds: List<String>): List<FeedInfo> =
+        feedJpaRepository.findAllByFeedIdInOrderByCreatedAtAsc(feedIds.map { it }).map { it.toFeedInfo() }
 
     override fun readsOwned(userId: String, feedStatus: FeedStatus): List<FeedInfo> = when (feedStatus) {
         FeedStatus.HIDDEN -> feedJpaRepository.findAllByUserIdAndHideTrueOrderByCreatedAtAsc(userId)
@@ -29,10 +29,8 @@ internal class FeedRepositoryImpl(
         FeedStatus.ALL -> feedJpaRepository.findAllByUserIdOrderByCreatedAtAsc(userId).map { it.toFeedInfo() }
     }
 
-    override suspend fun update(feedId: String, target: FeedTarget): String? =
-        withContext(Dispatchers.IO) {
-            feedJpaRepository.findById(feedId).orElse(null)
-        }?.let {
+    override fun update(feedId: String, target: FeedTarget): String? =
+        feedJpaRepository.findById(feedId).orElse(null)?.let {
             when (target) {
                 FeedTarget.LIKES -> it.likes()
                 FeedTarget.UNLIKES -> it.unLikes()
@@ -41,13 +39,10 @@ internal class FeedRepositoryImpl(
                 FeedTarget.HIDE -> it.hide()
                 FeedTarget.UNHIDE -> it.unHide()
             }
-            withContext(Dispatchers.IO) {
-                feedJpaRepository.save(it)
-            }
+            feedJpaRepository.save(it)
             feedId
         }
 
-    @Transactional
     override fun removes(feedIds: List<String>) {
         feedJpaRepository.deleteAllById(feedIds)
     }
@@ -57,5 +52,6 @@ internal class FeedRepositoryImpl(
         feedJpaRepository.deleteAllByUserId(userId)
     }
 
-    override fun append(userId: String, topic: String): String = feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
+    override fun append(userId: String, topic: String): String =
+        feedJpaRepository.save(FeedJpaEntity.generate(topic, userId)).toFeedId()
 }

@@ -1,7 +1,6 @@
 package org.chewing.v1.controller.chat
 
 import org.chewing.v1.dto.request.chat.ChatRequest
-import org.chewing.v1.dto.request.chat.message.*
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
