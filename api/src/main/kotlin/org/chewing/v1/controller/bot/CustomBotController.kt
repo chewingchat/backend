@@ -23,6 +23,8 @@ class CustomBotController(
 
     @GetMapping("/chat")
     fun chat(@RequestParam(name = "prompt") prompt: String): String? {
+        println("API URL: $apiURL")  // 디버깅용 로그 추가
+        println("Model: $model")     // 디버깅용 로그 추가
         val request = ChatGPTRequest(model, prompt)
         val chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse::class.java)
         return chatGPTResponse?.choices?.get(0)?.message?.content
