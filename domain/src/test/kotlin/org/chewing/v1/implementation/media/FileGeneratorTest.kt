@@ -6,9 +6,11 @@ import org.chewing.v1.model.media.MediaType
 import org.junit.jupiter.api.Test
 
 class FileGeneratorTest {
-    private val mediaUrl = "testUrl"
+    private val baseUrl = "baseUrl"
+    private val bucketName = "bucketName"
     private val fileGenerator = FileGenerator(
-        mediaUrl,
+        baseUrl = baseUrl,
+        bucketName = bucketName,
     )
 
     @Test
@@ -21,7 +23,7 @@ class FileGeneratorTest {
 
         assert(result.size == 1)
         assert(result[0].first == files[0])
-        assert(result[0].second.url.startsWith("$mediaUrl/FEED/$userId"))
+        assert(result[0].second.url.startsWith("$baseUrl/$bucketName/FEED/$userId"))
         assert(result[0].second.index == 0)
         assert(result[0].second.type == MediaType.IMAGE_PNG)
         assert(result[0].second.category == FileCategory.FEED)
@@ -34,7 +36,7 @@ class FileGeneratorTest {
         val file = TestDataFactory.createFileData(MediaType.IMAGE_PNG, "0.png")
         val result = fileGenerator.generateMedia(file, userId, FileCategory.FEED)
 
-        assert(result.url.startsWith("$mediaUrl/FEED/$userId"))
+        assert(result.url.startsWith("$baseUrl/$bucketName/FEED/$userId"))
         assert(result.index == 0)
         assert(result.type == MediaType.IMAGE_PNG)
         assert(result.category == FileCategory.FEED)
@@ -47,7 +49,7 @@ class FileGeneratorTest {
         val file = TestDataFactory.createFileData(MediaType.IMAGE_PNG, "0.png")
         val result = fileGenerator.generateMedia(file, userId, FileCategory.PROFILE)
 
-        assert(result.url.startsWith("$mediaUrl/PROFILE/$userId"))
+        assert(result.url.startsWith("$baseUrl/$bucketName/PROFILE/$userId"))
         assert(result.index == 0)
         assert(result.type == MediaType.IMAGE_PNG)
         assert(result.category == FileCategory.PROFILE)
@@ -60,7 +62,7 @@ class FileGeneratorTest {
         val file = TestDataFactory.createFileData(MediaType.IMAGE_PNG, "0.png")
         val result = fileGenerator.generateMedia(file, userId, FileCategory.BACKGROUND)
 
-        assert(result.url.startsWith("$mediaUrl/BACKGROUND/$userId"))
+        assert(result.url.startsWith("$baseUrl/$bucketName/BACKGROUND/$userId"))
         assert(result.index == 0)
         assert(result.type == MediaType.IMAGE_PNG)
         assert(result.category == FileCategory.BACKGROUND)
@@ -73,7 +75,7 @@ class FileGeneratorTest {
         val file = TestDataFactory.createFileData(MediaType.AUDIO_MP3, "0.mp3")
         val result = fileGenerator.generateMedia(file, userId, FileCategory.TTS)
 
-        assert(result.url.startsWith("$mediaUrl/TTS/$userId"))
+        assert(result.url.startsWith("$baseUrl/$bucketName/TTS/$userId"))
         assert(result.index == 0)
         assert(result.type == MediaType.AUDIO_MP3)
         assert(result.category == FileCategory.TTS)

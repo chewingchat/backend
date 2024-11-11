@@ -1,7 +1,5 @@
 package org.chewing.v1.repository.jpa.user
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.chewing.v1.jpaentity.feed.FeedCommentJpaEntity
 import org.chewing.v1.jparepository.feed.FeedCommentJpaRepository
 import org.chewing.v1.model.comment.CommentInfo
@@ -18,9 +16,10 @@ internal class CommentRepositoryImpl(
         it.toCommentInfo()
     }
 
-    override fun readsIn(commentIds: List<String>): List<CommentInfo> = commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
-        it.toCommentInfo()
-    }
+    override fun readsIn(commentIds: List<String>): List<CommentInfo> =
+        commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
+            it.toCommentInfo()
+        }
 
     @Transactional
     override fun remove(commentId: String): String? = commentJpaRepository.findById(commentId).map {
@@ -34,10 +33,8 @@ internal class CommentRepositoryImpl(
             .deleteAllByFeedIdIn(feedIds)
     }
 
-    override suspend fun append(userId: String, feedId: String, comment: String) {
-        withContext(Dispatchers.IO) {
-            commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
-        }
+    override fun append(userId: String, feedId: String, comment: String) {
+        commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
     }
 
     override fun readsOwned(userId: String): List<CommentInfo> = commentJpaRepository.findAllByUserId(userId).map {

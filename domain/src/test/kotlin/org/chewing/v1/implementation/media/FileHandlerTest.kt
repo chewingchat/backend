@@ -1,13 +1,12 @@
 package org.chewing.v1.implementation.media
 
 import io.mockk.Runs
+import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
@@ -28,7 +27,12 @@ class FileHandlerTest {
 
     private val fileAppender = FileAppender(externalFileClient)
     private val fileRemover = FileRemover(externalFileClient)
-    private val fileGenerator = FileGenerator(mediaUrl = "testUrl")
+    private val baseUrl = "baseUrl"
+    private val bucketName = "bucketName"
+    private val fileGenerator = FileGenerator(
+        baseUrl = baseUrl,
+        bucketName = bucketName,
+    )
     private val fileValidator = FileValidator()
 
     private val fileHandler = FileHandler(fileAppender, fileRemover, fileGenerator, fileValidator, asyncJobExecutor)
@@ -54,7 +58,7 @@ class FileHandlerTest {
             TestDataFactory.createFileData(MediaType.IMAGE_PNG, "1.png"),
         )
 
-        every { externalFileClient.uploadFile(eq(files[0]), any()) } throws RuntimeException()
+        coEvery { externalFileClient.uploadFile(eq(files[0]), any()) } throws RuntimeException()
 
         val exception = assertThrows<ConflictException> {
             fileHandler.handleNewFiles(userId, files, FileCategory.FEED)
@@ -95,7 +99,7 @@ class FileHandlerTest {
         val userId = "userId"
         val file = TestDataFactory.createFileData(MediaType.IMAGE_PNG, "0.png")
 
-        every { externalFileClient.uploadFile(eq(file), any()) } throws RuntimeException()
+        coEvery { externalFileClient.uploadFile(eq(file), any()) } throws RuntimeException()
 
         val exception = assertThrows<ConflictException> {
             fileHandler.handleNewFile(userId, file, FileCategory.FEED)
@@ -109,7 +113,7 @@ class FileHandlerTest {
         val userId = "userId"
         val file = TestDataFactory.createFileData(MediaType.IMAGE_PNG, "0.png")
 
-        every { externalFileClient.uploadFile(any(), any()) } just Runs
+        coEvery { externalFileClient.uploadFile(any(), any()) } just Runs
 
         fileHandler.handleNewFile(userId, file, FileCategory.FEED)
     }
@@ -118,7 +122,7 @@ class FileHandlerTest {
     fun `파일 삭제 테스트 - 성공`() {
         val media = TestDataFactory.createMedia(FileCategory.PROFILE, 0, MediaType.IMAGE_PNG)
 
-        every { externalFileClient.removeFile(media) } just Runs
+        coEvery { externalFileClient.removeFile(media) } just Runs
 
         assertDoesNotThrow {
             fileHandler.handleOldFile(media)
@@ -130,7 +134,7 @@ class FileHandlerTest {
         val media1 = TestDataFactory.createMedia(FileCategory.FEED, 0, MediaType.IMAGE_PNG)
         val media2 = TestDataFactory.createMedia(FileCategory.FEED, 0, MediaType.IMAGE_PNG)
 
-        every { externalFileClient.removeFile(media1) } throws RuntimeException()
+        coEvery { externalFileClient.removeFile(media1) } throws RuntimeException()
 
         val exception = assertThrows<ConflictException> {
             fileHandler.handleOldFiles(listOf(media1, media2))
@@ -162,7 +166,7 @@ class FileHandlerTest {
         }
 
         // Then
-        verify(exactly = 0) { externalFileClient.removeFile(any()) }
+        coVerify(exactly = 0) { externalFileClient.removeFile(any()) }
         confirmVerified(externalFileClient)
     }
 }

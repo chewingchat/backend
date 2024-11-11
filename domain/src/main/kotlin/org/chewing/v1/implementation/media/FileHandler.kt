@@ -13,7 +13,7 @@ class FileHandler(
     private val fileRemover: FileRemover,
     private val fileGenerator: FileGenerator,
     private val fileValidator: FileValidator,
-    private val asyncJobExecutor: AsyncJobExecutor
+    private val asyncJobExecutor: AsyncJobExecutor,
 ) {
     fun handleNewFiles(userId: String, files: List<FileData>, category: FileCategory): List<Media> {
         fileValidator.validateFilesNameCorrect(files)
@@ -27,13 +27,17 @@ class FileHandler(
     fun handleNewFile(userId: String, file: FileData, category: FileCategory): Media {
         fileValidator.validateFileNameCorrect(file)
         val media = fileGenerator.generateMedia(file, userId, category)
-        fileAppender.appendFile(file, media)
+        asyncJobExecutor.executeAsyncJob(media) {
+            fileAppender.appendFile(file, media)
+        }
         return media
     }
 
     fun handleOldFile(media: Media) {
         if (media.type != MediaType.IMAGE_BASIC) {
-            fileRemover.removeFile(media)
+            asyncJobExecutor.executeAsyncJob(media) {
+                fileRemover.removeFile(media)
+            }
         }
     }
 

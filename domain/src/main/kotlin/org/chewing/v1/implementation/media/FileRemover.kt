@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class FileRemover(
-    private val externalFileClient: ExternalFileClient
+    private val externalFileClient: ExternalFileClient,
 ) {
-    fun removeFile(media: Media) {
+    suspend fun removeFile(media: Media) {
         try {
             externalFileClient.removeFile(media)
         } catch (e: Exception) {

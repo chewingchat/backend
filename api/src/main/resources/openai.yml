@@ -2,12 +2,11 @@ spring:
   config:
     activate:
       on-profile: test
-
 openai:
-  model: ${OPENAI_API_MODEL}
+  model: test
   api:
-    url: ${OPENAI_API_URL}
-    key: ${OPENAI_API_KEY}
+    url: test-url
+    key: test-key
 
 ---
 spring:

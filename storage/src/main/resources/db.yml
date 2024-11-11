@@ -36,6 +36,7 @@ storage:
       data-source-properties:
         rewriteBatchedStatements: true
 
+
 ---
 
 spring.config.activate.on-profile: local
@@ -52,7 +53,7 @@ spring:
   data:
     mongodb:
       host: localhost
-      port: 27018
+      port: 27017
       database: chewing
       authentication-database: admin
       username: root
@@ -64,7 +65,7 @@ storage:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbcUrl: jdbc:mysql://localhost:3306/chewing?useSSL=false&allowPublicKeyRetrieval=true&useSSL=false
       username: root
-      password: 1234
+      password: tjljh6767.
       pool-name: core-db-pool
       data-source-properties:
         rewriteBatchedStatements: true

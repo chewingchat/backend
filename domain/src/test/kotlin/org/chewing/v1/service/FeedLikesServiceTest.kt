@@ -1,22 +1,19 @@
 package org.chewing.v1.service
 
 import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
+import io.mockk.justRun
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
+import org.chewing.v1.implementation.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.implementation.feed.like.*
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.feed.FeedLikesRepository
 import org.chewing.v1.service.feed.FeedLikesService
-import org.chewing.v1.util.AsyncJobExecutor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -30,11 +27,11 @@ class FeedLikesServiceTest {
     private val feedLikeChecker = FeedLikeChecker(feedLikesRepository)
     private val feedLikeRemover = FeedLikeRemover(feedLikesRepository)
     private val feedLikeProcessor = FeedLikeProcessor(feedLikeAppender, feedLikeRemover, feedUpdater)
-    private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    private val asyncJobExecutor = AsyncJobExecutor(ioScope)
-    private val feedLikeHandler = FeedLikeHandler(feedLikeProcessor, asyncJobExecutor)
+    private val optimisticLockHandler = OptimisticLockHandler()
+    private val feedLikeHandler = FeedLikeHandler(feedLikeProcessor, optimisticLockHandler)
     private val feedLikeValidator = FeedLikeValidator(feedLikesRepository)
     private val feedLikeService = FeedLikesService(feedLikeValidator, feedLikeHandler, feedLikeRemover, feedLikeChecker)
+
 
     @Test
     fun `피드 좋아요 성공`() {
@@ -43,10 +40,11 @@ class FeedLikesServiceTest {
         val feedTarget = FeedTarget.LIKES
 
         every { feedLikesRepository.checkLike(feedId, userId) } returns false
-        coJustRun { feedUpdater.update(feedId, feedTarget) }
-        coJustRun { feedLikesRepository.likes(any(), any()) }
+        justRun { feedUpdater.update(feedId, feedTarget) }
+        justRun { feedLikesRepository.likes(any(), any()) }
 
         feedLikeService.like(feedId, userId, feedTarget)
+
     }
 
     @Test
@@ -71,8 +69,8 @@ class FeedLikesServiceTest {
         val feedTarget = FeedTarget.LIKES
 
         every { feedLikesRepository.checkLike(feedId, userId) } returns false
-        coJustRun { feedLikesRepository.likes(feedId, userId) }
-        coEvery { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
+        justRun { feedLikesRepository.likes(feedId, userId) }
+        every { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
 
         val result = assertThrows<ConflictException> {
             feedLikeService.like(feedId, userId, feedTarget)
@@ -90,10 +88,11 @@ class FeedLikesServiceTest {
         val feedTarget = FeedTarget.UNLIKES
 
         every { feedLikesRepository.checkLike(feedId, userId) } returns true
-        coJustRun { feedUpdater.update(feedId, feedTarget) }
-        coJustRun { feedLikesRepository.unlikes(any(), any()) }
+        justRun { feedUpdater.update(feedId, feedTarget) }
+        justRun { feedLikesRepository.unlikes(any(), any()) }
 
         feedLikeService.unlike(feedId, userId, feedTarget)
+
     }
 
     @Test
@@ -118,8 +117,8 @@ class FeedLikesServiceTest {
         val feedTarget = FeedTarget.UNLIKES
 
         every { feedLikesRepository.checkLike(feedId, userId) } returns true
-        coJustRun { feedLikesRepository.unlikes(feedId, userId) }
-        coEvery { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
+        justRun { feedLikesRepository.unlikes(feedId, userId) }
+        every { feedUpdater.update(feedId, feedTarget) } throws OptimisticLockingFailureException("")
 
         val result = assertThrows<ConflictException> {
             feedLikeService.unlike(feedId, userId, feedTarget)
@@ -140,6 +139,7 @@ class FeedLikesServiceTest {
         val result = feedLikeService.checkLike(feedId, userId)
 
         assert(result)
+
     }
 
     @Test
@@ -162,4 +162,5 @@ class FeedLikesServiceTest {
             feedLikeService.unlikes(listOf(feedId))
         }
     }
+
 }
