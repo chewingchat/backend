@@ -2,7 +2,6 @@ spring:
   config:
     activate:
       on-profile: test
-
 openai:
   model: test
   api:
@@ -16,10 +15,10 @@ spring:
       on-profile: local
 
 openai:
-  model: local
+  model: ${OPENAI_API_MODEL}
   api:
-    url: local-url
-    key: local-key
+    url: ${OPENAI_API_URL}
+    key: ${OPENAI_API_KEY}
 
 ---
 spring:

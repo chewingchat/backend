@@ -15,6 +15,7 @@ class OpenAiConfig {
     fun restTemplate(): RestTemplate {
         val restTemplate = RestTemplate()
         val interceptor = ClientHttpRequestInterceptor { request, body, execution ->
+            println("Using API Key: $openAiKey")  // 디버깅용 로그 추가
             request.headers.add("Authorization", "Bearer $openAiKey")
             execution.execute(request, body)
         }

@@ -36,6 +36,7 @@ storage:
       data-source-properties:
         rewriteBatchedStatements: true
 
+
 ---
 
 spring.config.activate.on-profile: local

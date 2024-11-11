@@ -29,17 +29,4 @@ class AsyncJobExecutor(
         }
         job.await()
     }
-
-    fun <T> executeAsyncJobsTest(
-        items: List<T>,
-        action: suspend (T) -> Unit,
-    ) = runBlocking {
-        val jobs = items.map { item ->
-            ioScope.launch {
-                // 병렬 실행이 아닌 순차 비동기 작업
-                action(item)
-            }
-        }
-        jobs.forEach { it.join() } // 모든 작업이 끝날 때까지 기다림
-    }
 }
