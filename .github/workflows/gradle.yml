@@ -84,10 +84,7 @@ jobs:
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080  # SSH가 8080 포트에서 실행 중인 경우
           script: |
-            # docker-compose 설치 URL이 올바른지 확인하고 설치
-            DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K[0-9.]+')/docker-compose-$(uname -s)-$(uname -m)"
-            sudo curl -L $DOCKER_COMPOSE_URL -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
+          
             export SPRING_PROFILES_ACTIVE=live
             export STORAGE_DATABASE_CORE_DB_NAME=${{ secrets.STORAGE_DATABASE_CORE_DB_NAME }}
             export STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}
@@ -101,6 +98,6 @@ jobs:
             export OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}
             export FCM_API_URL=${{ secrets.FCM_API_URL }}
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker-compose pull  # 최신 이미지를 가져옴
-            docker-compose down  # 기존 서비스 종료
-            docker-compose up -d  # 새로운 컨테이너 생성 및 시작
+            docker compose pull  # 최신 이미지를 가져옴
+            docker compose down  # 기존 서비스 종료
+            docker compose up -d  # 새로운 컨테이너 생성 및 시작
