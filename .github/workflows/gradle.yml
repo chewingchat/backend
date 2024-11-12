@@ -5,6 +5,13 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
 name: CI/CD Pipeline
 
 on:
@@ -38,13 +45,17 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+            
       - name: Build with Gradle
-        # dev 브랜치에서 빌드 단계 실행
-        if: github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 빌드
+        env:
+          SPRING_PROFILES_ACTIVE: live
         run: ./gradlew clean build
 
       - name: Build Docker Image
         if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 빌드
+        env:
+          SPRING_PROFILES_ACTIVE: live
         run: docker build -t yhkim052556/chewingrepository:latest .
 
       - name: Login to Docker Hub
@@ -52,10 +63,13 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          SPRING_PROFILES_ACTIVE: live
         run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
       - name: Push Docker Image to Docker Hub
         if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 푸시
+        env:
+          SPRING_PROFILES_ACTIVE: live
         run: docker push yhkim052556/chewingrepository:latest
 
   deploy:
@@ -68,11 +82,21 @@ jobs:
           host: ${{ secrets.NCP_SERVER_HOST }}
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
-          port: 8080  # SSH가 8080 포트에서 실행 중인 경우  /  8080번 방화벽 뚫어서 업뎃
+          port: 8080  # SSH가 8080 포트에서 실행 중인 경우
           script: |
-            # .env 파일에서 환경 변수 로드
-            set -o allexport; source .env; set +o allexport;
-            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin # 도커계정정보 등록
+            export SPRING_PROFILES_ACTIVE=live
+            export STORAGE_DATABASE_CORE_DB_NAME=${{ secrets.STORAGE_DATABASE_CORE_DB_NAME }}
+            export STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}
+            export STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }}
+            export STORAGE_DATABASE_MONGO_DB_NAME=${{ secrets.STORAGE_DATABASE_MONGO_DB_NAME }}
+            export STORAGE_DATABASE_MONGO_DB_USER=${{ secrets.STORAGE_DATABASE_MONGO_DB_USER }}
+            export STORAGE_DATABASE_MONGO_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_MONGO_DB_PASSWORD }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            export OPENAI_API_MODEL=${{ secrets.OPENAI_API_MODEL }}
+            export OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}
+            export FCM_API_URL=${{ secrets.FCM_API_URL }}
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker-compose pull  # 최신 이미지를 가져옴
             docker-compose down  # 기존 서비스 종료
             docker-compose up -d  # 새로운 컨테이너 생성 및 시작
