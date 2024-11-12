@@ -71,7 +71,7 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_MYSELF)
@@ -88,7 +88,7 @@ class FriendShipServiceTest {
         every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_BLOCK)
@@ -105,7 +105,7 @@ class FriendShipServiceTest {
         every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_BLOCKED)
@@ -122,7 +122,7 @@ class FriendShipServiceTest {
         every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_ALREADY_CREATED)
@@ -140,7 +140,7 @@ class FriendShipServiceTest {
         every { friendShipRepository.append(friendId, userId, userName) } just Runs
 
         assertDoesNotThrow {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
     }
 

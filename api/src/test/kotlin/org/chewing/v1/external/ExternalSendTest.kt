@@ -1,8 +1,15 @@
 package org.chewing.v1.external
 
 import org.chewing.v1.config.IntegrationTest
+import org.chewing.v1.implementation.ai.AiSender
 import org.chewing.v1.implementation.media.FileHandler
+import org.chewing.v1.model.feed.Feed
+import org.chewing.v1.model.feed.FeedDetail
+import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.media.FileCategory
+import org.chewing.v1.model.media.Media
+import org.chewing.v1.model.user.UserName
+import org.chewing.v1.service.ai.AiService
 import org.chewing.v1.util.FileUtil
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,12 +22,19 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDateTime
 import javax.imageio.ImageIO
 
 @ActiveProfiles("local")
 class ExternalSendTest : IntegrationTest() {
     @Autowired
     private lateinit var fileHandler: FileHandler
+
+    @Autowired
+    private lateinit var aiService: AiService
+
+    @Autowired
+    private lateinit var aiSender: AiSender
 
     @Test
     fun test() {
@@ -55,6 +69,37 @@ class ExternalSendTest : IntegrationTest() {
         // 로컬 파일로 저장하는 함수 호출
         saveMultipartFileToLocal(file, localFilePath)
     }
+
+    @Test
+    fun test2() {
+        val feedInfo = FeedInfo.of(
+            feedId = "testFeedId",
+            userId = "testUserId",
+            topic = "오늘 공부함",
+            likes = 0,
+            comments = 0,
+            uploadAt = LocalDateTime.now(),
+        )
+        val media = Media.of(
+            FileCategory.FEED,
+            "https://kr.object.ncloudstorage.com/chewing-bucket/PROFILE/testUserId/9ee1c9f6-793e-40bf-947b-a4380a043735/0.jpg",
+            0,
+            org.chewing.v1.model.media.MediaType.IMAGE_JPG,
+        )
+        val feedDetail = FeedDetail.of(
+            feedDetailId = "testFeedDetailId",
+            feedId = "testFeedId",
+            media = media,
+        )
+        val friendName = UserName.of("김", "츄즈")
+        val feed = Feed.of(feedInfo, listOf(feedDetail))
+        val result = aiService.getAiRecentSummary(friendName, listOf(feed))
+        println(result)
+
+//        val prompt = "친구님의 최근 생활을 보아하니 요즘 두바이초콜릿을 먹어보고 싶어합니다. 누군가가 선물을 해주면 김츄즈님이 행복해할 것입니다."
+//        println(aiSender.sendAiPrompt(prompt))
+    }
+
     private fun saveMultipartFileToLocal(multipartFile: MockMultipartFile, filePath: String) {
         try {
             val file = File(filePath)
