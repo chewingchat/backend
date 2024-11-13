@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.auth.oauth2.GoogleCredentials
@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Request.Builder
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.chewing.v1.dto.FcmMessageDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component
 class FcmClient(
     private val objectMapper: ObjectMapper,
     @Value("\${fcm.api.url}") private val url: String,
-    private val client: OkHttpClient = OkHttpClient()
+    private val client: OkHttpClient = OkHttpClient(),
 ) {
     fun sendMessage(message: FcmMessageDto) {
         val jsonMessage = objectMapper.writeValueAsString(message)

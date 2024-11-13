@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.dto
 
 import org.chewing.v1.model.ai.ImagePrompt
 import org.chewing.v1.model.ai.Prompt

@@ -3,6 +3,8 @@ package org.chewing.v1.external
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import mu.KotlinLogging
+import org.chewing.v1.client.FcmClient
+import org.chewing.v1.dto.FcmMessageDto
 import org.chewing.v1.model.notification.Notification
 import org.springframework.stereotype.Component
 

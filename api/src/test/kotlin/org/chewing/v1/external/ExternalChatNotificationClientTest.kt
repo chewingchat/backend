@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.IntegrationTest
+import org.chewing.v1.dto.ChatMessageDto
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.implementation.session.SessionProvider
 import org.junit.jupiter.api.AfterAll

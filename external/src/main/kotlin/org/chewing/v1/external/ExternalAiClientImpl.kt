@@ -2,6 +2,8 @@ package org.chewing.v1.external
 
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import mu.KotlinLogging
+import org.chewing.v1.dto.ChatGPTRequest
+import org.chewing.v1.dto.ChatGPTResponse
 import org.chewing.v1.model.ai.Prompt
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType

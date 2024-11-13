@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.config
 
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
@@ -10,7 +10,5 @@ import org.springframework.context.annotation.Profile
 class OkHttpClientConfig {
 
     @Bean
-    fun okHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
-    }
+    fun okHttpClient(): OkHttpClient = OkHttpClient.Builder().build()
 }

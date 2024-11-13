@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.dto
 
 // ChatGPTResponse
 
