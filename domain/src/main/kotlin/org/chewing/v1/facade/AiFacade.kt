@@ -12,9 +12,9 @@ class AiFacade(
     private val aiService: AiService,
     private val friendShipService: FriendShipService,
 ) {
-    fun getAiRecentSummary(userId: String, friendId: String, targetDate: DateTarget) {
+    fun getAiRecentSummary(userId: String, friendId: String, targetDate: DateTarget): String {
         val friendName = friendShipService.getFriendName(userId, friendId)
         val feeds = feedService.getFriendFulledFeeds(friendId, targetDate)
-        aiService.getAiRecentSummary(friendName, feeds)
+        return aiService.getAiRecentSummary(friendName, feeds)
     }
 }

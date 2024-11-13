@@ -7,6 +7,11 @@ data class ChatGPTResponse(
 ) {
     data class Choice(
         var index: Int = 0,
-        var message: ChatGptMessage = ChatGptMessage(),
-    )
+        var message: ChatGptMessage,
+    ) {
+        data class ChatGptMessage(
+            var role: String,
+            var content: String,
+        )
+    }
 }
