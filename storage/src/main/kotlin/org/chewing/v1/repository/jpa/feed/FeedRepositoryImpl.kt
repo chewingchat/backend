@@ -3,11 +3,13 @@ package org.chewing.v1.repository.jpa.feed
 import jakarta.transaction.Transactional
 import org.chewing.v1.jpaentity.feed.FeedJpaEntity
 import org.chewing.v1.jparepository.feed.FeedJpaRepository
+import org.chewing.v1.model.ai.DateTarget
 import org.chewing.v1.model.feed.FeedInfo
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.repository.feed.FeedRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 internal class FeedRepositoryImpl(
@@ -27,6 +29,16 @@ internal class FeedRepositoryImpl(
             .map { it.toFeedInfo() }
 
         FeedStatus.ALL -> feedJpaRepository.findAllByUserIdOrderByCreatedAtAsc(userId).map { it.toFeedInfo() }
+    }
+
+    override fun readsFriendBetween(userId: String, dateTarget: DateTarget): List<FeedInfo> {
+        val now = LocalDateTime.now()
+        val startDate = when (dateTarget) {
+            DateTarget.WEEKLY -> now.minusWeeks(1)
+            DateTarget.MONTHLY -> now.minusMonths(1)
+        }
+        return feedJpaRepository.findAllByUserIdAndHideTrueAndCreatedAtAfterOrderByCreatedAtAsc(userId, startDate)
+            .map { it.toFeedInfo() }
     }
 
     override fun update(feedId: String, target: FeedTarget): String? =

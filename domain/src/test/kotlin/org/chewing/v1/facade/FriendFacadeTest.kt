@@ -31,10 +31,10 @@ class FriendFacadeTest {
         every { authService.getContact(targetContact) } returns contact
         every { userService.getUserByContact(contact) } returns targetUser
         every { userService.getUserAccount(userId) } returns userAccount
-        every { friendShipService.creatFriendShip(userId, userAccount.user.name, targetUser.userId, friendName) } just Runs
+        every { friendShipService.createFriendShip(userId, userAccount.user.name, targetUser.userId, friendName) } just Runs
 
         friendFacade.addFriend(userId, friendName, targetContact)
 
-        verify { friendShipService.creatFriendShip(userId, userAccount.user.name, targetUser.userId, friendName) }
+        verify { friendShipService.createFriendShip(userId, userAccount.user.name, targetUser.userId, friendName) }
     }
 }

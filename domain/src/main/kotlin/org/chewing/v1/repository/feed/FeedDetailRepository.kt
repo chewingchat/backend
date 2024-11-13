@@ -8,4 +8,5 @@ interface FeedDetailRepository {
     fun readsFirstIndex(feedIds: List<String>): List<FeedDetail>
     fun removes(feedIds: List<String>): List<Media>
     fun append(medias: List<Media>, feedId: String)
+    fun reads(feedIds: List<String>): List<FeedDetail>
 }

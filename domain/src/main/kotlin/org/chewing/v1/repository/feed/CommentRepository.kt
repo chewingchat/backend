@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 interface CommentRepository {
     fun reads(feedId: String): List<CommentInfo>
     fun readsIn(commentIds: List<String>): List<CommentInfo>
-    suspend fun append(userId: String, feedId: String, comment: String)
+    fun append(userId: String, feedId: String, comment: String)
     fun readsOwned(userId: String): List<CommentInfo>
     fun remove(commentId: String): String?
     fun removes(feedIds: List<String>)

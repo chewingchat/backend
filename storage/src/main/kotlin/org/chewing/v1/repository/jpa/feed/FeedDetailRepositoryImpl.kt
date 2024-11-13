@@ -29,4 +29,6 @@ internal class FeedDetailRepositoryImpl(
     override fun append(medias: List<Media>, feedId: String) {
         feedDetailJpaRepository.saveAll(FeedDetailJpaEntity.generate(medias, feedId))
     }
+
+    override fun reads(feedIds: List<String>): List<FeedDetail> = feedDetailJpaRepository.findAllByFeedIdInOrderByFeedIndexAsc(feedIds).map { it.toFeedDetail() }
 }

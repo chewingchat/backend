@@ -13,13 +13,13 @@ class FeedLikeProcessor(
 ) {
 
     @Transactional
-    suspend fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
+    fun processFeedLikes(feedId: String, userId: String, target: FeedTarget) {
         feedLikeAppender.appendLikes(feedId, userId)
         feedUpdater.update(feedId, target)
     }
 
     @Transactional
-    suspend fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
+    fun processFeedUnLikes(feedId: String, userId: String, target: FeedTarget) {
         feedLikeRemover.removeLikes(feedId, userId)
         feedUpdater.update(feedId, target)
     }

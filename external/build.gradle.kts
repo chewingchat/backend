@@ -9,4 +9,5 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.security:spring-security-oauth2-client")
     implementation("software.amazon.awssdk:s3:2.29.6")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FriendShipValidator(
-    private val friendShipRepository: FriendShipRepository
+    private val friendShipRepository: FriendShipRepository,
 ) {
     private fun validateBlock(friendShip: FriendShip) {
         if (friendShip.type == AccessStatus.BLOCK) {
@@ -38,13 +38,8 @@ class FriendShipValidator(
         }
     }
 
-    fun validateInteractionAllowed(userId: String, friendId: String) {
-        validateMyself(userId, friendId)
-        friendShipRepository.read(userId, friendId)?.let {
-            validateBlock(it)
-            validateBlocked(it)
-            return
-        }
-        throw ConflictException(ErrorCode.FRIEND_NOT_FOUND)
+    fun validateInteractionAllowed(friendShip: FriendShip) {
+        validateBlock(friendShip)
+        validateBlocked(friendShip)
     }
 }

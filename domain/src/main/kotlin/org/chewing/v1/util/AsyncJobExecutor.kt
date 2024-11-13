@@ -29,4 +29,14 @@ class AsyncJobExecutor(
         }
         job.await()
     }
+
+    fun <T, R> executeAsyncReturnJob(
+        item: T,
+        action: suspend (T) -> R,
+    ): R = runBlocking {
+        val job = ioScope.async {
+            action(item)
+        }
+        job.await()
+    }
 }
