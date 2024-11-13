@@ -1,5 +1,4 @@
 package org.chewing.v1.external
-
 interface ExternalSessionClient {
     fun connect(userId: String, sessionId: String)
     fun isOnline(userId: String): Boolean

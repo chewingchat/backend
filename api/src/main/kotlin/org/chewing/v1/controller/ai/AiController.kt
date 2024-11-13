@@ -1,4 +1,4 @@
-package org.chewing.v1.controller.bot
+package org.chewing.v1.controller.ai
 
 import org.chewing.v1.dto.response.ai.AiResponse
 import org.chewing.v1.facade.AiFacade

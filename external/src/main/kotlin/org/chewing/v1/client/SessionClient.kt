@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.client
 
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
@@ -19,11 +19,7 @@ class SessionClient {
         }
     }
 
-    fun isUserOnline(userId: String): Boolean {
-        return sessions.containsKey(userId)
-    }
+    fun isUserOnline(userId: String): Boolean = sessions.containsKey(userId)
 
-    fun getSessionId(userId: String): String {
-        return sessions[userId]?.firstOrNull() ?: ""
-    }
+    fun getSessionId(userId: String): String = sessions[userId]?.firstOrNull() ?: ""
 }

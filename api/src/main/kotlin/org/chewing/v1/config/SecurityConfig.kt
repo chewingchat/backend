@@ -31,7 +31,7 @@ class SecurityConfig(
                         "/api/auth/refresh",
                         "/api/auth/logout",
                         "/ws-stomp/**",
-                        "/bot/chat" // /bot/chat 경로 인증 없이 접근 가능(gpt api)
+                        "/bot/chat", // /ai/chat 경로 인증 없이 접근 가능(gpt api)
                     ).permitAll() // 인증 없이 접근 가능
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요(개인적인 부분)
             }

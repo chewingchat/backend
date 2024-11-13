@@ -1,4 +1,4 @@
-package org.chewing.v1.external
+package org.chewing.v1.dto
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -111,8 +111,8 @@ sealed class ChatMessageDto {
 
     companion object {
         fun from(chatMessage: ChatMessage): ChatMessageDto {
-            val formattedTime = chatMessage.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
-            val formattedExpiredTime = chatMessage.timestamp.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")
+            val formattedTime = chatMessage.timestamp.format(dateTimeFormatter)
             return when (chatMessage) {
                 is ChatReplyMessage -> Reply(
                     messageId = chatMessage.messageId,
@@ -123,7 +123,7 @@ sealed class ChatMessageDto {
                     parentMessagePage = chatMessage.parentMessagePage,
                     parentSeqNumber = chatMessage.parentSeqNumber,
                     parentMessageText = chatMessage.parentMessageText,
-                    timestamp = formattedTime,
+                    timestamp = chatMessage.timestamp.format(dateTimeFormatter),
                     seqNumber = chatMessage.number.sequenceNumber,
                     page = chatMessage.number.page,
                     text = chatMessage.text,
@@ -179,7 +179,7 @@ sealed class ChatMessageDto {
                     timestamp = formattedTime,
                     seqNumber = chatMessage.number.sequenceNumber,
                     page = chatMessage.number.page,
-                    expiredAt = formattedExpiredTime,
+                    expiredAt = chatMessage.expiredAt.format(dateTimeFormatter),
                     text = chatMessage.text,
                 )
 
