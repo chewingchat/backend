@@ -11,7 +11,7 @@ class EmoticonAggregator {
 
     fun aggregateEmoticons(
         emotionPacks: List<EmoticonPackInfo>,
-        emoticons: List<EmoticonInfo>
+        emoticons: List<EmoticonInfo>,
     ): List<EmoticonPack> {
         val emoticonGroup = emoticons.groupBy { it.emoticonPackId }
         return emoticonGroup.mapNotNull { emoticonInfo ->
@@ -24,7 +24,7 @@ class EmoticonAggregator {
                     it.id,
                     it.name,
                     it.url,
-                    emoticonList
+                    emoticonList,
                 )
             }
         }

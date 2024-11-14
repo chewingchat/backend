@@ -5,13 +5,13 @@ import java.util.*
 
 class ValidationCode(
     val code: String,
-    val expiredAt: LocalDateTime
+    val expiredAt: LocalDateTime,
 ) {
     companion object {
         fun of(code: String, expiredAt: LocalDateTime): ValidationCode {
             return ValidationCode(
                 code = code,
-                expiredAt = expiredAt
+                expiredAt = expiredAt,
             )
         }
     }

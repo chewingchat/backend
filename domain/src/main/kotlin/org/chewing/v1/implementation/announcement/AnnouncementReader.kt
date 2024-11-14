@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AnnouncementReader(
-    private val announcementRepository: AnnouncementRepository
+    private val announcementRepository: AnnouncementRepository,
 ) {
     fun reads(): List<Announcement> {
         return announcementRepository.reads()

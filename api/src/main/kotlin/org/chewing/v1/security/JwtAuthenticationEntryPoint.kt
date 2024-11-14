@@ -11,12 +11,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver
 @Component
 class JwtAuthenticationEntryPoint(
     @Qualifier("handlerExceptionResolver")
-    private val resolver: HandlerExceptionResolver
+    private val resolver: HandlerExceptionResolver,
 ) : AuthenticationEntryPoint {
     override fun commence(
         request: HttpServletRequest?,
         response: HttpServletResponse?,
-        authException: AuthenticationException?
+        authException: AuthenticationException?,
     ) {
         val exception = request!!.getAttribute("Exception") as? Exception
         resolver.resolveException(request, response!!, null, exception ?: authException!!)

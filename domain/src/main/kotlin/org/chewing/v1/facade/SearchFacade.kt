@@ -19,7 +19,7 @@ class SearchFacade(
     private val chatLogService: ChatLogService,
     private val chatRoomAggregator: ChatRoomAggregator,
     private val friendSearchEngine: FriendSearchEngine,
-    private val chatRoomSearchEngine: ChatRoomSearchEngine
+    private val chatRoomSearchEngine: ChatRoomSearchEngine,
 ) {
     fun search(userId: String, keyword: String): Search {
         val friendShips = friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)

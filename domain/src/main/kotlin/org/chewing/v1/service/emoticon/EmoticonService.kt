@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class EmoticonService(
     private val emoticonReader: EmoticonReader,
     private val userEmoticonReader: UserEmoticonReader,
-    private val emoticonAggregator: EmoticonAggregator
+    private val emoticonAggregator: EmoticonAggregator,
 ) {
     fun fetchUserEmoticonPacks(userId: String): List<EmoticonPack> {
         val userEmoticons = userEmoticonReader.readUserEmoticonPacks(userId)

@@ -40,11 +40,10 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         val requestBody = mapOf(
             "test" to 0,
         )
-        // 'test' 파라미터를 누락하여 예외 유발
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody(requestBody)), // 'test' 파라미터 누락
+                .content(jsonBody(requestBody)),
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -58,8 +57,8 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("test", "testValue") // 'test' 파라미터 포함
-                .content(""), // 빈 본문 전송
+                .param("test", "testValue")
+                .content(""),
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
@@ -76,7 +75,7 @@ class GlobalExceptionHandlerTest : RestDocsTest() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("test", "testValue") // 'test' 파라미터 포함
+                .param("test", "testValue")
                 .content(jsonBody(requestBody)),
         )
             .andExpect(status().isBadRequest)

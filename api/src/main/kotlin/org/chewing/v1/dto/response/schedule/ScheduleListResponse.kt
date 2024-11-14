@@ -4,14 +4,14 @@ import org.chewing.v1.model.schedule.Schedule
 import java.time.format.DateTimeFormatter
 
 data class ScheduleListResponse(
-    val schedules: List<ScheduleResponse>
+    val schedules: List<ScheduleResponse>,
 ) {
     companion object {
         fun of(schedules: List<Schedule>): ScheduleListResponse {
             return ScheduleListResponse(
                 schedules.map {
                     ScheduleResponse.of(it)
-                }
+                },
             )
         }
     }
@@ -24,7 +24,7 @@ data class ScheduleListResponse(
         val notificationTime: String,
         val memo: String,
         val location: String,
-        val private: Boolean
+        val private: Boolean,
     ) {
         companion object {
             fun of(schedule: Schedule): ScheduleResponse {
@@ -37,7 +37,7 @@ data class ScheduleListResponse(
                     schedule.time.notificationAt.format(formatter),
                     schedule.content.memo,
                     schedule.content.location,
-                    schedule.content.private
+                    schedule.content.private,
                 )
             }
         }

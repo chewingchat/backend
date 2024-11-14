@@ -26,7 +26,7 @@ internal class PhoneJpaEntity(
         fun generate(phoneNumber: PhoneNumber): PhoneJpaEntity {
             return PhoneJpaEntity(
                 number = phoneNumber.number,
-                countryCode = phoneNumber.countryCode
+                countryCode = phoneNumber.countryCode,
             )
         }
     }

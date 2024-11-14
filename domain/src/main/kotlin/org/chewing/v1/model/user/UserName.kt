@@ -2,7 +2,7 @@ package org.chewing.v1.model.user
 
 class UserName private constructor(
     val firstName: String,
-    val lastName: String
+    val lastName: String,
 ) {
     fun firstName(): String {
         return firstName

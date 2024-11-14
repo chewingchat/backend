@@ -11,7 +11,7 @@ class ChatFileLog private constructor(
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
     override val type: ChatLogType,
-    val medias: List<Media>
+    val medias: List<Media>,
 ) : ChatLog() {
     companion object {
         fun of(
@@ -21,7 +21,7 @@ class ChatFileLog private constructor(
             medias: List<Media>,
             timestamp: LocalDateTime,
             number: ChatNumber,
-            type: ChatLogType
+            type: ChatLogType,
         ): ChatFileLog {
             return ChatFileLog(
                 messageId = messageId,
@@ -30,7 +30,7 @@ class ChatFileLog private constructor(
                 medias = medias,
                 timestamp = timestamp,
                 number = number,
-                type = type
+                type = type,
             )
         }
     }

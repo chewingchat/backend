@@ -21,12 +21,12 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api")
 class FeedController(
     private val feedService: FeedService,
-    private val feedFacade: FeedFacade
+    private val feedFacade: FeedFacade,
 ) {
     @GetMapping("/friend/{friendId}/feed/list")
     fun getFriendFeeds(
         @RequestAttribute("userId") userId: String,
-        @PathVariable("friendId") targetUserId: String
+        @PathVariable("friendId") targetUserId: String,
     ): SuccessResponseEntity<FeedsResponse> {
         val feeds = feedService.getOwnedFeeds(targetUserId, FeedStatus.NOT_HIDDEN)
         // 성공 응답 200 반환
@@ -45,7 +45,7 @@ class FeedController(
     @GetMapping("/friend/feed/{feedId}/detail")
     fun getFriendFeed(
         @RequestAttribute("userId") userId: String,
-        @PathVariable("feedId") feedId: String
+        @PathVariable("feedId") feedId: String,
     ): SuccessResponseEntity<FriendFeedResponse> {
         val (feed, isLiked) = feedFacade.getOwnedFeed(userId, feedId)
         // 성공 응답 200 반환
@@ -64,7 +64,7 @@ class FeedController(
 
     @GetMapping("/feed/hide")
     fun getHiddenFeeds(
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<FeedsResponse> {
         val feeds = feedService.getOwnedFeeds(userId, FeedStatus.HIDDEN)
         // 성공 응답 200 반환
@@ -74,7 +74,7 @@ class FeedController(
     @PostMapping("/feed/hide")
     fun hideFeeds(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: List<FeedRequest.Hide>
+        @RequestBody request: List<FeedRequest.Hide>,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedService.changeHide(userId, request.map { it.toFeedId() }, FeedTarget.HIDE)
         // 성공 응답 200 반환
@@ -84,7 +84,7 @@ class FeedController(
     @DeleteMapping("/feed/hide")
     fun unHideFeeds(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: List<FeedRequest.Hide>
+        @RequestBody request: List<FeedRequest.Hide>,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedService.changeHide(userId, request.map { it.toFeedId() }, FeedTarget.UNHIDE)
         // 성공 응답 200 반환
@@ -94,7 +94,7 @@ class FeedController(
     @DeleteMapping("/feed")
     fun deleteFeeds(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: List<FeedRequest.Delete>
+        @RequestBody request: List<FeedRequest.Delete>,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         feedFacade.removesFeed(userId, request.map { it.toFeedId() })
         // 삭제 완료 응답 200 반환
@@ -105,7 +105,7 @@ class FeedController(
     fun createFeed(
         @RequestAttribute("userId") userId: String,
         @RequestPart("files") files: List<MultipartFile>,
-        @RequestParam("topic") topic: String
+        @RequestParam("topic") topic: String,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         feedService.make(userId, convertFiles, topic, FileCategory.FEED)

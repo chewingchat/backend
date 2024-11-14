@@ -20,11 +20,11 @@ internal class EmoticonPackJpaEntity(
     companion object {
         fun of(
             packUrl: String,
-            packName: String
+            packName: String,
         ): EmoticonPackJpaEntity {
             return EmoticonPackJpaEntity(
                 packUrl = packUrl,
-                packName = packName
+                packName = packName,
             )
         }
     }
@@ -32,7 +32,7 @@ internal class EmoticonPackJpaEntity(
         return EmoticonPackInfo.of(
             emoticonPackId,
             packName,
-            packUrl
+            packUrl,
         )
     }
 

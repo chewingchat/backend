@@ -24,7 +24,7 @@ class Schedule(
                     title,
                     memo,
                     location,
-                    private
+                    private,
                 ),
                 ScheduleTime.of(
                     startTime,

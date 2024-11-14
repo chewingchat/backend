@@ -18,7 +18,7 @@ sealed class ChatLogMessageResponse {
         val timestamp: String,
         val seqNumber: Int,
         val page: Int,
-        val text: String
+        val text: String,
     ) : ChatLogMessageResponse()
 
     data class Leave(
@@ -50,7 +50,7 @@ sealed class ChatLogMessageResponse {
         val timestamp: String,
         val seqNumber: Int,
         val page: Int,
-        val files: List<MediaResponse>
+        val files: List<MediaResponse>,
     ) : ChatLogMessageResponse()
 
     data class Normal(
@@ -61,7 +61,7 @@ sealed class ChatLogMessageResponse {
         val timestamp: String,
         val seqNumber: Int,
         val page: Int,
-        val text: String
+        val text: String,
     ) : ChatLogMessageResponse()
 
     data class Bomb(
@@ -73,7 +73,7 @@ sealed class ChatLogMessageResponse {
         val seqNumber: Int,
         val page: Int,
         val expiredAt: String,
-        val text: String
+        val text: String,
     ) : ChatLogMessageResponse()
 
     companion object {
@@ -115,7 +115,7 @@ sealed class ChatLogMessageResponse {
                     timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
-                    targetUserIds = chatLog.targetUserIds
+                    targetUserIds = chatLog.targetUserIds,
                 )
 
                 is ChatFileLog -> File(
@@ -126,7 +126,7 @@ sealed class ChatLogMessageResponse {
                     timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
-                    files = chatLog.medias.map { MediaResponse.from(it) }
+                    files = chatLog.medias.map { MediaResponse.from(it) },
                 )
 
                 is ChatNormalLog -> Normal(
@@ -137,7 +137,7 @@ sealed class ChatLogMessageResponse {
                     timestamp = formattedTime,
                     seqNumber = chatLog.number.sequenceNumber,
                     page = chatLog.number.page,
-                    text = chatLog.text
+                    text = chatLog.text,
                 )
 
                 is ChatBombLog ->
@@ -151,7 +151,7 @@ sealed class ChatLogMessageResponse {
                         seqNumber = chatLog.number.sequenceNumber,
                         page = chatLog.number.page,
                         expiredAt = chatLog.expiredAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
-                        text = chatLog.text
+                        text = chatLog.text,
                     )
             }
         }

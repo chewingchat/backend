@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserStatusReader(
-    private val userStatusRepository: UserStatusRepository
+    private val userStatusRepository: UserStatusRepository,
 ) {
 
     fun readsSelected(userIds: List<String>): List<UserStatus> {

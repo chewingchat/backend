@@ -8,7 +8,7 @@ import org.chewing.v1.model.user.UserStatus
 data class MainResponse(
     val friends: List<FriendMainResponse>,
     val user: UserResponse,
-    val totalFriends: Int
+    val totalFriends: Int,
 ) {
     data class FriendMainResponse(
         val friendId: String,
@@ -36,7 +36,7 @@ data class MainResponse(
                     access = friend.user.status.name.lowercase(),
                     backgroundImageUrl = friend.user.backgroundImage.url,
                     backgroundImageType = friend.user.backgroundImage.type.value().lowercase(),
-                    statusEmoji = friend.status.emoji
+                    statusEmoji = friend.status.emoji,
                 )
             }
         }

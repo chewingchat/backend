@@ -17,12 +17,12 @@ internal class EmoticonJpaEntity(
         fun of(
             url: String,
             name: String,
-            emoticonPackId: String
+            emoticonPackId: String,
         ): EmoticonJpaEntity {
             return EmoticonJpaEntity(
                 url = url,
                 name = name,
-                emoticonPackId = emoticonPackId
+                emoticonPackId = emoticonPackId,
             )
         }
     }
@@ -31,7 +31,7 @@ internal class EmoticonJpaEntity(
             emoticonId,
             name,
             url,
-            emoticonPackId
+            emoticonPackId,
         )
     }
 }

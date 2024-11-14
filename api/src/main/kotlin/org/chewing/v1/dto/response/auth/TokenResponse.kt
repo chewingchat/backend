@@ -4,7 +4,7 @@ import org.chewing.v1.model.auth.JwtToken
 
 data class TokenResponse(
     val accessToken: String,
-    val refreshToken: String
+    val refreshToken: String,
 ) {
     companion object {
         fun of(token: JwtToken): TokenResponse {

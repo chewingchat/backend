@@ -10,5 +10,5 @@ data class UserEmoticonId(
     val userId: String,
 
     @Column(name = "emoticon_pack_id")
-    val emoticonPackId: String
+    val emoticonPackId: String,
 ) : Serializable

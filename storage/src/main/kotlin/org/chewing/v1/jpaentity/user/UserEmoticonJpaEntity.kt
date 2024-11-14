@@ -9,13 +9,13 @@ import java.time.LocalDateTime
 internal class UserEmoticonJpaEntity(
     @EmbeddedId
     private val id: UserEmoticonId,
-    private val createAt: LocalDateTime
+    private val createAt: LocalDateTime,
 ) {
     fun toUserEmoticon(): UserEmoticonPackInfo {
         return UserEmoticonPackInfo.of(
             userId = id.userId,
             emoticonPackId = id.emoticonPackId,
-            createAt = createAt
+            createAt = createAt,
         )
     }
 }

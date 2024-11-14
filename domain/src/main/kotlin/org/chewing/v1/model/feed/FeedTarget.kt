@@ -6,5 +6,5 @@ enum class FeedTarget {
     COMMENTS,
     UNCOMMENTS,
     HIDE,
-    UNHIDE;
+    UNHIDE,
 }

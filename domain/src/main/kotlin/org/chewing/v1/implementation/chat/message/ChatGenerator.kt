@@ -19,13 +19,13 @@ class ChatGenerator {
     fun generateReadMessage(
         chatRoomId: String,
         userId: String,
-        number: ChatNumber
+        number: ChatNumber,
     ): ChatReadMessage {
         return ChatReadMessage.of(
             chatRoomId = chatRoomId,
             senderId = userId,
             timestamp = LocalDateTime.now(),
-            number = number
+            number = number,
         )
     }
 
@@ -33,14 +33,14 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        messageId: String
+        messageId: String,
     ): ChatDeleteMessage {
         return ChatDeleteMessage.of(
             targetMessageId = messageId,
             chatRoomId = chatRoomId,
             senderId = userId,
             timestamp = LocalDateTime.now(),
-            number = number
+            number = number,
         )
     }
 
@@ -48,7 +48,7 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        text: String
+        text: String,
     ): ChatNormalMessage {
         return ChatNormalMessage.of(
             generateKey(chatRoomId),
@@ -64,7 +64,7 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        targetUserIds: List<String>
+        targetUserIds: List<String>,
     ): ChatInviteMessage {
         return ChatInviteMessage.of(
             generateKey(chatRoomId),
@@ -72,7 +72,7 @@ class ChatGenerator {
             senderId = userId,
             timestamp = LocalDateTime.now(),
             number = number,
-            targetUserIds = targetUserIds
+            targetUserIds = targetUserIds,
         )
     }
 
@@ -94,7 +94,7 @@ class ChatGenerator {
         chatRoomId: String,
         userId: String,
         number: ChatNumber,
-        medias: List<Media>
+        medias: List<Media>,
     ): ChatFileMessage {
         return ChatFileMessage.of(
             generateKey(chatRoomId),
@@ -102,7 +102,7 @@ class ChatGenerator {
             senderId = userId,
             timestamp = LocalDateTime.now(),
             number = number,
-            medias = medias
+            medias = medias,
         )
     }
 
@@ -111,7 +111,7 @@ class ChatGenerator {
         userId: String,
         number: ChatNumber,
         text: String,
-        parentLog: ChatLog
+        parentLog: ChatLog,
     ): ChatReplyMessage {
         val (parentMessageId, parentMessageText) = when (parentLog) {
             is ChatNormalLog -> Pair(parentLog.messageId, parentLog.text)
@@ -132,7 +132,7 @@ class ChatGenerator {
             parentMessageText = parentMessageText,
             parentSeqNumber = parentLog.number.sequenceNumber,
             parentMessageType = parentLog.type,
-            type = MessageType.REPLY
+            type = MessageType.REPLY,
         )
     }
 
@@ -141,7 +141,7 @@ class ChatGenerator {
         userId: String,
         number: ChatNumber,
         text: String,
-        expiredAt: LocalDateTime
+        expiredAt: LocalDateTime,
     ): ChatBombMessage {
         return ChatBombMessage.of(
             generateKey(chatRoomId),
@@ -150,7 +150,7 @@ class ChatGenerator {
             timestamp = LocalDateTime.now(),
             number = number,
             text = text,
-            expiredAt = expiredAt
+            expiredAt = expiredAt,
         )
     }
 

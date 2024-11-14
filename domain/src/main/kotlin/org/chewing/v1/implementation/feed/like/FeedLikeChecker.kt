@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FeedLikeChecker(
-    private val feedLikesRepository: FeedLikesRepository
+    private val feedLikesRepository: FeedLikesRepository,
 ) {
     fun checkLike(feedId: String, userId: String): Boolean {
         return feedLikesRepository.checkLike(feedId, userId)

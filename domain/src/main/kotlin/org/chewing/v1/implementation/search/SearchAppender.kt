@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class SearchAppender(
-    private val userSearchRepository: UserSearchRepository
+    private val userSearchRepository: UserSearchRepository,
 ) {
     fun append(userId: String, keyword: String) {
         userSearchRepository.appendHistory(userId, keyword)

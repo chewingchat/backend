@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CommentValidator(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
 ) {
     fun isOwned(userId: String, commentIds: List<String>) {
         val comments = commentRepository.readsIn(commentIds)

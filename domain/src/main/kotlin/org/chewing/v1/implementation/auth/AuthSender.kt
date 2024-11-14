@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AuthSender(
-    val externalAuthClient: ExternalAuthClient
+    val externalAuthClient: ExternalAuthClient,
 ) {
 
     fun sendVerificationCode(credential: Credential, verificationCode: String) {

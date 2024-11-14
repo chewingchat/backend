@@ -20,7 +20,7 @@ class StompHandshakeInterceptor(
         request: ServerHttpRequest,
         response: ServerHttpResponse,
         wsHandler: WebSocketHandler,
-        attributes: MutableMap<String, Any>
+        attributes: MutableMap<String, Any>,
     ): Boolean {
         logger.info { "beforeHandshake" }
         val servletRequest = (request as ServletServerHttpRequest).servletRequest
@@ -46,7 +46,7 @@ class StompHandshakeInterceptor(
         request: ServerHttpRequest,
         response: ServerHttpResponse,
         wsHandler: WebSocketHandler,
-        exception: Exception?
+        exception: Exception?,
     ) {
         logger.info { "afterHandshake" }
     }

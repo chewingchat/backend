@@ -10,7 +10,7 @@ class LoginRequest {
         val verificationCode: String,
         val deviceId: String,
         val provider: String,
-        val appToken: String
+        val appToken: String,
     ) {
         fun toDevice(): PushToken.Device {
             return PushToken.Device.of(deviceId, PushToken.Provider.valueOf(provider.uppercase()))
@@ -34,7 +34,7 @@ class LoginRequest {
         val verificationCode: String,
         val deviceId: String,
         val provider: String,
-        val appToken: String
+        val appToken: String,
     ) {
         fun toDevice(): PushToken.Device {
             return PushToken.Device.of(deviceId, PushToken.Provider.valueOf(provider.uppercase()))

@@ -222,7 +222,7 @@ class FeedControllerTest : RestDocsTest() {
                 .file(mockFile1)
                 .file(mockFile2)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .requestAttr("userId", "testUserId") // userId 전달
+                .requestAttr("userId", "testUserId")
                 .param("topic", "testTopic"),
 
         )

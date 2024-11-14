@@ -17,7 +17,7 @@ data class FriendInfoResponse(
             userName: UserName,
             imageUrl: String,
             imageType: String,
-            access: AccessStatus
+            access: AccessStatus,
         ): FriendInfoResponse {
             return FriendInfoResponse(
                 friendId = friendId,
@@ -25,7 +25,7 @@ data class FriendInfoResponse(
                 lastName = userName.lastName(),
                 imageUrl = imageUrl,
                 imageType = imageType,
-                access = access.name.lowercase()
+                access = access.name.lowercase(),
             )
         }
     }

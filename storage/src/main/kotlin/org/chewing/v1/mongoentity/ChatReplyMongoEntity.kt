@@ -33,7 +33,7 @@ internal class ChatReplyMongoEntity(
 ) {
     companion object {
         fun from(
-            chatReplyMessage: ChatReplyMessage
+            chatReplyMessage: ChatReplyMessage,
         ): ChatReplyMongoEntity {
             return ChatReplyMongoEntity(
                 messageId = chatReplyMessage.messageId,

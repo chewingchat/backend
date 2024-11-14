@@ -9,8 +9,9 @@ import java.util.*
 @DynamicInsert
 @Entity
 @Table(
-    name = "feed", schema = "chewing",
-    indexes = [Index(name = "idx_feed_hide", columnList = "hide")]
+    name = "feed",
+    schema = "chewing",
+    indexes = [Index(name = "idx_feed_hide", columnList = "hide")],
 )
 internal class FeedJpaEntity(
     @Id

@@ -46,7 +46,7 @@ internal class UserJpaEntity(
     private var ttsType: MediaType,
 
     @Enumerated(EnumType.STRING)
-    private var type: AccessStatus
+    private var type: AccessStatus,
 ) : BaseEntity() {
     companion object {
         fun generateByEmail(email: Email): UserJpaEntity {
@@ -62,7 +62,7 @@ internal class UserJpaEntity(
                 pictureType = MediaType.IMAGE_BASIC,
                 backgroundPictureType = MediaType.IMAGE_BASIC,
                 ttsUrl = null,
-                ttsType = MediaType.VIDEO_BASIC
+                ttsType = MediaType.VIDEO_BASIC,
             )
         }
 
@@ -79,7 +79,7 @@ internal class UserJpaEntity(
                 pictureType = MediaType.IMAGE_BASIC,
                 backgroundPictureType = MediaType.IMAGE_BASIC,
                 ttsUrl = null,
-                ttsType = MediaType.VIDEO_BASIC
+                ttsType = MediaType.VIDEO_BASIC,
             )
         }
     }
@@ -92,7 +92,7 @@ internal class UserJpaEntity(
             this.birth,
             Media.of(FileCategory.PROFILE, this.pictureUrl, 0, this.pictureType),
             Media.of(FileCategory.BACKGROUND, this.backgroundPictureUrl, 0, this.backgroundPictureType),
-            this.type
+            this.type,
         )
     }
 
@@ -143,7 +143,7 @@ internal class UserJpaEntity(
         return UserAccount.of(
             this.toUser(),
             this.emailId,
-            this.phoneNumberId
+            this.phoneNumberId,
         )
     }
 }

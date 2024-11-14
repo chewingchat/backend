@@ -14,7 +14,7 @@ data class UserResponse(
     companion object {
         fun of(
             user: User,
-            userStatus: UserStatus
+            userStatus: UserStatus,
         ): UserResponse {
             return UserResponse(
                 statusMessage = userStatus.message,

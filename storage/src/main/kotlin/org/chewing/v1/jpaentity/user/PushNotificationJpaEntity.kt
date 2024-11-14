@@ -25,13 +25,13 @@ internal class PushNotificationJpaEntity(
         fun generate(
             appToken: String,
             device: PushToken.Device,
-            user: User
+            user: User,
         ): PushNotificationJpaEntity {
             return PushNotificationJpaEntity(
                 appToken = appToken,
                 deviceId = device.deviceId,
                 provider = device.provider,
-                userId = user.userId
+                userId = user.userId,
             )
         }
     }
@@ -41,7 +41,7 @@ internal class PushNotificationJpaEntity(
             pushTokenId = pushId,
             fcmToken = appToken,
             deviceId = deviceId,
-            provider = provider
+            provider = provider,
         )
     }
 }

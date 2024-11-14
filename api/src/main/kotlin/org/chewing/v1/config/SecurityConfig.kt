@@ -20,8 +20,8 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf().disable() // CSRF 비활성화 (토큰 기반 인증 사용)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함 (JWT 사용)
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests { auth ->
                 auth
@@ -31,9 +31,9 @@ class SecurityConfig(
                         "/api/auth/refresh",
                         "/api/auth/logout",
                         "/ws-stomp/**",
-                        "/bot/chat", // /ai/chat 경로 인증 없이 접근 가능(gpt api)
-                    ).permitAll() // 인증 없이 접근 가능
-                    .anyRequest().authenticated() // 나머지 요청은 인증 필요(개인적인 부분)
+                        "/bot/chat",
+                    ).permitAll()
+                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // JWT 인증 필터 추가
             .exceptionHandling { it.authenticationEntryPoint(entryPoint) }

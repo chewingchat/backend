@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/main")
 class MainController(
-    private val mainFacade: MainFacade
+    private val mainFacade: MainFacade,
 ) {
     @GetMapping("")
     fun getMainPage(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("sort") sort: FriendSortCriteria
+        @RequestParam("sort") sort: FriendSortCriteria,
     ): SuccessResponseEntity<MainResponse> {
         val (user, userStatus, friends) = mainFacade.getMainPage(userId, sort)
         // 성공 응답 200 반환

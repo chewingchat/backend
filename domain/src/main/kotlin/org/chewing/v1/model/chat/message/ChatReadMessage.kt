@@ -15,13 +15,13 @@ class ChatReadMessage private constructor(
             chatRoomId: String,
             senderId: String,
             timestamp: LocalDateTime,
-            number: ChatNumber
+            number: ChatNumber,
         ): ChatReadMessage {
             return ChatReadMessage(
                 chatRoomId = chatRoomId,
                 senderId = senderId,
                 timestamp = timestamp,
-                number = number
+                number = number,
             )
         }
     }

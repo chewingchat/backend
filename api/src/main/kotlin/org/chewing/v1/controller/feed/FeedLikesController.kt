@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/feed/likes")
 class FeedLikesController(
-    private val feedLikesService: FeedLikesService
+    private val feedLikesService: FeedLikesService,
 ) {
     @PostMapping("")
     fun addFeedLikes(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: LikesRequest.Add
+        @RequestBody request: LikesRequest.Add,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val feedId = request.toFeedId()
         feedLikesService.like(userId, feedId, request.toTarget())
@@ -27,7 +27,7 @@ class FeedLikesController(
     @DeleteMapping("")
     fun deleteFeedLikes(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: LikesRequest.Delete
+        @RequestBody request: LikesRequest.Delete,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val feedId = request.toFeedId()
         feedLikesService.unlike(userId, feedId, request.toUpdateType())

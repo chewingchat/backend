@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FeedLikeValidator(
-    private val feedLikesRepository: FeedLikesRepository
+    private val feedLikesRepository: FeedLikesRepository,
 ) {
     fun isAlreadyLiked(feedId: String, userId: String) {
         if (feedLikesRepository.checkLike(feedId, userId)) {

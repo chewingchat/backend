@@ -4,7 +4,7 @@ import org.chewing.v1.model.token.RefreshToken
 
 class JwtToken private constructor(
     val accessToken: String,
-    val refreshToken: RefreshToken
+    val refreshToken: RefreshToken,
 ) {
     companion object {
         fun of(accessToken: String, refreshToken: RefreshToken): JwtToken {

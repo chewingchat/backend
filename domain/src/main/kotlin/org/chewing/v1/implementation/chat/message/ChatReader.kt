@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ChatReader(
-    private val chatLogRepository: ChatLogRepository
+    private val chatLogRepository: ChatLogRepository,
 ) {
     fun readChatLog(chatRoomId: String, page: Int): List<ChatLog> {
         return chatLogRepository.readChatMessages(chatRoomId, page)

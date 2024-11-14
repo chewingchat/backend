@@ -11,7 +11,7 @@ class ChatBombMessage private constructor(
     override val number: ChatNumber,
     override val type: MessageType = MessageType.BOMB,
     val text: String,
-    val expiredAt: LocalDateTime
+    val expiredAt: LocalDateTime,
 ) : ChatMessage() {
     companion object {
         fun of(
@@ -21,7 +21,7 @@ class ChatBombMessage private constructor(
             timestamp: LocalDateTime,
             number: ChatNumber,
             text: String,
-            expiredAt: LocalDateTime
+            expiredAt: LocalDateTime,
         ): ChatBombMessage {
             return ChatBombMessage(
                 messageId = messageId,
@@ -30,7 +30,7 @@ class ChatBombMessage private constructor(
                 timestamp = timestamp,
                 number = number,
                 expiredAt = expiredAt,
-                text = text
+                text = text,
             )
         }
     }

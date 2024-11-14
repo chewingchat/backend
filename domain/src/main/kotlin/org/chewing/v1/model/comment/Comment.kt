@@ -14,7 +14,7 @@ class Comment(
             commentId: String,
             comment: String,
             createAt: LocalDateTime,
-            writer: User
+            writer: User,
         ): Comment {
             return Comment(commentId, comment, createAt, writer)
         }

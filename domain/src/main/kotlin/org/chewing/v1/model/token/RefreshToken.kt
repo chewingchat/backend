@@ -4,16 +4,16 @@ import java.time.LocalDateTime
 
 class RefreshToken private constructor(
     val token: String,
-    val expiredAt: LocalDateTime
+    val expiredAt: LocalDateTime,
 ) {
     companion object {
         fun of(
             token: String,
-            expiredAt: LocalDateTime
+            expiredAt: LocalDateTime,
         ): RefreshToken {
             return RefreshToken(
                 token = token,
-                expiredAt = expiredAt
+                expiredAt = expiredAt,
             )
         }
     }

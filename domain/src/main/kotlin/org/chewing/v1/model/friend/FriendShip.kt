@@ -7,7 +7,7 @@ class FriendShip private constructor(
     val friendId: String,
     val friendName: UserName,
     val isFavorite: Boolean,
-    val type: AccessStatus
+    val type: AccessStatus,
 ) {
     companion object {
         fun of(friendId: String, friendName: UserName, isFavorite: Boolean, type: AccessStatus): FriendShip {
@@ -15,7 +15,7 @@ class FriendShip private constructor(
                 friendId = friendId,
                 friendName = friendName,
                 isFavorite = isFavorite,
-                type
+                type,
             )
         }
     }

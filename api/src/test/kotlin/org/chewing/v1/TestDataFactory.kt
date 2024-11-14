@@ -50,7 +50,7 @@ object TestDataFactory {
             "2000-00-00",
             Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_PNG),
             Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_PNG),
-            AccessStatus.ACCESS
+            AccessStatus.ACCESS,
         )
     }
 
@@ -71,7 +71,7 @@ object TestDataFactory {
             LocalDateTime.now(),
             LocalDateTime.now(),
             "testLocation",
-            true
+            true,
         )
     }
 
@@ -84,7 +84,7 @@ object TestDataFactory {
             LocalDateTime.now(),
             LocalDateTime.now(),
             "testLocation",
-            false
+            false,
         )
     }
 
@@ -111,14 +111,14 @@ object TestDataFactory {
         return FeedDetail.of(
             "feedDetailId",
             Media.of(FileCategory.FEED, "www.example.com", 0, MediaType.IMAGE_PNG),
-            "feedId"
+            "feedId",
         )
     }
 
     fun createFeed(): Feed {
         return Feed.of(
             createFeedInfo(),
-            listOf(createFeedDetail1(), createFeedDetail2())
+            listOf(createFeedDetail1(), createFeedDetail2()),
         )
     }
 
@@ -149,7 +149,7 @@ object TestDataFactory {
             text = "text",
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            expiredAt = LocalDateTime.now().plusMinutes(1)
+            expiredAt = LocalDateTime.now().plusMinutes(1),
         )
     }
 
@@ -160,7 +160,7 @@ object TestDataFactory {
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            targetUserIds = listOf("targetUserId")
+            targetUserIds = listOf("targetUserId"),
         )
     }
 
@@ -171,7 +171,7 @@ object TestDataFactory {
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
             timestamp = LocalDateTime.now(),
-            medias = listOf(Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG))
+            medias = listOf(Media.of(FileCategory.CHAT, "www.example.com", 0, MediaType.IMAGE_PNG)),
         )
     }
 
@@ -207,7 +207,7 @@ object TestDataFactory {
             parentMessageType = ChatLogType.REPLY,
             parentSeqNumber = 1,
             type = MessageType.REPLY,
-            text = "text"
+            text = "text",
         )
     }
 
@@ -217,7 +217,7 @@ object TestDataFactory {
             chatRoomId = chatRoomId,
             senderId = "sender",
             number = ChatNumber.of(chatRoomId, 1, 1),
-            timestamp = LocalDateTime.now()
+            timestamp = LocalDateTime.now(),
         )
     }
 
@@ -334,13 +334,13 @@ object TestDataFactory {
 
     fun createEmoticonPack(
         emoticonPackId: String,
-        emoticons: List<Emoticon>
+        emoticons: List<Emoticon>,
     ): EmoticonPack {
         return EmoticonPack.of(
             id = emoticonPackId,
             name = "emoticonPackName",
             url = "www.example.com",
-            emoticons = emoticons
+            emoticons = emoticons,
         )
     }
 
@@ -349,14 +349,14 @@ object TestDataFactory {
             "testFriendId",
             createFriendName(),
             isFavorite = true,
-            AccessStatus.ACCESS
+            AccessStatus.ACCESS,
         )
     }
 
     fun createRoomInfo(): ChatRoomInfo {
         return ChatRoomInfo.of(
             "chatRoomId",
-            true
+            true,
         )
     }
 
@@ -368,7 +368,7 @@ object TestDataFactory {
             "chatRoomId",
             1,
             1,
-            true
+            true,
         )
     }
 
@@ -387,24 +387,24 @@ object TestDataFactory {
         return Room.of(
             createRoomInfo(),
             createChatRoomMemberInfo("userId"),
-            listOf(createChatRoomMember("userId", true), createChatRoomMember("friendId", false))
+            listOf(createChatRoomMember("userId", true), createChatRoomMember("friendId", false)),
         )
     }
 
     fun createChatRoom(): ChatRoom {
         return ChatRoom.of(
             room = createRoom(),
-            chatLog = createNormalLog("messageId", "chatRoomId", "userId")
+            chatLog = createNormalLog("messageId", "chatRoomId", "userId"),
         )
     }
 
     fun createSearch(
         chatRooms: List<ChatRoom>,
-        friends: List<FriendShip>
+        friends: List<FriendShip>,
     ): Search {
         return Search.of(
             chatRooms,
-            friends
+            friends,
         )
     }
 
@@ -416,7 +416,7 @@ object TestDataFactory {
             "comment",
             LocalDateTime.now(),
             "userId",
-            "feedId"
+            "feedId",
         )
     }
 
@@ -427,7 +427,7 @@ object TestDataFactory {
             createCommentInfo(commentId),
             createFriendShip(),
             createUser(),
-            createFeed()
+            createFeed(),
         )
     }
 }

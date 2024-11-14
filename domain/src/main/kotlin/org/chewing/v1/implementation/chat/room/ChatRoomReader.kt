@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 class ChatRoomReader(
     private val chatRoomRepository: ChatRoomRepository,
     private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository,
-    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository
+    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository,
 ) {
     fun reads(chatRoomIds: List<String>): List<ChatRoomInfo> {
         return chatRoomRepository.readChatRooms(chatRoomIds)

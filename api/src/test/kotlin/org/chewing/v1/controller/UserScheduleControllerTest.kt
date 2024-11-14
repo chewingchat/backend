@@ -48,7 +48,7 @@ class UserScheduleControllerTest : RestDocsTest() {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("year", year.toString())
                 .param("month", month.toString())
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].scheduleId").value(schedules[0].id))
@@ -89,7 +89,7 @@ class UserScheduleControllerTest : RestDocsTest() {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("year", year.toString())
                 .param("month", month.toString())
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.schedules[0].scheduleId").value(schedules[0].id))
@@ -125,7 +125,7 @@ class UserScheduleControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.delete("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("생성 완료"))
@@ -150,7 +150,7 @@ class UserScheduleControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.post("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))

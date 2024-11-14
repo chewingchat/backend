@@ -17,7 +17,7 @@ internal class ChatFileMongoEntity(
     seqNumber: Int,
     page: Int,
     sendTime: LocalDateTime,
-    val medias: List<Media>
+    val medias: List<Media>,
 ) : ChatMessageMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
@@ -25,11 +25,11 @@ internal class ChatFileMongoEntity(
     type = ChatLogType.FILE,
     seqNumber = seqNumber,
     page = page,
-    sendTime = sendTime
+    sendTime = sendTime,
 ) {
     companion object {
         fun from(
-            chatFileMessage: ChatFileMessage
+            chatFileMessage: ChatFileMessage,
         ): ChatFileMongoEntity {
             return ChatFileMongoEntity(
                 chatFileMessage.messageId,
@@ -38,7 +38,7 @@ internal class ChatFileMongoEntity(
                 chatFileMessage.number.sequenceNumber,
                 chatFileMessage.number.page,
                 chatFileMessage.timestamp,
-                chatFileMessage.medias
+                chatFileMessage.medias,
             )
         }
     }
@@ -51,7 +51,7 @@ internal class ChatFileMongoEntity(
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
             medias = medias,
-            type = type
+            type = type,
         )
     }
 }

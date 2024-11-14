@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 class UserEmoticonPackInfo private constructor(
     val userId: String,
     val emoticonPackId: String,
-    val createAt: LocalDateTime
+    val createAt: LocalDateTime,
 ) {
     companion object {
         fun of(
@@ -16,7 +16,7 @@ class UserEmoticonPackInfo private constructor(
             return UserEmoticonPackInfo(
                 userId = userId,
                 emoticonPackId = emoticonPackId,
-                createAt = createAt
+                createAt = createAt,
             )
         }
     }

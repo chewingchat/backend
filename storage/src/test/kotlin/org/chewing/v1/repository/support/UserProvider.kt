@@ -17,7 +17,7 @@ object UserProvider {
             "2000-00-00",
             Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_BASIC),
             Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_BASIC),
-            AccessStatus.NOT_ACCESS
+            AccessStatus.NOT_ACCESS,
         )
     }
     fun buildFriend(userId: String): User {
@@ -28,7 +28,7 @@ object UserProvider {
             "2000-00-00",
             Media.of(FileCategory.PROFILE, "www.example.com", 0, MediaType.IMAGE_BASIC),
             Media.of(FileCategory.BACKGROUND, "www.example.com", 0, MediaType.IMAGE_BASIC),
-            AccessStatus.NOT_ACCESS
+            AccessStatus.NOT_ACCESS,
         )
     }
     fun buildFriendName(): UserName {

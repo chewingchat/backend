@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Update
 class MongoDataGenerator {
     @Autowired
     private lateinit var chatLogMongoRepository: ChatLogMongoRepository
+
     @Autowired
     private lateinit var mongoTemplate: MongoTemplate
 

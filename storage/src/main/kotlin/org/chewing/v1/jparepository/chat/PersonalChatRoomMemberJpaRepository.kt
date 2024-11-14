@@ -16,10 +16,10 @@ internal interface PersonalChatRoomMemberJpaRepository : JpaRepository<PersonalC
         FROM PersonalChatRoomMemberJpaEntity crm
         WHERE (crm.id.userId = :userId AND crm.friendId = :friendId)
            OR (crm.id.userId = :friendId AND crm.friendId = :userId)
-    """
+    """,
     )
     fun findPersonalChatRoomId(
         @Param("userId") userId: String,
-        @Param("friendId") friendId: String
+        @Param("friendId") friendId: String,
     ): String?
 }

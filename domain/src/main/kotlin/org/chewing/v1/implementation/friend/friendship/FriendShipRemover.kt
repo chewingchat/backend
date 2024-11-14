@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class FriendShipRemover(
-    private val friendShipRepository: FriendShipRepository
+    private val friendShipRepository: FriendShipRepository,
 ) {
     @Transactional
     fun removeFriendShip(userId: String, friendId: String) {
