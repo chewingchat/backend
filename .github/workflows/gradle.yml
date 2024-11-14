@@ -83,7 +83,7 @@ jobs:
           host: ${{ secrets.NCP_SERVER_HOST }}
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
-          port: 22  # SSH 포트를 22로 변경
+          port: 8080  # SSH 포트를 22로 변경
           script: |
             # .env 파일을 서버로 복사
             scp -o StrictHostKeyChecking=no .env root@106.10.35.194:/path/to/docker-compose.yml/directory/.env
