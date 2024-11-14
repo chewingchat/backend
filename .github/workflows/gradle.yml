@@ -72,7 +72,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: live
         run: docker push yhkim052556/chewingrepository:latest
 
-deploy:
+ deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
