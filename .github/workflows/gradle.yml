@@ -72,11 +72,11 @@ jobs:
           SPRING_PROFILES_ACTIVE: live
         run: docker push yhkim052556/chewingrepository:latest
 
-  deploy:
+deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: SSH to NCP Server and Deploy
+      - name: SSH to NCP Server, Copy .env, and Deploy
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.NCP_SERVER_HOST }}
@@ -84,20 +84,13 @@ jobs:
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080  # SSH가 8080 포트에서 실행 중인 경우
           script: |
-          
-            export SPRING_PROFILES_ACTIVE=live
-            export STORAGE_DATABASE_CORE_DB_NAME=${{ secrets.STORAGE_DATABASE_CORE_DB_NAME }}
-            export STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}
-            export STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }}
-            export STORAGE_DATABASE_MONGO_DB_NAME=${{ secrets.STORAGE_DATABASE_MONGO_DB_NAME }}
-            export STORAGE_DATABASE_MONGO_DB_USER=${{ secrets.STORAGE_DATABASE_MONGO_DB_USER }}
-            export STORAGE_DATABASE_MONGO_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_MONGO_DB_PASSWORD }}
-            export JWT_SECRET=${{ secrets.JWT_SECRET }}
-            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-            export OPENAI_API_MODEL=${{ secrets.OPENAI_API_MODEL }}
-            export OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}
-            export FCM_API_URL=${{ secrets.FCM_API_URL }}
-            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker compose pull  # 최신 이미지를 가져옴
-            docker compose down  # 기존 서비스 종료
-            docker compose up -d  # 새로운 컨테이너 생성 및 시작
+            # .env 파일을 서버로 복사
+            scp .env root@106.10.35.194:/path/to/docker-compose.yml/directory/.env
+            # NCP 서버에서 docker-compose 실행
+            ssh root@106.10.35.194 -p 8080 << 'EOF'
+              cd /path/to/docker-compose.yml/directory
+              echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+              docker compose pull  # 최신 이미지를 가져옴
+              docker compose down  # 기존 서비스 종료
+              docker compose --env-file .env up -d  # 새로운 컨테이너 생성 및 시작
+            EOF
