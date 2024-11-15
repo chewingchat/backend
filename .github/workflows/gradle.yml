@@ -75,6 +75,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Copy docker-compose.yml to Server
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          port: 8080
+          source: "./docker-compose.yml"
+          target: "~/"
       - name: SSH to NCP Server and Deploy
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -82,9 +91,6 @@ jobs:
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080
-          source: "docker-compose.yml"
-          target: "~/"
-
           script: |
             cd ~/  # 홈 디렉터리로 이동
             export $(cat .env | xargs)  # .env 파일의 환경 변수를 명확하게 로드
