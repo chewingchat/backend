@@ -67,7 +67,6 @@ jobs:
         run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
       - name: Push Docker Image to Docker Hub
-        if: github.ref == 'refs/heads/dev'  # dev 브랜치에서만 Docker 이미지 푸시
         env:
           SPRING_PROFILES_ACTIVE: live
         run: docker compose push
@@ -83,6 +82,9 @@ jobs:
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080
+          source: "docker-compose.yml"
+          target: "~/"
+
           script: |
             cd ~/  # 홈 디렉터리로 이동
             export $(cat .env | xargs)  # .env 파일의 환경 변수를 명확하게 로드
