@@ -105,6 +105,17 @@ jobs:
           port: 8080
           source: "./docker-compose.yml"
           target: "~/"
+          
+      - name: Copy .env to Server
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          port: 22
+          source: "./.env"
+          target: "~/"
+          
       - name: SSH to NCP Server and Deploy
         uses: appleboy/ssh-action@v0.1.6
         with:
