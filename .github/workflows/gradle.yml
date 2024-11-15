@@ -74,24 +74,31 @@ jobs:
         
         
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - name: SSH to NCP Server, Copy .env, and Deploy
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.NCP_SERVER_HOST }}
-          username: ${{ secrets.NCP_USERNAME }}
-          key: ${{ secrets.NCP_SSH_KEY }}
-          port: 8080  # SSH 포트를 22로 변경
-          script: |
-            # .env 파일을 서버로 복사
-            scp -o StrictHostKeyChecking=no .env root@106.10.35.194:/path/to/docker-compose.yml/directory/.env
-            # NCP 서버에서 docker-compose 실행
-            ssh -o StrictHostKeyChecking=no root@106.10.35.194 << 'EOF'
-              cd /path/to/docker-compose.yml/directory
-              echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-              docker compose pull  # 최신 이미지를 가져옴
-              docker compose down  # 기존 서비스 종료
-              docker compose --env-file .env up -d  # 새로운 컨테이너 생성 및 시작
-            EOF
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Copy docker-compose.yml to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        source: "C:/Users/yhkim/Documents/backend/docker-compose.yml"
+        target: "/home/username/backend/"  # 서버에서 docker-compose.yml 파일을 저장할 경로
+
+    - name: Deploy with SSH
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/username/backend
+          docker compose pull
+          docker compose down
+          docker compose up -d
