@@ -85,6 +85,7 @@ jobs:
           port: 8080
           script: |
             cd ~/  # 홈 디렉터리로 이동
+            export $(cat .env | xargs)  # .env 파일의 환경 변수를 명확하게 로드
             docker compose --env-file .env pull
             docker compose --env-file .env down
             docker compose --env-file .env up -d
