@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
  * 채팅방 관련한 메소드만 들어갈게용
  * */
 internal class ChatRoomRepositoryImpl(
-    private val chatRoomJpaRepository: ChatRoomJpaRepository, // JPA 레포지토리
+    private val chatRoomJpaRepository: ChatRoomJpaRepository,
 
 ) : ChatRoomRepository {
 

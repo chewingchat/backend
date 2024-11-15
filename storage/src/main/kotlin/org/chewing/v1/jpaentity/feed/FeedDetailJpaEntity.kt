@@ -24,7 +24,7 @@ internal class FeedDetailJpaEntity(
                     feedIndex = media.index,
                     feedDetailUrl = media.url,
                     feedDetailType = media.type,
-                    feedId = feedId
+                    feedId = feedId,
                 )
             }
         }
@@ -38,7 +38,7 @@ internal class FeedDetailJpaEntity(
         return FeedDetail.of(
             feedDetailId = feedDetailId,
             media = Media.of(FileCategory.FEED, feedDetailUrl, feedIndex, feedDetailType),
-            feedId = feedId
+            feedId = feedId,
         )
     }
 }

@@ -1,5 +1,7 @@
 package org.chewing.v1.repository
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.jparepository.user.UserJpaRepository
 import org.chewing.v1.repository.jpa.user.UserRepositoryImpl
 import org.chewing.v1.repository.support.EmailProvider
@@ -7,19 +9,17 @@ import org.chewing.v1.repository.support.MediaProvider
 import org.chewing.v1.repository.support.PhoneProvider
 import org.chewing.v1.repository.support.UserProvider
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.util.*
 
 class UserRepositoryTest2 {
-    private val userJpaRepository: UserJpaRepository = mock()
+    private val userJpaRepository: UserJpaRepository = mockk()
 
     private var userRepositoryImpl: UserRepositoryImpl = UserRepositoryImpl(userJpaRepository)
 
     @Test
     fun `유저 아이디로 읽기 - 실패(유저를 찾을 수 없음)`() {
         val userId = generateUserId()
-        whenever(userJpaRepository.findById(userId)).thenReturn(Optional.empty())
+        every { userJpaRepository.findById(userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.read(userId)
 
@@ -29,7 +29,8 @@ class UserRepositoryTest2 {
     @Test
     fun `이메일로 유저 읽기 - 실페(유저를 찾을 수 없음)`() {
         val contact = EmailProvider.buildNormal()
-        whenever(userJpaRepository.findByEmailId(contact.emailId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findByEmailId(contact.emailId) } returns Optional.empty()
 
         val result = userRepositoryImpl.readByContact(contact)
         assert(result == null)
@@ -38,7 +39,8 @@ class UserRepositoryTest2 {
     @Test
     fun `휴대폰으로 유저 읽기 - 실패(유저를 찾을 수 없음)`() {
         val contact = PhoneProvider.buildNormal()
-        whenever(userJpaRepository.findByPhoneNumberId(contact.phoneId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findByPhoneNumberId(contact.phoneId) } returns Optional.empty()
 
         val result = userRepositoryImpl.readByContact(contact)
         assert(result == null)
@@ -47,7 +49,8 @@ class UserRepositoryTest2 {
     @Test
     fun `유저 삭제 - 실패(유저를 찾을 수 없음)`() {
         val userId = generateUserId()
-        whenever(userJpaRepository.findById(userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.remove(userId)
         assert(result == null)
@@ -58,7 +61,8 @@ class UserRepositoryTest2 {
         val media = MediaProvider.buildProfileContent()
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
@@ -69,7 +73,8 @@ class UserRepositoryTest2 {
         val media = MediaProvider.buildBackgroundContent()
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
@@ -80,7 +85,8 @@ class UserRepositoryTest2 {
         val media = MediaProvider.buildTTSContent()
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateMedia(user.userId, media)
         assert(result == null)
@@ -91,7 +97,8 @@ class UserRepositoryTest2 {
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val userName = UserProvider.buildNewUserName()
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateName(userId, userName)
         assert(result == null)
@@ -102,7 +109,8 @@ class UserRepositoryTest2 {
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val contact = EmailProvider.buildNormal()
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateContact(userId, contact)
         assert(result == null)
@@ -113,7 +121,8 @@ class UserRepositoryTest2 {
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val userContent = UserProvider.buildNewUserContent()
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateAccess(userId, userContent)
         assert(result == null)
@@ -124,7 +133,8 @@ class UserRepositoryTest2 {
         val userId = generateUserId()
         val user = UserProvider.buildNormal(userId)
         val birth = generateUserId()
-        whenever(userJpaRepository.findById(user.userId)).thenReturn(Optional.empty())
+
+        every { userJpaRepository.findById(user.userId) } returns Optional.empty()
 
         val result = userRepositoryImpl.updateBirth(userId, birth)
         assert(result == null)

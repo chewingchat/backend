@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/friend")
 class FriendController(
     private val friendFacade: FriendFacade,
-    private val friendShipService: FriendShipService
+    private val friendShipService: FriendShipService,
 ) {
     // 오류 관련 GlobalExceptionHandler 참조 404, 401, 409번만 사용
     @PostMapping("/email")
     fun addFriendWithEmail(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.AddWithEmail
+        @RequestBody request: FriendRequest.AddWithEmail,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toEmail())
         // 생성 완료 응답 201 반환
@@ -29,7 +29,7 @@ class FriendController(
     @PostMapping("/phone")
     fun addFriendWithPhone(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.AddWithPhone
+        @RequestBody request: FriendRequest.AddWithPhone,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         friendFacade.addFriend(userId, request.toUserName(), request.toPhoneNumber())
         // 생성 완료 응답 201 반환
@@ -39,17 +39,18 @@ class FriendController(
     @PutMapping("/favorite")
     fun changeFavorite(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.UpdateFavorite
+        @RequestBody request: FriendRequest.UpdateFavorite,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val (friendId, favorite) = request
         friendShipService.changeFriendFavorite(userId, friendId, favorite)
         // 성공 응답 200 반환
         return ResponseHelper.successOnly()
     }
+
     @DeleteMapping("")
     fun deleteFriend(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.Delete
+        @RequestBody request: FriendRequest.Delete,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
         friendShipService.removeFriendShip(userId, friendId)
@@ -60,7 +61,7 @@ class FriendController(
     @DeleteMapping("/block")
     fun blockFriend(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.Block
+        @RequestBody request: FriendRequest.Block,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val friendId = request.friendId
         friendShipService.blockFriendShip(userId, friendId)
@@ -71,7 +72,7 @@ class FriendController(
     @PutMapping("/name")
     fun changeFriendName(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: FriendRequest.UpdateName
+        @RequestBody request: FriendRequest.UpdateName,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         friendShipService.changeFriendName(userId, request.toFriendId(), request.toFriendName())
         // 생성 완료 응답 201 반환

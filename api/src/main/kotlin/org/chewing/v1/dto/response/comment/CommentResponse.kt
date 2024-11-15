@@ -6,11 +6,11 @@ import java.time.format.DateTimeFormatter
 data class CommentResponse(
     val commentId: String,
     val comment: String,
-    val commentTime: String
+    val commentTime: String,
 ) {
     companion object {
         fun of(
-            comment: Comment
+            comment: Comment,
         ): CommentResponse {
             val formattedCommentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return CommentResponse(comment.id, comment.comment, formattedCommentTime)

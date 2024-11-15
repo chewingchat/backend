@@ -17,40 +17,14 @@ import org.springframework.stereotype.Component
 class AuthValidator(
     private val userRepository: UserRepository,
     private val phoneRepository: PhoneRepository,
-    private val emailRepository: EmailRepository
+    private val emailRepository: EmailRepository,
 ) {
-    private fun validatePhoneNumber(phone: Phone, validateCode: String) {
-        if (!phone.validationCode.validateCode(validateCode)) {
+    fun validateVerifyCode(contact: Contact, verificationCode: String) {
+        if (!contact.validationCode.validateCode(verificationCode)) {
             throw ConflictException(ErrorCode.WRONG_VALIDATE_CODE)
         }
-        if (phone.validationCode.validateExpired()) {
+        if (contact.validationCode.validateExpired()) {
             throw ConflictException(ErrorCode.EXPIRED_VALIDATE_CODE)
-        }
-    }
-
-    private fun validateEmail(email: Email, validateCode: String) {
-        if (!email.validationCode.validateCode(validateCode)) {
-            throw ConflictException(ErrorCode.WRONG_VALIDATE_CODE)
-        }
-        if (email.validationCode.validateExpired()) {
-            throw ConflictException(ErrorCode.EXPIRED_VALIDATE_CODE)
-        }
-    }
-
-    fun validateCode(contact: Contact, validateCode: String) {
-        when (contact) {
-            is Phone -> validatePhoneNumber(contact, validateCode)
-            is Email -> validateEmail(contact, validateCode)
-        }
-    }
-
-    fun readContact(targetContact: Credential): Contact {
-        return when (targetContact) {
-            is EmailAddress -> emailRepository.read(targetContact)
-                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
-
-            is PhoneNumber -> phoneRepository.read(targetContact)
-                ?: throw ConflictException(ErrorCode.WRONG_ACCESS)
         }
     }
 

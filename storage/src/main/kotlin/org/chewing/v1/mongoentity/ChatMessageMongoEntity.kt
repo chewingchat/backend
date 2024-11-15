@@ -15,9 +15,9 @@ import java.time.LocalDateTime
 @CompoundIndexes(
     CompoundIndex(
         name = "chatRoomId_page_seqNumber_idx",
-        def = "{'chatRoomId': 1, 'page': 1, 'seqNumber': 1}"
+        def = "{'chatRoomId': 1, 'page': 1, 'seqNumber': 1}",
     ),
-    CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}")
+    CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}"),
 )
 internal sealed class ChatMessageMongoEntity(
     @Id
@@ -31,23 +31,17 @@ internal sealed class ChatMessageMongoEntity(
 ) {
 
     companion object {
-        fun fromChatMessage(chatMessage: ChatMessage): ChatMessageMongoEntity? {
-            return when (chatMessage) {
-                is ChatNormalMessage -> ChatNormalMongoEntity.from(chatMessage)
-                is ChatInviteMessage -> ChatInviteMongoEntity.from(chatMessage)
-                is ChatLeaveMessage -> ChatLeaveMongoEntity.from(chatMessage)
-                is ChatFileMessage -> ChatFileMongoEntity.from(chatMessage)
-                is ChatDeleteMessage -> null
-                is ChatReadMessage -> null
-                is ChatReplyMessage -> ChatReplyMongoEntity.from(chatMessage)
-                is ChatBombMessage -> ChatBombMongoEntity.from(chatMessage)
-            }
+        fun fromChatMessage(chatMessage: ChatMessage): ChatMessageMongoEntity? = when (chatMessage) {
+            is ChatNormalMessage -> ChatNormalMongoEntity.from(chatMessage)
+            is ChatInviteMessage -> ChatInviteMongoEntity.from(chatMessage)
+            is ChatLeaveMessage -> ChatLeaveMongoEntity.from(chatMessage)
+            is ChatFileMessage -> ChatFileMongoEntity.from(chatMessage)
+            is ChatDeleteMessage -> null
+            is ChatReadMessage -> null
+            is ChatReplyMessage -> ChatReplyMongoEntity.from(chatMessage)
+            is ChatBombMessage -> ChatBombMongoEntity.from(chatMessage)
         }
     }
 
     abstract fun toChatLog(): ChatLog
-
-    fun delete() {
-        this.type = ChatLogType.DELETE
-    }
 }

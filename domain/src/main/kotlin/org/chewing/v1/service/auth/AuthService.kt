@@ -26,7 +26,7 @@ class AuthService(
 
     fun verify(credential: Credential, verificationCode: String): Contact {
         val existingCredential = authReader.readContact(credential)
-        authValidator.validateCode(existingCredential, verificationCode)
+        authValidator.validateVerifyCode(existingCredential, verificationCode)
         return existingCredential
     }
 
@@ -54,10 +54,6 @@ class AuthService(
         authSender.sendVerificationCode(credential, verificationCode)
     }
 
-    fun getContactById(id: String, contactType: ContactType): Contact? {
-        return authReader.readContactById(id, contactType)
-    }
-    fun getContact(credential: Credential): Contact {
-        return authReader.readContact(credential)
-    }
+    fun getContactById(contactId: String, contactType: ContactType): Contact? = authReader.readContactById(contactId, contactType)
+    fun getContact(credential: Credential): Contact = authReader.readContact(credential)
 }

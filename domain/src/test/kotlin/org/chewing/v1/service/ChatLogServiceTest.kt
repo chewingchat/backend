@@ -1,5 +1,9 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.chat.message.ChatAppender
 import org.chewing.v1.implementation.chat.message.ChatGenerator
@@ -16,15 +20,12 @@ import org.chewing.v1.repository.chat.ChatLogRepository
 import org.chewing.v1.repository.chat.ChatSequenceRepository
 import org.chewing.v1.service.chat.ChatLogService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.time.LocalDateTime
 
 class ChatLogServiceTest {
-    private val fileHandler: FileHandler = mock()
-    private val chatLogRepository: ChatLogRepository = mock()
-    private val chatSequenceRepository: ChatSequenceRepository = mock()
+    private val fileHandler: FileHandler = mockk()
+    private val chatLogRepository: ChatLogRepository = mockk()
+    private val chatSequenceRepository: ChatSequenceRepository = mockk()
 
     private val chatSequenceReader: ChatSequenceReader = ChatSequenceReader(chatSequenceRepository)
     private val chatSequenceUpdater: ChatSequenceUpdater = ChatSequenceUpdater(chatSequenceRepository)
@@ -40,7 +41,7 @@ class ChatLogServiceTest {
         chatAppender,
         chatReader,
         chatGenerator,
-        chatRemover
+        chatRemover,
     )
 
     @Test
@@ -50,17 +51,15 @@ class ChatLogServiceTest {
         val chatRoomId = "chatRoomId"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every {
             fileHandler.handleNewFiles(
                 userId,
                 fileDataList,
-                FileCategory.CHAT
+                FileCategory.CHAT,
             )
-        ).thenReturn(listOf(TestDataFactory.createMedia(FileCategory.CHAT, 0, MediaType.IMAGE_PNG)))
-
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        } returns listOf(TestDataFactory.createMedia(FileCategory.CHAT, 0, MediaType.IMAGE_PNG))
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.uploadFiles(fileDataList, userId, chatRoomId)
 
@@ -83,9 +82,7 @@ class ChatLogServiceTest {
         val userId = "userId"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.readCurrent(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.readCurrent(chatRoomId) } returns seqNumber
 
         val result = chatLogService.readMessage(chatRoomId, userId)
 
@@ -104,9 +101,8 @@ class ChatLogServiceTest {
         val messageId = "messageId"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.removeLog(any()) } just Runs
 
         val result = chatLogService.deleteMessage(chatRoomId, userId, messageId)
 
@@ -128,15 +124,12 @@ class ChatLogServiceTest {
         val time = LocalDateTime.now()
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
         val parentChatNumber = TestDataFactory.createChatNumber(chatRoomId)
-        val parentChatLog = TestDataFactory.createChatNormalLog(parentMessageId, chatRoomId, userId, parentChatNumber, time)
+        val parentChatLog =
+            TestDataFactory.createChatNormalLog(parentMessageId, chatRoomId, userId, parentChatNumber, time)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
-
-        whenever(
-            chatLogRepository.readChatMessage(parentMessageId)
-        ).thenReturn(parentChatLog)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.readChatMessage(parentMessageId) } returns parentChatLog
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.replyMessage(chatRoomId, userId, parentMessageId, text)
 
@@ -164,13 +157,10 @@ class ChatLogServiceTest {
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
         val parentChatNumber = TestDataFactory.createChatNumber(chatRoomId)
         val parentChatLog = TestDataFactory.createChatFileLog(parentMessageId, chatRoomId, userId, parentChatNumber)
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
 
-        whenever(
-            chatLogRepository.readChatMessage(parentMessageId)
-        ).thenReturn(parentChatLog)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.readChatMessage(parentMessageId) } returns parentChatLog
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.replyMessage(chatRoomId, userId, parentMessageId, text)
 
@@ -196,9 +186,8 @@ class ChatLogServiceTest {
         val text = "text"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.chatNormalMessage(chatRoomId, userId, text)
 
@@ -217,9 +206,8 @@ class ChatLogServiceTest {
         val userId = "userId"
         val seqNumber = listOf(TestDataFactory.createChatSequenceNumber(chatRoomIds[0]))
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrements(chatRoomIds)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrements(chatRoomIds) } returns seqNumber
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.leaveMessages(chatRoomIds, userId)
 
@@ -239,9 +227,8 @@ class ChatLogServiceTest {
         val userId = "userId"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.inviteMessages(friendIds, chatRoomId, userId)
 
@@ -261,9 +248,8 @@ class ChatLogServiceTest {
         val userId = "userId"
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.inviteMessage(chatRoomId, friendId, userId)
 
@@ -284,9 +270,8 @@ class ChatLogServiceTest {
         val expiredAt = LocalDateTime.now()
         val seqNumber = TestDataFactory.createChatSequenceNumber(chatRoomId)
 
-        whenever(
-            chatSequenceRepository.updateSequenceIncrement(chatRoomId)
-        ).thenReturn(seqNumber)
+        every { chatSequenceRepository.updateSequenceIncrement(chatRoomId) } returns seqNumber
+        every { chatLogRepository.appendChatLog(any()) } just Runs
 
         val result = chatLogService.bombingMessage(chatRoomId, userId, text, expiredAt)
 
@@ -306,13 +291,11 @@ class ChatLogServiceTest {
         val seqNumbers = listOf(TestDataFactory.createChatSequenceNumber(chatRoomIds[0]))
         val chatNumbers = listOf(TestDataFactory.createChatNumber(chatRoomIds[0]))
         val time = LocalDateTime.now()
-        val chatNormalLog = TestDataFactory.createChatNormalLog("messageId", chatRoomIds[0], "userId", chatNumbers[0], time)
-        whenever(
-            chatSequenceRepository.readCurrentSeqNumbers(chatRoomIds)
-        ).thenReturn(seqNumbers)
-        whenever(
-            chatLogRepository.readLatestMessages(any())
-        ).thenReturn(listOf(chatNormalLog))
+        val chatNormalLog =
+            TestDataFactory.createChatNormalLog("messageId", chatRoomIds[0], "userId", chatNumbers[0], time)
+
+        every { chatSequenceRepository.readCurrentSeqNumbers(chatRoomIds) } returns seqNumbers
+        every { chatLogRepository.readLatestMessages(any()) } returns listOf(chatNormalLog)
 
         val result = chatLogService.getLatestChat(chatRoomIds)
 
@@ -335,11 +318,10 @@ class ChatLogServiceTest {
             chatRoomId,
             "userId",
             TestDataFactory.createChatNumber(chatRoomId),
-            time
+            time,
         )
-        whenever(
-            chatLogRepository.readChatMessages(chatRoomId, page)
-        ).thenReturn(listOf(chatNormalLog))
+
+        every { chatLogRepository.readChatMessages(chatRoomId, page) } returns listOf(chatNormalLog)
 
         val result = chatLogService.getChatLog(chatRoomId, page)
 

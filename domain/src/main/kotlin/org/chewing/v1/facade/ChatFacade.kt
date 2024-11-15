@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class ChatFacade(
     private val chatLogService: ChatLogService,
     private val roomService: RoomService,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
     fun processFiles(fileDataList: List<FileData>, userId: String, chatRoomId: String) {
         val chatMessage = chatLogService.uploadFiles(fileDataList, userId, chatRoomId)

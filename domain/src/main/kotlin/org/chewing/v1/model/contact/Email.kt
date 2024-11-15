@@ -6,20 +6,18 @@ import java.time.LocalDateTime
 class Email private constructor(
     val emailId: String,
     val emailAddress: String,
-    val validationCode: ValidationCode,
+    override val validationCode: ValidationCode,
 ) : Contact() {
     companion object {
         fun of(
             emailId: String,
             emailAddress: String,
-            authorizedNumber: String, // -->인증번호?
+            authorizedNumber: String,
             expiredTime: LocalDateTime,
-        ): Email {
-            return Email(
-                emailId = emailId,
-                emailAddress = emailAddress,
-                validationCode = ValidationCode.of(authorizedNumber, expiredTime),
-            )
-        }
+        ): Email = Email(
+            emailId = emailId,
+            emailAddress = emailAddress,
+            validationCode = ValidationCode.of(authorizedNumber, expiredTime),
+        )
     }
 }

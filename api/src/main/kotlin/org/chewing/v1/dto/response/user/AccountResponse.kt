@@ -12,7 +12,7 @@ data class AccountResponse(
 ) {
     companion object {
         fun of(
-            account: Account
+            account: Account,
         ): AccountResponse {
             return AccountResponse(
                 firstName = account.user.name.firstName(),
@@ -20,7 +20,7 @@ data class AccountResponse(
                 birth = account.user.birth,
                 phoneNumber = account.phoneNumber,
                 countryCode = account.countryCode,
-                emailAddress = account.emailAddress
+                emailAddress = account.emailAddress,
             )
         }
     }

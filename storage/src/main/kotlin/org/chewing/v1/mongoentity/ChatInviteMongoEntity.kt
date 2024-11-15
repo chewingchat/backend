@@ -24,11 +24,11 @@ internal class ChatInviteMongoEntity(
     type = ChatLogType.INVITE,
     seqNumber = seqNumber,
     page = page,
-    sendTime = sendTime
+    sendTime = sendTime,
 ) {
     companion object {
         fun from(
-            chatInviteMessage: ChatInviteMessage
+            chatInviteMessage: ChatInviteMessage,
         ): ChatInviteMongoEntity {
             return ChatInviteMongoEntity(
                 messageId = chatInviteMessage.messageId,
@@ -50,7 +50,7 @@ internal class ChatInviteMongoEntity(
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
             targetUserIds = targetUserIds,
-            type = type
+            type = type,
         )
     }
 }

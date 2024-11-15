@@ -16,9 +16,10 @@ internal class CommentRepositoryImpl(
         it.toCommentInfo()
     }
 
-    override fun readsIn(commentIds: List<String>): List<CommentInfo> = commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
-        it.toCommentInfo()
-    }
+    override fun readsIn(commentIds: List<String>): List<CommentInfo> =
+        commentJpaRepository.findAllByFeedCommentIdIn(commentIds).map {
+            it.toCommentInfo()
+        }
 
     @Transactional
     override fun remove(commentId: String): String? = commentJpaRepository.findById(commentId).map {

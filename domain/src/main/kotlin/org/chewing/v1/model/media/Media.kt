@@ -7,18 +7,24 @@ class Media private constructor(
     val url: String,
     val type: MediaType,
     val index: Int,
+    val path: String,
 ) {
     companion object {
-        private const val DEFAULT_IMAGE_URL = "https://chewing.s3.ap-northeast-2.amazonaws.com"
-
-        fun upload(category: FileCategory, userId: String, fileName: String, type: MediaType): Media {
+        fun upload(
+            baseUrl: String,
+            buckName: String,
+            category: FileCategory,
+            userId: String,
+            fileName: String,
+            type: MediaType,
+        ): Media {
             val randomId = UUID.randomUUID().toString()
-            val path = "$DEFAULT_IMAGE_URL/${category.name}/$userId/$randomId/$fileName"
-            return Media(category, path, type, fileName.split(".")[0].toInt())
+            val basePath = "$baseUrl/$buckName"
+            val filePath = "${category.name}/$userId/$randomId/$fileName"
+            return Media(category, "$basePath/$filePath", type, fileName.split(".")[0].toInt(), filePath)
         }
 
-        fun of(category: FileCategory, imagePath: String, index: Int, type: MediaType): Media {
-            return Media(category, imagePath, type, index)
-        }
+        fun of(category: FileCategory, imagePath: String, index: Int, type: MediaType): Media =
+            Media(category, imagePath, type, index, "")
     }
 }

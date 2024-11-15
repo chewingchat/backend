@@ -9,7 +9,7 @@ class ChatDeleteMessage private constructor(
     override val senderId: String,
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
-    override val type: MessageType = MessageType.DELETE
+    override val type: MessageType = MessageType.DELETE,
 ) : ChatMessage() {
 
     companion object {
@@ -18,14 +18,14 @@ class ChatDeleteMessage private constructor(
             chatRoomId: String,
             senderId: String,
             timestamp: LocalDateTime,
-            number: ChatNumber
+            number: ChatNumber,
         ): ChatDeleteMessage {
             return ChatDeleteMessage(
                 targetMessageId = targetMessageId,
                 chatRoomId = chatRoomId,
                 senderId = senderId,
                 timestamp = timestamp,
-                number = number
+                number = number,
             )
         }
     }

@@ -1,5 +1,7 @@
 package org.chewing.v1.facade
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.main.MainAggregator
 import org.chewing.v1.model.friend.FriendSortCriteria
@@ -8,13 +10,11 @@ import org.chewing.v1.service.friend.FriendShipService
 import org.chewing.v1.service.user.UserService
 import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class MainFacadeTest {
-    private val userService: UserService = mock()
-    private val userStatusService: UserStatusService = mock()
-    private val friendShipService: FriendShipService = mock()
+    private val userService: UserService = mockk()
+    private val userStatusService: UserStatusService = mockk()
+    private val friendShipService: FriendShipService = mockk()
     private val mainAggregator: MainAggregator = MainAggregator()
     private val mainFacade = MainFacade(userService, userStatusService, friendShipService, mainAggregator)
 
@@ -28,24 +28,24 @@ class MainFacadeTest {
         val userStatus = TestDataFactory.createUserStatus(userId)
         val friendShips = listOf(
             TestDataFactory.createFriendShip(friendId1, AccessStatus.ACCESS),
-            TestDataFactory.createFriendShip(friendId2, AccessStatus.ACCESS)
+            TestDataFactory.createFriendShip(friendId2, AccessStatus.ACCESS),
         )
 
         val friendIds = friendShips.map { it.friendId }
         val users = listOf(
             TestDataFactory.createUser(friendId2),
-            TestDataFactory.createUser(friendId1)
+            TestDataFactory.createUser(friendId1),
         )
         val usersStatuses = listOf(
             TestDataFactory.createUserStatus(friendId2),
-            TestDataFactory.createUserStatus(friendId1)
+            TestDataFactory.createUserStatus(friendId1),
         )
 
-        whenever(userService.getAccessUser(userId)).thenReturn(user)
-        whenever(userStatusService.getSelectedStatus(userId)).thenReturn(userStatus)
-        whenever(friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME)).thenReturn(friendShips)
-        whenever(userService.getUsers(friendIds)).thenReturn(users)
-        whenever(userStatusService.getSelectedStatuses(friendIds)).thenReturn(usersStatuses)
+        every { userService.getAccessUser(userId) } returns user
+        every { userStatusService.getSelectedStatus(userId) } returns userStatus
+        every { friendShipService.getAccessFriendShips(userId, FriendSortCriteria.NAME) } returns friendShips
+        every { userService.getUsers(friendIds) } returns users
+        every { userStatusService.getSelectedStatuses(friendIds) } returns usersStatuses
 
         val result = mainFacade.getMainPage(userId, FriendSortCriteria.NAME)
 

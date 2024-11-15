@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class SearchService(
     private val searchReader: SearchReader,
-    private val searchAppender: SearchAppender
+    private val searchAppender: SearchAppender,
 ) {
     fun createSearchKeyword(userId: String, keyword: String) {
         searchAppender.append(userId, keyword)

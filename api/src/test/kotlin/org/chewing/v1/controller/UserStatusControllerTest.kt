@@ -1,16 +1,17 @@
 package org.chewing.v1.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.user.UserStatusController
+import org.chewing.v1.dto.request.user.UserStatusRequest
 import org.chewing.v1.service.user.UserStatusService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -20,23 +21,22 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 class UserStatusControllerTest : RestDocsTest() {
 
     private lateinit var userStatusService: UserStatusService
-    private lateinit var objectMapper: ObjectMapper
     private lateinit var userStatusController: UserStatusController
 
     @BeforeEach
     fun setUp() {
-        userStatusService = mock()
+        userStatusService = mockk()
         userStatusController = UserStatusController(userStatusService)
         mockMvc = mockController(userStatusController)
-        objectMapper = objectMapper()
     }
 
     @Test
     @DisplayName("사용자 상태 선택 해제")
     fun deleteProfileSelectedStatus() {
+        every { userStatusService.deleteSelectUserStatus(any()) } just Runs
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/user/status/select")
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -45,14 +45,17 @@ class UserStatusControllerTest : RestDocsTest() {
     @DisplayName("사용자 상태 삭제")
     fun deleteProfileStatus() {
         val requestBody = listOf(
-            mapOf("statusId" to 1),
-            mapOf("statusId" to 2),
+            UserStatusRequest.Delete(statusId = "testStatusId"),
+            UserStatusRequest.Delete(statusId = "testStatusId2"),
         )
+
+        every { userStatusService.deleteUserStatuses(any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/user/status")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .content(jsonBody(requestBody))
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -60,14 +63,17 @@ class UserStatusControllerTest : RestDocsTest() {
     @Test
     @DisplayName("사용자 상태 선택")
     fun changeProfileSelectedStatus() {
-        val requestBody = mapOf(
-            "statusId" to 1,
+        val requestBody = UserStatusRequest.Update(
+            statusId = "testStatusId",
         )
+
+        every { userStatusService.selectUserStatus(any(), any()) } just Runs
+
         val result = mockMvc.perform(
             MockMvcRequestBuilders.put("/api/user/status/select")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .content(jsonBody(requestBody))
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -75,15 +81,16 @@ class UserStatusControllerTest : RestDocsTest() {
     @Test
     @DisplayName("사용자 상태 추가")
     fun addProfileStatus() {
-        val requestBody = mapOf(
-            "message" to "testMessage",
-            "emoji" to "testEmoji",
+        val requestBody = UserStatusRequest.Add(
+            emoji = "testEmoji",
+            message = "testMessage",
         )
+        every { userStatusService.createUserStatus(any(), any(), any()) } just Runs
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/user/status")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .content(jsonBody(requestBody))
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -92,10 +99,11 @@ class UserStatusControllerTest : RestDocsTest() {
     @DisplayName("사용자 상태 조회")
     fun getUserStatus() {
         val statuses = listOf(TestDataFactory.createUserStatus())
-        whenever(userStatusService.getUserStatuses(any())).thenReturn(statuses)
+
+        every { userStatusService.getUserStatuses(any()) } returns statuses
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/user/status")
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))

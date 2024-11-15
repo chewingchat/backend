@@ -18,7 +18,7 @@ internal class UserSearchJpaEntity(
     fun toFriendSearch(): UserSearch {
         return UserSearch.of(
             keyword = searchText,
-            searchTime = createdAt
+            searchTime = createdAt,
         )
     }
 
@@ -26,7 +26,7 @@ internal class UserSearchJpaEntity(
         fun fromFriendSearch(userId: String, keyword: String): UserSearchJpaEntity {
             return UserSearchJpaEntity(
                 searchText = keyword,
-                userId = userId
+                userId = userId,
             )
         }
     }

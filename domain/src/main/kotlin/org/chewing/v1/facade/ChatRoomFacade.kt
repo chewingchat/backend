@@ -14,7 +14,7 @@ class ChatRoomFacade(
     private val chatLogService: ChatLogService,
     private val roomService: RoomService,
     private val chatRoomAggregator: ChatRoomAggregator,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
     fun leavesChatRoom(chatRoomIds: List<String>, userId: String) {
         roomService.deleteGroupChatRooms(chatRoomIds, userId)

@@ -1,5 +1,7 @@
 package org.chewing.v1.service
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.emoticon.EmoticonAggregator
 import org.chewing.v1.implementation.emoticon.EmoticonReader
@@ -8,12 +10,10 @@ import org.chewing.v1.repository.emoticon.EmoticonRepository
 import org.chewing.v1.repository.user.UserEmoticonRepository
 import org.chewing.v1.service.emoticon.EmoticonService
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
-class EmoticonServiceTest() {
-    private val emoticonRepository: EmoticonRepository = mock()
-    private val userEmoticonRepository: UserEmoticonRepository = mock()
+class EmoticonServiceTest {
+    private val emoticonRepository: EmoticonRepository = mockk()
+    private val userEmoticonRepository: UserEmoticonRepository = mockk()
 
     private val emoticonReader = EmoticonReader(emoticonRepository)
     private val userEmoticonReader = UserEmoticonReader(userEmoticonRepository)
@@ -34,9 +34,9 @@ class EmoticonServiceTest() {
         val emoticonPackInfo = TestDataFactory.createEmoticonPackInfo(emoticonPackId)
         val userEmoticonInfo = TestDataFactory.createUserEmoticonPackInfo(userId, emoticonPackId)
 
-        whenever(userEmoticonRepository.readUserEmoticons(userId)).thenReturn(listOf(userEmoticonInfo))
-        whenever(emoticonRepository.readEmoticonPacks(listOf(emoticonPackId))).thenReturn(listOf(emoticonPackInfo))
-        whenever(emoticonRepository.readEmoticons(listOf(emoticonPackId))).thenReturn(listOf(emoticonInfo, emoticonInfo2, emoticonInfo3))
+        every { userEmoticonRepository.readUserEmoticons(userId) } returns listOf(userEmoticonInfo)
+        every { emoticonRepository.readEmoticonPacks(listOf(emoticonPackId)) } returns listOf(emoticonPackInfo)
+        every { emoticonRepository.readEmoticons(listOf(emoticonPackId)) } returns listOf(emoticonInfo, emoticonInfo2, emoticonInfo3)
 
         val emoticonPacks = emoticonService.fetchUserEmoticonPacks(userId)
 
@@ -67,9 +67,9 @@ class EmoticonServiceTest() {
         val emoticonPackInfo = TestDataFactory.createEmoticonPackInfo(emoticonPackId)
         val userEmoticonInfo = TestDataFactory.createUserEmoticonPackInfo(userId, emoticonPackId)
 
-        whenever(userEmoticonRepository.readUserEmoticons(userId)).thenReturn(listOf(userEmoticonInfo))
-        whenever(emoticonRepository.readEmoticonPacks(listOf(emoticonPackId))).thenReturn(listOf(emoticonPackInfo))
-        whenever(emoticonRepository.readEmoticons(listOf(emoticonPackId))).thenReturn(listOf(emoticonInfo, emoticonInfo2, emoticonInfo3))
+        every { userEmoticonRepository.readUserEmoticons(userId) } returns listOf(userEmoticonInfo)
+        every { emoticonRepository.readEmoticonPacks(listOf(emoticonPackId)) } returns listOf(emoticonPackInfo)
+        every { emoticonRepository.readEmoticons(listOf(emoticonPackId)) } returns listOf(emoticonInfo, emoticonInfo2, emoticonInfo3)
 
         val emoticonPacks = emoticonService.fetchUserEmoticonPacks(userId)
 

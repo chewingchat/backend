@@ -10,7 +10,7 @@ import org.chewing.v1.model.user.User
 import java.time.format.DateTimeFormatter
 
 data class MyCommentResponse(
-    val myComments: List<MyCommentFeedResponse>
+    val myComments: List<MyCommentFeedResponse>,
 ) {
     companion object {
         fun of(feedWithComments: List<UserCommentedInfo>): MyCommentResponse {
@@ -25,7 +25,7 @@ data class MyCommentResponse(
                     val comments = commentsPerFeed.map { it.comment }
 
                     MyCommentFeedResponse.of(feed, friendShip, user, comments)
-                }
+                },
             )
         }
     }
@@ -33,14 +33,14 @@ data class MyCommentResponse(
     data class MyCommentFeedResponse(
         val friend: FriendInfoResponse,
         val feed: MainFeedResponse,
-        val comments: List<CommentResponse>
+        val comments: List<CommentResponse>,
     ) {
         companion object {
             fun of(
                 feed: Feed,
                 friendShip: FriendShip,
                 user: User,
-                comments: List<CommentInfo>
+                comments: List<CommentInfo>,
             ): MyCommentFeedResponse {
                 return MyCommentFeedResponse(
                     FriendInfoResponse.of(
@@ -48,10 +48,10 @@ data class MyCommentResponse(
                         userName = friendShip.friendName,
                         imageUrl = user.image.url,
                         imageType = user.image.type.value().lowercase(),
-                        access = user.status
+                        access = user.status,
                     ),
                     MainFeedResponse.of(feed),
-                    comments.map { CommentResponse.of(it) }
+                    comments.map { CommentResponse.of(it) },
                 )
             }
         }
@@ -59,16 +59,16 @@ data class MyCommentResponse(
         data class CommentResponse(
             val commentId: String,
             val comment: String,
-            val commentTime: String
+            val commentTime: String,
         ) {
             companion object {
                 fun of(
-                    comment: CommentInfo
+                    comment: CommentInfo,
                 ): CommentResponse {
                     return CommentResponse(
                         commentId = comment.commentId,
                         comment = comment.comment,
-                        commentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
+                        commentTime = comment.createAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss")),
                     )
                 }
             }

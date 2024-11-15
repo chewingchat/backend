@@ -8,7 +8,7 @@ class UserCommentedInfo private constructor(
     val comment: CommentInfo,
     val friendShip: FriendShip,
     val user: User,
-    val feed: Feed
+    val feed: Feed,
 ) {
     companion object {
         fun of(comment: CommentInfo, friendShip: FriendShip, user: User, feed: Feed): UserCommentedInfo {
@@ -16,7 +16,7 @@ class UserCommentedInfo private constructor(
                 comment = comment,
                 friendShip = friendShip,
                 user = user,
-                feed = feed
+                feed = feed,
             )
         }
     }

@@ -23,7 +23,7 @@ class Notification private constructor(
                 pushToken = pushToken,
                 type = type,
                 targetId = targetId,
-                content = content
+                content = content,
             )
         }
     }

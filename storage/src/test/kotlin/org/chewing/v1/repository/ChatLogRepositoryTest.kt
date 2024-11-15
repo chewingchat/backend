@@ -1,12 +1,15 @@
 package org.chewing.v1.repository
 
 import org.chewing.v1.config.MongoContextTest
+import org.chewing.v1.error.ConflictException
+import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
 import org.chewing.v1.repository.mongo.chat.ChatLogRepositoryImpl
 import org.chewing.v1.repository.support.ChatMessageProvider
 import org.chewing.v1.repository.support.MongoDataGenerator
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -41,7 +44,10 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.type == ChatLogType.NORMAL)
     }
 
@@ -57,7 +63,10 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.type == ChatLogType.LEAVE)
     }
 
@@ -73,7 +82,10 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.type == ChatLogType.INVITE)
     }
 
@@ -89,7 +101,10 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.medias[0].url == chatMessage.medias[0].url)
         assert(chatLog.type == ChatLogType.FILE)
     }
@@ -108,7 +123,10 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.senderId == chatMessage.senderId)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.type == ChatLogType.REPLY)
         assert(chatLog.parentMessageId == parentMessageId)
@@ -131,9 +149,15 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.type == ChatLogType.BOMB)
-        assert(chatLog.expiredAt.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.expiredAt.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.expiredAt.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.expiredAt.truncatedTo(ChronoUnit.MILLIS)),
+        )
     }
 
     @Test
@@ -143,7 +167,11 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatLeaveMessage = ChatMessageProvider.buildLeaveMessage(generateMessageId(), chatRoomId)
         val chatInviteMessage = ChatMessageProvider.buildInviteMessage(generateMessageId(), chatRoomId)
         val chatFileMessage = ChatMessageProvider.buildFileMessage(generateMessageId(), chatRoomId)
-        val chatReplyMessage = ChatMessageProvider.buildReplyMessage(generateMessageId(), chatRoomId, ChatMessageProvider.buildNormalLog(generateMessageId(), chatRoomId))
+        val chatReplyMessage = ChatMessageProvider.buildReplyMessage(
+            generateMessageId(),
+            chatRoomId,
+            ChatMessageProvider.buildNormalLog(generateMessageId(), chatRoomId),
+        )
         val chatBombeMessage = ChatMessageProvider.buildBombMessage(generateMessageId(), chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatNormalMessage)
         mongoDataGenerator.chatLogEntityData(chatLeaveMessage)
@@ -167,7 +195,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildNormalMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -178,7 +206,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildLeaveMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -189,7 +217,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildInviteMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -200,7 +228,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val chatRoomId = generateChatRoomId()
         val chatMessage = ChatMessageProvider.buildFileMessage(messageId, chatRoomId)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -213,7 +241,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         val parentLog = ChatMessageProvider.buildNormalLog(parentMessageId, chatRoomId)
         val chatMessage = ChatMessageProvider.buildReplyMessage(messageId, chatRoomId, parentLog)
         mongoDataGenerator.chatLogEntityData(chatMessage)
-        chatLogRepositoryImpl.removeMessage(messageId)
+        chatLogRepositoryImpl.removeLog(messageId)
         val chatLog = chatLogRepositoryImpl.readChatMessage(messageId)
         assert(chatLog!!.type == ChatLogType.DELETE)
     }
@@ -231,8 +259,33 @@ class ChatLogRepositoryTest : MongoContextTest() {
         assert(chatLog.text == chatMessage.text)
         assert(chatLog.number.sequenceNumber == chatMessage.number.sequenceNumber)
         assert(chatLog.number.page == chatMessage.number.page)
-        assert(chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS).equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)))
+        assert(
+            chatLog.timestamp.truncatedTo(ChronoUnit.MILLIS)
+                .equals(chatMessage.timestamp.truncatedTo(ChronoUnit.MILLIS)),
+        )
         assert(chatLog.type == ChatLogType.NORMAL)
+    }
+
+    @Test
+    fun `잘못된 타입의 메시지  저장시 에러 발생 - 읽기 메시지`() {
+        val chatRoomId = generateChatRoomId()
+        val chatMessage = ChatMessageProvider.buildReadMessage(chatRoomId)
+
+        val exception = assertThrows<ConflictException> {
+            chatLogRepositoryImpl.appendChatLog(chatMessage)
+        }
+        assert(exception.errorCode == ErrorCode.INVALID_TYPE)
+    }
+
+    @Test
+    fun `잘못된 타입의 메시지  저장시 에러 발생 - 삭제 메시지`() {
+        val chatRoomId = generateChatRoomId()
+        val chatMessage = ChatMessageProvider.buildDeleteMessage(chatRoomId)
+
+        val exception = assertThrows<ConflictException> {
+            chatLogRepositoryImpl.appendChatLog(chatMessage)
+        }
+        assert(exception.errorCode == ErrorCode.INVALID_TYPE)
     }
 
     @Test
@@ -243,7 +296,13 @@ class ChatLogRepositoryTest : MongoContextTest() {
         mongoDataGenerator.chatLogEntityData(chatMessage1)
         mongoDataGenerator.chatLogEntityData(chatMessage2)
         mongoDataGenerator.chatLogEntityData(chatMessage3)
-        val chatLog = chatLogRepositoryImpl.readLatestMessages(listOf(chatMessage1.number, chatMessage2.number, chatMessage3.number))
+        val chatLog = chatLogRepositoryImpl.readLatestMessages(
+            listOf(
+                chatMessage1.number,
+                chatMessage2.number,
+                chatMessage3.number,
+            ),
+        )
         assert(chatLog.size == 3)
     }
 

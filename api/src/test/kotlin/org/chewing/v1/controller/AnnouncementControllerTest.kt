@@ -1,5 +1,7 @@
 package org.chewing.v1.controller
 
+import io.mockk.every
+import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.RestDocsUtils
 import org.chewing.v1.TestDataFactory.createAnnouncement
@@ -8,8 +10,6 @@ import org.chewing.v1.service.announcement.AnnouncementService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.restdocs.payload.PayloadDocumentation
@@ -26,7 +26,7 @@ class AnnouncementControllerTest : RestDocsTest() {
 
     @BeforeEach
     fun setUp() {
-        announcementService = mock()
+        announcementService = mockk()
         announcementController = AnnouncementController(announcementService)
         mockMvc = mockController(announcementController)
     }
@@ -35,7 +35,7 @@ class AnnouncementControllerTest : RestDocsTest() {
     @DisplayName("공지사항 목록 조회")
     fun getAnnouncements() {
         val announcement = createAnnouncement()
-        whenever(announcementService.readAnnouncements()).thenReturn(listOf(announcement))
+        every { announcementService.readAnnouncements() } returns listOf(announcement)
         val uploadTime = announcement.uploadAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/announcement/list")
@@ -66,7 +66,7 @@ class AnnouncementControllerTest : RestDocsTest() {
     @DisplayName("공지사항 조회")
     fun getAnnouncement() {
         val announcement = createAnnouncement()
-        whenever(announcementService.readAnnouncement(announcement.id)).thenReturn(announcement)
+        every { announcementService.readAnnouncement(announcement.id) } returns announcement
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/announcement/${announcement.id}")
                 .contentType(MediaType.APPLICATION_JSON)

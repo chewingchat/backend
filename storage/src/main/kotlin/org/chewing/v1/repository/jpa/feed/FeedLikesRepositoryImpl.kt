@@ -16,7 +16,6 @@ internal class FeedLikesRepositoryImpl(
         feedLikesRepository.save(userFeedJpaEntity)
     }
 
-    @Transactional
     override fun unlikes(feedId: String, userId: String) {
         feedLikesRepository.deleteById(FeedLikeId(userId, feedId))
     }
@@ -26,5 +25,6 @@ internal class FeedLikesRepositoryImpl(
         feedLikesRepository.deleteAllByFeedLikeIdFeedIdIn(feedIds)
     }
 
-    override fun checkLike(feedId: String, userId: String): Boolean = feedLikesRepository.existsById(FeedLikeId(userId, feedId))
+    override fun checkLike(feedId: String, userId: String): Boolean =
+        feedLikesRepository.existsById(FeedLikeId(userId, feedId))
 }

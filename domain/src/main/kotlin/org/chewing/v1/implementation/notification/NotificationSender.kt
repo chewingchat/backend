@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class NotificationSender(
     private val externalPushNotificationClient: ExternalPushNotificationClient,
     private val externalChatNotificationClient: ExternalChatNotificationClient,
-    private val asyncJobExecutor: AsyncJobExecutor
+    private val asyncJobExecutor: AsyncJobExecutor,
 ) {
     fun sendPushNotification(notificationList: List<Notification>) {
         asyncJobExecutor.executeAsyncJobs(notificationList) { notification ->

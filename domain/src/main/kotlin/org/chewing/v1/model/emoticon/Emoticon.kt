@@ -18,7 +18,7 @@ class Emoticon private constructor(
             return Emoticon(
                 id = id,
                 name = name,
-                media = Media.of(FileCategory.EMOTICON, url, 0, MediaType.IMAGE_PNG)
+                media = Media.of(FileCategory.EMOTICON, url, 0, MediaType.IMAGE_PNG),
             )
         }
     }

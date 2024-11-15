@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AnnouncementService(
-    private val announcementReader: AnnouncementReader
+    private val announcementReader: AnnouncementReader,
 ) {
     fun readAnnouncements(): List<Announcement> {
         return announcementReader.reads()

@@ -1,6 +1,6 @@
 package org.chewing.v1.controller.chat
 
-import org.chewing.v1.dto.request.chat.message.*
+import org.chewing.v1.dto.request.chat.ChatRequest
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.util.FileUtil
@@ -14,12 +14,12 @@ import java.security.Principal
 
 @Controller
 class ChatController(
-    private val chatFacade: ChatFacade
+    private val chatFacade: ChatFacade,
 ) {
     @MessageMapping("/chat/read")
     fun readMessage(
-        message: ChatReadDto,
-        principal: Principal
+        message: ChatRequest.Read,
+        principal: Principal,
     ) {
         val userId = principal.name
         chatFacade.processRead(message.chatRoomId, userId)
@@ -27,8 +27,8 @@ class ChatController(
 
     @MessageMapping("/chat/delete")
     fun deleteMessage(
-        message: ChatDeleteDto,
-        principal: Principal
+        message: ChatRequest.Delete,
+        principal: Principal,
     ) {
         val userId = principal.name
         chatFacade.processDelete(message.chatRoomId, userId, message.messageId)
@@ -36,8 +36,8 @@ class ChatController(
 
     @MessageMapping("/chat/reply")
     fun replyMessage(
-        message: ChatReplyDto,
-        principal: Principal
+        message: ChatRequest.Reply,
+        principal: Principal,
     ) {
         val userId = principal.name
         chatFacade.processReply(message.chatRoomId, userId, message.parentMessageId, message.message)
@@ -45,8 +45,8 @@ class ChatController(
 
     @MessageMapping("/chat/bomb")
     fun bombMessage(
-        message: ChatBombDto,
-        principal: Principal
+        message: ChatRequest.Bomb,
+        principal: Principal,
     ) {
         val userId = principal.name
         chatFacade.processBombing(message.chatRoomId, userId, message.message, message.toExpireAt())
@@ -54,8 +54,8 @@ class ChatController(
 
     @MessageMapping("/chat/common")
     fun chatMessage(
-        message: ChatCommonDto,
-        principal: Principal
+        message: ChatRequest.Common,
+        principal: Principal,
     ) {
         val userId = principal.name
         chatFacade.processCommon(message.chatRoomId, userId, message.message)
@@ -65,7 +65,7 @@ class ChatController(
     fun uploadFiles(
         @RequestPart("files") files: List<MultipartFile>,
         @RequestAttribute("userId") userId: String,
-        @RequestParam("chatRoomId") chatRoomId: String
+        @RequestParam("chatRoomId") chatRoomId: String,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
         chatFacade.processFiles(convertFiles, userId, chatRoomId)

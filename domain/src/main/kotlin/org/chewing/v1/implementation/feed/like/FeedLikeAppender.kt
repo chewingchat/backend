@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FeedLikeAppender(
-    private val feedLikesRepository: FeedLikesRepository
+    private val feedLikesRepository: FeedLikesRepository,
 ) {
     fun appendLikes(feedId: String, userId: String) {
         feedLikesRepository.likes(feedId, userId)

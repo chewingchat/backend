@@ -17,29 +17,23 @@ class NotificationGenerator {
         sourceUser: User,
         pushTokens: List<PushToken>,
         feedId: String,
-        comment: String
-    ): List<Notification> {
-        return createNotifications(
-            sourceUser = sourceUser,
-            pushTokens = pushTokens,
-            type = NotificationType.COMMENT,
-            targetId = feedId,
-            content = comment
-        )
-    }
+        comment: String,
+    ): List<Notification> = createNotifications(
+        sourceUser = sourceUser,
+        pushTokens = pushTokens,
+        type = NotificationType.COMMENT,
+        targetId = feedId,
+        content = comment,
+    )
 
     fun generateMessageNotification(
         sourceUser: User,
         pushTokens: List<PushToken>,
-        message: ChatMessage
+        message: ChatMessage,
     ): List<Notification> {
         val (type, targetId, content) = when (message) {
             is ChatFileMessage -> {
-                val mediaUrl = message.medias.firstOrNull()?.url
-                if (mediaUrl.isNullOrBlank()) {
-                    logger.warn("파일 메시지에 미디어 URL이 없습니다.")
-                    return emptyList()
-                }
+                val mediaUrl = message.medias.first().url
                 Triple(NotificationType.CHAT_FILE, message.chatRoomId, mediaUrl)
             }
             is ChatNormalMessage -> {
@@ -68,7 +62,7 @@ class NotificationGenerator {
             pushTokens = pushTokens,
             type = type,
             targetId = targetId,
-            content = content
+            content = content,
         )
     }
 
@@ -77,16 +71,14 @@ class NotificationGenerator {
         pushTokens: List<PushToken>,
         type: NotificationType,
         targetId: String,
-        content: String?
-    ): List<Notification> {
-        return pushTokens.map { pushToken ->
-            Notification.of(
-                user = sourceUser,
-                pushToken = pushToken,
-                type = type,
-                targetId = targetId,
-                content = content ?: ""
-            )
-        }
+        content: String?,
+    ): List<Notification> = pushTokens.map { pushToken ->
+        Notification.of(
+            user = sourceUser,
+            pushToken = pushToken,
+            type = type,
+            targetId = targetId,
+            content = content ?: "",
+        )
     }
 }

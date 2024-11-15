@@ -13,5 +13,5 @@ data class PersonalChatRoomMemberId(
     val userId: String,
 
     @Column(name = "friend_id")
-    val friendId: String
+    val friendId: String,
 ) : Serializable

@@ -10,5 +10,5 @@ data class FeedLikeId(
     val userId: String,
 
     @Column(name = "feed_id")
-    val feedId: String
+    val feedId: String,
 ) : Serializable

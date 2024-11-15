@@ -12,7 +12,7 @@ class FeedLikesService(
     private val likeValidator: FeedLikeValidator,
     private val likeLocker: FeedLikeHandler,
     private val likeRemover: FeedLikeRemover,
-    private val likeChecker: FeedLikeChecker
+    private val likeChecker: FeedLikeChecker,
 ) {
     fun like(feedId: String, userId: String, target: FeedTarget) {
         likeValidator.isAlreadyLiked(feedId, userId)

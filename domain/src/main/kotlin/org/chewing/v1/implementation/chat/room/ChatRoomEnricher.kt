@@ -24,7 +24,7 @@ class ChatRoomEnricher {
 
             val chatRoomMembersInfo = groupedChatRoomMembers[chatRoomInfo.chatRoomId] ?: emptyList()
             val chatRoomMembers = chatRoomMembersInfo.map {
-                ChatRoomMember.of(it.memberId, it.readSeqNumber, it.memberId == userId,)
+                ChatRoomMember.of(it.memberId, it.readSeqNumber, it.memberId == userId)
             }
             Room.of(
                 chatRoomInfo = chatRoomInfo,

@@ -23,7 +23,7 @@ class FeedFacade(
     private val userService: UserService,
     private val feedAggregator: FeedAggregator,
     private val commentAggregator: CommentAggregator,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
     fun removesFeed(userId: String, feedIds: List<String>) {
         feedService.removes(userId, feedIds)

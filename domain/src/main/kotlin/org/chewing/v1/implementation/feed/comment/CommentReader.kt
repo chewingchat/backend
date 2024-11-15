@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CommentReader(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
 ) {
     fun reads(feedId: String): List<CommentInfo> {
         return commentRepository.reads(feedId)

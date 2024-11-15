@@ -8,4 +8,5 @@ internal interface FeedDetailJpaRepository : JpaRepository<FeedDetailJpaEntity, 
     fun findAllByFeedIdIn(feedIds: List<String>): List<FeedDetailJpaEntity>
     fun findByFeedIdInAndFeedIndex(feedId: List<String>, feedIndex: Int): List<FeedDetailJpaEntity>
     fun deleteAllByFeedIdIn(feedIds: List<String>)
+    fun findAllByFeedIdInOrderByFeedIndexAsc(feedIds: List<String>): List<FeedDetailJpaEntity>
 }

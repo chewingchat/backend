@@ -4,14 +4,14 @@ import org.chewing.v1.model.announcement.Announcement
 import java.time.format.DateTimeFormatter
 
 data class AnnouncementListResponse(
-    val announcements: List<AnnouncementResponse>
+    val announcements: List<AnnouncementResponse>,
 ) {
     companion object {
         fun of(announcements: List<Announcement>): AnnouncementListResponse {
             return AnnouncementListResponse(
                 announcements.map {
                     AnnouncementResponse.of(it)
-                }
+                },
             )
         }
     }
@@ -19,7 +19,7 @@ data class AnnouncementListResponse(
     data class AnnouncementResponse(
         val announcementId: String,
         val topic: String,
-        val uploadTime: String
+        val uploadTime: String,
     ) {
         companion object {
             fun of(
@@ -30,7 +30,7 @@ data class AnnouncementListResponse(
                 return AnnouncementResponse(
                     announcementId = announcement.id,
                     topic = announcement.topic,
-                    uploadTime = formattedUploadTime
+                    uploadTime = formattedUploadTime,
                 )
             }
         }

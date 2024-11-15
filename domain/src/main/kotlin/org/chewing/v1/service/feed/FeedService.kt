@@ -2,6 +2,7 @@ package org.chewing.v1.service.feed
 
 import org.chewing.v1.implementation.feed.feed.*
 import org.chewing.v1.implementation.media.FileHandler
+import org.chewing.v1.model.ai.DateTarget
 import org.chewing.v1.model.feed.*
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
@@ -15,7 +16,7 @@ class FeedService(
     private val feedValidator: FeedValidator,
     private val fileHandler: FileHandler,
     private val feedEnricher: FeedEnricher,
-    private val feedRemover: FeedRemover
+    private val feedRemover: FeedRemover,
 ) {
     // 피드를 가져옴
     fun getFeed(feedId: String): Feed {
@@ -33,6 +34,12 @@ class FeedService(
     fun getOwnedFeeds(targetUserId: String, feedStatus: FeedStatus): List<Feed> {
         val feeds = feedReader.readsOwnedInfo(targetUserId, feedStatus)
         val feedsDetail = feedReader.readsMainDetails(feeds.map { it.feedId })
+        return feedEnricher.enriches(feeds, feedsDetail)
+    }
+
+    fun getFriendFulledFeeds(friendId: String, dateTarget: DateTarget): List<Feed> {
+        val feeds = feedReader.readsFriendBetween(friendId, dateTarget)
+        val feedsDetail = feedReader.readsDetails(feeds.map { it.feedId })
         return feedEnricher.enriches(feeds, feedsDetail)
     }
 

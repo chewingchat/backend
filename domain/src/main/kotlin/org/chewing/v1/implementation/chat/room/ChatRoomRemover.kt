@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class ChatRoomRemover(
     private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository,
-    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository
+    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository,
 ) {
     fun removeGroups(chatRoomIds: List<String>, userId: String) {
         return groupChatRoomMemberRepository.removes(chatRoomIds, userId)

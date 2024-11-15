@@ -58,10 +58,7 @@ class JwtTokenProvider(
     // 토큰 유효성 검사 수정함(예외 발생 방식으로 수정)
     fun validateToken(token: String) {
         try {
-            val claims = getClaimsFromToken(token)
-            if (claims.expiration.before(Date())) {
-                throw AuthorizationException(ErrorCode.TOKEN_EXPIRED) // 엑세스 토큰 만료 예외 발생
-            }
+            getClaimsFromToken(token)
         } catch (e: ExpiredJwtException) {
             throw AuthorizationException(ErrorCode.TOKEN_EXPIRED) // 엑세스 토큰 만료 예외 발생
         } catch (e: JwtException) {
@@ -82,17 +79,14 @@ class JwtTokenProvider(
     }
 
     // 토큰에서 클레임(사용자 관련 정보(예: 사용자 ID, 권한 등)) 추출
-    private fun getClaimsFromToken(token: String): Claims {
-        return Jwts.parserBuilder()
-            .setSigningKey(secretKey)
-            .build()
-            .parseClaimsJws(token)
-            .body
-    }
+    private fun getClaimsFromToken(token: String): Claims = Jwts.parserBuilder()
+        .setSigningKey(secretKey)
+        .build()
+        .parseClaimsJws(token)
+        .body
+
     // token 글자 깔끔히 정리
-    fun cleanedToken(token: String): String {
-        return token.removePrefix("Bearer ").trim()
-    }
+    fun cleanedToken(token: String): String = token.removePrefix("Bearer ").trim()
 
     fun refresh(token: String): Pair<JwtToken, String> {
         val cleanedToken = cleanedToken(token)

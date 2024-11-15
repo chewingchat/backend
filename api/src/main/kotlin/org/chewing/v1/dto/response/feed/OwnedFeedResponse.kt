@@ -10,12 +10,12 @@ data class OwnedFeedResponse(
     val topic: String,
     val comments: Int,
     val liked: Boolean,
-    val details: List<FeedDetailResponse>
+    val details: List<FeedDetailResponse>,
 ) {
     companion object {
         fun of(
             feed: Feed,
-            isLiked: Boolean
+            isLiked: Boolean,
         ): OwnedFeedResponse {
             val formattedUploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return OwnedFeedResponse(
@@ -25,7 +25,7 @@ data class OwnedFeedResponse(
                 topic = feed.feed.topic,
                 comments = feed.feed.comments,
                 liked = isLiked,
-                details = feed.feedDetails.map { FeedDetailResponse.of(it) }
+                details = feed.feedDetails.map { FeedDetailResponse.of(it) },
             )
         }
     }

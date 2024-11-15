@@ -17,7 +17,7 @@ class FriendFacade(
     fun addFriend(
         userId: String,
         friendName: UserName,
-        targetContact: Credential
+        targetContact: Credential,
     ) {
         // 저장할 친구 정보를 읽어옴
         val contact = authService.getContact(targetContact)
@@ -26,6 +26,6 @@ class FriendFacade(
         // 나의 정보를 읽어온다.
         val userAccount = userService.getUserAccount(userId)
         // 친구 추가
-        friendShipService.creatFriendShip(userId, userAccount.user.name, targetUser.userId, friendName)
+        friendShipService.createFriendShip(userId, userAccount.user.name, targetUser.userId, friendName)
     }
 }

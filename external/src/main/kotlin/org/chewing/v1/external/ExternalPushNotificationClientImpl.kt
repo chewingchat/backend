@@ -3,17 +3,19 @@ package org.chewing.v1.external
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import mu.KotlinLogging
+import org.chewing.v1.client.FcmClient
+import org.chewing.v1.dto.FcmMessageDto
 import org.chewing.v1.model.notification.Notification
 import org.springframework.stereotype.Component
 
 @Component
 class ExternalPushNotificationClientImpl(
-    private val fcmClient: FcmClient
+    private val fcmClient: FcmClient,
 ) : ExternalPushNotificationClient {
     private val logger = KotlinLogging.logger {}
 
     @Throws(JsonParseException::class, JsonProcessingException::class)
-    override fun sendFcmNotification(notification: Notification) {
+    override suspend fun sendFcmNotification(notification: Notification) {
         try {
             fcmClient.sendMessage(FcmMessageDto.from(notification))
         } catch (e: Exception) {

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserStatusAppender(
-    private val userStatusRepository: UserStatusRepository
+    private val userStatusRepository: UserStatusRepository,
 ) {
     fun append(userId: String, statusMessage: String, emoji: String) {
         userStatusRepository.append(userId, statusMessage, emoji)

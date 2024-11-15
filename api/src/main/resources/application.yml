@@ -10,7 +10,15 @@ spring:
       - jwt.yml
       - openai.yml
       - fcm.yml
+      - ncp.yml
+      - media.yml
+      - optional:file:../.env[.properties]
+      - optional:file:./.env[.properties]
+
+
   web.resources.add-mappings: false
+
+
 
 server:
   tomcat:

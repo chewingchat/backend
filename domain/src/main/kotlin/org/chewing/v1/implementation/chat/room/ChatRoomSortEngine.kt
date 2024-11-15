@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component
 object ChatRoomSortEngine {
     fun sortChatRoom(
         chatRooms: List<ChatRoom>,
-        sort: ChatRoomSortCriteria
+        sort: ChatRoomSortCriteria,
     ): List<ChatRoom> {
         return when (sort) {
             ChatRoomSortCriteria.FAVORITE -> chatRooms.sortedWith(
-                compareByDescending<ChatRoom> { it.favorite }.thenByDescending { it.latestMessageTime }
+                compareByDescending<ChatRoom> { it.favorite }.thenByDescending { it.latestMessageTime },
             )
             ChatRoomSortCriteria.DATE -> chatRooms.sortedWith(
-                compareByDescending<ChatRoom> { it.latestMessageTime }
+                compareByDescending<ChatRoom> { it.latestMessageTime },
             )
             ChatRoomSortCriteria.NOT_READ -> chatRooms.sortedWith(
-                compareByDescending<ChatRoom> { it.totalUnReadMessage != 0 }.thenByDescending { it.latestMessageTime }
+                compareByDescending<ChatRoom> { it.totalUnReadMessage != 0 }.thenByDescending { it.latestMessageTime },
             )
         }
     }

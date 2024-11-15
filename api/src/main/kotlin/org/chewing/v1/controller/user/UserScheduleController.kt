@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/schedule")
 class UserScheduleController(
-    private val scheduleService: ScheduleService
+    private val scheduleService: ScheduleService,
 ) {
     @GetMapping("")
     fun getOwnedSchedule(
         @RequestAttribute("userId") userId: String,
         @RequestParam("year") year: Int,
-        @RequestParam("month") month: Int
+        @RequestParam("month") month: Int,
     ): SuccessResponseEntity<ScheduleListResponse> {
         val type = ScheduleType.of(year, month)
         val schedules = scheduleService.fetches(userId, type, true)
@@ -31,7 +31,7 @@ class UserScheduleController(
         @RequestAttribute("userId") userId: String,
         @PathVariable("friendId") friendId: String,
         @RequestParam("year") year: Int,
-        @RequestParam("month") month: Int
+        @RequestParam("month") month: Int,
     ): SuccessResponseEntity<ScheduleListResponse> {
         val type = ScheduleType.of(year, month)
         val schedules = scheduleService.fetches(friendId, type, false)
@@ -41,17 +41,17 @@ class UserScheduleController(
     @DeleteMapping("")
     fun deleteSchedule(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: ScheduleRequest.Delete
+        @RequestBody request: ScheduleRequest.Delete,
     ): SuccessResponseEntity<SuccessCreateResponse> {
         val scheduleId = request.toScheduleId()
-        scheduleService.remove(scheduleId)
+        scheduleService.delete(scheduleId)
         return ResponseHelper.successCreateOnly()
     }
 
     @PostMapping("")
     fun addSchedule(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: ScheduleRequest.Add
+        @RequestBody request: ScheduleRequest.Add,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         scheduleService.create(userId, request.toScheduleTime(), request.toScheduleContent())
         return ResponseHelper.successOnly()

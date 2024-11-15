@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class FeedEnricher {
     fun enriches(
         feeds: List<FeedInfo>,
-        feedDetails: List<FeedDetail>
+        feedDetails: List<FeedDetail>,
     ): List<Feed> {
         val feedDetailMap = feedDetails.groupBy { it.feedId }
         return feeds.map { feedInfo ->

@@ -1,5 +1,9 @@
 package org.chewing.v1.service
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
@@ -12,11 +16,9 @@ import org.chewing.v1.service.friend.FriendShipService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class FriendShipServiceTest {
-    private val friendShipRepository: FriendShipRepository = mock()
+    private val friendShipRepository: FriendShipRepository = mockk()
     private val friendShipReader = FriendShipReader(friendShipRepository)
     private val friendShipRemover = FriendShipRemover(friendShipRepository)
     private val friendShipAppender = FriendShipAppender(friendShipRepository)
@@ -27,7 +29,7 @@ class FriendShipServiceTest {
         friendShipRemover,
         friendShipAppender,
         friendShipValidator,
-        friendShipUpdater
+        friendShipUpdater,
     )
 
     @Test
@@ -37,7 +39,7 @@ class FriendShipServiceTest {
         val sort = FriendSortCriteria.NAME
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.readsAccess(userId, AccessStatus.ACCESS, sort)).thenReturn(listOf(friendShip))
+        every { friendShipRepository.readsAccess(userId, AccessStatus.ACCESS, sort) } returns listOf(friendShip)
 
         val result = assertDoesNotThrow {
             friendShipService.getAccessFriendShips(userId, sort)
@@ -52,7 +54,7 @@ class FriendShipServiceTest {
         val friendIds = listOf(friendId)
         val friendShips = listOf(TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS))
 
-        whenever(friendShipRepository.reads(friendIds, userId, AccessStatus.ACCESS)).thenReturn(friendShips)
+        every { friendShipRepository.reads(friendIds, userId, AccessStatus.ACCESS) } returns friendShips
 
         val result = assertDoesNotThrow {
             friendShipService.getAccessFriendShipsIn(friendIds, userId)
@@ -69,7 +71,7 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_MYSELF)
@@ -83,10 +85,10 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCK)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_BLOCK)
@@ -100,10 +102,10 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCKED)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_BLOCKED)
@@ -117,10 +119,10 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
 
         val exception = assertThrows<ConflictException> {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
 
         assert(exception.errorCode == ErrorCode.FRIEND_ALREADY_CREATED)
@@ -133,10 +135,12 @@ class FriendShipServiceTest {
         val friendId = "friendId"
         val friendName = TestDataFactory.createUserName()
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(null)
+        every { friendShipRepository.read(userId, friendId) } returns null
+        every { friendShipRepository.append(userId, friendId, friendName) } just Runs
+        every { friendShipRepository.append(friendId, userId, userName) } just Runs
 
         assertDoesNotThrow {
-            friendShipService.creatFriendShip(userId, userName, friendId, friendName)
+            friendShipService.createFriendShip(userId, userName, friendId, friendName)
         }
     }
 
@@ -145,8 +149,8 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
 
-        whenever(friendShipRepository.remove(userId, friendId)).thenReturn(userId)
-        whenever(friendShipRepository.remove(friendId, userId)).thenReturn(friendId)
+        every { friendShipRepository.remove(userId, friendId) } returns userId
+        every { friendShipRepository.remove(friendId, userId) } returns friendId
 
         assertDoesNotThrow {
             friendShipService.removeFriendShip(userId, friendId)
@@ -159,8 +163,8 @@ class FriendShipServiceTest {
         val friendId = "friendId"
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.remove(userId, friendId)).thenReturn(null)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.remove(userId, friendId) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.removeFriendShip(userId, friendId)
@@ -176,10 +180,9 @@ class FriendShipServiceTest {
 
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-
-        whenever(friendShipRepository.remove(userId, friendId)).thenReturn(userId)
-        whenever(friendShipRepository.remove(friendId, userId)).thenReturn(null)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.remove(userId, friendId) } returns userId
+        every { friendShipRepository.remove(friendId, userId) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.removeFriendShip(userId, friendId)
@@ -193,8 +196,8 @@ class FriendShipServiceTest {
         val userId = "userId"
         val friendId = "friendId"
 
-        whenever(friendShipRepository.block(userId, friendId)).thenReturn(userId)
-        whenever(friendShipRepository.blocked(friendId, userId)).thenReturn(friendId)
+        every { friendShipRepository.block(userId, friendId) } returns userId
+        every { friendShipRepository.blocked(friendId, userId) } returns friendId
 
         assertDoesNotThrow {
             friendShipService.blockFriendShip(userId, friendId)
@@ -208,9 +211,8 @@ class FriendShipServiceTest {
 
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-
-        whenever(friendShipRepository.block(userId, friendId)).thenReturn(null)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.block(userId, friendId) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.blockFriendShip(userId, friendId)
@@ -226,10 +228,9 @@ class FriendShipServiceTest {
 
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-
-        whenever(friendShipRepository.block(userId, friendId)).thenReturn(userId)
-        whenever(friendShipRepository.blocked(friendId, userId)).thenReturn(null)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.block(userId, friendId) } returns userId
+        every { friendShipRepository.blocked(friendId, userId) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.blockFriendShip(userId, friendId)
@@ -245,8 +246,8 @@ class FriendShipServiceTest {
         val favorite = true
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateFavorite(userId, friendId, favorite) } returns userId
 
         assertDoesNotThrow {
             friendShipService.changeFriendFavorite(userId, friendId, favorite)
@@ -260,8 +261,8 @@ class FriendShipServiceTest {
         val favorite = true
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCK)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateFavorite(userId, friendId, favorite) } returns userId
 
         val exception = assertThrows<ConflictException> {
             friendShipService.changeFriendFavorite(userId, friendId, favorite)
@@ -277,8 +278,8 @@ class FriendShipServiceTest {
         val favorite = true
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCKED)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateFavorite(userId, friendId, favorite)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateFavorite(userId, friendId, favorite) } returns userId
 
         val exception = assertThrows<ConflictException> {
             friendShipService.changeFriendFavorite(userId, friendId, favorite)
@@ -294,7 +295,8 @@ class FriendShipServiceTest {
         val favorite = true
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateFavorite(userId, friendId, favorite) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.changeFriendFavorite(userId, friendId, favorite)
@@ -310,8 +312,8 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateName(userId, friendId, friendName) } returns userId
 
         assertDoesNotThrow {
             friendShipService.changeFriendName(userId, friendId, friendName)
@@ -325,8 +327,8 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCK)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateName(userId, friendId, friendName) } returns userId
 
         val exception = assertThrows<ConflictException> {
             friendShipService.changeFriendName(userId, friendId, friendName)
@@ -342,8 +344,8 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.BLOCKED)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
-        whenever(friendShipRepository.updateName(userId, friendId, friendName)).thenReturn(userId)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateName(userId, friendId, friendName) } returns userId
 
         val exception = assertThrows<ConflictException> {
             friendShipService.changeFriendName(userId, friendId, friendName)
@@ -359,7 +361,8 @@ class FriendShipServiceTest {
         val friendName = TestDataFactory.createUserName()
         val friendShip = TestDataFactory.createFriendShip(friendId, AccessStatus.ACCESS)
 
-        whenever(friendShipRepository.read(userId, friendId)).thenReturn(friendShip)
+        every { friendShipRepository.read(userId, friendId) } returns friendShip
+        every { friendShipRepository.updateName(userId, friendId, friendName) } returns null
 
         val exception = assertThrows<NotFoundException> {
             friendShipService.changeFriendName(userId, friendId, friendName)

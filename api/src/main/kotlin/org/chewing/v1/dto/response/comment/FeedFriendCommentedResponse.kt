@@ -4,14 +4,14 @@ import org.chewing.v1.dto.response.friend.FriendInfoResponse
 import org.chewing.v1.model.comment.Comment
 
 data class FeedFriendCommentedResponse(
-    val comments: List<FriendCommentResponse>
+    val comments: List<FriendCommentResponse>,
 ) {
     companion object {
         fun of(
-            comments: List<Comment>
+            comments: List<Comment>,
         ): FeedFriendCommentedResponse {
             return FeedFriendCommentedResponse(
-                comments = comments.map { FriendCommentResponse.of(it) }
+                comments = comments.map { FriendCommentResponse.of(it) },
             )
         }
     }
@@ -22,7 +22,7 @@ data class FeedFriendCommentedResponse(
     ) {
         companion object {
             fun of(
-                friendComment: Comment
+                friendComment: Comment,
             ): FriendCommentResponse {
                 return FriendCommentResponse(
                     friend = FriendInfoResponse.of(
@@ -30,9 +30,9 @@ data class FeedFriendCommentedResponse(
                         userName = friendComment.writer.name,
                         imageUrl = friendComment.writer.image.url,
                         access = friendComment.writer.status,
-                        imageType = friendComment.writer.image.type.value().lowercase()
+                        imageType = friendComment.writer.image.type.value().lowercase(),
                     ),
-                    comment = CommentResponse.of(friendComment)
+                    comment = CommentResponse.of(friendComment),
                 )
             }
         }

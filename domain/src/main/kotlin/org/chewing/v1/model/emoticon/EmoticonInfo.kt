@@ -17,7 +17,7 @@ class EmoticonInfo private constructor(
                 id = id,
                 name = name,
                 url = url,
-                emoticonPackId = emoticonPackId
+                emoticonPackId = emoticonPackId,
             )
         }
     }

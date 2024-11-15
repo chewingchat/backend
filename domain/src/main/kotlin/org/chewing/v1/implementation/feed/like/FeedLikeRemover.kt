@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FeedLikeRemover(
-    private val feedLikesRepository: FeedLikesRepository
+    private val feedLikesRepository: FeedLikesRepository,
 ) {
     fun removeLikes(feedId: String, userId: String) {
         feedLikesRepository.unlikes(feedId, userId)

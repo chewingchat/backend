@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class FileAppender(
-    private val externalFileClient: ExternalFileClient
+    private val externalFileClient: ExternalFileClient,
 ) {
-    fun appendFile(file: FileData, media: Media) {
+    suspend fun appendFile(file: FileData, media: Media) {
         try {
             externalFileClient.uploadFile(file, media)
         } catch (e: Exception) {

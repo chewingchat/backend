@@ -13,7 +13,7 @@ class ChatRoomMemberInfo private constructor(
             chatRoomId: String,
             readSeqNumber: Int,
             startSeqNumber: Int,
-            favorite: Boolean
+            favorite: Boolean,
         ): ChatRoomMemberInfo {
             return ChatRoomMemberInfo(memberId, chatRoomId, readSeqNumber, startSeqNumber, favorite)
         }

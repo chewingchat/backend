@@ -16,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val accountFacade: AccountFacade
+    private val accountFacade: AccountFacade,
 ) {
     @GetMapping("/profile")
     fun getAccount(
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<AccountResponse> {
         val account = accountFacade.getAccount(userId)
         return ResponseHelper.success(AccountResponse.of(account))
@@ -43,7 +43,7 @@ class UserController(
     fun changeUserImage(
         @RequestPart("file") file: MultipartFile,
         @RequestAttribute("userId") userId: String,
-        @RequestParam("category") category: FileCategory
+        @RequestParam("category") category: FileCategory,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         val convertedFile = FileUtil.convertMultipartFileToFileData(file)
         userService.updateFile(convertedFile, userId, category)
@@ -53,7 +53,7 @@ class UserController(
     @PutMapping("/name")
     fun changeName(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: UserRequest.UpdateName
+        @RequestBody request: UserRequest.UpdateName,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         userService.updateName(userId, request.toUserName())
         return ResponseHelper.successOnly()
@@ -62,7 +62,7 @@ class UserController(
     @PutMapping("birth")
     fun changeBirth(
         @RequestAttribute("userId") userId: String,
-        @RequestBody request: UserRequest.UpdateBirth
+        @RequestBody request: UserRequest.UpdateBirth,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         userService.updateBirth(userId, request.toBirth())
         return ResponseHelper.successOnly()
@@ -70,7 +70,7 @@ class UserController(
 
     @DeleteMapping("")
     fun deleteUser(
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
         accountFacade.deleteAccount(userId)
         return ResponseHelper.successOnly()

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 class FeedLikeProcessor(
     private val feedLikeAppender: FeedLikeAppender,
     private val feedLikeRemover: FeedLikeRemover,
-    private val feedUpdater: FeedUpdater
+    private val feedUpdater: FeedUpdater,
 ) {
 
     @Transactional

@@ -5,7 +5,7 @@ import org.chewing.v1.model.user.User
 
 class LoginInfo private constructor(
     val jwtToken: JwtToken,
-    val loginType: AccessStatus
+    val loginType: AccessStatus,
 ) {
     companion object {
         fun of(jwtToken: JwtToken, user: User): LoginInfo {
