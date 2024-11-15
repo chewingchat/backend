@@ -84,10 +84,9 @@ jobs:
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 8080
           script: |
-            cd ~/  # 홈 디렉터리로 이동 (docker-compose.yml 파일이 위치한 경로)
-            export $(cat .env | xargs)  # .env 파일의 환경 변수를 로드
-            docker compose pull  # 최신 이미지를 가져옴
-            docker compose down  # 기존 서비스 종료
-            docker compose up -d  # 새로운 컨테이너 생성 및 시작
+            cd ~/  # 홈 디렉터리로 이동
+            docker compose --env-file .env pull
+            docker compose --env-file .env down
+            docker compose --env-file .env up -d
 
 
