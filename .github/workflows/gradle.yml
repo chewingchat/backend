@@ -67,6 +67,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        env:
+          SPRING_PROFILES_ACTIVE: live
+        run: ./gradlew clean build
             
       - name: Build Docker Image
         env:
