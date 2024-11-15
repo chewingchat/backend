@@ -29,6 +29,9 @@ services:
       OPENAI_API_URL: ${OPENAI_API_URL}
       FCM_API_URL: ${FCM_API_URL}
       MEDIA_URL: ${MEDIA_URL}
+      NCP_ACCESS_KEY: ${NCP_ACCESS_KEY}
+      NCP_SECRET_KEY: ${NCP_SECRET_KEY}
+      NCP_BUCKET_NAME: ${NCP_BUCKET_NAME}
     networks:
       - chewing_network
 

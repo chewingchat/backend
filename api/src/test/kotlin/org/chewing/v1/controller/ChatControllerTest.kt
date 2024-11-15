@@ -57,7 +57,7 @@ class ChatControllerTest : IntegrationTest() {
                 val futureSession = stompClient.connectAsync(
                     url,
                     headers,
-                    object : StompSessionHandlerAdapter() {}
+                    object : StompSessionHandlerAdapter() {},
                 )
                 return futureSession.get(2, TimeUnit.MINUTES)
             } catch (e: Exception) {
