@@ -113,7 +113,7 @@ jobs:
           host: ${{ secrets.NCP_SERVER_HOST }}
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
-          port: 22
+          port: 8080
           source: ".env"
           target: "~/"
           
