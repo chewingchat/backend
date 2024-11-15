@@ -114,7 +114,7 @@ jobs:
           username: ${{ secrets.NCP_USERNAME }}
           key: ${{ secrets.NCP_SSH_KEY }}
           port: 22
-          source: "./.env"
+          source: ".env"
           target: "~/"
           
       - name: SSH to NCP Server and Deploy
