@@ -56,7 +56,7 @@ jobs:
           echo "NCP_BUCKET_NAME=${{ secrets.NCP_BUCKET_NAME }}" >> .env
           echo "NCP_ACCESS_KEY=${{ secrets.NCP_ACCESS_KEY }}" >> .env
           echo "NCP_SECRET_KEY=${{ secrets.NCP_SECRET_KEY }}" >> .env
-          echo "DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/chewingrepository:latest" >> .env
+          echo "DOCKER_IMAGE_NAME=${{ secrets.DOCKER_IMAGE_NAME }}" >> .env
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
           echo "OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}" >> .env
             
