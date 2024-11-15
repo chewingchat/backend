@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
+    kotlin("kapt")
     kotlin("plugin.spring") apply false
     kotlin("plugin.jpa") apply false
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("org.asciidoctor.jvm.convert")
     id("org.jlleitschuh.gradle.ktlint")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
     jacoco
     id("jacoco-report-aggregation")
 }
@@ -38,8 +38,8 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.asciidoctor.jvm.convert")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "com.google.devtools.ksp")
     apply(plugin = "jacoco")
+    apply(plugin = "org.jetbrains.kotlin.kapt")
 
     jacoco {
         toolVersion = "0.8.8"
@@ -56,8 +56,7 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-        implementation("com.google.dagger:dagger-compiler:2.51.1")
-        ksp("com.google.dagger:dagger-compiler:2.51.1")
+        kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         // 추가
         implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
