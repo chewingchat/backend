@@ -14,14 +14,14 @@ internal class FeedCommentJpaEntity(
     private val feedCommentId: String = UUID.randomUUID().toString(),
     private val comment: String,
     private val userId: String,
-    private val feedId: String
+    private val feedId: String,
 ) : BaseEntity() {
     companion object {
         fun generate(userId: String, feedId: String, comment: String): FeedCommentJpaEntity {
             return FeedCommentJpaEntity(
                 comment = comment,
                 userId = userId,
-                feedId = feedId
+                feedId = feedId,
             )
         }
     }
@@ -32,7 +32,7 @@ internal class FeedCommentJpaEntity(
             comment,
             this.createdAt,
             userId,
-            feedId
+            feedId,
         )
     }
 }

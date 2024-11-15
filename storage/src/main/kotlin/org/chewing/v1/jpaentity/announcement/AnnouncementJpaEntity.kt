@@ -15,16 +15,16 @@ internal class AnnouncementJpaEntity(
     @Id
     private val announcementId: String = UUID.randomUUID().toString(),
     private val topic: String,
-    private val content: String
+    private val content: String,
 ) : BaseEntity() {
     companion object {
         fun generate(
             topic: String,
-            content: String
+            content: String,
         ): AnnouncementJpaEntity {
             return AnnouncementJpaEntity(
                 topic = topic,
-                content = content
+                content = content,
             )
         }
     }
@@ -34,7 +34,7 @@ internal class AnnouncementJpaEntity(
             announcementId,
             topic,
             createdAt,
-            content
+            content,
         )
     }
 }

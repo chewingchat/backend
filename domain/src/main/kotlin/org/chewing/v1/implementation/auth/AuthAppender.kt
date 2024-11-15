@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 class AuthAppender(
     private val loggedInRepository: LoggedInRepository,
     private val emailRepository: EmailRepository,
-    private val phoneRepository: PhoneRepository
+    private val phoneRepository: PhoneRepository,
 ) {
     fun appendLoggedIn(newRefreshToken: RefreshToken, userId: String) {
         loggedInRepository.append(newRefreshToken, userId)

@@ -9,7 +9,7 @@ class ChatNormalMessage private constructor(
     override val senderId: String,
     override val timestamp: LocalDateTime,
     override val number: ChatNumber,
-    val text: String
+    val text: String,
 ) : ChatMessage() {
     override val type: MessageType = MessageType.NORMAL
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class ChatRoomAggregator {
     fun aggregateChatRoom(
         chatRooms: List<Room>,
-        latestMessages: List<ChatLog>
+        latestMessages: List<ChatLog>,
     ): List<ChatRoom> {
         val chatRoomMap = chatRooms.associateBy { it.chatRoomId }
         return latestMessages.mapNotNull {
@@ -17,7 +17,7 @@ class ChatRoomAggregator {
                 ?: return@mapNotNull null
             ChatRoom.of(
                 room = myChatRoom,
-                chatLog = it
+                chatLog = it,
             )
         }
     }

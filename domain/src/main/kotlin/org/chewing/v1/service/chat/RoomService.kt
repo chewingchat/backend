@@ -16,7 +16,7 @@ class RoomService(
     private val chatRoomAppender: ChatRoomAppender,
     private val chatRoomHandler: ChatRoomHandler,
     private val chatRoomValidator: ChatRoomValidator,
-    private val chatFinder: ChatFinder
+    private val chatFinder: ChatFinder,
 ) {
     fun getChatRooms(userId: String): List<Room> {
         val chatRoomMembers = chatRoomReader.readOwnedChatRoomMembers(userId)
@@ -24,7 +24,7 @@ class RoomService(
         return chatRoomEnricher.enrichChatRooms(
             chatRoomMembers,
             chatRoomInfos,
-            userId
+            userId,
         )
     }
 

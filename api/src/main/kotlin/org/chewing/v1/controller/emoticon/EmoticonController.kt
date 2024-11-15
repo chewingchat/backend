@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/emoticon")
 class EmoticonController(
-    private val emoticonService: EmoticonService
+    private val emoticonService: EmoticonService,
 ) {
     @GetMapping("/list")
     fun getEmoticonPacks(
-        @RequestAttribute("userId") userId: String
+        @RequestAttribute("userId") userId: String,
     ): SuccessResponseEntity<EmoticonPacksResponse> {
         val emoticonPacks = emoticonService.fetchUserEmoticonPacks(userId)
         return ResponseHelper.success(EmoticonPacksResponse.of(emoticonPacks))

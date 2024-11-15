@@ -17,7 +17,7 @@ object ScheduleProvider {
         return ScheduleTime.of(
             LocalDateTime.of(1000, 1, 1, 0, 0, 0),
             LocalDateTime.of(1000, 12, 31, 23, 59, 59),
-            LocalDateTime.now()
+            LocalDateTime.now(),
         )
     }
 
@@ -25,7 +25,7 @@ object ScheduleProvider {
         return ScheduleTime.of(
             LocalDateTime.of(1000, 1, 2, 0, 0, 0),
             LocalDateTime.of(1000, 12, 31, 23, 59, 59),
-            LocalDateTime.now()
+            LocalDateTime.now(),
         )
     }
 }

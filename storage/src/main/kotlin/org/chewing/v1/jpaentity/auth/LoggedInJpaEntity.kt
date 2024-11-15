@@ -15,14 +15,14 @@ internal class LoggedInJpaEntity(
 
     private val userId: String,
 
-    private var expiredAt: LocalDateTime
+    private var expiredAt: LocalDateTime,
 ) {
     companion object {
         fun generate(refreshToken: RefreshToken, userId: String): LoggedInJpaEntity {
             return LoggedInJpaEntity(
                 refreshToken = refreshToken.token,
                 userId = userId,
-                expiredAt = refreshToken.expiredAt
+                expiredAt = refreshToken.expiredAt,
             )
         }
     }

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class FeedAppender(
     private val feedRepository: FeedRepository,
-    private val feedDetailRepository: FeedDetailRepository
+    private val feedDetailRepository: FeedDetailRepository,
 ) {
     @Transactional
     fun append(medias: List<Media>, userId: String, topic: String): String {

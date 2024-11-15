@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class FeedValidator(
-    private val feedRepository: FeedRepository
+    private val feedRepository: FeedRepository,
 ) {
     fun isFeedsOwner(feedIds: List<String>, userId: String) {
         val feedInfos = feedRepository.reads(feedIds)

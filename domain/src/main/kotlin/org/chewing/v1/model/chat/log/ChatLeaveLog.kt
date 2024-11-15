@@ -19,7 +19,7 @@ class ChatLeaveLog private constructor(
             senderId: String,
             timestamp: LocalDateTime,
             number: ChatNumber,
-            type: ChatLogType
+            type: ChatLogType,
         ): ChatLeaveLog {
             return ChatLeaveLog(
                 messageId = messageId,
@@ -27,7 +27,7 @@ class ChatLeaveLog private constructor(
                 senderId = senderId,
                 timestamp = timestamp,
                 number = number,
-                type = type
+                type = type,
             )
         }
     }

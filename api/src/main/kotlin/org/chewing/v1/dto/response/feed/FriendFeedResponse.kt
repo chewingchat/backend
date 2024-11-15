@@ -8,12 +8,12 @@ data class FriendFeedResponse(
     val liked: Boolean,
     val uploadTime: String,
     val topic: String,
-    val details: List<FeedDetailResponse>
+    val details: List<FeedDetailResponse>,
 ) {
     companion object {
         fun of(
             feed: Feed,
-            isLiked: Boolean
+            isLiked: Boolean,
         ): FriendFeedResponse {
             val formattedUploadTime = feed.feed.uploadAt.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"))
             return FriendFeedResponse(
@@ -21,7 +21,7 @@ data class FriendFeedResponse(
                 liked = isLiked,
                 uploadTime = formattedUploadTime,
                 topic = feed.feed.topic,
-                details = feed.feedDetails.map { FeedDetailResponse.of(it) }
+                details = feed.feedDetails.map { FeedDetailResponse.of(it) },
             )
         }
     }

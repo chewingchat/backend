@@ -2,7 +2,7 @@ package org.chewing.v1.response
 
 data class HttpResponse<T>(
     val status: Int,
-    val data: T
+    val data: T,
 ) {
     companion object {
         fun <T> success(data: T): HttpResponse<T> {

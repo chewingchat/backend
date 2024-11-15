@@ -17,7 +17,7 @@ internal class ChatBombMongoEntity(
     page: Int,
     sendTime: LocalDateTime,
     private val message: String,
-    private val expiredAt: LocalDateTime
+    private val expiredAt: LocalDateTime,
 ) : ChatMessageMongoEntity(
     messageId = messageId,
     chatRoomId = chatRoomId,
@@ -25,11 +25,11 @@ internal class ChatBombMongoEntity(
     type = ChatLogType.BOMB,
     seqNumber = seqNumber,
     page = page,
-    sendTime = sendTime
+    sendTime = sendTime,
 ) {
     companion object {
         fun from(
-            chatBombMessage: ChatBombMessage
+            chatBombMessage: ChatBombMessage,
         ): ChatBombMongoEntity {
             return ChatBombMongoEntity(
                 messageId = chatBombMessage.messageId,
@@ -39,7 +39,7 @@ internal class ChatBombMongoEntity(
                 page = chatBombMessage.number.page,
                 sendTime = chatBombMessage.timestamp,
                 message = chatBombMessage.text,
-                expiredAt = chatBombMessage.expiredAt
+                expiredAt = chatBombMessage.expiredAt,
             )
         }
     }
@@ -53,7 +53,7 @@ internal class ChatBombMongoEntity(
             number = ChatNumber.of(chatRoomId, seqNumber, page),
             text = message,
             type = type,
-            expiredAt = expiredAt
+            expiredAt = expiredAt,
         )
     }
 }

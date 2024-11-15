@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class SessionProvider(
-    private val externalSessionClient: ExternalSessionClient
+    private val externalSessionClient: ExternalSessionClient,
 
 ) {
     fun connect(userId: String, sessionId: String) {

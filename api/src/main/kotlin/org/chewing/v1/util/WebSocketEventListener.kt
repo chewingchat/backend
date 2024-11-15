@@ -12,7 +12,7 @@ private val logger = KotlinLogging.logger { }
 
 @Component
 class WebSocketEventListener(
-    private val sessionProvider: SessionProvider
+    private val sessionProvider: SessionProvider,
 ) {
 
     @EventListener

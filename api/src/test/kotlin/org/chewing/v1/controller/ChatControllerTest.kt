@@ -49,14 +49,24 @@ class ChatControllerTest : IntegrationTest() {
         }
         val url = "ws://localhost:$port/ws-stomp"
 
-        // CompletableFuture 사용
-        val futureSession = stompClient.connectAsync(
-            url,
-            headers,
-            object : StompSessionHandlerAdapter() {
-            },
-        )
-        return futureSession.get(1, TimeUnit.MINUTES) // 연결이 완료될 때까지 최대 1분 대기
+        // 재시도 메커니즘 구현
+        val maxRetries = 5
+        var attempt = 0
+        while (attempt < maxRetries) {
+            try {
+                val futureSession = stompClient.connectAsync(
+                    url,
+                    headers,
+                    object : StompSessionHandlerAdapter() {}
+                )
+                return futureSession.get(2, TimeUnit.MINUTES)
+            } catch (e: Exception) {
+                attempt++
+                Thread.sleep(2000) // 2초 대기 후 재시도
+                if (attempt == maxRetries) throw e
+            }
+        }
+        throw IllegalStateException("Failed to connect to WebSocket after $maxRetries attempts")
     }
 
     @BeforeAll

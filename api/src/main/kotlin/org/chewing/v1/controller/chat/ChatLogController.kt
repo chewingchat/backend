@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/chatRooms/{chatRoomId}")
 class ChatLogController(
-    private val chatLogService: ChatLogService
+    private val chatLogService: ChatLogService,
 ) {
 
     @GetMapping("/log")

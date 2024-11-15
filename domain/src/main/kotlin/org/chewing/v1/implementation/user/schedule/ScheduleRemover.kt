@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ScheduleRemover(
-    private val scheduleRepository: ScheduleRepository
+    private val scheduleRepository: ScheduleRepository,
 ) {
     fun remove(scheduleId: String) {
         scheduleRepository.remove(scheduleId)

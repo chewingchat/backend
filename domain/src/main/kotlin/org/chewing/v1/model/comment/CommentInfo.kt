@@ -7,7 +7,7 @@ class CommentInfo private constructor(
     val comment: String,
     val createAt: LocalDateTime,
     val userId: String,
-    val feedId: String
+    val feedId: String,
 ) {
     companion object {
         fun of(
@@ -15,7 +15,7 @@ class CommentInfo private constructor(
             comment: String,
             createAt: LocalDateTime,
             userId: String,
-            feedId: String
+            feedId: String,
         ): CommentInfo {
             return CommentInfo(commentId, comment, createAt, userId, feedId)
         }

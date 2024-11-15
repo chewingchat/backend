@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ChatRoomValidator(
-    private val chatRoomRepository: ChatRoomRepository
+    private val chatRoomRepository: ChatRoomRepository,
 ) {
     fun validateGroupChatRoom(chatRoomId: String) {
         if (!chatRoomRepository.isGroupChatRoom(chatRoomId)) {

@@ -32,7 +32,6 @@ class FeedLikesServiceTest {
     private val feedLikeValidator = FeedLikeValidator(feedLikesRepository)
     private val feedLikeService = FeedLikesService(feedLikeValidator, feedLikeHandler, feedLikeRemover, feedLikeChecker)
 
-
     @Test
     fun `피드 좋아요 성공`() {
         val userId = "userId"
@@ -44,7 +43,6 @@ class FeedLikesServiceTest {
         justRun { feedLikesRepository.likes(any(), any()) }
 
         feedLikeService.like(feedId, userId, feedTarget)
-
     }
 
     @Test
@@ -92,7 +90,6 @@ class FeedLikesServiceTest {
         justRun { feedLikesRepository.unlikes(any(), any()) }
 
         feedLikeService.unlike(feedId, userId, feedTarget)
-
     }
 
     @Test
@@ -139,7 +136,6 @@ class FeedLikesServiceTest {
         val result = feedLikeService.checkLike(feedId, userId)
 
         assert(result)
-
     }
 
     @Test
@@ -162,5 +158,4 @@ class FeedLikesServiceTest {
             feedLikeService.unlikes(listOf(feedId))
         }
     }
-
 }

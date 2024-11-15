@@ -11,7 +11,7 @@ class ChatBombLog private constructor(
     override val number: ChatNumber,
     override val type: ChatLogType,
     val expiredAt: LocalDateTime,
-    val text: String
+    val text: String,
 ) : ChatLog() {
 
     companion object {
@@ -23,7 +23,7 @@ class ChatBombLog private constructor(
             number: ChatNumber,
             timestamp: LocalDateTime,
             expiredAt: LocalDateTime,
-            type: ChatLogType
+            type: ChatLogType,
         ): ChatBombLog {
             return ChatBombLog(
                 messageId = messageId,
@@ -33,7 +33,7 @@ class ChatBombLog private constructor(
                 number = number,
                 timestamp = timestamp,
                 expiredAt = expiredAt,
-                type = type
+                type = type,
             )
         }
     }

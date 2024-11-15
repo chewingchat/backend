@@ -16,13 +16,13 @@ class AccountFacade(
     private val authService: AuthService,
     private val userService: UserService,
     private val userStatusService: UserStatusService,
-    private val scheduleService: ScheduleService
+    private val scheduleService: ScheduleService,
 ) {
     fun loginAndCreateUser(
         credential: Credential,
         verificationCode: String,
         appToken: String,
-        device: PushToken.Device
+        device: PushToken.Device,
     ): LoginInfo {
         val contact = authService.verify(credential, verificationCode)
         val user = userService.createUser(contact, appToken, device)
@@ -32,7 +32,7 @@ class AccountFacade(
     fun changeCredential(
         userId: String,
         credential: Credential,
-        verificationCode: String
+        verificationCode: String,
     ) {
         val contact = authService.verify(credential, verificationCode)
         userService.updateUserContact(userId, contact)

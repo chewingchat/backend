@@ -14,7 +14,7 @@ class CommentAggregator {
         friendShips: List<FriendShip>,
         comments: List<CommentInfo>,
         users: List<User>,
-        feeds: List<Feed>
+        feeds: List<Feed>,
     ): List<UserCommentedInfo> {
         val feedMap = feeds.associateBy { it.feed.feedId }
         val userMap = users.associateBy { it.userId }

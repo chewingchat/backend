@@ -8,7 +8,8 @@ enum class MediaType(val type: String) {
 
     VIDEO_BASIC("video/mp4"),
     AUDIO_MP3("audio/mp3"),
-    VIDEO_MP4("video/mp4");
+    VIDEO_MP4("video/mp4"),
+    ;
 
     // pdf 추가
 

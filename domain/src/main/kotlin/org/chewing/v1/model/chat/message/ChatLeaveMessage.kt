@@ -18,14 +18,14 @@ class ChatLeaveMessage private constructor(
             chatRoomId: String,
             senderId: String,
             timestamp: LocalDateTime,
-            number: ChatNumber
+            number: ChatNumber,
         ): ChatLeaveMessage {
             return ChatLeaveMessage(
                 messageId = messageId,
                 chatRoomId = chatRoomId,
                 senderId = senderId,
                 timestamp = timestamp,
-                number = number
+                number = number,
             )
         }
     }

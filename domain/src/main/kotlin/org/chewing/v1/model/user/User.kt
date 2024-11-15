@@ -18,7 +18,7 @@ class User private constructor(
             birth: String,
             image: Media,
             backgroundImage: Media,
-            status: AccessStatus
+            status: AccessStatus,
         ): User {
             return User(
                 userId = userId,
@@ -26,13 +26,13 @@ class User private constructor(
                 image = image,
                 backgroundImage = backgroundImage,
                 name = UserName.of(firstName, lastName),
-                status = status
+                status = status,
             )
         }
     }
 
     fun updateName(
-        name: UserName
+        name: UserName,
     ): User {
         return User(
             userId = userId,
@@ -40,7 +40,7 @@ class User private constructor(
             image = image,
             backgroundImage = backgroundImage,
             name = name,
-            status = status
+            status = status,
         )
     }
 }

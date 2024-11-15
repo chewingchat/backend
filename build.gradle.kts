@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
-    kotlin("kapt")
     kotlin("plugin.spring") apply false
     kotlin("plugin.jpa") apply false
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("org.asciidoctor.jvm.convert")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
     jacoco
     id("jacoco-report-aggregation")
 }
@@ -32,13 +32,13 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "org.jetbrains.kotlin.kapt")
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
     apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.asciidoctor.jvm.convert")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "com.google.devtools.ksp")
     apply(plugin = "jacoco")
 
     jacoco {
@@ -56,7 +56,9 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-        kapt("org.springframework.boot:spring-boot-configuration-processor")
+        implementation("com.google.dagger:dagger-compiler:2.51.1")
+        ksp("com.google.dagger:dagger-compiler:2.51.1")
+
         // 추가
         implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
         implementation("io.jsonwebtoken:jjwt-impl:0.11.5") // for Jackson JSON Processor

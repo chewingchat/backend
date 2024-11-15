@@ -23,12 +23,12 @@ internal class ChatLeaveMongoEntity(
     type = ChatLogType.LEAVE,
     seqNumber = seqNumber,
     page = page,
-    sendTime = sendTime
+    sendTime = sendTime,
 ) {
 
     companion object {
         fun from(
-            chatLeaveMessage: ChatLeaveMessage
+            chatLeaveMessage: ChatLeaveMessage,
         ): ChatLeaveMongoEntity {
             return ChatLeaveMongoEntity(
                 messageId = chatLeaveMessage.messageId,
@@ -48,7 +48,7 @@ internal class ChatLeaveMongoEntity(
             senderId = senderId,
             timestamp = sendTime,
             number = ChatNumber.of(chatRoomId, seqNumber, page),
-            type = type
+            type = type,
         )
     }
 }

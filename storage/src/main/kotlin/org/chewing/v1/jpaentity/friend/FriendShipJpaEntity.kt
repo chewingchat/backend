@@ -17,7 +17,7 @@ internal class FriendShipJpaEntity(
     private var firstName: String,
     private var lastName: String,
     @Enumerated(EnumType.STRING)
-    private var type: AccessStatus
+    private var type: AccessStatus,
 ) : BaseEntity() {
     companion object {
         fun generate(userId: String, targetUserId: String, targetUserName: UserName): FriendShipJpaEntity {
@@ -26,7 +26,7 @@ internal class FriendShipJpaEntity(
                 favorite = false,
                 firstName = targetUserName.firstName(),
                 lastName = targetUserName.lastName(),
-                type = AccessStatus.ACCESS
+                type = AccessStatus.ACCESS,
             )
         }
     }
@@ -45,7 +45,7 @@ internal class FriendShipJpaEntity(
             friendId = id.friendId,
             friendName = UserName.of(firstName, lastName),
             isFavorite = favorite,
-            type = type
+            type = type,
         )
     }
 

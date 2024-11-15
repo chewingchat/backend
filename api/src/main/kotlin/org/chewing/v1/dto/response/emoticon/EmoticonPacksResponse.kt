@@ -4,12 +4,12 @@ import org.chewing.v1.model.emoticon.Emoticon
 import org.chewing.v1.model.emoticon.EmoticonPack
 
 data class EmoticonPacksResponse(
-    val emoticonPacks: List<EmoticonPackResponse>
+    val emoticonPacks: List<EmoticonPackResponse>,
 ) {
     companion object {
         fun of(emoticonPacks: List<EmoticonPack>): EmoticonPacksResponse {
             return EmoticonPacksResponse(
-                emoticonPacks = emoticonPacks.map { EmoticonPackResponse.of(it) }
+                emoticonPacks = emoticonPacks.map { EmoticonPackResponse.of(it) },
             )
         }
     }
@@ -18,7 +18,7 @@ data class EmoticonPacksResponse(
         val emoticonPackId: String,
         val fileUrl: String,
         val fileType: String,
-        val emoticons: List<EmoticonResponse>
+        val emoticons: List<EmoticonResponse>,
     ) {
         companion object {
             fun of(emoticonPack: EmoticonPack): EmoticonPackResponse {
@@ -26,7 +26,7 @@ data class EmoticonPacksResponse(
                     emoticonPackId = emoticonPack.id,
                     fileUrl = emoticonPack.media.url,
                     fileType = emoticonPack.media.type.value(),
-                    emoticons = emoticonPack.emoticons.map { EmoticonResponse.of(it) }
+                    emoticons = emoticonPack.emoticons.map { EmoticonResponse.of(it) },
                 )
             }
         }
@@ -35,7 +35,7 @@ data class EmoticonPacksResponse(
             val emoticonId: String,
             val name: String,
             val fileUrl: String,
-            val fileType: String
+            val fileType: String,
         ) {
             companion object {
                 fun of(emoticon: Emoticon): EmoticonResponse {
@@ -43,7 +43,7 @@ data class EmoticonPacksResponse(
                         emoticonId = emoticon.id,
                         name = emoticon.name,
                         fileUrl = emoticon.media.url,
-                        fileType = emoticon.media.type.value()
+                        fileType = emoticon.media.type.value(),
                     )
                 }
             }

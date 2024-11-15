@@ -19,7 +19,7 @@ data class ChatRoom(
     companion object {
         fun of(
             room: Room,
-            chatLog: ChatLog
+            chatLog: ChatLog,
         ): ChatRoom {
             val totalUnReadMessage = chatLog.number.sequenceNumber - room.readSequenceNumber
             when (chatLog) {
@@ -33,7 +33,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
 
@@ -47,7 +47,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
 
@@ -61,7 +61,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
 
@@ -75,7 +75,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
 
@@ -89,7 +89,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
 
@@ -103,7 +103,7 @@ data class ChatRoom(
                         totalUnReadMessage = totalUnReadMessage,
                         latestSeqNumber = chatLog.number.sequenceNumber,
                         latestPage = chatLog.number.page,
-                        chatRoomMemberInfos = room.chatRoomMemberInfos
+                        chatRoomMemberInfos = room.chatRoomMemberInfos,
                     )
                 }
             }

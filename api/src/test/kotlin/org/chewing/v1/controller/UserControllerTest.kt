@@ -48,7 +48,7 @@ class UserControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.multipart("/api/user/image")
                 .file(mockFile)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .requestAttr("userId", "testUserId") // userId 전달
+                .requestAttr("userId", "testUserId")
                 .param("category", "PROFILE"),
         )
         // Then: 응답 코드와 메시지 검증
@@ -71,7 +71,7 @@ class UserControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.post("/api/user/access")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -90,7 +90,7 @@ class UserControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.put("/api/user/name")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -102,7 +102,7 @@ class UserControllerTest : RestDocsTest() {
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/user")
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -120,7 +120,7 @@ class UserControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.put("/api/user/birth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }

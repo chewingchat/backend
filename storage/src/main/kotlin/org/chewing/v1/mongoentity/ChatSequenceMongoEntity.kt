@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class ChatSequenceMongoEntity(
     @Id
     val chatRoomId: String,
-    var seqNumber: Int
+    var seqNumber: Int,
 )

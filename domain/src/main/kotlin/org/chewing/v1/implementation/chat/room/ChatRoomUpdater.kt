@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class ChatRoomUpdater(
     private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository,
-    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository
+    private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository,
 ) {
     fun updateFavorite(chatRoomId: String, userId: String, isFavorite: Boolean, isGroup: Boolean) {
         isGroup.let {

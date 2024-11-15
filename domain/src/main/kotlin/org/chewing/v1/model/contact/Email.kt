@@ -12,7 +12,7 @@ class Email private constructor(
         fun of(
             emailId: String,
             emailAddress: String,
-            authorizedNumber: String, // -->인증번호?
+            authorizedNumber: String,
             expiredTime: LocalDateTime,
         ): Email = Email(
             emailId = emailId,

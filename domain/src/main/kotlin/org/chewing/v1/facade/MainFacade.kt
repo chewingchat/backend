@@ -15,7 +15,7 @@ class MainFacade(
     private val userService: UserService,
     private val userStatusService: UserStatusService,
     private val friendShipService: FriendShipService,
-    private val mainAggregator: MainAggregator
+    private val mainAggregator: MainAggregator,
 ) {
     fun getMainPage(userId: String, sort: FriendSortCriteria): Triple<User, UserStatus, List<Friend>> {
         val user = userService.getAccessUser(userId)

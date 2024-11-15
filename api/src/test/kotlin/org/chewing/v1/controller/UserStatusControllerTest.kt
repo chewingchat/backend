@@ -36,7 +36,7 @@ class UserStatusControllerTest : RestDocsTest() {
         every { userStatusService.deleteSelectUserStatus(any()) } just Runs
         val result = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/user/status/select")
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -55,7 +55,7 @@ class UserStatusControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.delete("/api/user/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -73,7 +73,7 @@ class UserStatusControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.put("/api/user/status/select")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessResponse(result)
     }
@@ -90,7 +90,7 @@ class UserStatusControllerTest : RestDocsTest() {
             MockMvcRequestBuilders.post("/api/user/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody(requestBody))
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
         performCommonSuccessCreateResponse(result)
     }
@@ -103,7 +103,7 @@ class UserStatusControllerTest : RestDocsTest() {
         every { userStatusService.getUserStatuses(any()) } returns statuses
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/user/status")
-                .requestAttr("userId", "testUserId"), // userId 전달
+                .requestAttr("userId", "testUserId"),
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))

@@ -11,13 +11,13 @@ class ScheduleContent private constructor(
             title: String,
             memo: String,
             location: String,
-            private: Boolean
+            private: Boolean,
         ): ScheduleContent {
             return ScheduleContent(
                 title,
                 memo,
                 location,
-                private
+                private,
             )
         }
     }

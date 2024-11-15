@@ -10,7 +10,7 @@ class Account private constructor(
     val user: User,
     val emailAddress: String,
     val phoneNumber: String,
-    val countryCode: String
+    val countryCode: String,
 ) {
     companion object {
         private const val DEFAULT_EMAIL = "none"
@@ -20,7 +20,7 @@ class Account private constructor(
         fun of(
             userAccount: UserAccount,
             email: Contact?,
-            phone: Contact?
+            phone: Contact?,
         ): Account {
             val emailAddress = (email as? Email)?.emailAddress ?: DEFAULT_EMAIL
             val phoneNumber = (phone as? Phone)?.number ?: DEFAULT_PHONE
@@ -30,7 +30,7 @@ class Account private constructor(
                 userAccount.user,
                 emailAddress,
                 phoneNumber,
-                countryCode
+                countryCode,
             )
         }
     }

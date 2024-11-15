@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 internal class UserFeedLikesJpaEntity(
     @EmbeddedId
     private val feedLikeId: FeedLikeId,
-    private val likeTime: LocalDateTime = LocalDateTime.now()
+    private val likeTime: LocalDateTime = LocalDateTime.now(),
 ) {
     companion object {
         fun fromUserFeed(userId: String, feedId: String): UserFeedLikesJpaEntity {

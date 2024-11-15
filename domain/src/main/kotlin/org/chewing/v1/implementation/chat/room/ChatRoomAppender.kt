@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class ChatRoomAppender(
     private val groupChatRoomMemberRepository: GroupChatRoomMemberRepository,
     private val personalChatRoomMemberRepository: PersonalChatRoomMemberRepository,
-    private val chatRoomRepository: ChatRoomRepository
+    private val chatRoomRepository: ChatRoomRepository,
 ) {
     fun append(isGroup: Boolean): String {
         return chatRoomRepository.appendChatRoom(isGroup)

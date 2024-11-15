@@ -4,7 +4,7 @@ import org.chewing.v1.model.auth.LoginInfo
 
 data class LogInfoResponse(
     val token: TokenResponse,
-    val access: String
+    val access: String,
 ) {
     companion object {
         fun of(loginInfo: LoginInfo): LogInfoResponse {
