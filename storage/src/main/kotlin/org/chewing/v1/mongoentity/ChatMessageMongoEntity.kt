@@ -18,6 +18,16 @@ import java.time.LocalDateTime
         def = "{'chatRoomId': 1, 'page': 1, 'seqNumber': 1}",
     ),
     CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}"),
+    CompoundIndex(
+        name = "normal_message_idx",
+        def = "{'chatRoomId': 1, 'text': 1}",
+        partialFilter = "{'type': 'NORMAL'}",
+    ),
+    CompoundIndex(
+        name = "reply_message_idx",
+        def = "{'chatRoomId': 1, 'text': 1}",
+        partialFilter = "{'type': 'REPLY'}",
+    )
 )
 internal sealed class ChatMessageMongoEntity(
     @Id

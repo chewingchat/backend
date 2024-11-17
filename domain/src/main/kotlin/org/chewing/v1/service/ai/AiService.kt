@@ -15,4 +15,8 @@ class AiService(
         val prompts = promptGenerator.generateRecentSummaryPrompt(friendName, feeds)
         return aiSender.sendAiPrompt(prompts)
     }
+    fun getAiSearchChat(keyWord: String): String {
+        val prompts = promptGenerator.generateSearchChatPrompt(keyWord)
+        return aiSender.sendAiPrompt(prompts)
+    }
 }

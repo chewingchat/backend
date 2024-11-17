@@ -48,4 +48,11 @@ class PromptGenerator {
 
             ),
         )
+
+    fun generateSearchChatPrompt(keyWord: String): List<Prompt> = sequenceOf(
+        TextPrompt.of(
+            "다음은 최근 채팅 검색에 대한 정보입니다. 텍스트에 검색 대한 정보가 포함되어 있습니다.",
+        ),
+        TextPrompt.of("검색어: $keyWord"),
+    ).toList()
 }

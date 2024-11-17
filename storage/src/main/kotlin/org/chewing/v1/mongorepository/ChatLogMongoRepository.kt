@@ -19,4 +19,6 @@ internal interface ChatLogMongoRepository : MongoRepository<ChatMessageMongoEnti
     @Query("{ '_id': ?0 }")
     @Update("{ '\$set': { 'type': ?1 } }")
     fun updateMessageTypeToDelete(messageId: String, deleteType: ChatLogType = ChatLogType.DELETE): Int
+
+
 }
