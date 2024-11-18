@@ -3,8 +3,8 @@ package org.chewing.v1.controller.announcement
 import org.chewing.v1.dto.response.announcement.AnnouncementDetailResponse
 import org.chewing.v1.dto.response.announcement.AnnouncementListResponse
 import org.chewing.v1.service.announcement.AnnouncementService
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController

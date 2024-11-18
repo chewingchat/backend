@@ -1,7 +1,7 @@
 package org.chewing.v1.config
 
-import org.chewing.v1.security.JwtAuthenticationEntryPoint
-import org.chewing.v1.security.JwtAuthenticationFilter
+import org.chewing.v1.util.security.JwtAuthenticationEntryPoint
+import org.chewing.v1.util.security.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

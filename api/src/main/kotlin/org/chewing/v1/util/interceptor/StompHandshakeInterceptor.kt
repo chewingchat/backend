@@ -1,7 +1,8 @@
-package org.chewing.v1.util
+package org.chewing.v1.util.interceptor
 
 import mu.KotlinLogging
 import org.chewing.v1.implementation.auth.JwtTokenProvider
+import org.springframework.http.HttpStatus
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.http.server.ServletServerHttpRequest
@@ -33,12 +34,12 @@ class StompHandshakeInterceptor(
                 true
             } catch (e: Exception) {
                 logger.error("Failed to authenticate user: ${e.message}")
-                response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED)
+                response.setStatusCode(HttpStatus.UNAUTHORIZED)
                 false
             }
         }
         logger.warn("Authorization header missing")
-        response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED)
+        response.setStatusCode(HttpStatus.UNAUTHORIZED)
         return false
     }
 

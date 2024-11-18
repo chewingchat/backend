@@ -1,4 +1,4 @@
-package org.chewing.v1.util
+package org.chewing.v1.util.aliases
 
 import org.chewing.v1.response.ErrorResponse
 import org.chewing.v1.response.HttpResponse

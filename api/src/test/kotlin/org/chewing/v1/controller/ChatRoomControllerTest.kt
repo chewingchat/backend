@@ -11,7 +11,7 @@ import org.chewing.v1.dto.request.chat.ChatRoomRequest
 import org.chewing.v1.facade.ChatRoomFacade
 import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.service.chat.RoomService
-import org.chewing.v1.util.StringToChatRoomSortCriteriaConverter
+import org.chewing.v1.util.converter.StringToChatRoomSortCriteriaConverter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType

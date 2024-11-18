@@ -1,4 +1,4 @@
-package org.chewing.v1.security
+package org.chewing.v1.util.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException

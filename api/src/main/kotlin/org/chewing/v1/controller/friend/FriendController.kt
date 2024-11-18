@@ -5,8 +5,8 @@ import org.chewing.v1.facade.FriendFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.friend.FriendShipService
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController

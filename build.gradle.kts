@@ -78,6 +78,14 @@ subprojects {
     }
 
     tasks {
+        build {
+            dependsOn(ktlintFormat)
+        }
+        test {
+            useJUnitPlatform()
+            maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+            forkEvery = 100
+        }
         bootJar {
             enabled = false
         }
@@ -94,22 +102,12 @@ subprojects {
             jvmTarget.set(JvmTarget.valueOf("JVM_${project.property("javaVersion")}"))
         }
     }
-
-    tasks.test {
-        useJUnitPlatform()
-        maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-        forkEvery = 100
-    }
 }
 
 tasks {
 
     test {
         finalizedBy(testCodeCoverageReport)
-    }
-
-    build {
-        dependsOn(ktlintFormat)
     }
 
     testCodeCoverageReport {

@@ -8,6 +8,7 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.implementation.auth.JwtTokenProvider
 import org.chewing.v1.model.auth.LoginInfo
+import org.chewing.v1.util.security.JwtAuthenticationEntryPoint
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

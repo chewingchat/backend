@@ -1,4 +1,4 @@
-package org.chewing.v1.util
+package org.chewing.v1.util.converter
 
 import org.chewing.v1.model.ai.DateTarget
 import org.springframework.core.convert.converter.Converter

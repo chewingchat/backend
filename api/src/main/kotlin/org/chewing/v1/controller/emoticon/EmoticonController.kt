@@ -2,8 +2,8 @@ package org.chewing.v1.controller.emoticon
 
 import org.chewing.v1.dto.response.emoticon.EmoticonPacksResponse
 import org.chewing.v1.service.emoticon.EmoticonService
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestMapping

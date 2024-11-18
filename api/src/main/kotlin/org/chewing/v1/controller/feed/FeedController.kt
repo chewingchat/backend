@@ -11,9 +11,9 @@ import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.feed.FeedService
-import org.chewing.v1.util.FileUtil
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.FileHelper
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -107,7 +107,7 @@ class FeedController(
         @RequestPart("files") files: List<MultipartFile>,
         @RequestParam("topic") topic: String,
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
+        val convertFiles = FileHelper.convertMultipartFileToFileDataList(files)
         feedService.make(userId, convertFiles, topic, FileCategory.FEED)
         // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()

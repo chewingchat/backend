@@ -3,9 +3,9 @@ package org.chewing.v1.controller.chat
 import org.chewing.v1.dto.request.chat.ChatRequest
 import org.chewing.v1.facade.ChatFacade
 import org.chewing.v1.response.SuccessCreateResponse
-import org.chewing.v1.util.FileUtil
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.FileHelper
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -67,7 +67,7 @@ class ChatController(
         @RequestAttribute("userId") userId: String,
         @RequestParam("chatRoomId") chatRoomId: String,
     ): SuccessResponseEntity<SuccessCreateResponse> {
-        val convertFiles = FileUtil.convertMultipartFileToFileDataList(files)
+        val convertFiles = FileHelper.convertMultipartFileToFileDataList(files)
         chatFacade.processFiles(convertFiles, userId, chatRoomId)
         // 생성 완료 응답 201 반환
         return ResponseHelper.successCreateOnly()

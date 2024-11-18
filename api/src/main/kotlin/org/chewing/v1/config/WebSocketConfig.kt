@@ -1,7 +1,7 @@
 package org.chewing.v1.config
 
-import org.chewing.v1.util.CustomHandshakeHandler
-import org.chewing.v1.util.StompHandshakeInterceptor
+import org.chewing.v1.util.handler.CustomHandshakeHandler
+import org.chewing.v1.util.interceptor.StompHandshakeInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker

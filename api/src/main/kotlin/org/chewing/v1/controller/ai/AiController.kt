@@ -5,8 +5,8 @@ import org.chewing.v1.dto.response.ai.AiResponse
 import org.chewing.v1.dto.response.chat.ChatLogResponse
 import org.chewing.v1.facade.AiFacade
 import org.chewing.v1.model.ai.DateTarget
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
