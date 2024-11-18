@@ -8,15 +8,11 @@ import org.chewing.v1.model.chat.room.ChatNumber
 import org.chewing.v1.mongoentity.*
 import org.chewing.v1.mongorepository.ChatLogMongoRepository
 import org.chewing.v1.repository.chat.ChatLogRepository
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
 internal class ChatLogRepositoryImpl(
     private val chatLogMongoRepository: ChatLogMongoRepository,
-    private val mongoTemplate: MongoTemplate,
 ) : ChatLogRepository {
 
     // 채팅방의 특정 페이지의 메시지를 조회
@@ -37,22 +33,14 @@ internal class ChatLogRepositoryImpl(
     }
 
     override fun readChatKeyWordMessages(chatRoomId: String, keyword: String): List<ChatLog> {
-        val keywords = keyword.split(",").map { it.trim() }
+//        val keywords = keyword.split(",").map { it.trim() }
         // MongoDB에서 chatRoomId와 keyWord로 메시지 조회
-        val regexPattern = keywords.joinToString("|") { it }
-        val query = Query(
-            Criteria.where("chatRoomId").`is`(chatRoomId)
-                .and("text").regex(regexPattern, "i")
-        )
-        return mongoTemplate.find(query, ChatMessageMongoEntity::class.java).map { it.toChatLog() }
+//        val regexPattern = keywords.joinToString("|") { it }
+//        return mongoTemplate.find(query, ChatMessageMongoEntity::class.java).map { it.toChatLog() }
+        val keywordString = keyword.split(",").joinToString(" ")
+        return chatLogMongoRepository.searchByKeywords(keywordString, chatRoomId).map { it.toChatLog() }
     }
 
-    // 메시지를 삭제하는 기능
-    /**
-     * room확인 하지 않고
-     * 바로 메시지 삭제 할게용
-     * 이떄 실제 삭제는 하지않고, type을 delete로 업데이트만 할게용
-     */
     override fun removeLog(messageId: String) {
         // 메시지 ID로 MongoDB에서 메시지 조회
         chatLogMongoRepository.updateMessageTypeToDelete(messageId)

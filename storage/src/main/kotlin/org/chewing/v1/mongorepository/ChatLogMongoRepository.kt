@@ -20,5 +20,9 @@ internal interface ChatLogMongoRepository : MongoRepository<ChatMessageMongoEnti
     @Update("{ '\$set': { 'type': ?1 } }")
     fun updateMessageTypeToDelete(messageId: String, deleteType: ChatLogType = ChatLogType.DELETE): Int
 
-
+    @Query(
+        value = "{ 'chatRoomId': ?1, \$text: { \$search: ?0 } }",
+        sort = "{ score: { \$meta: 'textScore' } }",
+    )
+    fun searchByKeywords(keywords: String, chatRoomId: String): List<ChatMessageMongoEntity>
 }

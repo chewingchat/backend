@@ -19,15 +19,10 @@ import java.time.LocalDateTime
     ),
     CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}"),
     CompoundIndex(
-        name = "normal_message_idx",
-        def = "{'chatRoomId': 1, 'text': 1}",
-        partialFilter = "{'type': 'NORMAL'}",
+        name = "chatRoom_message_text_idx",
+        def = "{'chatRoomId': 1, 'message': 'text'}",
+        partialFilter = "{ 'type': { \$in: ['NORMAL', 'REPLY'] } }",
     ),
-    CompoundIndex(
-        name = "reply_message_idx",
-        def = "{'chatRoomId': 1, 'text': 1}",
-        partialFilter = "{'type': 'REPLY'}",
-    )
 )
 internal sealed class ChatMessageMongoEntity(
     @Id

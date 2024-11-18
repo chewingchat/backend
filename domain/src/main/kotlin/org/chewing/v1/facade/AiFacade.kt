@@ -6,6 +6,7 @@ import org.chewing.v1.service.ai.AiService
 import org.chewing.v1.service.chat.ChatLogService
 import org.chewing.v1.service.feed.FeedService
 import org.chewing.v1.service.friend.FriendShipService
+import org.chewing.v1.service.user.ScheduleService
 import org.springframework.stereotype.Component
 
 @Component
@@ -14,6 +15,7 @@ class AiFacade(
     private val aiService: AiService,
     private val friendShipService: FriendShipService,
     private val chatLogService: ChatLogService,
+    private val scheduleService: ScheduleService,
 ) {
     fun getAiRecentSummary(userId: String, friendId: String, targetDate: DateTarget): String {
         val friendName = friendShipService.getFriendName(userId, friendId)
@@ -21,8 +23,13 @@ class AiFacade(
         return aiService.getAiRecentSummary(friendName, feeds)
     }
 
-    fun getAiSearchChat(chatRoomId: String, keyWord: String): List<ChatLog> {
-        val resultKeyword = aiService.getAiSearchChat(keyWord)
+    fun getAiSearchChat(chatRoomId: String, prompt: String): List<ChatLog> {
+        val resultKeyword = aiService.getAiSearchChat(prompt)
         return chatLogService.getChatKeyWordLog(chatRoomId, resultKeyword)
+    }
+
+    fun appendAiSchedule(userId: String, prompt: String) {
+        val promptedSchedule = aiService.getAiSchedule(prompt)
+        scheduleService.createAiSchedule(userId, promptedSchedule)
     }
 }

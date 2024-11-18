@@ -54,7 +54,6 @@ class AccountFacade(
         val phone = userAccount.phoneId?.let {
             authService.getContactById(it, ContactType.PHONE)
         }
-
         return Account.of(userAccount, email, phone)
     }
 }

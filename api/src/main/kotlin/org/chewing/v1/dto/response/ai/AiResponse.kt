@@ -4,6 +4,6 @@ data class AiResponse(
     val promptResult: String,
 ) {
     companion object {
-        fun of(promptResult: String): AiResponse = AiResponse(promptResult)
+        fun from(promptResult: String): AiResponse = AiResponse(promptResult)
     }
 }

@@ -59,8 +59,8 @@ subprojects {
         kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         // 추가
-        implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
-        implementation("io.jsonwebtoken:jjwt-impl:0.11.5") // for Jackson JSON Processor
+        implementation("io.jsonwebtoken:jjwt-jackson:${property("jjwtVersion")}")
+        implementation("io.jsonwebtoken:jjwt-impl:${property("jjwtVersion")}") // for Jackson JSON Processor
         //
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
@@ -69,9 +69,9 @@ subprojects {
         //
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         // 코루틴
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
-        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${property("kotlinxCoroutinesVersion")}")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${property("kotlinxCoroutinesVersion")}")
+        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "${property("kotlinxCoroutinesVersion")}")
 
         //env
         implementation("me.paulschwarz:spring-dotenv:4.0.0")
@@ -106,6 +106,10 @@ tasks {
 
     test {
         finalizedBy(testCodeCoverageReport)
+    }
+
+    build {
+        dependsOn(ktlintFormat)
     }
 
     testCodeCoverageReport {

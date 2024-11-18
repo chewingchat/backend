@@ -1,6 +1,7 @@
 package org.chewing.v1.controller.ai
 
 import org.chewing.v1.dto.response.ai.AiResponse
+import org.chewing.v1.dto.response.chat.ChatLogResponse
 import org.chewing.v1.facade.AiFacade
 import org.chewing.v1.model.ai.DateTarget
 import org.chewing.v1.util.ResponseHelper
@@ -23,6 +24,23 @@ class AiController(
         @RequestParam("targetDate") dateTarget: DateTarget,
     ): SuccessResponseEntity<AiResponse> {
         val result = aiFacade.getAiRecentSummary(userId, friendId, dateTarget)
-        return ResponseHelper.success(AiResponse.of(result))
+        return ResponseHelper.success(AiResponse.from(result))
+    }
+    @GetMapping("/chat/search")
+    fun searchChat(
+        @RequestAttribute("chatRoomId") chatRoomId: String,
+        @RequestParam("prompt") prompt: String,
+    ): SuccessResponseEntity<ChatLogResponse> {
+        val result = aiFacade.getAiSearchChat(chatRoomId, prompt)
+        return ResponseHelper.success(ChatLogResponse.from(result))
+    }
+
+    @GetMapping("/schedule")
+    fun appendSchedule(
+        @RequestAttribute("userId") userId: String,
+        @RequestParam("prompt") prompt: String,
+    ): SuccessResponseEntity<Unit> {
+        aiFacade.appendAiSchedule(userId, prompt)
+        return ResponseHelper.success(Unit)
     }
 }
