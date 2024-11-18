@@ -1,5 +1,6 @@
 package org.chewing.v1.controller.ai
 
+import org.chewing.v1.dto.request.ai.AiRequest
 import org.chewing.v1.dto.response.ai.AiResponse
 import org.chewing.v1.dto.response.chat.ChatLogResponse
 import org.chewing.v1.facade.AiFacade
@@ -7,7 +8,10 @@ import org.chewing.v1.model.ai.DateTarget
 import org.chewing.v1.util.ResponseHelper
 import org.chewing.v1.util.SuccessResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -17,30 +21,30 @@ import org.springframework.web.bind.annotation.RestController
 class AiController(
     private val aiFacade: AiFacade,
 ) {
-    @GetMapping("/friend/summary")
+    @GetMapping("/friend/{friendId}/summary")
     fun getFriendSummary(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("friendId") friendId: String,
+        @PathVariable("friendId") friendId: String,
         @RequestParam("targetDate") dateTarget: DateTarget,
     ): SuccessResponseEntity<AiResponse> {
         val result = aiFacade.getAiRecentSummary(userId, friendId, dateTarget)
         return ResponseHelper.success(AiResponse.from(result))
     }
-    @GetMapping("/chat/search")
+
+    @PostMapping("/chat/search")
     fun searchChat(
-        @RequestAttribute("chatRoomId") chatRoomId: String,
-        @RequestParam("prompt") prompt: String,
+        @RequestBody request: AiRequest.ChatSearch,
     ): SuccessResponseEntity<ChatLogResponse> {
-        val result = aiFacade.getAiSearchChat(chatRoomId, prompt)
+        val result = aiFacade.getAiSearchChat(request.chatRoomId, request.prompt)
         return ResponseHelper.success(ChatLogResponse.from(result))
     }
 
     @GetMapping("/schedule")
     fun appendSchedule(
         @RequestAttribute("userId") userId: String,
-        @RequestParam("prompt") prompt: String,
+        @RequestBody request: AiRequest.Schedule,
     ): SuccessResponseEntity<Unit> {
-        aiFacade.appendAiSchedule(userId, prompt)
+        aiFacade.appendAiSchedule(userId, request.prompt)
         return ResponseHelper.success(Unit)
     }
 }
