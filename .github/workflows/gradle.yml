@@ -37,23 +37,7 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "STORAGE_DATABASE_MONGO_DB_USER=${{ secrets.STORAGE_DATABASE_MONGO_DB_USER }}" >> .env
-          echo "STORAGE_DATABASE_MONGO_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_MONGO_DB_PASSWORD }}" >> .env
-          echo "STORAGE_DATABASE_MONGO_DB_NAME=${{ secrets.STORAGE_DATABASE_MONGO_DB_NAME }}" >> .env
-          echo "STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}" >> .env
-          echo "STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }}" >> .env
-          echo "STORAGE_DATABASE_CORE_DB_NAME=${{ secrets.STORAGE_DATABASE_CORE_DB_NAME }}" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          echo "OPENAI_API_MODEL=${{ secrets.OPENAI_API_MODEL }}" >> .env
-          echo "FCM_API_URL=${{ secrets.FCM_API_URL }}" >> .env
-          echo "MEDIA_URL=${{ secrets.MEDIA_URL }}" >> .env
-          echo "NCP_BUCKET_NAME=${{ secrets.NCP_BUCKET_NAME }}" >> .env
-          echo "NCP_ACCESS_KEY=${{ secrets.NCP_ACCESS_KEY }}" >> .env
-          echo "NCP_SECRET_KEY=${{ secrets.NCP_SECRET_KEY }}" >> .env
-          echo "DOCKER_IMAGE_NAME=yhkim052556/chewingrepository:latest" >> .env
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
-          echo "OPENAI_API_URL=${{ secrets.OPENAI_API_URL }}" >> .env
-
+          echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
 
       - name: Show current directory
         run: pwd
