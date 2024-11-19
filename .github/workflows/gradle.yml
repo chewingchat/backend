@@ -91,6 +91,17 @@ jobs:
           source: "./docker-compose.yml"
           target: "~/"
           
+      - name: Create .env on NCP Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          port: 8080
+          script: |
+            cd ~/
+            echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
+      
       - name: SSH to NCP Server and Deploy
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -100,9 +111,5 @@ jobs:
           port: 8080
           script: |
             cd ~/  # 홈 디렉터리로 이동
-            export $(cat .env | xargs)  # .env 파일의 환경 변수를 명확하게 로드
             docker compose --env-file .env pull
-            docker compose --env-file .env down
             docker compose --env-file .env up -d
-
-
