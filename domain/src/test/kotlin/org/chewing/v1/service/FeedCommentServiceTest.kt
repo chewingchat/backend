@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.comment.*
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.model.feed.FeedTarget

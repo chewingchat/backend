@@ -8,7 +8,7 @@ import io.mockk.justRun
 import io.mockk.mockk
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.feed.FeedUpdater
 import org.chewing.v1.implementation.feed.like.*
 import org.chewing.v1.model.feed.FeedTarget

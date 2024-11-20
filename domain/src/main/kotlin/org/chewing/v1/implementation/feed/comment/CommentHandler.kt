@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.feed.comment
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.util.AsyncJobExecutor
 import org.springframework.stereotype.Component
