@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm")
-    kotlin("kapt")
+    kotlin("jvm") version "1.9.0" // 안정적인 버전으로 변경
+    kotlin("kapt") version "1.9.0" // 동일한 버전으로 설정
     kotlin("plugin.spring") apply false
     kotlin("plugin.jpa") apply false
     id("org.springframework.boot")
@@ -75,6 +75,9 @@ subprojects {
 
         //env
         implementation("me.paulschwarz:spring-dotenv:4.0.0")
+
+        //openvidu
+        implementation("io.openvidu:openvidu-java-client:2.30.0")
     }
 
     tasks {

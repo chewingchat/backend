@@ -32,6 +32,7 @@ class SecurityConfig(
                         "/api/auth/logout",
                         "/ws-stomp/**",
                         "/bot/chat",
+                        "/api/tts" // TTS 엔드포인트를 인증 없이 접근 가능하도록 추가
                     ).permitAll()
                     .anyRequest().authenticated()
             }
