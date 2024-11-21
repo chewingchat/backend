@@ -154,14 +154,15 @@ class FeedCommentServiceTest {
         val feedId = "feedId"
         val comment = "comment"
         val target = FeedTarget.COMMENTS
+        val commentId = "commentId"
 
         justRun { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
-        justRun { commentRepository.append(userId, feedId, comment) }
+        every { commentRepository.append(userId, feedId, comment) } returns commentId
 
-        assertDoesNotThrow {
+        val result =
             feedCommentService.comment(userId, feedId, comment, target)
-        }
 
+        assert(result == commentId)
         verify(exactly = 1) { feedUpdater.update(feedId, FeedTarget.COMMENTS) }
     }
 

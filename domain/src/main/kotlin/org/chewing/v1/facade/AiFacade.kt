@@ -28,8 +28,8 @@ class AiFacade(
         return chatLogService.getChatKeyWordLog(chatRoomId, resultKeyword)
     }
 
-    fun appendAiSchedule(userId: String, prompt: String) {
+    fun createAiSchedule(userId: String, prompt: String): String {
         val promptedSchedule = aiService.getAiSchedule(prompt)
-        scheduleService.createAiSchedule(userId, promptedSchedule)
+        return scheduleService.createAiSchedule(userId, promptedSchedule)
     }
 }

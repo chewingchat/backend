@@ -127,8 +127,7 @@ class UserScheduleControllerTest : RestDocsTest() {
                 .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"),
         )
-            .andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("생성 완료"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
     }
 
     @Test
@@ -142,8 +141,9 @@ class UserScheduleControllerTest : RestDocsTest() {
             location = "testLocation",
             private = false,
         )
+        val scheduleId = "testScheduleId"
 
-        every { scheduleService.create(any(), any(), any()) } just Runs
+        every { scheduleService.create(any(), any(), any()) } returns scheduleId
 
         // When
         mockMvc.perform(
@@ -152,7 +152,7 @@ class UserScheduleControllerTest : RestDocsTest() {
                 .content(jsonBody(requestBody))
                 .requestAttr("userId", "testUserId"),
         )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.message").value("성공"))
+            .andExpect(MockMvcResultMatchers.status().isCreated)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.scheduleId").value(scheduleId))
     }
 }

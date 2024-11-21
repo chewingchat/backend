@@ -13,13 +13,14 @@ class CommentHandler(
     private val asyncJobExecutor: AsyncJobExecutor,
     private val optimisticLockHandler: OptimisticLockHandler,
 ) {
-    fun handleComment(userId: String, feedId: String, comment: String, target: FeedTarget) {
+    fun handleComment(userId: String, feedId: String, comment: String, target: FeedTarget): String {
         val result = optimisticLockHandler.retryOnOptimisticLock {
             commentProcessor.processComment(userId, feedId, comment, target)
         }
         if (result == null) {
             throw ConflictException(ErrorCode.FEED_COMMENT_FAILED)
         }
+        return result
     }
 
     fun handleUnComments(commentIds: List<String>, target: FeedTarget) {

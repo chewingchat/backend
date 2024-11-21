@@ -1,11 +1,11 @@
 package org.chewing.v1.controller.feed
 
+import org.chewing.v1.dto.request.feed.CommentIdResponse
 import org.chewing.v1.dto.request.feed.CommentRequest
 import org.chewing.v1.dto.response.comment.FeedFriendCommentedResponse
 import org.chewing.v1.dto.response.comment.MyCommentResponse
 import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedTarget
-import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.feed.FeedCommentService
 import org.chewing.v1.util.helper.ResponseHelper
@@ -22,15 +22,14 @@ class FeedCommentController(
     fun addFeedComment(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: CommentRequest.Add,
-    ): SuccessResponseEntity<SuccessCreateResponse> {
-        feedFacade.commentFeed(
+    ): SuccessResponseEntity<CommentIdResponse> {
+        val commentId = feedFacade.commentFeed(
             userId,
             request.toFeedId(),
             request.toComment(),
             FeedTarget.COMMENTS,
         )
-        // 생성 완료 응답 201 반환
-        return ResponseHelper.successCreateOnly()
+        return ResponseHelper.successCreate(CommentIdResponse(commentId))
     }
 
     @DeleteMapping("/comment")

@@ -19,6 +19,8 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.format.DateTimeFormatter
 
 @ActiveProfiles("test")
@@ -214,19 +216,20 @@ class FeedControllerTest : RestDocsTest() {
             "Test content".toByteArray(),
         )
 
-        every { feedService.make(any(), any(), any(), any()) } just Runs
+        val feedId = "testFeedId"
 
-        // When: 파일 업로드 요청을 보냄
-        val result = mockMvc.perform(
+        every { feedService.make(any(), any(), any(), any()) } returns feedId
+
+        mockMvc.perform(
             MockMvcRequestBuilders.multipart("/api/feed")
                 .file(mockFile1)
                 .file(mockFile2)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .requestAttr("userId", "testUserId")
                 .param("topic", "testTopic"),
-
         )
-        performCommonSuccessCreateResponse(result)
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.data.feedId").value(feedId))
     }
 
     @Test

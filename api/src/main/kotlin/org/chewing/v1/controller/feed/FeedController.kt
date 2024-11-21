@@ -1,5 +1,6 @@
 package org.chewing.v1.controller.feed
 
+import org.chewing.v1.dto.request.feed.FeedIdResponse
 import org.chewing.v1.dto.request.feed.FeedRequest
 import org.chewing.v1.dto.response.feed.FeedsResponse
 import org.chewing.v1.dto.response.feed.FriendFeedResponse
@@ -8,7 +9,6 @@ import org.chewing.v1.facade.FeedFacade
 import org.chewing.v1.model.feed.FeedStatus
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.model.media.FileCategory
-import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.feed.FeedService
 import org.chewing.v1.util.helper.FileHelper
@@ -106,10 +106,10 @@ class FeedController(
         @RequestAttribute("userId") userId: String,
         @RequestPart("files") files: List<MultipartFile>,
         @RequestParam("topic") topic: String,
-    ): SuccessResponseEntity<SuccessCreateResponse> {
+    ): SuccessResponseEntity<FeedIdResponse> {
         val convertFiles = FileHelper.convertMultipartFileToFileDataList(files)
-        feedService.make(userId, convertFiles, topic, FileCategory.FEED)
+        val feedId = feedService.make(userId, convertFiles, topic, FileCategory.FEED)
         // 생성 완료 응답 201 반환
-        return ResponseHelper.successCreateOnly()
+        return ResponseHelper.successCreate(FeedIdResponse(feedId))
     }
 }

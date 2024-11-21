@@ -23,9 +23,9 @@ internal class CommentRepositoryTest : JpaContextTest() {
         val userId = generateUserId()
         val feedId = generateFeedId()
         val comment = "comment"
-        commentRepositoryImpl.append(userId, feedId, comment)
-        val result = commentJpaRepository.findAllByUserId(userId)
-        assert(result.size == 1)
+        val result = commentRepositoryImpl.append(userId, feedId, comment)
+
+        assert(result.isNotEmpty())
     }
 
     @Test

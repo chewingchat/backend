@@ -31,9 +31,10 @@ class FeedFacade(
         feedLikeService.unlikes(feedIds)
     }
 
-    fun commentFeed(userId: String, feedId: String, comment: String, target: FeedTarget) {
-        feedCommentService.comment(userId, feedId, comment, target)
+    fun commentFeed(userId: String, feedId: String, comment: String, target: FeedTarget): String {
+        val commentId = feedCommentService.comment(userId, feedId, comment, target)
         notificationService.handleCommentNotification(userId, feedId, comment)
+        return commentId
     }
 
     fun getOwnedFeed(userId: String, feedId: String): Pair<Feed, Boolean> {

@@ -1,9 +1,9 @@
 package org.chewing.v1.dto.response.ai
 
 data class AiResponse(
-    val promptResult: String,
+    val summary: String,
 ) {
     companion object {
-        fun from(promptResult: String): AiResponse = AiResponse(promptResult)
+        fun from(summary: String): AiResponse = AiResponse(summary)
     }
 }

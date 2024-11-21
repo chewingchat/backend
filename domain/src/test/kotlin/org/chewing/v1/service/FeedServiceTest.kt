@@ -238,8 +238,8 @@ class FeedServiceTest {
         every { feedDetailRepository.append(listOf(media), feedId) } just Runs
         every { fileHandler.handleNewFiles(userId, listOf(fileData), FileCategory.FEED) } returns listOf(media)
 
-        assertDoesNotThrow {
+        val result =
             feedService.make(userId, listOf(fileData), topic, FileCategory.FEED)
-        }
+        assert(result == feedId)
     }
 }
