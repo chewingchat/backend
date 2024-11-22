@@ -33,12 +33,9 @@ internal class ChatLogRepositoryImpl(
     }
 
     override fun readChatKeyWordMessages(chatRoomId: String, keyword: String): List<ChatLog> {
-//        val keywords = keyword.split(",").map { it.trim() }
-        // MongoDB에서 chatRoomId와 keyWord로 메시지 조회
-//        val regexPattern = keywords.joinToString("|") { it }
-//        return mongoTemplate.find(query, ChatMessageMongoEntity::class.java).map { it.toChatLog() }
-        val keywordString = keyword.split(",").joinToString(" ")
-        return chatLogMongoRepository.searchByKeywords(keywordString, chatRoomId).map { it.toChatLog() }
+        val keywords = keyword.split(",").map { it.trim() }
+        val regexPattern = keywords.joinToString("|") { it }
+        return chatLogMongoRepository.searchByKeywordsRegex(regexPattern, chatRoomId).map { it.toChatLog() }
     }
 
     override fun removeLog(messageId: String) {
