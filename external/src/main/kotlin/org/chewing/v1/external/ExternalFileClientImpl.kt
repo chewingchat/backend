@@ -29,6 +29,10 @@ class ExternalFileClientImpl(
             .contentType(media.type.type)
             .acl(ObjectCannedACL.PUBLIC_READ)
             .build()
+        println("S3 PutObjectRequest: $putObjectRequest")
+        println("Bucket: $bucketName")
+        println("Key: ${media.path}")// 디버깅
+
         try {
             val requestBody = AsyncRequestBody.fromInputStream { builder ->
                 builder.inputStream(file.inputStream)

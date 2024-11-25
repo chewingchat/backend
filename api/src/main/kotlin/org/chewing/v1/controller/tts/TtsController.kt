@@ -1,5 +1,6 @@
 package org.chewing.v1.controller.tts
 
+import org.springframework.http.MediaType
 import org.chewing.v1.service.tts.TtsService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,15 +14,11 @@ class TtsController(
     private val ttsService: TtsService
 ) {
     @GetMapping("/api/tts")
-    fun generateTts(
+    suspend fun generateTts(
         @RequestParam text: String,
         @RequestParam(defaultValue = "nara") speaker: String
-    ): ResponseEntity<ByteArray> {
-        val file: File = ttsService.generateTtsFile(text, speaker)
-        val fileContent = Files.readAllBytes(file.toPath())
-        file.delete() // 임시 파일 삭제
-        return ResponseEntity.ok()
-            .header("Content-Disposition", "attachment; filename=${file.name}")
-            .body(fileContent)
+    ): ResponseEntity<String> {
+        val media = ttsService.generateTtsFile(text, speaker)
+        return ResponseEntity.ok("File uploaded successfully: ${media.url}")
     }
 }

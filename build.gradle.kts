@@ -78,6 +78,7 @@ subprojects {
 
         //openvidu
         implementation("io.openvidu:openvidu-java-client:2.30.0")
+
     }
 
     tasks {

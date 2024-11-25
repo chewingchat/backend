@@ -1,6 +1,7 @@
 package org.chewing.v1.service.tts
 
 import org.chewing.v1.external.ExternalTtsClient
+import org.chewing.v1.model.media.Media
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -8,7 +9,7 @@ import java.io.File
 class TtsService(
     private val externalTtsClient: ExternalTtsClient
 ) {
-    fun generateTtsFile(text: String, speaker: String): File {
+    suspend fun generateTtsFile(text: String, speaker: String): Media {
         return externalTtsClient.generateTts(text, speaker)
     }
 }
