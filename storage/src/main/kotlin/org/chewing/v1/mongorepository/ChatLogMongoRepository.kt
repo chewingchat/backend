@@ -22,16 +22,15 @@ internal interface ChatLogMongoRepository : MongoRepository<ChatMessageMongoEnti
 
     @Query(
         value = "{ 'chatRoomId': ?1, 'type': { \$in: ['NORMAL', 'REPLY'] }, \$text: { \$search: ?0 } }",
-        sort = "{ score: { \$meta: 'textScore' } }"
+        sort = "{ score: { \$meta: 'textScore' } }",
     )
     fun searchByKeywords(keywords: String, chatRoomId: String): List<ChatMessageMongoEntity>
+
     @Query(
         value = "{ 'chatRoomId': ?1, 'type': { \$in: ['NORMAL', 'REPLY'] }, 'message': { \$regex: ?0, \$options: 'i' } }",
-        sort = "{ 'seqNumber': 1 }"
+        sort = "{ 'seqNumber': 1 }",
     )
     fun searchByKeywordsRegex(regex: String, chatRoomId: String): List<ChatMessageMongoEntity>
-
-
 
     @Query("{ \$text: { \$search: ?0 }, type: { \$in: ['NORMAL', 'REPLY'] } }")
     fun searchMessagesByText(text: String): List<ChatMessageMongoEntity>

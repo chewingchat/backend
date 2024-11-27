@@ -307,7 +307,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
     }
 
     @Test
-    fun `키워드로 채팅 조회`(){
+    fun `키워드로 채팅 조회`() {
         val chatRoomId = generateChatRoomId()
         val chatMessage1 = ChatMessageProvider.buildNormalMessageForSearch(generateMessageId(), chatRoomId, "밥먹자")
         val chatMessage2 = ChatMessageProvider.buildNormalMessageForSearch(generateMessageId(), chatRoomId, "언제 밥 먹을 건데?")
@@ -316,7 +316,7 @@ class ChatLogRepositoryTest : MongoContextTest() {
         mongoDataGenerator.chatLogEntityData(chatMessage1)
         mongoDataGenerator.chatLogEntityData(chatMessage2)
         mongoDataGenerator.chatLogEntityData(chatMessage3)
-        val chatLog = chatLogRepositoryImpl.readChatKeyWordMessages(chatMessage1.chatRoomId,keyword)
+        val chatLog = chatLogRepositoryImpl.readChatKeyWordMessages(chatMessage1.chatRoomId, keyword)
         assert(chatLog.size == 3)
     }
 

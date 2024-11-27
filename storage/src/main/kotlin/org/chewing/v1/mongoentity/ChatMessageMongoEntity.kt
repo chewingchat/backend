@@ -22,7 +22,7 @@ import java.time.LocalDateTime
         name = "chatRoom_message_compound_idx",
         def = "{'chatRoomId': 1, 'type': 1, 'message': 1}",
         partialFilter = "{ 'type': { \$in: ['NORMAL', 'REPLY'] } }",
-    )
+    ),
 )
 internal sealed class ChatMessageMongoEntity(
     @Id

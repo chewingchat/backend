@@ -7,11 +7,13 @@ spring:
   config:
     import:
       - db.yml
+      - db.yml
       - jwt.yml
       - openai.yml
       - fcm.yml
       - ncp.yml
       - media.yml
+      - email.yml
       - optional:file:../.env[.properties]
       - optional:file:./.env[.properties]
 
