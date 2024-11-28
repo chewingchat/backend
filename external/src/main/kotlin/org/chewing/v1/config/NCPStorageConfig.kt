@@ -29,7 +29,6 @@ class NCPStorageConfig(
     fun ncpStorageClient(): S3AsyncClient {
         val credentials = AwsBasicCredentials.create(accessKey, secretKey)
 
-
         println("Initializing S3AsyncClient")
         println("AccessKey: $accessKey")
         println("SecretKey: $secretKey")
@@ -42,6 +41,5 @@ class NCPStorageConfig(
             .endpointOverride(URI.create(endPoint))
             .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
             .build()
-
     }
 }

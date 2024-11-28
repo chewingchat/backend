@@ -20,10 +20,4 @@ class ChatLogController(
         val chatLog = chatLogService.getChatLog(chatRoomId, page)
         return HttpResponse.success(ChatLogResponse.from(chatLog))
     }
-
-//    @GetMapping("/log/latest")
-//    fun getChatLogLatest(@PathVariable chatRoomId: String): HttpResponse<ChatLogResponse> {
-//        val chatLog = chatLogService.getChatLogLatest(chatRoomId)
-//        return HttpResponse.success(ChatLogResponse.from(chatLog))
-//    }
 }
