@@ -15,9 +15,9 @@ import java.util.*
 @Component
 class ExternalTtsClientImpl(
     private val externalFileClient: ExternalFileClient,
-    @Value("\${NCP_TTS_API_URL}") private val apiUrl: String,
-    @Value("\${NCP_TTS_ACCESS_KEY}") private val clientId: String,
-    @Value("\${NCP_TTS_SECRET_KEY}") private val clientSecret: String,
+    @Value("\${ncp.tts.url}") private val apiUrl: String,
+    @Value("\${ncp.tts.accessKey}") private val clientId: String,
+    @Value("\${ncp.tts.secretKey}") private val clientSecret: String,
     @Value("\${ncp.storage.bucketName}") private val bucketName: String,
     @Value("\${ncp.storage.endpoint}") private val baseUrl: String,
 ) : ExternalTtsClient {
