@@ -14,8 +14,8 @@ class ScheduleService(
     private val scheduleReader: ScheduleReader,
     private val scheduleGenerator: ScheduleGenerator,
 ) {
-    fun create(userId: String, scheduleTime: ScheduleTime, scheduleContent: ScheduleContent) {
-        scheduleAppender.append(scheduleTime, scheduleContent, userId)
+    fun create(userId: String, scheduleTime: ScheduleTime, scheduleContent: ScheduleContent): String {
+        return scheduleAppender.append(scheduleTime, scheduleContent, userId)
     }
 
     fun delete(scheduleId: String) {
@@ -29,8 +29,8 @@ class ScheduleService(
     fun fetches(userId: String, type: ScheduleType, isOwned: Boolean): List<Schedule> =
         scheduleReader.reads(userId, type, isOwned)
 
-    fun createAiSchedule(userId: String, scheduleStringInfo: String) {
+    fun createAiSchedule(userId: String, scheduleStringInfo: String): String {
         val (scheduleContent, scheduleTime) = scheduleGenerator.generateScheduleFromString(scheduleStringInfo)
-        scheduleAppender.append(scheduleTime, scheduleContent, userId)
+        return scheduleAppender.append(scheduleTime, scheduleContent, userId)
     }
 }

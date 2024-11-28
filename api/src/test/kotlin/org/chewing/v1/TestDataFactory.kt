@@ -2,6 +2,7 @@ package org.chewing.v1
 
 import org.chewing.v1.model.announcement.Announcement
 import org.chewing.v1.model.auth.JwtToken
+import org.chewing.v1.model.auth.PushToken
 import org.chewing.v1.model.chat.log.*
 import org.chewing.v1.model.chat.member.ChatRoomMember
 import org.chewing.v1.model.chat.member.ChatRoomMemberInfo
@@ -23,6 +24,8 @@ import org.chewing.v1.model.friend.FriendShip
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.notification.Notification
+import org.chewing.v1.model.notification.NotificationType
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.search.Search
 import org.chewing.v1.model.token.RefreshToken
@@ -428,6 +431,21 @@ object TestDataFactory {
             createFriendShip(),
             createUser(),
             createFeed(),
+        )
+    }
+
+    fun createNotification(): Notification {
+        return Notification.of(
+            createUser(),
+            PushToken.of(
+                "pushToken",
+                "platform",
+                PushToken.Provider.ANDROID,
+                "deviceId",
+            ),
+            NotificationType.COMMENT,
+            "testId",
+            "content",
         )
     }
 }

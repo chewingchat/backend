@@ -3,6 +3,7 @@ package org.chewing.v1.controller.ai
 import org.chewing.v1.dto.request.ai.AiRequest
 import org.chewing.v1.dto.response.ai.AiResponse
 import org.chewing.v1.dto.response.chat.ChatLogResponse
+import org.chewing.v1.dto.response.schedule.ScheduleIdResponse
 import org.chewing.v1.facade.AiFacade
 import org.chewing.v1.model.ai.DateTarget
 import org.chewing.v1.util.helper.ResponseHelper
@@ -39,12 +40,12 @@ class AiController(
         return ResponseHelper.success(ChatLogResponse.from(result))
     }
 
-    @GetMapping("/schedule")
-    fun appendSchedule(
+    @PostMapping("/schedule")
+    fun createSchedule(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: AiRequest.Schedule,
-    ): SuccessResponseEntity<Unit> {
-        aiFacade.appendAiSchedule(userId, request.prompt)
-        return ResponseHelper.success(Unit)
+    ): SuccessResponseEntity<ScheduleIdResponse> {
+        val scheduleId = aiFacade.createAiSchedule(userId, request.prompt)
+        return ResponseHelper.successCreate(ScheduleIdResponse(scheduleId))
     }
 }

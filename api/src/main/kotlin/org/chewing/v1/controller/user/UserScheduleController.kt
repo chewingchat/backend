@@ -1,9 +1,9 @@
 package org.chewing.v1.controller.user
 
 import org.chewing.v1.dto.request.user.ScheduleRequest
+import org.chewing.v1.dto.response.schedule.ScheduleIdResponse
 import org.chewing.v1.dto.response.schedule.ScheduleListResponse
 import org.chewing.v1.model.schedule.ScheduleType
-import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.user.ScheduleService
 import org.chewing.v1.util.helper.ResponseHelper
@@ -42,18 +42,18 @@ class UserScheduleController(
     fun deleteSchedule(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: ScheduleRequest.Delete,
-    ): SuccessResponseEntity<SuccessCreateResponse> {
+    ): SuccessResponseEntity<SuccessOnlyResponse> {
         val scheduleId = request.toScheduleId()
         scheduleService.delete(scheduleId)
-        return ResponseHelper.successCreateOnly()
+        return ResponseHelper.successOnly()
     }
 
     @PostMapping("")
     fun addSchedule(
         @RequestAttribute("userId") userId: String,
         @RequestBody request: ScheduleRequest.Add,
-    ): SuccessResponseEntity<SuccessOnlyResponse> {
-        scheduleService.create(userId, request.toScheduleTime(), request.toScheduleContent())
-        return ResponseHelper.successOnly()
+    ): SuccessResponseEntity<ScheduleIdResponse> {
+        val scheduleId = scheduleService.create(userId, request.toScheduleTime(), request.toScheduleContent())
+        return ResponseHelper.successCreate(ScheduleIdResponse(scheduleId))
     }
 }

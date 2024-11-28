@@ -13,8 +13,8 @@ import java.time.temporal.TemporalAdjusters
 internal class ScheduleRepositoryImpl(
     private val scheduleJpaRepository: ScheduleJpaRepository,
 ) : ScheduleRepository {
-    override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, userId: String) {
-        scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, userId))
+    override fun append(scheduleTime: ScheduleTime, scheduleContent: ScheduleContent, userId: String): String {
+        return scheduleJpaRepository.save(ScheduleJpaEntity.generate(scheduleContent, scheduleTime, userId)).toSchedule().id
     }
 
     @Transactional

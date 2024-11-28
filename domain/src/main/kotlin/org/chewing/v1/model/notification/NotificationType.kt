@@ -9,4 +9,9 @@ enum class NotificationType {
     CHAT_REPLY,
     CHAT_INVITE,
     CHAT_BOMB,
+    ;
+
+    fun toLowerCase(): String {
+        return this.name.lowercase()
+    }
 }

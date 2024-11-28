@@ -21,8 +21,8 @@ class FeedCommentService(
         commentRemover.removes(feedIds)
     }
 
-    fun comment(userId: String, feedId: String, comment: String, target: FeedTarget) {
-        commentHandler.handleComment(userId, feedId, comment, target)
+    fun comment(userId: String, feedId: String, comment: String, target: FeedTarget): String {
+        return commentHandler.handleComment(userId, feedId, comment, target)
     }
 
     fun getOwnedComment(userId: String): List<CommentInfo> = commentReader.readsOwned(userId)

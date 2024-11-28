@@ -42,16 +42,19 @@ class FeedCommentControllerTest : RestDocsTest() {
             feedId = "feedId",
             comment = "comment",
         )
-        every { feedFacade.commentFeed(any(), any(), any(), any()) } just Runs
+        val commentId = "commentId"
+        every { feedFacade.commentFeed(any(), any(), any(), any()) } returns commentId
         // When
-        val result = mockMvc.perform(
+        mockMvc.perform(
             MockMvcRequestBuilders.post("/api/feed/comment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .requestAttr("userId", "userId")
                 .content(jsonBody(requestBody)),
+        ).andExpect(
+            status().isCreated,
+        ).andExpect(
+            jsonPath("$.data.commentId").value(commentId),
         )
-        // Then
-        performCommonSuccessCreateResponse(result)
     }
 
     @Test

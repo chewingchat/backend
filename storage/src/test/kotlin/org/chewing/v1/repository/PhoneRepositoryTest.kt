@@ -58,7 +58,11 @@ class PhoneRepositoryTest : JpaContextTest() {
     @Test
     fun `전화번호가 존재하지 않는다면 저장한다`() {
         val phoneNumber = PhoneProvider.buildNormalPhoneNumber(generatePhoneNumber())
-        phoneRepositoryImpl.appendIfNotExists(phoneNumber)
+        val verifiedNumber = phoneRepositoryImpl.appendIfNotExists(phoneNumber)
+        print(verifiedNumber)
+        assert(verifiedNumber.matches(Regex("\\d{6}"))) {
+            "인증 번호가 6자리 숫자여야 함"
+        }
         val result = phoneJpaRepository.findByNumberAndCountryCode(phoneNumber.number, phoneNumber.countryCode)
         assert(result.isPresent)
         assert(result.get().toPhone().number == phoneNumber.number)

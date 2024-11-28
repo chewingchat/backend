@@ -20,6 +20,9 @@ spring:
   h2:
     console:
       enabled: true
+  data:
+    mongodb:
+      auto-index-creation: true
 de:
   flapdoodle:
     mongodb:
@@ -58,6 +61,7 @@ spring:
       authentication-database: admin
       username: root
       password: root
+      auto-index-creation: true
 
 storage:
   datasource:
@@ -93,6 +97,7 @@ spring:
       port: ${STORAGE_DATABASE_MONGO_DB_PORT}
       database: ${STORAGE_DATABASE_MONGO_DB_NAME}
       authentication-database: admin
+      auto-index-creation: true
       username: ${STORAGE_DATABASE_MONGO_DB_NAME}
       password: ${STORAGE_DATABASE_MONGO_DB_PASSWORD}
 

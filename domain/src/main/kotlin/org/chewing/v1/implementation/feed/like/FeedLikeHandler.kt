@@ -2,7 +2,7 @@ package org.chewing.v1.implementation.feed.like
 
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.model.feed.FeedTarget
 import org.springframework.stereotype.Component
 

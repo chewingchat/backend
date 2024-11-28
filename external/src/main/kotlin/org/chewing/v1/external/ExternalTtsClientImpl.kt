@@ -14,12 +14,12 @@ import java.util.*
 
 @Component
 class ExternalTtsClientImpl(
-    private val externalFileClient: ExternalFileClient, // 파일 업로드 클라이언트
+    private val externalFileClient: ExternalFileClient,
     @Value("\${NCP_TTS_API_URL}") private val apiUrl: String,
     @Value("\${NCP_TTS_ACCESS_KEY}") private val clientId: String,
     @Value("\${NCP_TTS_SECRET_KEY}") private val clientSecret: String,
     @Value("\${ncp.storage.bucketName}") private val bucketName: String,
-    @Value("\${ncp.storage.endpoint}") private val baseUrl: String
+    @Value("\${ncp.storage.endpoint}") private val baseUrl: String,
 ) : ExternalTtsClient {
 
     override suspend fun generateTts(text: String, speaker: String): Media {
@@ -65,9 +65,9 @@ class ExternalTtsClientImpl(
                     baseUrl = baseUrl,
                     buckName = bucketName,
                     category = FileCategory.TTS,
-                    userId = "testUserId", // 사용자 ID를 동적으로 처리
+                    userId = "testUserId",
                     fileName = tempFile.name,
-                    type = MediaType.AUDIO_MP3
+                    type = MediaType.AUDIO_MP3,
                 )
 
                 // 파일 업로드
@@ -76,7 +76,7 @@ class ExternalTtsClientImpl(
                     inputStream = tempFile.inputStream(),
                     contentType = MediaType.AUDIO_MP3,
                     fileName = tempFile.name,
-                    size = tempFile.length()
+                    size = tempFile.length(),
                 )
                 externalFileClient.uploadFile(fileData, media)
 
@@ -95,4 +95,3 @@ class ExternalTtsClientImpl(
         }
     }
 }
-

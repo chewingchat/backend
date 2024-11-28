@@ -16,6 +16,15 @@ object ChatMessageProvider {
         timestamp = LocalDateTime.now(),
     )
 
+    fun buildNormalMessageForSearch(messageId: String, chatRoomId: String, text: String): ChatNormalMessage = ChatNormalMessage.of(
+        messageId = messageId,
+        chatRoomId = chatRoomId,
+        senderId = "sender",
+        text = text,
+        number = ChatNumber.of(chatRoomId, 1, 1),
+        timestamp = LocalDateTime.now(),
+    )
+
     fun buildLeaveMessage(messageId: String, chatRoomId: String): ChatLeaveMessage = ChatLeaveMessage.of(
         messageId = messageId,
         chatRoomId = chatRoomId,

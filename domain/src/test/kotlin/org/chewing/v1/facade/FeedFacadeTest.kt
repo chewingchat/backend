@@ -63,13 +63,16 @@ class FeedFacadeTest {
         val feedId = "1"
         val comment = "댓글"
         val target = FeedTarget.COMMENTS
+        val commentId = "testCommentId"
 
-        every { feedCommentService.comment(userId, feedId, comment, target) } just Runs
+        every { feedCommentService.comment(userId, feedId, comment, target) } returns commentId
         every { notificationService.handleCommentNotification(userId, feedId, comment) } just Runs
 
-        feedFacade.commentFeed(userId, feedId, comment, target)
+        val result = feedFacade.commentFeed(userId, feedId, comment, target)
 
         // 피드 댓글을 달고, 댓글 알림을 처리해야 함
+
+        assert(result == commentId)
 
         verify {
             feedCommentService.comment(userId, feedId, comment, target)

@@ -33,8 +33,8 @@ internal class CommentRepositoryImpl(
             .deleteAllByFeedIdIn(feedIds)
     }
 
-    override fun append(userId: String, feedId: String, comment: String) {
-        commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment))
+    override fun append(userId: String, feedId: String, comment: String): String {
+        return commentJpaRepository.save(FeedCommentJpaEntity.generate(userId, feedId, comment)).toCommentInfo().commentId
     }
 
     override fun readsOwned(userId: String): List<CommentInfo> = commentJpaRepository.findAllByUserId(userId).map {
