@@ -21,6 +21,13 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+
+        // 필터링 제외 대상은 바로 다음 필터로 전달
+        if (shouldNotFilter(request)) {
+            filterChain.doFilter(request, response)
+            return
+        }
+
         // 여기부터 수정
         try {
             val token = resolveToken(request)
@@ -38,6 +45,7 @@ class JwtAuthenticationFilter(
         val path = request.requestURI
         // 특정 경로를 무시하도록 설정
         return path.startsWith("/api/auth/phone/create") || path.startsWith("/api/auth/email/create") || path.startsWith("/api/auth/refresh") || path.startsWith("/api/auth/logout")
+                || path.startsWith("/api/openvidu/") || path.startsWith("/api/tts")
     }
 
     private fun resolveToken(request: HttpServletRequest): String {
