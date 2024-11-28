@@ -1,7 +1,7 @@
 spring.config.activate.on-profile: test
 
 openvidu:
-  url: test_url
+  url: http://test_url.test
   secret: test_secret
 
 ---

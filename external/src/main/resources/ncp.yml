@@ -7,7 +7,10 @@ ncp:
     accessKey: test-access-key
     secretKey: test-secret-key
     bucketName: test-bucket-name
-
+  tts:
+    url: test-tts-url
+    accessKey: test-access-key
+    secretKey: test-secret-key
 ---
 spring.config.activate.on-profile: local
 
@@ -15,9 +18,13 @@ ncp:
   storage:
     region: kr-standard
     endpoint: https://kr.object.ncloudstorage.com
-    accessKey: ${NCP_ACCESS_KEY}
-    secretKey: ${NCP_SECRET_KEY}
+    accessKey: ${NCP_STORAGE_ACCESS_KEY}
+    secretKey: ${NCP_STORAGE_SECRET_KEY}
     bucketName: ${NCP_BUCKET_NAME}
+  tts:
+    accessKey: ${NCP_TTS_ACCESS_KEY}
+    secretKey: ${NCP_TTS_SECRET_KEY}
+    url: ${NCP_TTS_API_URL}
 
 
 ---
@@ -30,3 +37,5 @@ ncp:
     accessKey: ${NCP_ACCESS_KEY}
     secretKey: ${NCP_SECRET_KEY}
     bucketName: ${NCP_BUCKET_NAME}
+  tts:
+    url: ${NCP_TTS_API_URL}
