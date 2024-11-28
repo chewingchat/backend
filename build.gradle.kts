@@ -64,8 +64,6 @@ subprojects {
         //
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
-
-        implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
         //
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         // 코루틴
