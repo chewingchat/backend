@@ -2,6 +2,7 @@ package org.chewing.v1.security
 
 import org.chewing.v1.config.IntegrationTest
 import org.chewing.v1.implementation.auth.JwtTokenProvider
+import org.chewing.v1.util.security.JwtAuthenticationEntryPoint
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders

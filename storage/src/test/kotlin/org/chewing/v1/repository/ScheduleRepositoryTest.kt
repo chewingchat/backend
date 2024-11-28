@@ -25,7 +25,8 @@ class ScheduleRepositoryTest : JpaContextTest() {
         val userId = generateUserId()
         val content = ScheduleProvider.buildContent(true)
         val time = ScheduleProvider.buildTime()
-        scheduleRepositoryImpl.append(time, content, userId)
+        val result = scheduleRepositoryImpl.append(time, content, userId)
+        assert(result.isNotEmpty())
     }
 
     @Test

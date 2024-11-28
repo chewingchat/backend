@@ -32,12 +32,12 @@ internal class ChatLogRepositoryImpl(
         return messageEntities.map { it.toChatLog() }
     }
 
-    // 메시지를 삭제하는 기능
-    /**
-     * room확인 하지 않고
-     * 바로 메시지 삭제 할게용
-     * 이떄 실제 삭제는 하지않고, type을 delete로 업데이트만 할게용
-     */
+    override fun readChatKeyWordMessages(chatRoomId: String, keyword: String): List<ChatLog> {
+        val keywords = keyword.split(",").map { it.trim() }
+        val regexPattern = keywords.joinToString("|") { it }
+        return chatLogMongoRepository.searchByKeywordsRegex(regexPattern, chatRoomId).map { it.toChatLog() }
+    }
+
     override fun removeLog(messageId: String) {
         // 메시지 ID로 MongoDB에서 메시지 조회
         chatLogMongoRepository.updateMessageTypeToDelete(messageId)

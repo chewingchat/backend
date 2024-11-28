@@ -24,6 +24,8 @@ import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.model.media.FileData
 import org.chewing.v1.model.media.Media
 import org.chewing.v1.model.media.MediaType
+import org.chewing.v1.model.notification.Notification
+import org.chewing.v1.model.notification.NotificationType
 import org.chewing.v1.model.schedule.Schedule
 import org.chewing.v1.model.schedule.ScheduleContent
 import org.chewing.v1.model.schedule.ScheduleTime
@@ -381,4 +383,21 @@ object TestDataFactory {
             createChatRoomMember(friendId),
         ),
     )
+
+    fun createNotification(): Notification {
+        return Notification.of(
+            createUser(
+                "userId",
+            ),
+            PushToken.of(
+                "pushToken",
+                "platform",
+                PushToken.Provider.ANDROID,
+                "deviceId",
+            ),
+            NotificationType.COMMENT,
+            "testId",
+            "content",
+        )
+    }
 }

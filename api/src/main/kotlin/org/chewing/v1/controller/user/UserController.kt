@@ -6,9 +6,9 @@ import org.chewing.v1.facade.AccountFacade
 import org.chewing.v1.model.media.FileCategory
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.user.UserService
-import org.chewing.v1.util.FileUtil
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.FileHelper
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -45,7 +45,7 @@ class UserController(
         @RequestAttribute("userId") userId: String,
         @RequestParam("category") category: FileCategory,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        val convertedFile = FileUtil.convertMultipartFileToFileData(file)
+        val convertedFile = FileHelper.convertMultipartFileToFileData(file)
         userService.updateFile(convertedFile, userId, category)
         return ResponseHelper.successOnly()
     }
@@ -81,7 +81,7 @@ class UserController(
         @RequestAttribute("userId") userId: String,
         @RequestPart("file") file: MultipartFile,
     ): SuccessResponseEntity<SuccessOnlyResponse> {
-        val convertedFile = FileUtil.convertMultipartFileToFileData(file)
+        val convertedFile = FileHelper.convertMultipartFileToFileData(file)
         userService.updateFile(convertedFile, userId, FileCategory.TTS)
         return ResponseHelper.successOnly()
     }

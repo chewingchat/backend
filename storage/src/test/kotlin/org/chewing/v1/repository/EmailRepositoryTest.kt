@@ -52,7 +52,10 @@ internal class EmailRepositoryTest : JpaContextTest() {
 
         val oldEmail = jpaDataGenerator.emailEntityData(emailAddress)
 
-        emailRepositoryImpl.appendIfNotExists(emailAddress)
+        val verifiedNumber = emailRepositoryImpl.appendIfNotExists(emailAddress)
+        assert(verifiedNumber.matches(Regex("\\d{6}"))) {
+            "인증 번호가 6자리 숫자여야 함"
+        }
         val result = emailJpaRepository.findByAddress(emailAddress.address)
 
         assert(result.isPresent)

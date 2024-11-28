@@ -1,4 +1,4 @@
-package org.chewing.v1.implementation
+package org.chewing.v1.util
 
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Component

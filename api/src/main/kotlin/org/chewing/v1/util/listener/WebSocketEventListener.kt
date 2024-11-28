@@ -1,4 +1,4 @@
-package org.chewing.v1.util
+package org.chewing.v1.util.listener
 
 import mu.KotlinLogging
 import org.chewing.v1.implementation.session.SessionProvider
@@ -8,12 +8,11 @@ import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.SessionConnectedEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
 
-private val logger = KotlinLogging.logger { }
-
 @Component
 class WebSocketEventListener(
     private val sessionProvider: SessionProvider,
 ) {
+    private val logger = KotlinLogging.logger { }
 
     @EventListener
     fun handleWebSocketConnectListener(event: SessionConnectedEvent) {

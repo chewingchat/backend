@@ -8,7 +8,7 @@ import org.chewing.v1.TestDataFactory.createUser
 import org.chewing.v1.TestDataFactory.createUserStatus
 import org.chewing.v1.controller.main.MainController
 import org.chewing.v1.facade.MainFacade
-import org.chewing.v1.util.StringToFriendSortCriteriaConverter
+import org.chewing.v1.util.converter.StringToFriendSortCriteriaConverter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

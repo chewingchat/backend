@@ -8,8 +8,8 @@ import org.chewing.v1.model.chat.room.ChatRoomSortCriteria
 import org.chewing.v1.response.HttpResponse
 import org.chewing.v1.response.SuccessOnlyResponse
 import org.chewing.v1.service.chat.RoomService
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute

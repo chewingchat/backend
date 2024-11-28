@@ -18,6 +18,11 @@ import java.time.LocalDateTime
         def = "{'chatRoomId': 1, 'page': 1, 'seqNumber': 1}",
     ),
     CompoundIndex(name = "chatRoomId_seqNumber_idx", def = "{'chatRoomId': 1, 'seqNumber': 1}"),
+    CompoundIndex(
+        name = "chatRoom_message_compound_idx",
+        def = "{'chatRoomId': 1, 'type': 1, 'message': 1}",
+        partialFilter = "{ 'type': { \$in: ['NORMAL', 'REPLY'] } }",
+    ),
 )
 internal sealed class ChatMessageMongoEntity(
     @Id

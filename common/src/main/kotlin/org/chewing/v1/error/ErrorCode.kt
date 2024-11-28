@@ -63,7 +63,13 @@ enum class ErrorCode(
 
     ANNOUNCEMENT_NOT_FOUND("ANNOUNCEMENT_1", "공지사항을 찾을 수 없음."),
 
+    SCHEDULE_NOT_FOUND("SCHEDULE_1", "일정을 찾을 수 없음."),
+    SCHEDULE_CREATE_FAILED("SCHEDULE_2", "일정 생성을 실패하였습니다."),
+
+    AI_CREATE_FAILED("AI_1", "AI 생성을 실패하였습니다."),
+
     INVALID_TYPE("INVALID_1", "잘못된 타입입니다."),
+
     ;
 
     companion object {

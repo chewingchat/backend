@@ -1,4 +1,4 @@
-package org.chewing.v1.security
+package org.chewing.v1.util.security
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

@@ -94,9 +94,7 @@ class ChatLogService(
     fun getChatLog(chatRoomId: String, page: Int): List<ChatLog> {
         return chatReader.readChatLog(chatRoomId, page)
     }
-
-//    fun getChatLogLatest(chatRoomId: String): List<ChatLog> {
-//        val page = chatFinder.findLastPage(chatRoomId)
-//        return chatReader.readChatLog(chatRoomId, page)
-//    }
+    fun getChatKeyWordLog(chatRoomId: String, resultKeyword: String): List<ChatLog> {
+        return chatReader.readChatKeyWordLog(chatRoomId, resultKeyword)
+    }
 }

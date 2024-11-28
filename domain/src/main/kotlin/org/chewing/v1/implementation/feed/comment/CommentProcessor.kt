@@ -13,9 +13,9 @@ class CommentProcessor(
 ) {
 
     @Transactional
-    fun processComment(userId: String, feedId: String, comment: String, updateType: FeedTarget) {
+    fun processComment(userId: String, feedId: String, comment: String, updateType: FeedTarget): String {
         feedUpdater.update(feedId, updateType)
-        commentAppender.appendComment(userId, feedId, comment)
+        return commentAppender.appendComment(userId, feedId, comment)
     }
 
     // 존재 하는 댓글에 대해서만 업데이트 진행

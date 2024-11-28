@@ -29,15 +29,14 @@ class ExternalFileClientImpl(
             .contentType(media.type.type)
             .acl(ObjectCannedACL.PUBLIC_READ)
             .build()
+        val requestBody = AsyncRequestBody.fromInputStream { builder ->
+            builder.inputStream(file.inputStream)
+            builder.contentLength(file.size)
+            builder.executor(executor)
+        }
         try {
-            val requestBody = AsyncRequestBody.fromInputStream { builder ->
-                builder.inputStream(file.inputStream)
-                builder.contentLength(file.size)
-                builder.executor(executor)
-            }
             try {
                 s3AsyncClient.putObject(putObjectRequest, requestBody).join()
-                logger.info { "Successfully uploaded file: ${media.url}" }
             } catch (exception: Exception) {
                 logger.error { "Failed to upload file: ${exception.message}" }
                 throw exception

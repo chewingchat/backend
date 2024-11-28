@@ -19,7 +19,7 @@ data class FcmMessageDto(
                     "senderId" to notification.user.userId,
                     "senderFirstName" to notification.user.name.firstName,
                     "senderLastName" to notification.user.name.lastName,
-                    "type" to notification.type.name,
+                    "type" to notification.type.toLowerCase(),
                     "targetId" to notification.targetId,
                     "content" to notification.content,
                 ),

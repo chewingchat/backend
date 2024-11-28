@@ -6,8 +6,8 @@ import org.chewing.v1.dto.response.search.SearchResultResponse
 import org.chewing.v1.facade.SearchFacade
 import org.chewing.v1.response.SuccessCreateResponse
 import org.chewing.v1.service.search.SearchService
-import org.chewing.v1.util.ResponseHelper
-import org.chewing.v1.util.SuccessResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
+import org.chewing.v1.util.aliases.SuccessResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController

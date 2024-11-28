@@ -54,8 +54,8 @@ class FeedService(
         feedHandler.lockFeedHides(feedIds, target)
     }
 
-    fun make(userId: String, files: List<FileData>, topic: String, category: FileCategory) {
+    fun make(userId: String, files: List<FileData>, topic: String, category: FileCategory): String {
         val medias = fileHandler.handleNewFiles(userId, files, category)
-        feedAppender.append(medias, userId, topic)
+        return feedAppender.append(medias, userId, topic)
     }
 }

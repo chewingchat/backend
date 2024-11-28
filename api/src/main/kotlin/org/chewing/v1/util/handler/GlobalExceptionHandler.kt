@@ -1,4 +1,4 @@
-package org.chewing.v1.util
+package org.chewing.v1.util.handler
 
 import mu.KotlinLogging
 import org.chewing.v1.error.AuthorizationException
@@ -6,6 +6,8 @@ import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.response.ErrorResponse
+import org.chewing.v1.util.aliases.ErrorResponseEntity
+import org.chewing.v1.util.helper.ResponseHelper
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -20,7 +22,7 @@ class GlobalExceptionHandler {
 
     private fun handleException(e: Exception, errorCode: ErrorCode, status: HttpStatus): ErrorResponseEntity {
         logger.info { "ErrorCode: ${errorCode.code}, Message: ${errorCode.message}, Class: ${e.stackTrace.first().className}" }
-        return ResponseHelper.error(status, ErrorResponse.from(errorCode))
+        return ResponseHelper.error(status, ErrorResponse.Companion.from(errorCode))
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
@@ -48,6 +50,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleGenericException(e: Exception): ErrorResponseEntity {
         logger.error(e) { "예기치 않은 오류 발생: ${e.message}" }
-        return ResponseHelper.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR))
+        return ResponseHelper.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorResponse.Companion.from(ErrorCode.INTERNAL_SERVER_ERROR))
     }
 }

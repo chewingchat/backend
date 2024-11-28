@@ -9,16 +9,20 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Configuration
-class OpenAiConfig {
+class OpenAiConfig(
     @Value("\${openai.api.key}")
-    private lateinit var openAiKey: String
+    private val openAiKey: String,
+    @Value("\${openai.api.url}")
+    private val openAiUrl: String,
+) {
 
     @Bean
-    fun webClient(): WebClient = WebClient.builder()
-        .baseUrl("https://api.openai.com") // OpenAI API의 기본 URL 설정
-        .filter(addAuthorizationHeader()) // Authorization 헤더 필터 추가
-        .filter(logRequest()) // 요청 로깅 필터 추가 (선택 사항)
+    fun openAiWebClient(): WebClient = WebClient.builder()
+        .baseUrl(openAiUrl)
+        .filter(addAuthorizationHeader())
+        .filter(logRequest())
         .build()
+
     private fun addAuthorizationHeader(): ExchangeFilterFunction = ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
         val modifiedRequest = ClientRequest.from(clientRequest)
             .header("Authorization", "Bearer $openAiKey")

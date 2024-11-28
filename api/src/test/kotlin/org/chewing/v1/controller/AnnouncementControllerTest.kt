@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.chewing.v1.RestDocsTest
 import org.chewing.v1.RestDocsUtils
-import org.chewing.v1.TestDataFactory.createAnnouncement
+import org.chewing.v1.TestDataFactory
 import org.chewing.v1.controller.announcement.AnnouncementController
 import org.chewing.v1.service.announcement.AnnouncementService
 import org.junit.jupiter.api.BeforeEach
@@ -34,7 +34,7 @@ class AnnouncementControllerTest : RestDocsTest() {
     @Test
     @DisplayName("공지사항 목록 조회")
     fun getAnnouncements() {
-        val announcement = createAnnouncement()
+        val announcement = TestDataFactory.createAnnouncement()
         every { announcementService.readAnnouncements() } returns listOf(announcement)
         val uploadTime = announcement.uploadAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         mockMvc.perform(
@@ -65,7 +65,7 @@ class AnnouncementControllerTest : RestDocsTest() {
     @Test
     @DisplayName("공지사항 조회")
     fun getAnnouncement() {
-        val announcement = createAnnouncement()
+        val announcement = TestDataFactory.createAnnouncement()
         every { announcementService.readAnnouncement(announcement.id) } returns announcement
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/announcement/${announcement.id}")

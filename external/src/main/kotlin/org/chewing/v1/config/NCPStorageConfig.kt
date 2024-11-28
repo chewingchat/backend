@@ -11,22 +11,29 @@ import software.amazon.awssdk.services.s3.S3Configuration
 import java.net.URI
 
 @Configuration
-class NCPStorageConfig {
+class NCPStorageConfig(
     @Value("\${ncp.storage.accessKey}")
-    private lateinit var accessKey: String
+    private val accessKey: String,
 
     @Value("\${ncp.storage.secretKey}")
-    private lateinit var secretKey: String
+    private val secretKey: String,
 
     @Value("\${ncp.storage.region}")
-    private lateinit var region: String
+    private val region: String,
 
     @Value("\${ncp.storage.endpoint}")
-    private lateinit var endPoint: String
+    private val endPoint: String,
+) {
 
     @Bean
     fun ncpStorageClient(): S3AsyncClient {
         val credentials = AwsBasicCredentials.create(accessKey, secretKey)
+
+        println("Initializing S3AsyncClient")
+        println("AccessKey: $accessKey")
+        println("SecretKey: $secretKey")
+        println("Region: $region")
+        println("Endpoint: $endPoint")
 
         return S3AsyncClient.builder()
             .credentialsProvider(StaticCredentialsProvider.create(credentials))

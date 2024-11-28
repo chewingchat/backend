@@ -1,6 +1,6 @@
 package org.chewing.v1.implementation.feed.feed
 
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.model.feed.FeedTarget
 import org.chewing.v1.util.AsyncJobExecutor
 import org.springframework.stereotype.Component

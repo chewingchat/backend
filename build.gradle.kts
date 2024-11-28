@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm")
-    kotlin("kapt")
+    kotlin("jvm") version "1.9.0" // 안정적인 버전으로 변경
+    kotlin("kapt") version "1.9.0" // 동일한 버전으로 설정
     kotlin("plugin.spring") apply false
     kotlin("plugin.jpa") apply false
     id("org.springframework.boot")
@@ -42,7 +42,7 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     jacoco {
-        toolVersion = "0.8.8"
+        toolVersion = "0.8.12"
     }
 
     repositories {
@@ -59,25 +59,34 @@ subprojects {
         kapt("org.springframework.boot:spring-boot-configuration-processor")
 
         // 추가
-        implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
-        implementation("io.jsonwebtoken:jjwt-impl:0.11.5") // for Jackson JSON Processor
+        implementation("io.jsonwebtoken:jjwt-jackson:${property("jjwtVersion")}")
+        implementation("io.jsonwebtoken:jjwt-impl:${property("jjwtVersion")}") // for Jackson JSON Processor
         //
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
-
-        implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
         //
         implementation("org.springframework.boot:spring-boot-starter-websocket")
         // 코루틴
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
-        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${property("kotlinxCoroutinesVersion")}")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${property("kotlinxCoroutinesVersion")}")
+        testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "${property("kotlinxCoroutinesVersion")}")
 
         //env
         implementation("me.paulschwarz:spring-dotenv:4.0.0")
+
+        //openvidu
+        implementation("io.openvidu:openvidu-java-client:2.30.0")
     }
 
     tasks {
+        build {
+            dependsOn(ktlintFormat)
+        }
+        test {
+            useJUnitPlatform()
+            maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+            forkEvery = 100
+        }
         bootJar {
             enabled = false
         }
@@ -93,12 +102,6 @@ subprojects {
             freeCompilerArgs.addAll("-Xjsr305=strict")
             jvmTarget.set(JvmTarget.valueOf("JVM_${project.property("javaVersion")}"))
         }
-    }
-
-    tasks.test {
-        useJUnitPlatform()
-        maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-        forkEvery = 100
     }
 }
 

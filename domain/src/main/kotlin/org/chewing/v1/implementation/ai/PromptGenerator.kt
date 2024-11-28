@@ -45,7 +45,25 @@ class PromptGenerator {
                         "2. 동료들과의 점심 시간 경험을 공유해보세요.\n" +
                         "3. 두바이 초콜릿에 대한 관심과 맛있는 초콜릿 추천을 나눠보세요.\n",
                 ),
-
             ),
         )
+
+    fun generateSearchChatPrompt(prompt: String): List<Prompt> = sequenceOf(
+        TextPrompt.of(
+            "아래는 특정 채팅 검색 질의를 기반으로 몽고디비에서 효과적으로 검색할 수 있도록 설계된 키워드입니다. 검색 시스템이 지원할 수 있는 명사 단어만을 포함하고," +
+                " 관련된 유사한 의미를 가진 단어도 함께 문맥을 고려하여 검색 범위를 확장해주세요. 키워드는 검색 가능성을 높이기 위해 짧고 간결하게 제공하며," +
+                " 최대 10개의 단어를 쉼표로 구분된 목록 형태로 출력해주세요. 예시: 단어1, 단어2, 단어3",
+        ),
+        TextPrompt.of("검색어: $prompt"),
+    ).toList()
+
+    fun generateSchedulePrompt(prompt: String): List<Prompt> = sequenceOf(
+        TextPrompt.of(
+            "다음 문장을 분석하여 이떄 상상력을 더해 스케줄 정보를 아래 형식에 맞춰 작성해주세요.\n\n" +
+                "예시 형식:\ntitle: 밥먹기\nmemo: 꼭 먹어야돼\nlocation: 집에서\n" +
+                "startAt: 2024-04-27T12:00:00\nendAt: 2024-04-27T13:00:00\n" +
+                "notificationAt: 2024-04-27T13:00:00\n\n",
+        ),
+        TextPrompt.of("일정: $prompt"),
+    ).toList()
 }

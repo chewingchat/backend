@@ -2,7 +2,7 @@ package org.chewing.v1.config
 
 import io.mockk.mockk
 import org.chewing.v1.implementation.auth.JwtTokenProvider
-import org.chewing.v1.security.JwtAuthenticationEntryPoint
+import org.chewing.v1.util.security.JwtAuthenticationEntryPoint
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

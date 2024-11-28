@@ -12,7 +12,7 @@ import org.chewing.v1.TestDataFactory
 import org.chewing.v1.error.ConflictException
 import org.chewing.v1.error.ErrorCode
 import org.chewing.v1.error.NotFoundException
-import org.chewing.v1.implementation.OptimisticLockHandler
+import org.chewing.v1.util.OptimisticLockHandler
 import org.chewing.v1.implementation.feed.feed.*
 import org.chewing.v1.implementation.media.FileHandler
 import org.chewing.v1.model.feed.FeedStatus
@@ -238,8 +238,8 @@ class FeedServiceTest {
         every { feedDetailRepository.append(listOf(media), feedId) } just Runs
         every { fileHandler.handleNewFiles(userId, listOf(fileData), FileCategory.FEED) } returns listOf(media)
 
-        assertDoesNotThrow {
+        val result =
             feedService.make(userId, listOf(fileData), topic, FileCategory.FEED)
-        }
+        assert(result == feedId)
     }
 }

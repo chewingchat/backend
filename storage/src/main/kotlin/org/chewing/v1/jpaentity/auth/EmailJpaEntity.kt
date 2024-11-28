@@ -19,7 +19,7 @@ internal class EmailJpaEntity(
 
     private var expiredAt: LocalDateTime = LocalDateTime.now().plusMinutes(5),
 
-    private var authorizedNumber: String = UUID.randomUUID().toString().replace("-", "").take(4),
+    private var authorizedNumber: String = (100000 + Random().nextInt(900000)).toString(),
 ) : BaseEntity() {
     companion object {
         fun fromEmail(email: Email): EmailJpaEntity {
@@ -49,11 +49,7 @@ internal class EmailJpaEntity(
     }
 
     fun updateVerificationCode() {
-        authorizedNumber = UUID.randomUUID().toString().replace("-", "").take(4)
+        authorizedNumber = (100000 + Random().nextInt(900000)).toString()
         expiredAt = LocalDateTime.now().plusMinutes(5)
-    }
-
-    fun updateEmail(email: String) {
-        address = email
     }
 }

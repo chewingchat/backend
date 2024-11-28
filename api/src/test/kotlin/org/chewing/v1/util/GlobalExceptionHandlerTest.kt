@@ -11,6 +11,7 @@ import org.chewing.v1.error.NotFoundException
 import org.chewing.v1.response.ErrorResponse
 import org.chewing.v1.support.TestExceptionController
 import org.chewing.v1.support.TestExceptionService
+import org.chewing.v1.util.handler.GlobalExceptionHandler
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.context.annotation.Import

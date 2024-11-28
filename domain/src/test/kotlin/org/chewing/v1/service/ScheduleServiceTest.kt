@@ -6,6 +6,7 @@ import io.mockk.just
 import io.mockk.mockk
 import org.chewing.v1.TestDataFactory
 import org.chewing.v1.implementation.user.schedule.ScheduleAppender
+import org.chewing.v1.implementation.user.schedule.ScheduleGenerator
 import org.chewing.v1.implementation.user.schedule.ScheduleReader
 import org.chewing.v1.implementation.user.schedule.ScheduleRemover
 import org.chewing.v1.model.schedule.ScheduleType
@@ -20,19 +21,21 @@ class ScheduleServiceTest {
     private val scheduleAppender = ScheduleAppender(scheduleRepository)
     private val scheduleReader = ScheduleReader(scheduleRepository)
     private val scheduleRemover = ScheduleRemover(scheduleRepository)
-    private val scheduleService = ScheduleService(scheduleAppender, scheduleRemover, scheduleReader)
+    private val scheduleGenerator = ScheduleGenerator()
+    private val scheduleService = ScheduleService(scheduleAppender, scheduleRemover, scheduleReader, scheduleGenerator)
 
     @Test
     fun `스케줄 추가`() {
         val userId = "userId"
+        val scheduleId = "scheduleId"
         val scheduleTime = TestDataFactory.createScheduledTime()
         val scheduleContent = TestDataFactory.createScheduleContent()
 
-        every { scheduleRepository.append(scheduleTime, scheduleContent, userId) } just Runs
+        every { scheduleRepository.append(scheduleTime, scheduleContent, userId) } returns scheduleId
 
-        assertDoesNotThrow {
-            scheduleService.create(userId, scheduleTime, scheduleContent)
-        }
+        val result = scheduleService.create(userId, scheduleTime, scheduleContent)
+
+        assert(result == scheduleId)
     }
 
     @Test
