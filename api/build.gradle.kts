@@ -6,7 +6,7 @@ dependencies {
     runtimeOnly(project(":storage"))
     runtimeOnly(project(":external"))
     testImplementation(project(":external"))
-    testImplementation(project(":storage"))
+    testImplementation(testFixtures(project(":storage")))
     testImplementation(project(":tests:api-docs"))
 }
 
