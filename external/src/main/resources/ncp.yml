@@ -34,12 +34,6 @@ ncp:
   storage:
     region: kr-standard
     endpoint: https://kr.object.ncloudstorage.com
-spring.config.activate.on-profile: live
-
-ncp:
-  storage:
-    region: kr-standard
-    endpoint: https://kr.object.ncloudstorage.com
     accessKey: ${NCP_STORAGE_ACCESS_KEY}
     secretKey: ${NCP_STORAGE_SECRET_KEY}
     bucketName: ${NCP_BUCKET_NAME}
